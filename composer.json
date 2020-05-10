@@ -16,7 +16,7 @@
         "geo-sot/laravel-env-editor": "^0.9.7",
         "kalnoy/nestedset": "^5.0",
         "laravel/framework": "^6.0",
-        "laravel/telescope": "^2.1",
+        "laravel/telescope": "^3.3",
         "laravel/tinker": "^1.0",
         "mariuzzo/laravel-js-localization": "^1.5",
         "nemiah/php-fints": "^1.6",
