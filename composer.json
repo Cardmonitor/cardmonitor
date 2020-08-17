@@ -19,7 +19,7 @@
         "laravel/telescope": "^3.5",
         "laravel/tinker": "^2.4",
         "mariuzzo/laravel-js-localization": "^1.5",
-        "nemiah/php-fints": "^2.1",
+        "nemiah/php-fints": "^3.0",
         "nemiah/php-sepa-xml": "dev-master",
         "spatie/flysystem-dropbox": "^1.2",
         "spatie/laravel-cookie-consent": "^2.10"

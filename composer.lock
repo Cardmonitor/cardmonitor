@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "947291065827129f0561669474f96fb5",
+    "content-hash": "d9edf211e36c02e2c1143f693cda2404",
     "packages": [
         {
             "name": "calebporzio/parental",
@@ -45,6 +45,12 @@
                 }
             ],
             "description": "A simple eloquent trait that allows relationships to be accessed through child models.",
+            "funding": [
+                {
+                    "url": "https://github.com/calebporzio",
+                    "type": "github"
+                }
+            ],
             "time": "2020-03-03T13:45:17+00:00"
         },
         {
@@ -1662,16 +1668,16 @@
         },
         {
             "name": "nemiah/php-fints",
-            "version": "2.1.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nemiah/phpFinTS.git",
-                "reference": "7796f4ad31c3a29b67ababb82904bd8dba00355b"
+                "reference": "9b93d6e9ed407680729d642e1afe79daaa6e704c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nemiah/phpFinTS/zipball/7796f4ad31c3a29b67ababb82904bd8dba00355b",
-                "reference": "7796f4ad31c3a29b67ababb82904bd8dba00355b",
+                "url": "https://api.github.com/repos/nemiah/phpFinTS/zipball/9b93d6e9ed407680729d642e1afe79daaa6e704c",
+                "reference": "9b93d6e9ed407680729d642e1afe79daaa6e704c",
                 "shasum": ""
             },
             "require": {
@@ -1702,7 +1708,7 @@
             ],
             "description": "PHP Library for the protocols fints and hbci",
             "homepage": "https://github.com/nemiah/phpFinTS",
-            "time": "2020-04-10T13:05:55+00:00"
+            "time": "2020-08-17T07:47:18+00:00"
         },
         {
             "name": "nemiah/php-sepa-xml",
@@ -5167,9 +5173,9 @@
             "authors": [
                 {
                     "name": "Marcel Pociot",
-                    "role": "Developer",
                     "email": "marcel@beyondco.de",
-                    "homepage": "https://beyondco.de"
+                    "homepage": "https://beyondco.de",
+                    "role": "Developer"
                 }
             ],
             "description": "Symfony Var-Dump Server for Laravel",
