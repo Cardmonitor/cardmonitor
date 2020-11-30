@@ -45,6 +45,12 @@
                 }
             ],
             "description": "A simple eloquent trait that allows relationships to be accessed through child models.",
+            "funding": [
+                {
+                    "url": "https://github.com/calebporzio",
+                    "type": "github"
+                }
+            ],
             "time": "2020-03-03T13:45:17+00:00"
         },
         {
@@ -2780,27 +2786,27 @@
         },
         {
             "name": "spatie/laravel-cookie-consent",
-            "version": "2.12.5",
+            "version": "2.12.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-cookie-consent.git",
-                "reference": "46ad2dd6d20cf931d9a2ca98926cdbf8407d612c"
+                "reference": "ee6358d18750d3e5bb6eda23d328b5d0b0f94187"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-cookie-consent/zipball/46ad2dd6d20cf931d9a2ca98926cdbf8407d612c",
-                "reference": "46ad2dd6d20cf931d9a2ca98926cdbf8407d612c",
+                "url": "https://api.github.com/repos/spatie/laravel-cookie-consent/zipball/ee6358d18750d3e5bb6eda23d328b5d0b0f94187",
+                "reference": "ee6358d18750d3e5bb6eda23d328b5d0b0f94187",
                 "shasum": ""
             },
             "require": {
-                "illuminate/cookie": "~5.8.0|^6.0|^7.0",
-                "illuminate/support": "~5.8.0|^6.0|^7.0",
-                "illuminate/view": "~5.8.0|^6.0|^7.0",
-                "php": "^7.2"
+                "illuminate/cookie": "^6.0|^7.0|^8.0",
+                "illuminate/support": "^6.0|^7.0|^8.0",
+                "illuminate/view": "^6.0|^7.0|^8.0",
+                "php": "^7.3|^8.0"
             },
             "require-dev": {
-                "fzaninotto/faker": "~1.4",
-                "orchestra/testbench": "~3.8.0|^4.0|^5.0"
+                "fakerphp/faker": "~1.9",
+                "orchestra/testbench": "^4.0|^5.0|^6.0"
             },
             "type": "library",
             "extra": {
@@ -2849,7 +2855,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2020-06-08T10:07:44+00:00"
+            "time": "2020-11-28T23:12:36+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -5167,9 +5173,9 @@
             "authors": [
                 {
                     "name": "Marcel Pociot",
-                    "role": "Developer",
                     "email": "marcel@beyondco.de",
-                    "homepage": "https://beyondco.de"
+                    "homepage": "https://beyondco.de",
+                    "role": "Developer"
                 }
             ],
             "description": "Symfony Var-Dump Server for Laravel",
@@ -5359,6 +5365,7 @@
                 "faker",
                 "fixtures"
             ],
+            "abandoned": true,
             "time": "2019-12-12T13:22:17+00:00"
         },
         {
