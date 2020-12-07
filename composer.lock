@@ -45,6 +45,12 @@
                 }
             ],
             "description": "A simple eloquent trait that allows relationships to be accessed through child models.",
+            "funding": [
+                {
+                    "url": "https://github.com/calebporzio",
+                    "type": "github"
+                }
+            ],
             "time": "2020-03-03T13:45:17+00:00"
         },
         {
@@ -860,22 +866,22 @@
         },
         {
             "name": "kalnoy/nestedset",
-            "version": "v5.0.1",
+            "version": "v5.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lazychaser/laravel-nestedset.git",
-                "reference": "d4fe17f9abd3414014bda32a5612c9ed24246f99"
+                "reference": "789a70bce94a7c3bd206fb05fa4b747cf27acbe2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lazychaser/laravel-nestedset/zipball/d4fe17f9abd3414014bda32a5612c9ed24246f99",
-                "reference": "d4fe17f9abd3414014bda32a5612c9ed24246f99",
+                "url": "https://api.github.com/repos/lazychaser/laravel-nestedset/zipball/789a70bce94a7c3bd206fb05fa4b747cf27acbe2",
+                "reference": "789a70bce94a7c3bd206fb05fa4b747cf27acbe2",
                 "shasum": ""
             },
             "require": {
-                "illuminate/database": "~5.7.0|~5.8.0|^6.0|^7.0",
-                "illuminate/events": "~5.7.0|~5.8.0|^6.0|^7.0",
-                "illuminate/support": "~5.7.0|~5.8.0|^6.0|^7.0",
+                "illuminate/database": "~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
+                "illuminate/events": "~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
+                "illuminate/support": "~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
                 "php": ">=7.1.3"
             },
             "require-dev": {
@@ -915,7 +921,7 @@
                 "nested sets",
                 "nsm"
             ],
-            "time": "2020-03-04T05:33:20+00:00"
+            "time": "2020-12-07T05:59:45+00:00"
         },
         {
             "name": "laravel/framework",
@@ -5167,9 +5173,9 @@
             "authors": [
                 {
                     "name": "Marcel Pociot",
-                    "role": "Developer",
                     "email": "marcel@beyondco.de",
-                    "homepage": "https://beyondco.de"
+                    "homepage": "https://beyondco.de",
+                    "role": "Developer"
                 }
             ],
             "description": "Symfony Var-Dump Server for Laravel",
@@ -5359,6 +5365,7 @@
                 "faker",
                 "fixtures"
             ],
+            "abandoned": true,
             "time": "2019-12-12T13:22:17+00:00"
         },
         {
