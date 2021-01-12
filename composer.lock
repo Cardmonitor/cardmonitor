@@ -45,6 +45,12 @@
                 }
             ],
             "description": "A simple eloquent trait that allows relationships to be accessed through child models.",
+            "funding": [
+                {
+                    "url": "https://github.com/calebporzio",
+                    "type": "github"
+                }
+            ],
             "time": "2020-03-03T13:45:17+00:00"
         },
         {
@@ -497,20 +503,20 @@
         },
         {
             "name": "geo-sot/laravel-env-editor",
-            "version": "v0.9.9",
+            "version": "v0.9.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GeoSot/Laravel-EnvEditor.git",
-                "reference": "e828d3d3310890286d0b53045de9381187258605"
+                "reference": "178f4ae3bd528f202f3354b4026d0d32ca5e7937"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GeoSot/Laravel-EnvEditor/zipball/e828d3d3310890286d0b53045de9381187258605",
-                "reference": "e828d3d3310890286d0b53045de9381187258605",
+                "url": "https://api.github.com/repos/GeoSot/Laravel-EnvEditor/zipball/178f4ae3bd528f202f3354b4026d0d32ca5e7937",
+                "reference": "178f4ae3bd528f202f3354b4026d0d32ca5e7937",
                 "shasum": ""
             },
             "require": {
-                "laravel/framework": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|~6.0|~7.0",
+                "laravel/framework": ">=5.5",
                 "php": "^7.1"
             },
             "require-dev": {
@@ -518,9 +524,6 @@
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "0.9.*-dev"
-                },
                 "laravel": {
                     "providers": [
                         "GeoSot\\EnvEditor\\ServiceProvider"
@@ -545,14 +548,14 @@
                     "email": "geo.sotis@gmail.com"
                 }
             ],
-            "description": "A laravel Package that Supports .Env File editing and backup ",
+            "description": "A laravel Package that supports .Env File, editing and backup ",
             "keywords": [
                 "EnvEditor",
                 "geo-sot",
                 "laravel",
                 "laravel-env-editor"
             ],
-            "time": "2020-04-17T23:33:36+00:00"
+            "time": "2021-01-09T17:00:00+00:00"
         },
         {
             "name": "graham-campbell/guzzle-factory",
@@ -5167,9 +5170,9 @@
             "authors": [
                 {
                     "name": "Marcel Pociot",
-                    "role": "Developer",
                     "email": "marcel@beyondco.de",
-                    "homepage": "https://beyondco.de"
+                    "homepage": "https://beyondco.de",
+                    "role": "Developer"
                 }
             ],
             "description": "Symfony Var-Dump Server for Laravel",
@@ -5359,6 +5362,7 @@
                 "faker",
                 "fixtures"
             ],
+            "abandoned": true,
             "time": "2019-12-12T13:22:17+00:00"
         },
         {
