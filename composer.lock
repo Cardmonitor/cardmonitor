@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "36ce6f43f9cd1fb172350070474b722f",
+    "content-hash": "7a46dfe20091ea435006643ef1ef191c",
     "packages": [
         {
             "name": "brick/math",
@@ -2330,16 +2330,16 @@
         },
         {
             "name": "nemiah/php-fints",
-            "version": "2.1.0",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nemiah/phpFinTS.git",
-                "reference": "7796f4ad31c3a29b67ababb82904bd8dba00355b"
+                "reference": "9e4e61ed85816d4be756b5e56fd7187ce9051489"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nemiah/phpFinTS/zipball/7796f4ad31c3a29b67ababb82904bd8dba00355b",
-                "reference": "7796f4ad31c3a29b67ababb82904bd8dba00355b",
+                "url": "https://api.github.com/repos/nemiah/phpFinTS/zipball/9e4e61ed85816d4be756b5e56fd7187ce9051489",
+                "reference": "9e4e61ed85816d4be756b5e56fd7187ce9051489",
                 "shasum": ""
             },
             "require": {
@@ -2372,9 +2372,9 @@
             "homepage": "https://github.com/nemiah/phpFinTS",
             "support": {
                 "issues": "https://github.com/nemiah/phpFinTS/issues",
-                "source": "https://github.com/nemiah/phpFinTS/tree/2.1"
+                "source": "https://github.com/nemiah/phpFinTS/tree/3.1"
             },
-            "time": "2020-04-10T13:05:55+00:00"
+            "time": "2020-12-29T14:49:01+00:00"
         },
         {
             "name": "nemiah/php-sepa-xml",
