@@ -21,7 +21,7 @@
         "laravel/ui": "^3.2",
         "lukeraymonddowning/honey": "^0.3.1",
         "mariuzzo/laravel-js-localization": "^1.5",
-        "nemiah/php-fints": "^2.1",
+        "nemiah/php-fints": "^3.2",
         "nemiah/php-sepa-xml": "dev-master",
         "socialiteproviders/dropbox": "^4.2",
         "spatie/flysystem-dropbox": "^1.2",

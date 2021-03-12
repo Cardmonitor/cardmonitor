@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "36ce6f43f9cd1fb172350070474b722f",
+    "content-hash": "319b8ddeb6cd1e789a8ea0189ac384f1",
     "packages": [
         {
             "name": "brick/math",
@@ -2330,16 +2330,16 @@
         },
         {
             "name": "nemiah/php-fints",
-            "version": "2.1.0",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nemiah/phpFinTS.git",
-                "reference": "7796f4ad31c3a29b67ababb82904bd8dba00355b"
+                "reference": "fce921b5311ee3c15eb075c25627a0584c6bee99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nemiah/phpFinTS/zipball/7796f4ad31c3a29b67ababb82904bd8dba00355b",
-                "reference": "7796f4ad31c3a29b67ababb82904bd8dba00355b",
+                "url": "https://api.github.com/repos/nemiah/phpFinTS/zipball/fce921b5311ee3c15eb075c25627a0584c6bee99",
+                "reference": "fce921b5311ee3c15eb075c25627a0584c6bee99",
                 "shasum": ""
             },
             "require": {
@@ -2348,9 +2348,9 @@
                 "psr/log": "~1.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "2.16.*",
-                "php-mock/php-mock-phpunit": "2.5.*",
-                "phpunit/phpunit": "8.4.*"
+                "friendsofphp/php-cs-fixer": "2.18.*",
+                "php-mock/php-mock-phpunit": "2.6.*",
+                "phpunit/phpunit": "9.5.*"
             },
             "suggest": {
                 "abcaeffchen/sephpa": "1.*",
@@ -2372,9 +2372,9 @@
             "homepage": "https://github.com/nemiah/phpFinTS",
             "support": {
                 "issues": "https://github.com/nemiah/phpFinTS/issues",
-                "source": "https://github.com/nemiah/phpFinTS/tree/2.1"
+                "source": "https://github.com/nemiah/phpFinTS/tree/3.2"
             },
-            "time": "2020-04-10T13:05:55+00:00"
+            "time": "2021-03-11T16:28:26+00:00"
         },
         {
             "name": "nemiah/php-sepa-xml",
