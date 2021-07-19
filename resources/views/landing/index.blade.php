@@ -5,7 +5,7 @@
     <div class="alert alert-warning" role="alert">
         <div class="container">
             <div class="row">
-                Cardmarket hat die API abgestellt. Cardmonitor funktioniert deshalb aktuell nicht. <br />Sobald die neue API verfügbar ist, werde ich sie implementieren.
+                <a href="https://www.cardmarket.com/de/Magic/News/Statement-On-Cardmarket-Outage" target="_blank">Cardmarket hat die API abgestellt</a>. Cardmonitor funktioniert deshalb aktuell nicht. Sobald die neue API verfügbar ist, werde ich sie implementieren.
             </div>
         </div>
     </div>
