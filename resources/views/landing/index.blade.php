@@ -2,6 +2,14 @@
 
 @section('content')
 
+    <div class="alert alert-warning" role="alert">
+        <div class="container">
+            <div class="row">
+                Cardmarket hat die API abgestellt. Cardmonitor funktioniert deshalb aktuell nicht. <br />Sobald die neue API verfügbar ist, werde ich sie implementieren.
+            </div>
+        </div>
+    </div>
+
     <div class="masthead bg-dark p-5">
 
         <div class="container h-100">
