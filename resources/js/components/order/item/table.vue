@@ -18,7 +18,7 @@
 
                 </div>
             </div>
-            <table class="table table-striped table-hover" v-if="items.length">
+            <table class="table table-striped table-hover table-sm" v-if="items.length">
                 <tbody>
                     <row :item="item" :key="item.id" :uri="uri" v-for="(item, index) in items" @deleted="remove(index)" @updated="updated(index, $event)"></row>
                 </tbody>

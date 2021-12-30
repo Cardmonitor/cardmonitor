@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Orders\Evaluation;
 use App\Models\Orders\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
@@ -29,14 +30,14 @@ class HomeController extends Controller
     {
         $user = auth()->user();
         $cardmarketIsConnected = $user->api->isConnected();
+        $cardmarketAccount = [];
+        $cardmarketConnectLink = (App::make('CardmarketApi'))->access->link();
         if ($cardmarketIsConnected) {
             $cardmarketAccount = $user->cardmarketApi->account->get();
-            $cardmarketAccount = $cardmarketAccount['account'];
-            $cardmarketConnectLink = '';
-        }
-        else {
-            $cardmarketAccount = [];
-            $cardmarketConnectLink = (App::make('CardmarketApi'))->access->link();
+            if (! empty($cardmarketAccount) && Arr::has($cardmarketAccount, 'account')) {
+                $cardmarketAccount = $cardmarketAccount['account'];
+                $cardmarketConnectLink = '';
+            }
         }
 
         $paidOrders = Order::where('user_id', $user->id)
