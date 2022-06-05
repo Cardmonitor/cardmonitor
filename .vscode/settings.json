@@ -1,0 +1,6 @@
+{
+    "files.encoding": "utf8",
+    "files.autoGuessEncoding": false,
+    "files.trimTrailingWhitespace": true,
+    "editor.renderControlCharacters": true,
+}
