@@ -76,7 +76,7 @@ class Language extends Model
             ],
         ];
         foreach ($languages as $id => $language) {
-            self::create([
+            self::updateOrCreate([
                 'id' => $id,
                 'code' => $language['code'],
                 'name' => $language['name'],
