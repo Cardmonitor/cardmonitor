@@ -27,7 +27,7 @@ class DeploymentController extends Controller
         // }
 
         $root_path = base_path();
-        $process = new Process('cd ' . $root_path . '; sh ./deploy.sh');
+        $process = Process::fromShellCommandline('cd ' . $root_path . '; sh ./deploy.sh');
         $process->run();
 
         // executes after the command finishes
