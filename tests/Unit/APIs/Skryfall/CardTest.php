@@ -30,7 +30,7 @@ class CardTest extends TestCase
         $this->assertEquals('', $model->color_order_by);
 
         $model->color_identity = [];
-        $this->assertEquals('', $model->color_order_by);
+        $this->assertEquals('C', $model->color_order_by);
 
         $model->color_identity = ['W'];
         $this->assertEquals('W', $model->color_order_by);
@@ -57,6 +57,22 @@ class CardTest extends TestCase
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/normal/front/c/3/c3f1f41e-98fc-4f6b-b287-c8899dff8ab0.jpg?1562563557', $model->image_uri_normal);
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/large/front/c/3/c3f1f41e-98fc-4f6b-b287-c8899dff8ab0.jpg?1562563557', $model->image_uri_large);
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/png/front/c/3/c3f1f41e-98fc-4f6b-b287-c8899dff8ab0.png?1562563557', $model->image_uri_png);
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_an_image_if_the_card_has_two_faces()
+    {
+        $this->markTestSkipped();
+
+        $model = Card::findByCardmarketId(496410);
+        $this->assertInstanceOf(Card::class, $model);
+        $this->assertEquals('609d3ecf-f88d-4268-a8d3-4bf2bcf5df60', $model->id);
+        $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/small/front/6/0/609d3ecf-f88d-4268-a8d3-4bf2bcf5df60.jpg?1604195984', $model->image_uri_small);
+        $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/normal/front/6/0/609d3ecf-f88d-4268-a8d3-4bf2bcf5df60.jpg?1604195984', $model->image_uri_normal);
+        $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/large/front/6/0/609d3ecf-f88d-4268-a8d3-4bf2bcf5df60.jpg?1604195984', $model->image_uri_large);
+        $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/png/front/6/0/609d3ecf-f88d-4268-a8d3-4bf2bcf5df60.png?1604195984', $model->image_uri_png);
     }
 
     /**

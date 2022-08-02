@@ -278,4 +278,26 @@ class CardTest extends TestCase
         $this->assertEquals(['B'], $card->colors);
         $this->assertEquals('Creature — Harpy', $card->type_line);
     }
+
+    /**
+     * @test
+     */
+    public function it_has_a_color_name_attribute()
+    {
+        $model = new Card();
+
+        $this->assertEquals('Not Available', $model->color_name);
+
+        $model->color_order_by = 'C';
+        $this->assertEquals('Colorless', $model->color_name);
+
+        $model->color_order_by = 'W';
+        $this->assertEquals('White', $model->color_name);
+
+        $model->color_order_by = 'M';
+        $this->assertEquals('Multicolor', $model->color_name);
+
+        $model->color_order_by = 'L';
+        $this->assertEquals('Land', $model->color_name);
+    }
 }

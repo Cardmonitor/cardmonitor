@@ -105,6 +105,7 @@ class Card extends ApiModel
 
     public function getColorOrderByAttribute(): string
     {
+        // Land
         if ($this->type_line == 'Land') {
             return 'L';
         }
@@ -114,15 +115,32 @@ class Card extends ApiModel
         }
 
         $count = count($this->color_identity);
+
+        // Multicolor
         if ($count > 1) {
             return 'M';
         }
 
+        // Colorless
+        if ($count == 0) {
+            return 'C';
+        }
+
+        // Color
         if ($count == 1) {
             return Arr::get($this->color_identity, 0, '');
         }
 
         return '';
+    }
+
+    public function getImageUrisAttribute(): array
+    {
+        if (array_key_exists('card_faces', $this->attributes)) {
+            return $this->attributes['card_faces'][0]['image_uris'];
+        }
+
+        return $this->attributes['image_uris'];
     }
 
     public function getColorIdentityStringAttribute() : string

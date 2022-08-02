@@ -322,6 +322,26 @@ class Card extends Model
         return (! is_null($this->cmc));
     }
 
+    public function getColorNameAttribute(): string
+    {
+        if (is_null($this->color_order_by)) {
+            return 'Not Available';
+        }
+
+        switch ($this->color_order_by) {
+            case 'B': return 'Black';break;
+            case 'C': return 'Colorless';break;
+            case 'G': return 'Green';break;
+            case 'L': return 'Land';break;
+            case 'M': return 'Multicolor';break;
+            case 'R': return 'Red';break;
+            case 'U': return 'Blue';break;
+            case 'W': return 'White';break;
+
+            default: return 'Not Available'; break;
+        }
+    }
+
     public function expansion() : BelongsTo
     {
         return $this->belongsTo(Expansion::class, 'expansion_id');

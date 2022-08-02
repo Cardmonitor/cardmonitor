@@ -50,7 +50,7 @@
                         <td class="align-middle">
                             <img src="{{ $article->card->skryfall_image_small }}" alt="{{ $article->card->name }}" width="146" height="204">
                         </td>
-                        <td class="align-middle">{{ $article->card->color_order_by }}</td>
+                        <td class="align-middle">{{ $article->card->color_name }}</td>
                         <td class="align-middle">{{ $article->card->cmc }}</td>
                         <td class="align-middle">
                             <div>{{ $article->local_name }}</div>
