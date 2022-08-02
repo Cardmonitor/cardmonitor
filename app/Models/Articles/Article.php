@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -231,6 +230,22 @@ class Article extends Model
         $article = self::updateOrCreate(['cardmarket_article_id' => $cardmarketArticle['idArticle']], $values);
 
         return $article;
+    }
+
+    public static function getForPicklist(int $user_id, array $article_ids): ArticleCollection
+    {
+        return self::select('articles.*', DB::raw('COUNT(articles.id) AS amount'))
+            ->join('cards', 'cards.id', '=', 'articles.card_id')
+            ->with([
+                'card',
+                'language',
+            ])
+            ->where('user_id', $user_id)
+            ->whereIn('articles.id', $article_ids)
+            ->orderBy('cards.color_order_by', 'ASC')
+            ->orderBy('cards.cmc', 'ASC')
+            ->groupBy('articles.card_id')
+            ->get();
     }
 
     /**

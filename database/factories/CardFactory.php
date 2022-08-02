@@ -12,7 +12,7 @@ $factory->define(Card::class, function (Faker $faker) {
         'cardmarket_product_id' => $faker->unique()->randomNumber,
         'reprints_count' => $faker->numberBetween(1, 10),
         'name' => $faker->word,
-        'website' => $faker->url,
+        'website' => '',
         'image' => '',
         'number' => $faker->word,
         'rarity' => $faker->randomElement(['Common', 'Uncommon', 'Rare', 'Mystic']),

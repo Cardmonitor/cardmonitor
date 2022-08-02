@@ -74,6 +74,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('order/import/sent', 'Orders\Import\SentController@store');
 
+    Route::get('order/picklist', 'Orders\Picklists\PicklistController@index')->name('order.picklist.index');
+    Route::post('order/picklist', 'Orders\Picklists\PicklistController@store')->name('order.picklist.store');
+    Route::get('order/picklist/pdf', 'Orders\Picklists\PdfController@index')->name('order.picklist.pdf.index');
+
     Route::post('order/{order}/images', 'Images\ImageableController@store')->name('order.images.store');
 
     Route::get('order/sync', 'Cardmarket\Orders\OrderController@index');

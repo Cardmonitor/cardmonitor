@@ -3,7 +3,6 @@
 namespace App\Models\Cards;
 
 use App\Models\Expansions\Expansion;
-use App\Models\Localizations\Language;
 use App\Traits\HasLocalizations;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -51,6 +50,8 @@ class Card extends Model
         'price_foil_avg_1' => 'decimal:2',
         'price_foil_avg_7' => 'decimal:2',
         'price_foil_avg_30' => 'decimal:2',
+        'colors' => 'array',
+        'color_identity' => 'array',
     ];
 
     protected $dates = [
@@ -185,6 +186,39 @@ class Card extends Model
         return self::import($cardmarketProductId);
     }
 
+
+
+    public function updateFromSkryfallByCardmarketId(int $cardmarket_id): self
+    {
+        // Skryfall Daten holen
+        try{
+            $skryfall_card = \App\APIs\Skryfall\Card::findByCardmarketId($cardmarket_id);
+        }
+        catch(\Exception $e){
+            return $this;
+        }
+
+        if (is_null($skryfall_card)) {
+            return $this;
+        }
+
+        $this->update([
+            'name' => $skryfall_card->name,
+            'skryfall_card_id' => $skryfall_card->id,
+            'cmc' => $skryfall_card->cmc,
+            'color_identity' => $skryfall_card->color_identity,
+            'colors' => $skryfall_card->colors,
+            'color_order_by' => $skryfall_card->color_order_by,
+            'type_line' => $skryfall_card->type_line,
+            'skryfall_image_small' => $skryfall_card->image_uri_small,
+            'skryfall_image_normal' => $skryfall_card->image_uri_normal,
+            'skryfall_image_large' => $skryfall_card->image_uri_large,
+            'skryfall_image_png' => $skryfall_card->image_uri_png,
+        ]);
+
+        return $this;
+    }
+
     public static function import(int $cardmarketProductId) : self
     {
         $cardmarketApi = App::make('CardmarketApi');
@@ -281,6 +315,11 @@ class Card extends Model
     public function getImagePathAttribute()
     {
         return Storage::url('public/items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg');
+    }
+
+    public function getHasSkryfallDataAttribute(): bool
+    {
+        return (! is_null($this->cmc));
     }
 
     public function expansion() : BelongsTo

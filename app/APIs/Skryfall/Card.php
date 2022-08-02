@@ -2,10 +2,11 @@
 
 namespace App\APIs\Skryfall;
 
-use App\APIs\Skryfall\CardCollection as Collection;
 use App\APIs\ApiModel;
-use GuzzleHttp\Exception\ClientException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
+use GuzzleHttp\Exception\ClientException;
+use App\APIs\Skryfall\CardCollection as Collection;
 
 class Card extends ApiModel
 {
@@ -20,6 +21,28 @@ class Card extends ApiModel
     public static function find(string $id)
     {
 
+    }
+
+    public static function findByCardmarketId(int $cardmarket_id)
+    {
+        $api = App::make('SkryfallApi');
+
+        try {
+            $attributes = $api->card->findByCardmarketId($cardmarket_id);
+
+            $model = new self();
+            $model->fill($attributes);
+
+            return $model;
+        }
+        catch(ClientException $e) {
+            return null;
+        }
+
+        $model = new self();
+        $model->fill($attributes);
+
+        return $model;
     }
 
     public static function findByCodeAndNumber(string $code, int $number)
@@ -78,6 +101,28 @@ class Card extends ApiModel
     public function getColorsStringAttribute() : string
     {
         return implode(', ', $this->attributes['colors'] ?? []);
+    }
+
+    public function getColorOrderByAttribute(): string
+    {
+        if ($this->type_line == 'Land') {
+            return 'L';
+        }
+
+        if (! is_array($this->color_identity)) {
+            return '';
+        }
+
+        $count = count($this->color_identity);
+        if ($count > 1) {
+            return 'M';
+        }
+
+        if ($count == 1) {
+            return Arr::get($this->color_identity, 0, '');
+        }
+
+        return '';
     }
 
     public function getColorIdentityStringAttribute() : string
@@ -148,6 +193,16 @@ class Card extends ApiModel
     public function getLegalitiesOldschoolAttribute() : string
     {
         return $this->legalities['oldschool'];
+    }
+
+    public function getImageUriSmallAttribute() : string
+    {
+        return $this->image_uris['small'] ?? '';
+    }
+
+    public function getImageUriNormalAttribute() : string
+    {
+        return $this->image_uris['normal'] ?? '';
     }
 
     public function getImageUriLargeAttribute() : string

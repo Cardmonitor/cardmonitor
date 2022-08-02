@@ -2,13 +2,27 @@
 
 namespace App\Models\Localizations;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Database\Eloquent\Model;
 
 class Language extends Model
 {
     const DEFAULT_ID = 1;
     const DEFAULT_NAME = 'English';
+
+    const GERMAN_TO_IDS = [
+        1 => 'Englisch',
+        2 => 'Französisch',
+        3 => 'Deutsch',
+        4 => 'Spanisch',
+        5 => 'Italienisch',
+        6 => 'S-Chinesisch',
+        7 => 'Japanisch',
+        8 => 'Portugiesisch',
+        9 => 'Koreanisch',
+        10 => 'T-Chinesisch',
+    ];
 
     public $incrementing = false;
 
@@ -25,6 +39,17 @@ class Language extends Model
         return Cache::rememberForever('language.' . $code, function () use ($code) {
             return self::firstWhere('code', $code);
         });
+    }
+
+    public static function getIdByGermanName(string $german_name): int
+    {
+        $id = array_search($german_name, self::GERMAN_TO_IDS);
+
+        if ($id === false) {
+            return 0;
+        }
+
+        return $id;
     }
 
     public static function setup()

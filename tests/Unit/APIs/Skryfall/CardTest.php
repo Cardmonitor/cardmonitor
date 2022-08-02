@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\APIs\Skryfall;
 
-use App\APIs\Skryfall\Card;
-use App\APIs\Skryfall\CardCollection;
-use Illuminate\Support\Carbon;
 use Tests\TestCase;
+use App\APIs\Skryfall\Card;
+use Illuminate\Support\Carbon;
+use App\APIs\Skryfall\CardCollection;
 
 class CardTest extends TestCase
 {
@@ -18,6 +18,45 @@ class CardTest extends TestCase
 
         $model = Card::findByCodeAndNumber('mmq', 1);
         $this->assertInstanceOf(Card::class, $model);
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_the_color_order_by_attribute()
+    {
+        $model = new Card();
+
+        $this->assertEquals('', $model->color_order_by);
+
+        $model->color_identity = [];
+        $this->assertEquals('', $model->color_order_by);
+
+        $model->color_identity = ['W'];
+        $this->assertEquals('W', $model->color_order_by);
+
+        $model->color_identity = ['W', 'U'];
+        $this->assertEquals('M', $model->color_order_by);
+
+        $model->type_line = 'Land';
+        $model->color_identity = ['W'];
+        $this->assertEquals('L', $model->color_order_by);
+    }
+
+    /**
+     * @test
+     */
+    public function it_finds_a_card_by_cardmarket_id()
+    {
+        $this->markTestSkipped();
+
+        $model = Card::findByCardmarketId(301775);
+        $this->assertInstanceOf(Card::class, $model);
+        $this->assertEquals('c3f1f41e-98fc-4f6b-b287-c8899dff8ab0', $model->id);
+        $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/small/front/c/3/c3f1f41e-98fc-4f6b-b287-c8899dff8ab0.jpg?1562563557', $model->image_uri_small);
+        $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/normal/front/c/3/c3f1f41e-98fc-4f6b-b287-c8899dff8ab0.jpg?1562563557', $model->image_uri_normal);
+        $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/large/front/c/3/c3f1f41e-98fc-4f6b-b287-c8899dff8ab0.jpg?1562563557', $model->image_uri_large);
+        $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/png/front/c/3/c3f1f41e-98fc-4f6b-b287-c8899dff8ab0.png?1562563557', $model->image_uri_png);
     }
 
     /**

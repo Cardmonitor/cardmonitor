@@ -19,8 +19,8 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('shipping_method_id');
 
             $table->unsignedBigInteger('cardmarket_order_id');
-            $table->unsignedBigInteger('buyer_id');
-            $table->unsignedBigInteger('seller_id');
+            $table->unsignedBigInteger('buyer_id')->nullable();
+            $table->unsignedBigInteger('seller_id')->nullable();
 
             $table->string('state');
             $table->dateTime('bought_at')->nullable();

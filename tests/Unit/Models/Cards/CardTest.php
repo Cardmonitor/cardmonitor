@@ -253,4 +253,29 @@ class CardTest extends TestCase
 
         $this->assertTrue(Card::hasLatestPrices());
     }
+
+    /**
+     * @test
+     */
+    public function it_can_be_updated_from_skryfall_by_cardmarket_id()
+    {
+        $cardmarket_id = 265882;
+
+        $expansion = factory(Expansion::class)->create([
+            'name' => 'Born of the Gods',
+        ]);
+
+        $card = factory(Card::class)->create([
+            'cardmarket_product_id' => $cardmarket_id,
+            'expansion_id' => $expansion->id,
+        ]);
+
+        $card->updateFromSkryfallByCardmarketId($cardmarket_id);
+
+        $this->assertEquals('1c2b1eeb-6cc9-48a7-a068-afa1011c45f2', $card->skryfall_card_id);
+        $this->assertEquals('Shrike Harpy', $card->name);
+        $this->assertEquals(['B'], $card->color_identity);
+        $this->assertEquals(['B'], $card->colors);
+        $this->assertEquals('Creature — Harpy', $card->type_line);
+    }
 }

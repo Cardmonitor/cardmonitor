@@ -404,41 +404,45 @@ class Order extends Model
 
     protected function addArticleFromCardmarket(array $cardmarketArticle)
     {
-        // Article finden, wenn nicht vorhanden
-        $articles = $this->articles()
-            ->where('cardmarket_article_id', $cardmarketArticle['idArticle'])
-            ->where('user_id', $this->user_id)
-            ->limit($cardmarketArticle['count'])
-            ->get();
-        $articles_count = count($articles);
-        $articles_left_count = ($cardmarketArticle['count'] - $articles_count);
-        if ($articles_left_count == 0) {
-            return;
-        }
+        $articles_left_count = $cardmarketArticle['count'];
 
-        // Article mit cardmarket_article_id
-        $articles = Article::where('articles.user_id', $this->user_id)
-            ->whereNull('sold_at')
-            ->where('articles.cardmarket_article_id', $cardmarketArticle['idArticle'])
-            ->where('articles.language_id', $cardmarketArticle['language']['idLanguage'])
-            ->where('articles.condition', Arr::get($cardmarketArticle, 'condition', ''))
-            ->where('articles.unit_price', $cardmarketArticle['price'])
-            ->where('is_foil', $cardmarketArticle['isFoil'] ?? false)
-            ->where('is_signed', $cardmarketArticle['isSigned'] ?? false)
-            ->where('is_altered', $cardmarketArticle['isAltered'] ?? false)
-            ->where('is_playset', $cardmarketArticle['isPlayset'] ?? false)
-            ->limit($articles_left_count)
-            ->get();
-        foreach ($articles as $key => $article) {
-            $this->articles()->attach($article->id);
-            $article->update([
-                'articles.sold_at' => $this->paid_at,
-            ]);
-        }
-        $articles_count = count($articles);
-        $articles_left_count -= $articles_count;
-        if ($articles_left_count == 0) {
-            return;
+        // Article finden, wenn nicht vorhanden
+        if (! is_null($cardmarketArticle['idArticle'])) {
+            $articles = $this->articles()
+                ->where('cardmarket_article_id', $cardmarketArticle['idArticle'])
+                ->where('user_id', $this->user_id)
+                ->limit($cardmarketArticle['count'])
+                ->get();
+            $articles_count = count($articles);
+            $articles_left_count -= $articles_count;
+            if ($articles_left_count == 0) {
+                return;
+            }
+
+            // Article mit cardmarket_article_id
+            $articles = Article::where('articles.user_id', $this->user_id)
+                ->whereNull('sold_at')
+                ->where('articles.cardmarket_article_id', $cardmarketArticle['idArticle'])
+                ->where('articles.language_id', $cardmarketArticle['language']['idLanguage'])
+                ->where('articles.condition', Arr::get($cardmarketArticle, 'condition', ''))
+                ->where('articles.unit_price', $cardmarketArticle['price'])
+                ->where('is_foil', $cardmarketArticle['isFoil'] ?? false)
+                ->where('is_signed', $cardmarketArticle['isSigned'] ?? false)
+                ->where('is_altered', $cardmarketArticle['isAltered'] ?? false)
+                ->where('is_playset', $cardmarketArticle['isPlayset'] ?? false)
+                ->limit($articles_left_count)
+                ->get();
+            foreach ($articles as $key => $article) {
+                $this->articles()->syncWithoutDetaching([$article->id]);
+                $article->update([
+                    'articles.sold_at' => $this->paid_at,
+                ]);
+            }
+            $articles_count = count($articles);
+            $articles_left_count -= $articles_count;
+            if ($articles_left_count == 0) {
+                return;
+            }
         }
 
         $articles = Article::select('articles.*')
@@ -456,7 +460,7 @@ class Order extends Model
             ->limit($articles_left_count)
             ->get();
         foreach ($articles as $key => $article) {
-            $this->articles()->attach($article->id);
+            $this->articles()->syncWithoutDetaching([$article->id]);
             $article->update([
                 'articles.sold_at' => $this->paid_at,
                 'articles.cardmarket_article_id' => $cardmarketArticle['idArticle'],
