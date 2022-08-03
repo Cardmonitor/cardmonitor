@@ -4,6 +4,7 @@ namespace App\Console\Commands\Card;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Storage;
 
 class SyncCommand extends Command
 {
