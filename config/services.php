@@ -34,6 +34,13 @@ return [
         'secret' => env('SPARKPOST_SECRET'),
     ],
 
+    'cardmarket' => [
+        'app_token' => env('CARDMARKET_APP_TOKEN'),
+        'app_secret' => env('CARDMARKET_APP_SECRET'),
+        'access_token' => env('CARDMARKET_ACCESS_TOKEN'),
+        'access_token_secret' => env('CARDMARKET_ACCESS_TOKEN_SECRET'),
+    ],
+
     'dropbox' => [
         'accesstoken' => env('DROPBOX_ACCESSTOKEN'),
         'client_id' => env('DROPBOX_CLIENT_ID'),

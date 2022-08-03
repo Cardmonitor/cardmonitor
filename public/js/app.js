@@ -1935,7 +1935,7 @@ __webpack_require__.r(__webpack_exports__);
       required: true
     },
     defaultCardCosts: {
-      type: Object,
+      type: Array,
       required: true
     },
     expansions: {
@@ -9684,9 +9684,9 @@ var render = function render() {
       attrs: {
         href: item.path
       }
-    }, [_vm._v(_vm._s(item.cardmarket_order_id))]), _vm._v(" "), _c("div", {
+    }, [_vm._v(_vm._s(item.cardmarket_order_id))]), _vm._v(" "), item.buyer ? _c("div", {
       staticClass: "text-muted"
-    }, [_vm._v(_vm._s(item.buyer.name))])]), _vm._v(" "), _c("td", {
+    }, [_vm._v(_vm._s(item.buyer.name))]) : _vm._e()]), _vm._v(" "), _c("td", {
       staticClass: "align-middle d-none d-sm-table-cell"
     }, [_c("div", [_vm._v(_vm._s(item.revenue_formatted) + " € ")]), _vm._v(" "), _c("div", [_vm._v(_vm._s(item.articles_count) + " " + _vm._s(_vm.$t("app.article")))])]), _vm._v(" "), _c("td", {
       staticClass: "align-middle text-right"

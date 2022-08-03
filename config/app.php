@@ -487,11 +487,6 @@ return [
 
     ],
 
-    'cardmarket_api' => [
-        'app_token' => env('CARDMARKET_APP_TOKEN'),
-        'app_secret' => env('CARDMARKET_APP_SECRET'),
-    ],
-
     'fints' => [
         'registration_no' => env('FHP_REGISTRATION_NO'),
         'bank_url' => env('FHP_BANK_URL'),

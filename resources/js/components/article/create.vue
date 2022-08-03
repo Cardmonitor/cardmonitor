@@ -267,7 +267,7 @@
                 required: true,
             },
             defaultCardCosts: {
-                type: Object,
+                type: Array,
                 required: true,
             },
             expansions: {

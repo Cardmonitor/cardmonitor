@@ -24,7 +24,7 @@
                             <td class="align-middle d-none d-md-table-cell">{{ item.paid_at_formatted }}</td>
                             <td class="align-middle">
                                 <a :href="item.path">{{ item.cardmarket_order_id }}</a>
-                                <div class="text-muted">{{ item.buyer.name }}</div>
+                                <div class="text-muted" v-if="item.buyer">{{ item.buyer.name }}</div>
                             </td>
                             <td class="align-middle d-none d-sm-table-cell">
                                 <div>{{ item.revenue_formatted }} € </div>

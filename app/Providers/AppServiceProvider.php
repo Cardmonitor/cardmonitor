@@ -23,14 +23,21 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('CardmarketApi', function ($app, array $parameters) {
 
             $access = [
-                'app_token' => config('app.cardmarket_api.app_token'),
-                'app_secret' => config('app.cardmarket_api.app_secret'),
                 'url' => (($this->app->environment() == 'production') ? Api::URL_API : Api::URL_SANDBOX),
             ];
 
             if (Arr::has($parameters, 'api')) {
                 $access += $parameters['api']->accessdata;
             }
+            else {
+                $access += [
+                    'app_token' => config('services.cardmarket.app_token'),
+                    'app_secret' => config('services.cardmarket.app_secret'),
+                    'access_token' => config('services.cardmarket.access_token'),
+                    'access_token_secret' => config('services.cardmarket.access_token_secret'),
+                ];
+            }
+
 
             return new Api($access, [
                 'timeout' => 30,

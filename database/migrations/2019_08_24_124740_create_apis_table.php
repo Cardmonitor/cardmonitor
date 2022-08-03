@@ -17,9 +17,9 @@ class CreateApisTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
 
-            $table->string('request_token')->nullable();
-            $table->string('access_token')->nullable();
-            $table->string('access_token_secret')->nullable();
+            $table->text('request_token')->nullable();
+            $table->text('access_token')->nullable();
+            $table->text('access_token_secret')->nullable();
 
             $table->dateTime('invalid_at')->nullable();
 

@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +47,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home/article', 'Home\Articles\ArticleController@index');
     Route::get('/home/order/month/{year}/{month}', 'Home\Orders\MonthController@index')->name('home.order.month');
     Route::get('/home/order/year/{year}', 'Home\Orders\YearController@index')->name('home.order.year');
+
+    Route::put('api/{api}', 'Apis\ApiController@update')->name('api.update');
+    Route::delete('api/{api}', 'Apis\ApiController@destroy')->name('api.destroy');
 
     Route::get('article/sync', 'Cardmarket\Articles\ArticleController@index');
     Route::put('article/sync', 'Cardmarket\Articles\ArticleController@update')->name('article.sync.update');
