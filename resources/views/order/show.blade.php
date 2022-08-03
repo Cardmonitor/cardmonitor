@@ -70,14 +70,18 @@
                         <div class="col-label"><b>{{ __('order.id') }}</b></div>
                         <div class="col-value">{{ $model->cardmarket_order_id }}</div>
                     </div>
-                    <div class="row">
-                        <div class="col-label"><b>{{ __('order.buyer') }}</b></div>
-                        <div class="col-value">{{ $model->buyer->username }}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label"><b>{{ __('order.seller') }}</b></div>
-                        <div class="col-value">{{ $model->seller->username }}</div>
-                    </div>
+                    @if ($model->buyer)
+                        <div class="row">
+                            <div class="col-label"><b>{{ __('order.buyer') }}</b></div>
+                            <div class="col-value">{{ $model->buyer->username }}</div>
+                        </div>
+                    @endif
+                    @if ($model->seller)
+                        <div class="row">
+                            <div class="col-label"><b>{{ __('order.seller') }}</b></div>
+                            <div class="col-value">{{ $model->seller->username }}</div>
+                        </div>
+                    @endif
                     <div class="row">
                         <div class="col-label"><b>{{ __('app.cards') }}</b></div>
                         <div class="col-value">{{ $model->articles_count }}</div>
@@ -233,7 +237,7 @@
 
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{ __('order.show.message_modal.title', ['buyer' => $model->buyer->username]) }}</h5>
+                        <h5 class="modal-title">{{ __('order.show.message_modal.title', ['buyer' => ($model->buyer ? $model->buyer->username : '')]) }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

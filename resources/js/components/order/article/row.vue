@@ -3,7 +3,7 @@
         <td class="align-middle d-none d-sm-table-cell pointer" @click="toShow">{{ (index + 1) }}</td>
         <td class="align-middle text-center pointer" @click="toShow"><i class="fas fa-fw" :class="item.state_icon" :title="item.state_comments"></i></td>
         <td class="align-middle pointer" @click="toShow">
-            <div><span class="flag-icon" :class="'flag-icon-' + item.language.code" :title="item.language.name"></span> {{ item.localName }}<span v-if="item.card.number"> ({{ item.card.number }})</span></div>
+            <div><span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.localName }}<span v-if="item.card.number"> ({{ item.card.number }})</span></div>
             <div v-if="item.cardmarket_comments">{{ item.cardmarket_comments }}</div>
         </td>
         <td class="align-middle pointer" @click="toShow"><expansion-icon :expansion="item.card.expansion" :show-name="false"></expansion-icon></td>

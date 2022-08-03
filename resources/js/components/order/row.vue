@@ -3,7 +3,7 @@
         <td class="align-middle d-none d-sm-table-cell pointer" @click="link">{{ item.paid_at }}</td>
         <td class="align-middle pointer" @click="link">
             <div>{{ item.cardmarket_order_id }}</div>
-            <div class="text-muted">{{ item.buyer.name }}</div>
+            <div class="text-muted" v-if="item.buyer">{{ item.buyer.name }}</div>
         </td>
         <td class="align-middle d-none d-md-table-cell text-right pointer" @click="link">{{ item.articles_count }}</td>
         <td class="align-middle d-none d-md-table-cell text-right pointer" @click="link">{{ Number(item.revenue).toFixed(2) }} €</td>

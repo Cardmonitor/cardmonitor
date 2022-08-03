@@ -3,11 +3,11 @@
 
         <td class="align-middle d-none d-xl-table-cell pointer"><i class="fas fa-image" @mouseover="show($event)" @mouseout="$emit('hide')"></i></td>
         <td class="align-middle">
-            <span class="flag-icon" :class="'flag-icon-' + item.language.code" :title="item.language.name"></span> {{ item.localName }} ({{ item.card.number }})
+            <span class="fi-icon" :class="'fi-icon-' + item.language.code" :title="item.language.name"></span> {{ item.localName }} ({{ item.card.number }})
             <div class="text-muted" v-if="item.language_id != 1">{{ item.card.name }}</div></td>
         <td class="align-middle text-center"><expansion-icon :expansion="item.card.expansion" :show-name="false"></expansion-icon></td>
         <td class="align-middle d-none d-xl-table-cell text-center"><rarity :value="item.card.rarity"></rarity></td>
-        <td class="align-middle d-none d-lg-table-cell text-center"><span class="flag-icon" :class="'flag-icon-' + item.language.code" :title="item.language.name"></span></td>
+        <td class="align-middle d-none d-lg-table-cell text-center"><span class="fi-icon" :class="'fi-icon-' + item.language.code" :title="item.language.name"></span></td>
         <td class="align-middle d-none d-lg-table-cell text-center"><condition :value="item.condition"></condition></td>
         <td class="align-middle d-none d-xl-table-cell text-center">
             <i class="fas fa-star text-warning" v-if="item.is_foil"></i>
