@@ -56,7 +56,7 @@
                             <div>{{ $article->local_name }}</div>
                             <div class="text-muted">{{ $article->card->name }}</div>
                         </td>
-                        <td class="align-middle text-right">{{ $article->amount }}</td>
+                        <td class="align-middle text-right">{{ $article->amount_picklist }}</td>
                         <td class="align-middle">{{ $article->condition }}</td>
                         <td class="align-middle">{{ $article->language->name }}</td>
                         <td class="align-middle text-center">{{ $article->card->rarity }}</td>

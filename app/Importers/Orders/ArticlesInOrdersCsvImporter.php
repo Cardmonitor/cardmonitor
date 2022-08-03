@@ -7,7 +7,6 @@ use App\Models\Games\Game;
 use Illuminate\Support\Arr;
 use App\Models\Orders\Order;
 use App\Models\Localizations\Language;
-use Illuminate\Support\Facades\Storage;
 
 class ArticlesInOrdersCsvImporter
 {
@@ -35,13 +34,15 @@ class ArticlesInOrdersCsvImporter
     {
         $article_rows = [];
         $handle = fopen($filepath, "r");
-        while (($raw_string = fgets($handle)) !== false) {
+        $article_rows_counter = 0;
+        while (($raw_string = trim(fgets($handle))) !== false) {
             if (empty($raw_string)) {
-                continue;
+                break;
             }
 
             $row = str_getcsv($raw_string, ';');
             $article_rows[] = $row;
+            $article_rows_counter++;
         }
         fclose($handle);
 
