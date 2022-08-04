@@ -48,7 +48,7 @@ class CardTest extends TestCase
      */
     public function it_finds_a_card_by_cardmarket_id()
     {
-        $this->markTestSkipped();
+        // $this->markTestSkipped();
 
         $model = Card::findByCardmarketId(301775);
         $this->assertInstanceOf(Card::class, $model);
@@ -64,7 +64,7 @@ class CardTest extends TestCase
      */
     public function it_has_an_image_if_the_card_has_two_faces()
     {
-        $this->markTestSkipped();
+        // $this->markTestSkipped();
 
         $model = Card::findByCardmarketId(496410);
         $this->assertInstanceOf(Card::class, $model);
@@ -73,6 +73,14 @@ class CardTest extends TestCase
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/normal/front/6/0/609d3ecf-f88d-4268-a8d3-4bf2bcf5df60.jpg?1604195984', $model->image_uri_normal);
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/large/front/6/0/609d3ecf-f88d-4268-a8d3-4bf2bcf5df60.jpg?1604195984', $model->image_uri_large);
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/png/front/6/0/609d3ecf-f88d-4268-a8d3-4bf2bcf5df60.png?1604195984', $model->image_uri_png);
+
+        $model = Card::findByCardmarketId(497835);
+        $this->assertInstanceOf(Card::class, $model);
+        $this->assertEquals('531d60ad-39f6-4d79-b276-ec70636b123b', $model->id);
+        $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/small/front/5/3/531d60ad-39f6-4d79-b276-ec70636b123b.jpg?1599766870', $model->image_uri_small);
+        $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/normal/front/5/3/531d60ad-39f6-4d79-b276-ec70636b123b.jpg?1599766870', $model->image_uri_normal);
+        $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/large/front/5/3/531d60ad-39f6-4d79-b276-ec70636b123b.jpg?1599766870', $model->image_uri_large);
+        $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/png/front/5/3/531d60ad-39f6-4d79-b276-ec70636b123b.png?1599766870', $model->image_uri_png);
     }
 
     /**

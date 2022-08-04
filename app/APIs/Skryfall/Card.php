@@ -136,11 +136,15 @@ class Card extends ApiModel
 
     public function getImageUrisAttribute(): array
     {
-        if (array_key_exists('card_faces', $this->attributes)) {
+        if (Arr::has($this->attributes, 'image_uris')) {
+            return $this->attributes['image_uris'];
+        }
+
+        if (Arr::has($this->attributes, 'card_faces.0.image_uris')) {
             return $this->attributes['card_faces'][0]['image_uris'];
         }
 
-        return $this->attributes['image_uris'];
+        return [];
     }
 
     public function getColorIdentityStringAttribute() : string
