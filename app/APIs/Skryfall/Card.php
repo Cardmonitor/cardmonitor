@@ -110,11 +110,11 @@ class Card extends ApiModel
             return 'L';
         }
 
-        if (! is_array($this->color_identity)) {
+        if (! is_array($this->colors)) {
             return '';
         }
 
-        $count = count($this->color_identity);
+        $count = count($this->colors);
 
         // Multicolor
         if ($count > 1) {
@@ -128,10 +128,23 @@ class Card extends ApiModel
 
         // Color
         if ($count == 1) {
-            return Arr::get($this->color_identity, 0, '');
+            return Arr::get($this->colors, 0, '');
         }
 
         return '';
+    }
+
+    public function getColorsAttribute(): array
+    {
+        if (Arr::has($this->attributes, 'colors')) {
+            return $this->attributes['colors'];
+        }
+
+        if (Arr::has($this->attributes, 'card_faces.0.colors')) {
+            return $this->attributes['card_faces'][0]['colors'];
+        }
+
+        return [];
     }
 
     public function getImageUrisAttribute(): array
