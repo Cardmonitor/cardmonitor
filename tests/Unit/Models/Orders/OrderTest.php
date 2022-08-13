@@ -5,14 +5,11 @@ namespace Tests\Unit\Models\Orders;
 use App\Models\Articles\Article;
 use App\Models\Expansions\Expansion;
 use App\Models\Images\Image;
-use App\Models\Items\Card;
 use App\Models\Items\Item;
 use App\Models\Orders\Evaluation;
 use App\Models\Orders\Order;
 use App\Models\Users\CardmarketUser;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Tests\Traits\RelationshipAssertions;
 
@@ -146,6 +143,7 @@ class OrderTest extends TestCase
             $cards[$key] = factory(\App\Models\Cards\Card::class)->create([
                 'cardmarket_product_id' => $cardmarketArticle['idProduct'],
                 'rarity' => $cardmarketArticle['product']['rarity'],
+                'name' => $cardmarketArticle['product']['enName'],
             ]);
         }
 
@@ -180,7 +178,7 @@ class OrderTest extends TestCase
         $this->assertCount(1, Order::all());
         $this->assertCount(2, CardmarketUser::all());
         $this->assertCount(4, \App\Models\Cards\Card::all());
-        $this->assertCount(16, $order->articles);
+        $this->assertCount($cardmarketOrder['order']['articleCount'], $order->fresh()->articles);
     }
 
     /**

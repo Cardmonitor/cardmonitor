@@ -2,8 +2,6 @@
 
 namespace Tests\Unit\Models\Users;
 
-use Mockery;
-use App\Models\Apis\Api;
 use App\Models\Articles\Article;
 use App\Models\Items\Item;
 use App\Models\Orders\Order;
@@ -12,8 +10,6 @@ use App\Models\Storages\Storage;
 use App\Models\Users\Balance;
 use App\Support\Users\CardmarketApi;
 use App\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Tests\Traits\RelationshipAssertions;
 

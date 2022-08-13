@@ -5,6 +5,7 @@ namespace Tests\Feature\Controller\Orders\Picklists;
 use Tests\TestCase;
 use App\Models\Cards\Card;
 use App\Models\Orders\Order;
+use Illuminate\Http\Response;
 use App\Models\Articles\Article;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
@@ -41,7 +42,7 @@ class PicklistControllerTest extends TestCase
         $response = $this->post('/order/picklist', [
             'articles_in_orders' => new UploadedFile($path, $filename, null, null, true),
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
         $this->assertCount(1, Order::all());
         $this->assertCount(2, Article::all());
         $this->assertCount(2, Card::all());

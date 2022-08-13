@@ -4,8 +4,6 @@ namespace Tests\Feature\Controller\Articles;
 
 use App\Models\Articles\Article;
 use App\Models\Cards\Card;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Tests\TestCase;

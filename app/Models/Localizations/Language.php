@@ -46,7 +46,7 @@ class Language extends Model
         $id = array_search($german_name, self::GERMAN_TO_IDS);
 
         if ($id === false) {
-            return 0;
+            return self::DEFAULT_ID;
         }
 
         return $id;

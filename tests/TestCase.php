@@ -2,14 +2,14 @@
 
 namespace Tests;
 
-use App\Models\Items\Item;
-use App\Models\Localizations\Language;
 use App\User;
+use App\Models\Items\Item;
+use Illuminate\Http\Response;
+use Illuminate\Testing\TestResponse;
+use App\Models\Localizations\Language;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Illuminate\Foundation\Testing\TestResponse;
-use Illuminate\Http\Response;
 
 abstract class TestCase extends BaseTestCase
 {

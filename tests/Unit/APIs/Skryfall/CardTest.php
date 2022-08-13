@@ -27,7 +27,7 @@ class CardTest extends TestCase
     {
         $model = new Card();
 
-        $this->assertEquals('', $model->color_order_by);
+        $this->assertEquals('C', $model->color_order_by);
 
         $model->colors = [];
         $this->assertEquals('C', $model->color_order_by);

@@ -435,7 +435,7 @@ class Order extends Model
             foreach ($articles as $key => $article) {
                 $this->articles()->syncWithoutDetaching([$article->id]);
                 $article->update([
-                    'articles.sold_at' => $this->paid_at,
+                    'sold_at' => $this->paid_at,
                 ]);
             }
             $articles_count = count($articles);
@@ -462,8 +462,8 @@ class Order extends Model
         foreach ($articles as $key => $article) {
             $this->articles()->syncWithoutDetaching([$article->id]);
             $article->update([
-                'articles.sold_at' => $this->paid_at,
-                'articles.cardmarket_article_id' => $cardmarketArticle['idArticle'],
+                'sold_at' => $this->paid_at,
+                'cardmarket_article_id' => $cardmarketArticle['idArticle'],
             ]);
         }
         $articles_count = count($articles);

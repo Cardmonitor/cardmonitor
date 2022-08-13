@@ -20,6 +20,7 @@ class SentControllerTest extends TestCase
     protected function tearDown() : void
     {
         Mockery::close();
+        Storage::disk('local')->delete('import.csv');
     }
 
     /**
@@ -58,7 +59,7 @@ class SentControllerTest extends TestCase
         $this->assertFileExists($path);
 
         $response = $this->post('/order/import/sent', [
-            'import_sent_file' => new UploadedFile($path, $filename, filesize($path), null, null, true),
+            'import_sent_file' => new UploadedFile($path, $filename, filesize($path), null, true),
         ]);
 
         $response->assertSessionHasNoErrors()
