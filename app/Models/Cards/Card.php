@@ -282,7 +282,6 @@ class Card extends Model
             $CardmarketApi->product->download($this->image, $filename);
         }
         catch(\Exception $e) {
-            echo ' Datei ' . $this->image . ' konnte nicht heruntergeladen werden!';
             return;
         }
     }
