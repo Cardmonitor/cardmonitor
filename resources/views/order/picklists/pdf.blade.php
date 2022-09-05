@@ -60,6 +60,7 @@
                     <th>Zustand</th>
                     <th>Sprache</th>
                     <th class="text-center">Seltenheit</th>
+                    <th class="text-right">#</th>
                 </thead>
                 <tbody>
                     @foreach ($articles as $article)
@@ -77,6 +78,7 @@
                             <td class="align-middle">{{ $article->condition }}</td>
                             <td class="align-middle">{{ $article->language->name }}</td>
                             <td class="align-middle text-center">{{ $article->card->rarity }}</td>
+                            <td class="align-middle text-right">{{ $article->card->number }}</td>
                         </tr>
                     @endforeach
                 </tbody>

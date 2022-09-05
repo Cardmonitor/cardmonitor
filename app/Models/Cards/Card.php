@@ -203,17 +203,18 @@ class Card extends Model
         }
 
         $this->update([
-            'name' => $skryfall_card->name,
-            'skryfall_card_id' => $skryfall_card->id,
             'cmc' => $skryfall_card->cmc,
             'color_identity' => $skryfall_card->color_identity,
-            'colors' => $skryfall_card->colors,
             'color_order_by' => $skryfall_card->color_order_by,
-            'type_line' => $skryfall_card->type_line,
-            'skryfall_image_small' => $skryfall_card->image_uri_small,
-            'skryfall_image_normal' => $skryfall_card->image_uri_normal,
+            'colors' => $skryfall_card->colors,
+            'name' => $skryfall_card->name,
+            'number' => $skryfall_card->collector_number,
+            'skryfall_card_id' => $skryfall_card->id,
             'skryfall_image_large' => $skryfall_card->image_uri_large,
+            'skryfall_image_normal' => $skryfall_card->image_uri_normal,
             'skryfall_image_png' => $skryfall_card->image_uri_png,
+            'skryfall_image_small' => $skryfall_card->image_uri_small,
+            'type_line' => $skryfall_card->type_line,
         ]);
 
         return $this;
@@ -318,7 +319,7 @@ class Card extends Model
 
     public function getHasSkryfallDataAttribute(): bool
     {
-        return (! is_null($this->cmc));
+        return (! is_null($this->cmc) && !is_null($this->number));
     }
 
     public function getColorNameAttribute(): string

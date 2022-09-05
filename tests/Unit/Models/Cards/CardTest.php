@@ -279,6 +279,7 @@ class CardTest extends TestCase
         $this->assertEquals(['B'], $card->color_identity);
         $this->assertEquals(['B'], $card->colors);
         $this->assertEquals('Creature — Harpy', $card->type_line);
+        $this->assertEquals(83, $card->number);
     }
 
     /**

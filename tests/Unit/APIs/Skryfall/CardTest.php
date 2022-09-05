@@ -67,6 +67,7 @@ class CardTest extends TestCase
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/normal/front/c/3/c3f1f41e-98fc-4f6b-b287-c8899dff8ab0.jpg?1562563557', $model->image_uri_normal);
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/large/front/c/3/c3f1f41e-98fc-4f6b-b287-c8899dff8ab0.jpg?1562563557', $model->image_uri_large);
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/png/front/c/3/c3f1f41e-98fc-4f6b-b287-c8899dff8ab0.png?1562563557', $model->image_uri_png);
+        $this->assertEquals(96, $model->collector_number);
     }
 
     /**
@@ -84,6 +85,7 @@ class CardTest extends TestCase
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/normal/front/6/0/609d3ecf-f88d-4268-a8d3-4bf2bcf5df60.jpg?1604195984', $model->image_uri_normal);
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/large/front/6/0/609d3ecf-f88d-4268-a8d3-4bf2bcf5df60.jpg?1604195984', $model->image_uri_large);
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/png/front/6/0/609d3ecf-f88d-4268-a8d3-4bf2bcf5df60.png?1604195984', $model->image_uri_png);
+        $this->assertEquals(111, $model->collector_number);
 
         $model = Card::findByCardmarketId(497835);
         $this->assertInstanceOf(Card::class, $model);
@@ -93,6 +95,7 @@ class CardTest extends TestCase
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/normal/front/5/3/531d60ad-39f6-4d79-b276-ec70636b123b.jpg?1599766870', $model->image_uri_normal);
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/large/front/5/3/531d60ad-39f6-4d79-b276-ec70636b123b.jpg?1599766870', $model->image_uri_large);
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/png/front/5/3/531d60ad-39f6-4d79-b276-ec70636b123b.png?1599766870', $model->image_uri_png);
+        $this->assertEquals(239, $model->collector_number);
     }
 
     /**
