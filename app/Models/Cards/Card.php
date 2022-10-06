@@ -168,13 +168,9 @@ class Card extends Model
                     'name' => $localization['name'],
                 ]);
             }
-
-            if (! Storage::exists('public/items/' . $model->game_id . '/' . $model->expansion_id . '/' . $model->id . '.jpg')) {
-                $model->download();
-            }
         }
 
-
+        $model->download();
 
         if (! $model->hasSkryfallData) {
             $model->updateFromSkryfallByCardmarketId($model->cardmarket_product_id);
