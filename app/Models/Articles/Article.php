@@ -595,9 +595,7 @@ class Article extends Model
 
     public function getSkuAttribute() : string
     {
-        $expansion = (is_null($this->card->expansion_id) ? '' : '-' . strtoupper($this->card->expansion->abbreviation));
-
-        return $this->card_id . $expansion . '-' . strtoupper($this->language->code) . ($this->is_altered ? '-A' : '') . ($this->is_foil ? '-F' : '');
+        return 'A11360';
     }
 
     public static function skuToAttributes(string $sku) : array
