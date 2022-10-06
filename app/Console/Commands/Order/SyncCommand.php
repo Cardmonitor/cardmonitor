@@ -52,7 +52,9 @@ class SyncCommand extends Command
             $cardmarketOrder = $this->user->cardmarketApi->order->get($order_id);
             dump($cardmarketOrder['order']);
 
-            return Order::updateOrCreateFromCardmarket($this->user->id, $cardmarketOrder['order'], Order::FORCE_UPDATE_OR_CREATE);
+            Order::updateOrCreateFromCardmarket($this->user->id, $cardmarketOrder['order'], Order::FORCE_UPDATE_OR_CREATE);
+
+            return self::SUCCESS;
         }
 
         try {
@@ -72,6 +74,8 @@ class SyncCommand extends Command
         finally {
             $this->processed();
         }
+
+        return self::SUCCESS;
     }
 
     public function processing()
