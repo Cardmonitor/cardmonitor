@@ -169,7 +169,16 @@ class Card extends Model
                 ]);
             }
 
-            $model->download();
+            if (! Storage::exists('public/items/' . $model->game_id . '/' . $model->expansion_id . '/' . $model->id . '.jpg')) {
+                $model->download();
+            }
+        }
+
+
+
+        if (! $model->hasSkryfallData) {
+            $model->updateFromSkryfallByCardmarketId($model->cardmarket_product_id);
+            usleep(100000); // Skryfall: We kindly ask that you insert 50 – 100 milliseconds of delay between the requests
         }
 
         return $model;
@@ -194,7 +203,7 @@ class Card extends Model
         try{
             $skryfall_card = \App\APIs\Skryfall\Card::findByCardmarketId($cardmarket_id);
         }
-        catch(\Exception $e){
+        catch(\Exception $e) {
             return $this;
         }
 
