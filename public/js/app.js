@@ -9645,7 +9645,9 @@ var render = function render() {
     staticClass: "card-header d-flex align-items-center"
   }, [_c("div", {
     staticClass: "col"
-  }, [_vm._v(_vm._s(_vm.$t("order.home.paid.title")))]), _vm._v(" "), _c("div", [_c("i", {
+  }, [_vm._v(_vm._s(_vm.$t("order.home.paid.title")))]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "ml-3"
+  }, [_c("i", {
     staticClass: "fas fa-sync pointer",
     "class": {
       "fa-spin": _vm.syncing.status == 1
@@ -9663,7 +9665,7 @@ var render = function render() {
     on: {
       click: _vm.download
     }
-  })]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1)]), _vm._v(" "), _c("div", {
+  })]), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm._m(2)]), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_vm.isLoading ? _c("div", {
     staticClass: "mt-3 p-5"
@@ -9705,6 +9707,16 @@ var render = function render() {
 };
 
 var staticRenderFns = [function () {
+  var _vm = this,
+      _c = _vm._self._c;
+
+  return _c("div", [_c("a", {
+    staticClass: "text-body",
+    attrs: {
+      href: "/order/picklist"
+    }
+  }, [_vm._v("Pickliste")])]);
+}, function () {
   var _vm = this,
       _c = _vm._self._c;
 
