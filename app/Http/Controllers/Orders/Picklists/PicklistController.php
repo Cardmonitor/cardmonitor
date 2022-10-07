@@ -16,13 +16,12 @@ class PicklistController extends Controller
 
         $articles = Article::getForPicklist($user->id);
 
-        $cards = $articles->pluck('card')->unique();
-        foreach ($cards as $card) {
-            if ($card->hasSkryfallData) {
+        foreach ($articles as $article) {
+            if ($article->card->hasSkryfallData) {
                 continue;
             }
 
-            $card->updateFromSkryfallByCardmarketId($card->cardmarket_product_id);
+            $article->card->updateFromSkryfallByCardmarketId($article->card->cardmarket_product_id);
         }
 
         return view('order.picklists.index', compact('articles'));
