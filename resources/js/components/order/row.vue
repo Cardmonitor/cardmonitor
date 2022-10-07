@@ -1,6 +1,6 @@
 <template>
     <tr>
-        <td class="align-middle d-none d-sm-table-cell pointer" @click="link">{{ item.paid_at }}</td>
+        <td class="align-middle d-none d-sm-table-cell pointer" @click="link">{{ item.paid_at_formatted }}</td>
         <td class="align-middle pointer" @click="link">
             <div>{{ item.cardmarket_order_id }}</div>
             <div class="text-muted" v-if="item.buyer">{{ item.buyer.name }}</div>

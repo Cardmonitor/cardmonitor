@@ -11642,7 +11642,7 @@ var render = function render() {
     on: {
       click: _vm.link
     }
-  }, [_vm._v(_vm._s(_vm.item.paid_at))]), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.item.paid_at_formatted))]), _vm._v(" "), _c("td", {
     staticClass: "align-middle pointer",
     on: {
       click: _vm.link
