@@ -14,7 +14,7 @@ class AddSkryfallDataToCards extends Migration
     public function up()
     {
         Schema::table('cards', function (Blueprint $table) {
-            $table->smallInteger('cmc')->nullable();
+            $table->mediumInteger('cmc')->nullable();
             $table->string('type_line')->nullable();
             $table->string('skryfall_image_small')->nullable();
             $table->string('skryfall_image_normal')->nullable();

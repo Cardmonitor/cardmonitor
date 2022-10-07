@@ -396,15 +396,18 @@ class Order extends Model
     {
         $this->getCardDefaultPrices();
 
+        $article_ids = [];
         foreach ($cardmarketOrder['article'] as $cardmarketArticle) {
-            // dump($cardmarketArticle);
-            $this->addArticleFromCardmarket($cardmarketArticle);
+            $article_ids = array_merge($article_ids, $this->addArticleFromCardmarket($cardmarketArticle));
         }
+
+        $this->articles()->sync($article_ids);
     }
 
-    protected function addArticleFromCardmarket(array $cardmarketArticle)
+    protected function addArticleFromCardmarket(array $cardmarketArticle): array
     {
         $articles_left_count = $cardmarketArticle['count'];
+        $article_ids = [];
 
         // Article finden, wenn nicht vorhanden
         if (! is_null($cardmarketArticle['idArticle'])) {
@@ -413,10 +416,11 @@ class Order extends Model
                 ->where('user_id', $this->user_id)
                 ->limit($cardmarketArticle['count'])
                 ->get();
+            $article_ids = $articles->pluck('id')->toArray();
             $articles_count = count($articles);
             $articles_left_count -= $articles_count;
             if ($articles_left_count == 0) {
-                return;
+                return $article_ids;
             }
 
             // Article mit cardmarket_article_id
@@ -437,11 +441,12 @@ class Order extends Model
                 $article->update([
                     'sold_at' => $this->paid_at,
                 ]);
+                $article_ids[] = $article->id;
             }
             $articles_count = count($articles);
             $articles_left_count -= $articles_count;
             if ($articles_left_count == 0) {
-                return;
+                return $article_ids;
             }
         }
 
@@ -465,11 +470,12 @@ class Order extends Model
                 'sold_at' => $this->paid_at,
                 'cardmarket_article_id' => $cardmarketArticle['idArticle'],
             ]);
+            $article_ids[] = $article->id;
         }
         $articles_count = count($articles);
         $articles_left_count -= $articles_count;
         if ($articles_left_count == 0) {
-            return;
+            return $article_ids;
         }
 
         $card = Card::firstOrImport($cardmarketArticle['idProduct']);
@@ -492,8 +498,11 @@ class Order extends Model
             'cardmarket_comments' => $cardmarketArticle['comments'] ?: null,
         ];
         foreach (range($articles_count, ($articles_left_count - 1)) as $value) {
-            $this->articles()->create($attributes);
+            $article = $this->articles()->create($attributes);
+            $article_ids[] = $article->id;
         }
+
+        return $article_ids;
     }
 
     public function calculateProfits() : self

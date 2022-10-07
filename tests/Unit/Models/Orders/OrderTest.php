@@ -2,16 +2,17 @@
 
 namespace Tests\Unit\Models\Orders;
 
-use App\Models\Articles\Article;
-use App\Models\Expansions\Expansion;
-use App\Models\Images\Image;
-use App\Models\Items\Item;
-use App\Models\Orders\Evaluation;
-use App\Models\Orders\Order;
-use App\Models\Users\CardmarketUser;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Tests\TestCase;
+use App\Models\Items\Item;
+use App\Models\Images\Image;
+use App\Models\Orders\Order;
+use App\Models\Articles\Article;
+use App\Models\Orders\Evaluation;
+use App\Models\Expansions\Expansion;
+use App\Models\Users\CardmarketUser;
+use App\Models\Localizations\Language;
 use Tests\Traits\RelationshipAssertions;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class OrderTest extends TestCase
 {
@@ -160,24 +161,31 @@ class OrderTest extends TestCase
             'is_playset' => $cardmarketOrder['order']['article'][1]['isPlayset'],
         ]);
 
-        $articlesWithDifferentCardmarketArticleId = factory(Article::class, 2)->create([
-            'user_id' => $this->user->id,
-            'card_id' => $cards[2]->id,
-            'cardmarket_article_id' => 1,
-            'language_id' => $cardmarketOrder['order']['article'][2]['language']['idLanguage'],
-            'condition' => $cardmarketOrder['order']['article'][2]['condition'],
-            'unit_price' => $cardmarketOrder['order']['article'][2]['price'],
-            'is_foil' => $cardmarketOrder['order']['article'][2]['isFoil'],
-            'is_signed' => $cardmarketOrder['order']['article'][2]['isSigned'],
-            'is_altered' => $cardmarketOrder['order']['article'][2]['isAltered'],
-            'is_playset' => $cardmarketOrder['order']['article'][2]['isPlayset'],
-        ]);
-
         $order = Order::updateOrCreateFromCardmarket($this->user->id, $cardmarketOrder['order']);
 
         $this->assertCount(1, Order::all());
         $this->assertCount(2, CardmarketUser::all());
         $this->assertCount(4, \App\Models\Cards\Card::all());
+        $this->assertCount($cardmarketOrder['order']['articleCount'], $order->fresh()->articles);
+
+        $articlesNotinOrder = factory(Article::class, 2)->create([
+            'user_id' => $this->user->id,
+            'card_id' => $cards[1]->id,
+            'cardmarket_article_id' => $cardmarketOrder['order']['article'][1]['idArticle'],
+            'language_id' => $cardmarketOrder['order']['article'][1]['language']['idLanguage'],
+            'condition' => $cardmarketOrder['order']['article'][1]['condition'],
+            'unit_price' => $cardmarketOrder['order']['article'][1]['price'],
+            'is_foil' => !$cardmarketOrder['order']['article'][1]['isFoil'],
+            'is_signed' => $cardmarketOrder['order']['article'][1]['isSigned'],
+            'is_altered' => $cardmarketOrder['order']['article'][1]['isAltered'],
+            'is_playset' => $cardmarketOrder['order']['article'][1]['isPlayset'],
+        ]);
+
+        $order->articles()->syncWithoutDetaching($articlesNotinOrder->pluck('id')->toArray());
+
+        $order = Order::updateOrCreateFromCardmarket($this->user->id, $cardmarketOrder['order'], true);
+
+        $this->assertCount(1, Order::all());
         $this->assertCount($cardmarketOrder['order']['articleCount'], $order->fresh()->articles);
     }
 
