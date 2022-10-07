@@ -11,24 +11,6 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body">
-            <form action="{{ route('order.picklist.store') }}" enctype="multipart/form-data" method="POST">
-                @csrf
-
-                <div class="form-group">
-                    <label for="import_sent_file">CSV-Datei</label>
-                    <input type="file" class="form-control-file form-control-sm" name="articles_in_orders" id="articles_in_orders" required>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-sm btn-primary">Importieren</button>
-                </div>
-
-            </form>
-        </div>
-    </div>
-
     @empty($articles)
         <p>Keine Artikel vorhanden.</p>
     @else

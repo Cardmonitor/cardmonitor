@@ -232,16 +232,18 @@ class Article extends Model
         return $article;
     }
 
-    public static function getForPicklist(int $user_id, array $article_ids): ArticleCollection
+    public static function getForPicklist(int $user_id): ArticleCollection
     {
         return self::select('articles.*', DB::raw('COUNT(articles.id) AS amount_picklist'))
+            ->join('article_order', 'articles.id', '=', 'article_order.article_id')
+            ->join('orders', 'orders.id', '=', 'article_order.order_id')
             ->join('cards', 'cards.id', '=', 'articles.card_id')
             ->with([
                 'card',
                 'language',
             ])
-            ->where('user_id', $user_id)
-            ->whereIn('articles.id', $article_ids)
+            ->where('articles.user_id', $user_id)
+            ->where('orders.state', 'paid')
             ->orderBy('cards.color_order_by', 'ASC')
             ->orderBy('cards.cmc', 'ASC')
             ->groupBy('articles.card_id')

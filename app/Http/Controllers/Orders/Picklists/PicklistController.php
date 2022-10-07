@@ -14,14 +14,16 @@ class PicklistController extends Controller
     {
         $user = auth()->user();
 
-        $cache_key = 'orders.picklist.' . $user->id . '.article_ids';
-        if (Cache::has($cache_key)) {
-            $article_ids = Cache::get($cache_key);
-        } else {
-            $article_ids = [];
-        }
+        $articles = Article::getForPicklist($user->id);
 
-        $articles = Article::getForPicklist($user->id, $article_ids);
+        $cards = $articles->pluck('card')->unique();
+        foreach ($cards as $card) {
+            if ($card->hasSkryfallData) {
+                continue;
+            }
+
+            $card->updateFromSkryfallByCardmarketId($card->cardmarket_product_id);
+        }
 
         return view('order.picklists.index', compact('articles'));
     }
