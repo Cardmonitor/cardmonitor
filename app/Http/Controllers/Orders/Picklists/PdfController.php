@@ -12,14 +12,7 @@ class PdfController extends Controller
     {
         $user = auth()->user();
 
-        $cache_key = 'orders.picklist.' . $user->id . '.article_ids';
-        if (Cache::has($cache_key)) {
-            $article_ids = Cache::get($cache_key);
-        } else {
-            $article_ids = [];
-        }
-
-        $articles = Article::getForPicklist($user->id, $article_ids);
+        $articles = Article::getForPicklist($user->id);
 
         return \PDF::loadView('order.picklists.pdf', [
             'articles' => $articles,
