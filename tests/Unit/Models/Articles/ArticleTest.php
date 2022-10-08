@@ -4,7 +4,6 @@ namespace Tests\Unit\Models\Articles;
 
 use App\Models\Articles\Article;
 use App\Models\Cards\Card;
-use App\Models\Expansions\Expansion;
 use App\Models\Localizations\Language;
 use App\Models\Orders\Order;
 use App\Models\Rules\Rule;
@@ -12,9 +11,6 @@ use App\User;
 use Cardmonitor\Cardmarket\Stock;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\DB;
 use Mockery;
 use Tests\TestCase;
 use Tests\Traits\AttributeAssertions;
@@ -563,6 +559,8 @@ class ArticleTest extends TestCase
      */
     public function it_gets_the_attributes_from_the_sku()
     {
+        $this->markTestSkipped('Wird aktuell nicht mehr gebraucht, weil es nur noch eine SKU gibt');
+
         $model = factory(Article::class)->create([
             'is_foil' => false,
             'is_altered' => false,

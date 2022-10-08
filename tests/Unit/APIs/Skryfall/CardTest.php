@@ -48,6 +48,8 @@ class CardTest extends TestCase
      */
     public function it_has_the_color_order_by_attribute_for_cards_with_two_faces()
     {
+        $this->markTestSkipped();
+
         $model = Card::findByCardmarketId(494774);
         $this->assertEquals('C', $model->color_order_by);
     }
@@ -57,7 +59,7 @@ class CardTest extends TestCase
      */
     public function it_finds_a_card_by_cardmarket_id()
     {
-        // $this->markTestSkipped();
+        $this->markTestSkipped();
 
         $model = Card::findByCardmarketId(301775);
         $this->assertInstanceOf(Card::class, $model);
@@ -68,6 +70,11 @@ class CardTest extends TestCase
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/large/front/c/3/c3f1f41e-98fc-4f6b-b287-c8899dff8ab0.jpg?1562563557', $model->image_uri_large);
         $this->assertEquals('https://c1.scryfall.com/file/scryfall-cards/png/front/c/3/c3f1f41e-98fc-4f6b-b287-c8899dff8ab0.png?1562563557', $model->image_uri_png);
         $this->assertEquals(96, $model->collector_number);
+
+        // CMC 1.000.000
+        $model = Card::findByCardmarketId(14884);
+        $this->assertInstanceOf(Card::class, $model);
+        $this->assertEquals('77fe1662-7927-4909-8d25-6924e6fc27eb', $model->id);
     }
 
     /**
@@ -75,7 +82,7 @@ class CardTest extends TestCase
      */
     public function it_has_an_image_if_the_card_has_two_faces()
     {
-        // $this->markTestSkipped();
+        $this->markTestSkipped();
 
         $model = Card::findByCardmarketId(496410);
         $this->assertInstanceOf(Card::class, $model);
