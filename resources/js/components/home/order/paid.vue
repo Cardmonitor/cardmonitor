@@ -106,9 +106,9 @@
                     .then(function (response) {
                         component.items = response.data.data;
                         component.isLoading = false;
-                        setTimeout( function () {
-                            component.sync();
-                        }, 1000 * 60 * 60);
+                        // setTimeout( function () {
+                        //     component.sync();
+                        // }, 1000 * 60 * 60);
                     })
                     .catch(function (error) {
                         Vue.error(component.$t('order.errors.loaded'));

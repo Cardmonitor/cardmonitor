@@ -3639,10 +3639,9 @@ __webpack_require__.r(__webpack_exports__);
         params: component.filter
       }).then(function (response) {
         component.items = response.data.data;
-        component.isLoading = false;
-        setTimeout(function () {
-          component.sync();
-        }, 1000 * 60 * 60);
+        component.isLoading = false; // setTimeout( function () {
+        //     component.sync();
+        // }, 1000 * 60 * 60);
       })["catch"](function (error) {
         Vue.error(component.$t('order.errors.loaded'));
         console.log(error);
