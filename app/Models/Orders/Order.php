@@ -398,6 +398,9 @@ class Order extends Model
 
         $article_ids = [];
         foreach ($cardmarketOrder['article'] as $cardmarketArticle) {
+            $card = Card::firstOrImport($cardmarketArticle['idProduct']);
+            $card->download();
+
             $article_ids = array_merge($article_ids, $this->addArticleFromCardmarket($cardmarketArticle));
         }
 
