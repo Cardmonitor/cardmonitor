@@ -4846,7 +4846,7 @@ __webpack_require__.r(__webpack_exports__);
         page: 1,
         presale: null,
         searchtext: '',
-        show: true,
+        show: false,
         state: 'paid'
       },
       selected: []

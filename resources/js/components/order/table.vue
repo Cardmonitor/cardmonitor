@@ -128,7 +128,7 @@
                     page: 1,
                     presale: null,
                     searchtext: '',
-                    show: true,
+                    show: false,
                     state: 'paid',
                 },
                 selected: [],
