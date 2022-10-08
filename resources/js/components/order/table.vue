@@ -6,10 +6,10 @@
                 <div class="form-group" style="margin-bottom: 0;">
                     <filter-search v-model="filter.searchtext" @input="search()"></filter-search>
                 </div>
-                <button class="btn btn-secondary ml-1" @click="filter.show = !filter.show"><i class="fas fa-filter"></i></button>
-                <button class="btn btn-secondary ml-1" @click="sync" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i></button>
-                <button class="btn btn-secondary ml-1" @click="download" :disabled="syncing.status == 1"><i class="fas fa-download"></i></button>
-                <button type="button" class="btn btn-secondary ml-1" data-toggle="modal" data-target="#import-sent">
+                <button class="btn btn-sm btn-secondary ml-1" @click="filter.show = !filter.show"><i class="fas fa-filter"></i></button>
+                <button class="btn btn-sm btn-secondary ml-1" @click="sync" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i></button>
+                <button class="btn btn-sm btn-secondary ml-1" @click="download" :disabled="syncing.status == 1"><i class="fas fa-download"></i></button>
+                <button type="button" class="btn btn-sm btn-secondary ml-1" data-toggle="modal" data-target="#import-sent">
                     <i class="fas fa-upload"></i>
                 </button>
             </div>
@@ -21,7 +21,7 @@
                 <div class="col-auto">
                     <div class="form-group">
                         <label for="filter-state">{{ $t('app.state') }}</label>
-                        <select class="form-control" id="filter-state" v-model="filter.state" @change="search">
+                        <select class="form-control form-control-sm" id="filter-state" v-model="filter.state" @change="search">
                             <option :value="null">{{ $t('filter.all') }}</option>
                             <option :value="id" v-for="(name, id) in states">{{ name }}</option>
                         </select>
@@ -31,7 +31,7 @@
                 <div class="col-auto">
                     <div class="form-group">
                         <label for="filter-presale">Presale</label>
-                        <select class="form-control" id="filter-presale" v-model="filter.presale" @change="search">
+                        <select class="form-control form-control-sm" id="filter-presale" v-model="filter.presale" @change="search">
                             <option :value="null">{{ $t('filter.all') }}</option>
                             <option value="0">Ohne Presale</option>
                             <option value="1">Presale</option>
@@ -51,7 +51,7 @@
             </center>
         </div>
         <div class="table-responsive mt-3" v-else-if="items.length">
-            <table class="table table-hover table-striped bg-white">
+            <table class="table table-sm table-hover table-striped bg-white">
                 <thead>
                     <tr>
                         <th class="d-none d-sm-table-cell" width="10%">{{ $t('app.date') }}</th>

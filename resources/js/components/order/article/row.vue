@@ -14,18 +14,18 @@
         </td>
         <td class="align-middle d-none d-sm-table-cell text-right pointer" @click="toShow">{{ Number(item.unit_price).format(2, ',', '.') }} €</td>
         <td class="align-middle d-none d-xl-table-cell text-right">
-            <input class="form-control text-right" :class="'unit_cost_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_cost_formatted" @keydown.enter="update">
+            <input class="form-control form-control-sm text-right" :class="'unit_cost_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_cost_formatted" @keydown.enter="update">
             <div class="invalid-feedback" v-text="'unit_cost_formatted' in errors ? errors.unit_cost_formatted[0] : ''"></div>
         </td>
         <td class="align-middle d-none d-xl-table-cell text-right">
-            <input class="form-control text-right" :class="'provision_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.provision_formatted" @keydown.enter="update">
+            <input class="form-control form-control-sm text-right" :class="'provision_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.provision_formatted" @keydown.enter="update">
             <div class="invalid-feedback" v-text="'provision_formatted' in errors ? errors.provision_formatted[0] : ''"></div>
         </td>
         <td class="align-middle d-none d-xl-table-cell text-right pointer" @click="toShow">{{ Number(item.unit_price - item.unit_cost - item.provision).format(2, ',', '.') }} €</td>
         <td class="align-middle d-none d-sm-table-cell text-right">
             <div class="btn-group btn-group-sm" role="group">
-                <button type="button" class="btn btn-secondary" :title="$t('app.actions.show')" @click="toShow"><i class="fas fa-fw fa-eye"></i></button>
-                <button type="button" class="btn btn-secondary" :title="$t('app.actions.save')" @click="update"><i class="fas fa-fw fa-save"></i></button>
+                <button type="button" class="btn btn-sm btn-secondary" :title="$t('app.actions.show')" @click="toShow"><i class="fas fa-fw fa-eye"></i></button>
+                <button type="button" class="btn btn-sm btn-secondary" :title="$t('app.actions.save')" @click="update"><i class="fas fa-fw fa-save"></i></button>
             </div>
         </td>
     </tr>

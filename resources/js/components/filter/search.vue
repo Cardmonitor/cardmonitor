@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input :value="value" class="form-control" ref="search" :class="error ? 'is-invalid' : ''" type="search" :placeholder="$t('app.search')" @keyup="delay">
+        <input :value="value" class="form-control form-control-sm" ref="search" :class="error ? 'is-invalid' : ''" type="search" :placeholder="$t('app.search')" @keyup="delay">
         <div class="invalid-feedback" v-text="error ? error : ''"></div>
     </div>
 </template>

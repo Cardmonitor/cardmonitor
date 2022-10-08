@@ -3858,12 +3858,14 @@ select.v-select:focus::-ms-value {
 }
 
 .form-control-plaintext.form-control-sm,
+.form-control-plaintext.v-select,
 .form-control-plaintext.form-control-lg {
   padding-right: 0;
   padding-left: 0;
 }
 
-.form-control-sm {
+.form-control-sm,
+.v-select {
   height: calc(1.5em + 0.5rem + 2px);
   padding: 0.25rem 0.5rem;
   font-size: 0.7875rem;

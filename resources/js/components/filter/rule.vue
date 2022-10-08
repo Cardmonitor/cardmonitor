@@ -1,7 +1,7 @@
 <template>
     <div class="form-group">
         <label for="filter-rule">{{ $t('filter.rule.label') }}</label>
-        <select class="form-control" id="filter-rule" v-model="value" @change="$emit('input', value)">
+        <select class="form-control form-control-sm" id="filter-rule" v-model="value" @change="$emit('input', value)">
             <option :value="0">{{ $t('filter.all') }}</option>
             <option :value="null">{{ $t('filter.rule.without') }}</option>
             <option v-for="(option, key) in sortedOptions" :value="option.id">{{ option.name }}</option>

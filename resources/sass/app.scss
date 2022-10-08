@@ -252,6 +252,7 @@ hr.divider {
 
 .v-select {
     @extend .form-control;
+    @extend .form-control-sm;
 }
 
 .vs__dropdown-toggle {

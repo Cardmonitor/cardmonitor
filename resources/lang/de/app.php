@@ -69,6 +69,7 @@ return [
     'successes' => [
         'created' => 'Datensatz wurde erstellt.',
         'deleted' => 'Datensatz wurde gelöscht',
+        'updated' => 'Datensatz wurde gespeichert',
         'uploaded' => 'Datensatz wurde hochgeladen.',
         'created_uploaded' => 'Datensatz wurde erstellt und hochgeladen.',
         'sorted' => 'Reihenfolge wurde gespeichert.',

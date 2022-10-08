@@ -2,15 +2,15 @@
     <div>
         <div class="row">
             <div class="col mb-1 mb-sm-0">
-                <a href="/article/create" class="btn btn-primary"><i class="fas fa-plus-square"></i></a>
+                <a href="/article/create" class="btn btn-sm btn-primary"><i class="fas fa-plus-square"></i></a>
             </div>
             <div class="col-auto d-flex">
                 <div class="form-group" style="margin-bottom: 0;">
                     <filter-search v-model="filter.searchtext" @input="search()"></filter-search>
                 </div>
-                <button class="btn btn-secondary ml-1" @click="filter.show = !filter.show"><i class="fas fa-filter"></i></button>
-                <button class="btn btn-secondary ml-1" @click="sync" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i></button>
-                <button type="button" class="btn btn-primary text-overflow-ellipsis ml-1" :title="$t('rule.apply')" data-toggle="modal" data-target="#confirm-rule-apply" :disabled="applying.status == 1">
+                <button class="btn btn-sm btn-secondary ml-1" @click="filter.show = !filter.show"><i class="fas fa-filter"></i></button>
+                <button class="btn btn-sm btn-secondary ml-1" @click="sync" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i></button>
+                <button type="button" class="btn btn-sm btn-primary text-overflow-ellipsis ml-1" :title="$t('rule.apply')" data-toggle="modal" data-target="#confirm-rule-apply" :disabled="applying.status == 1">
                     <i class="fas fa-spinner fa-spin mr-1" v-show="applying.status == 1"></i>{{ $t('rule.apply') }}
                 </button>
             </div>
@@ -22,7 +22,7 @@
                 <div class="col-auto">
                     <div class="form-group">
                         <label for="filter-sync">{{ $t('filter.sync.label') }}</label>
-                        <select class="form-control" id="filter-sync" v-model="filter.sync" @change="search">
+                        <select class="form-control form-control-sm" id="filter-sync" v-model="filter.sync" @change="search">
                             <option :value="-1">{{ $t('filter.all') }}</option>
                             <option :value="1">{{ $t('filter.sync.error') }}</option>
                             <option :value="0">{{ $t('filter.sync.success') }}</option>
@@ -33,7 +33,7 @@
                 <div class="col-auto">
                     <div class="form-group">
                         <label for="filter-sold">{{ $t('filter.sold.label') }}</label>
-                        <select class="form-control" id="filter-sold" v-model="filter.sold" @change="search">
+                        <select class="form-control form-control-sm" id="filter-sold" v-model="filter.sold" @change="search">
                             <option :value="-1">{{ $t('filter.all') }}</option>
                             <option :value="0">{{ $t('filter.sold.not_sold') }}</option>
                             <option :value="1">{{ $t('filter.sold.sold') }}</option>
@@ -60,25 +60,25 @@
                 <div class="col-auto">
                     <div class="form-group">
                         <label for="filter-unit_price_min">{{ $t('filter.price.min') }}</label>
-                        <input class="form-control" id="filter-unit_price_min" type="text" v-model="filter.unit_price_min" @input="search">
+                        <input class="form-control form-control-sm" id="filter-unit_price_min" type="text" v-model="filter.unit_price_min" @input="search">
                     </div>
                 </div>
                 <div class="col-auto">
                     <div class="form-group">
                         <label for="filter-unit_price_max">{{ $t('filter.price.max') }}</label>
-                        <input class="form-control" id="filter-unit_price_max" type="text" v-model="filter.unit_price_max" @input="search">
+                        <input class="form-control form-control-sm" id="filter-unit_price_max" type="text" v-model="filter.unit_price_max" @input="search">
                     </div>
                 </div>
                 <div class="col-auto">
                     <div class="form-group">
                         <label for="filter-unit_cost_min">{{ $t('filter.price_buying.min') }}</label>
-                        <input class="form-control" id="filter-unit_cost_min" type="text" v-model="filter.unit_cost_min" @input="search">
+                        <input class="form-control form-control-sm" id="filter-unit_cost_min" type="text" v-model="filter.unit_cost_min" @input="search">
                     </div>
                 </div>
                 <div class="col-auto">
                     <div class="form-group">
                         <label for="filter-unit_cost_max">{{ $t('filter.price_buying.max') }}</label>
-                        <input class="form-control" id="filter-unit_cost_max" type="text" v-model="filter.unit_cost_max" @input="search">
+                        <input class="form-control form-control-sm" id="filter-unit_cost_max" type="text" v-model="filter.unit_cost_max" @input="search">
                     </div>
                 </div>
 
@@ -94,7 +94,7 @@
             </center>
         </div>
         <div class="table-responsive mt-3" v-else-if="items.length">
-            <table class="table table-hover table-striped bg-white">
+            <table class="table table-sm table-hover table-striped bg-white">
                 <thead>
                     <tr>
                         <th class="text-center d-none d-lg-table-cell w-icon">{{ $t('article.sync') }}</th>
@@ -105,7 +105,7 @@
                         <th class="text-center d-none d-lg-table-cell">{{ $t('app.language') }}</th>
                         <th class="text-center d-none d-lg-table-cell">{{ $t('app.condition') }}</th>
                         <th class="d-none d-xl-table-cell" style="width: 100px;"></th>
-                        <th class="d-none d-xl-table-cell">{{ $t('storage.storage') }}</th>
+                        <th class="d-none d-xl-table-cell">{{ $t('storages.storage') }}</th>
                         <th class="text-right d-none d-sm-table-cell">{{ $t('app.price_abbr') }}</th>
                         <th class="text-right d-none d-xl-table-cell">{{ $t('app.price_buying_abbr') }}</th>
                         <th class="text-right d-none d-xl-table-cell w-formatted-number">{{ $t('app.provision') }}</th>
@@ -155,9 +155,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $t('app.actions.cancel') }}</button>
-                        <button type="button" class="btn btn-secondary" @click="apply(false)">{{ $t('rule.simulate') }}</button>
-                        <button type="button" class="btn btn-primary" @click="apply(true)">{{ $t('rule.apply') }}</button>
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">{{ $t('app.actions.cancel') }}</button>
+                        <button type="button" class="btn btn-sm btn-secondary" @click="apply(false)">{{ $t('rule.simulate') }}</button>
+                        <button type="button" class="btn btn-sm btn-primary" @click="apply(true)">{{ $t('rule.apply') }}</button>
                     </div>
                 </div>
             </div>

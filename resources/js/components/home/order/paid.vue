@@ -19,7 +19,7 @@
                         {{ $t('app.loading') }}
                     </center>
                 </div>
-                <table class="table table-striped table-hover" v-else>
+                <table class="table table-sm table-striped table-hover" v-else>
                     <tbody>
                         <tr v-for="(item, key) in items">
                             <td class="align-middle d-none d-md-table-cell">{{ item.paid_at_formatted }}</td>
@@ -32,7 +32,7 @@
                                 <div>{{ item.articles_count }} {{ $t('app.article') }}</div>
                             </td>
                             <td class="align-middle text-right">
-                                <button class="btn btn-primary":title="$t('app.actions.send')" @click="send(item)">{{ $t('app.actions.send') }}</button>
+                                <button class="btn btn-sm btn-primary":title="$t('app.actions.send')" @click="send(item)">{{ $t('app.actions.send') }}</button>
                             </td>
                         </tr>
                     </tbody>

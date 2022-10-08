@@ -9,13 +9,13 @@
         <td class="align-middle text-center"><expansion-icon :expansion="item.card.expansion" :show-name="false"></expansion-icon></td>
         <td class="align-middle d-none d-xl-table-cell text-center"><rarity :value="item.card.rarity"></rarity></td>
         <td class="align-middle d-none d-lg-table-cell text-center">
-            <select class="form-control" v-model="form.language_id">
+            <select class="form-control  form-control-sm" v-model="form.language_id">
                 <option :value="language_id" v-for="(name, language_id) in languages">{{ name }}</option>
             </select>
             <div class="invalid-feedback" v-text="'unit_price_formatted' in errors ? errors.unit_price_formatted[0] : ''"></div>
         </td>
         <td class="align-middle d-none d-lg-table-cell text-center">
-            <select class="form-control" v-model="form.condition">
+            <select class="form-control  form-control-sm" v-model="form.condition">
                 <option :value="id" v-for="(name, id) in conditions">{{ name }}</option>
             </select>
             <div class="invalid-feedback" v-text="'condition' in errors ? errors.condition[0] : ''"></div>
@@ -36,7 +36,7 @@
             </div>
         </td>
         <td class="align-middle d-none d-xl-table-cell text-center">
-            <select class="form-control" v-model="form.storage_id">
+            <select class="form-control  form-control-sm" v-model="form.storage_id">
                 <option :value="null">{{ $t('storages.no_storage') }}</option>
                 <option :value="storage.id" v-for="(storage, key) in storages" v-html="storage.indentedName"></option>
             </select>
@@ -44,7 +44,7 @@
         </td>
         <td class="align-middle d-none d-sm-table-cell text-right">
             <div class="input-group">
-                <input class="form-control text-right" :class="'unit_price_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_price_formatted" @keydown.enter="update(false)">
+                <input class="form-control  form-control-sm text-right" :class="'unit_price_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_price_formatted" @keydown.enter="update(false)">
                 <div class="input-group-append" v-if="item.rule_id">
                     <span class="input-group-text text-left pointer" :title="'Regel ' + item.rule.name" @click="form.unit_price_formatted = item.price_rule_formatted">
                         {{ item.price_rule_formatted }}€
@@ -54,7 +54,7 @@
             <div class="invalid-feedback" v-text="'unit_price_formatted' in errors ? errors.unit_price_formatted[0] : ''"></div>
         </td>
         <td class="align-middle d-none d-xl-table-cell text-right">
-            <input class="form-control text-right" :class="'unit_cost_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_cost_formatted" @keydown.enter="update(false)">
+            <input class="form-control  form-control-sm text-right" :class="'unit_cost_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_cost_formatted" @keydown.enter="update(false)">
             <div class="invalid-feedback" v-text="'unit_cost_formatted' in errors ? errors.unit_cost_formatted[0] : ''"></div>
         </td>
         <td class="align-middle d-none d-xl-table-cell text-right">{{ Number(item.provision).format(2, ',', '.') }} €</td>
@@ -85,11 +85,11 @@
         <td class="align-middle d-none d-xl-table-cell">{{ item.storage_id ? item.storage.full_name : 'Kein Lagerplatz' }}</td>
         <td class="align-middle d-none d-sm-table-cell text-right">{{ Number(item.unit_price).format(2, ',', '.') }} €</td>
         <td class="align-middle d-none d-xl-table-cell text-right">
-            <input class="form-control text-right" :class="'unit_cost_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_cost_formatted" @keydown.enter="update(false)">
+            <input class="form-control  form-control-sm text-right" :class="'unit_cost_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_cost_formatted" @keydown.enter="update(false)">
             <div class="invalid-feedback" v-text="'unit_cost_formatted' in errors ? errors.unit_cost_formatted[0] : ''"></div>
         </td>
         <td class="align-middle d-none d-xl-table-cell text-right">
-            <input class="form-control text-right" :class="'provision_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.provision_formatted" @keydown.enter="update">
+            <input class="form-control  form-control-sm text-right" :class="'provision_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.provision_formatted" @keydown.enter="update">
             <div class="invalid-feedback" v-text="'provision_formatted' in errors ? errors.provision_formatted[0] : ''"></div>
         </td>
         <td class="align-middle d-none d-xl-table-cell text-right pointer">{{ Number(item.unit_price - item.unit_cost - item.provision).format(2, ',', '.') }} €</td>
@@ -188,7 +188,7 @@
                     .then( function (response) {
                         component.errors = {};
                         component.$emit('updated', response.data);
-                        Vue.success((sync ? component.$t('app.successes.created_uploaded') : component.$t('app.successes.created')));
+                        Vue.success((sync ? component.$t('app.successes.created_uploaded') : component.$t('app.successes.updated')));
                     })
                     .catch(function (error) {
                         component.errors = error.response.data.errors;
