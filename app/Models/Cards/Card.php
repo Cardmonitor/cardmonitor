@@ -276,7 +276,8 @@ class Card extends Model
 
         $filename = storage_path('app/public/items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg');
 
-        if (Storage::exists('public/items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg')) {
+        // if image exists and is valid, do nothing
+        if (Storage::exists('public/items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg') && exif_imagetype($filename) !== false) {
             return;
         }
 
