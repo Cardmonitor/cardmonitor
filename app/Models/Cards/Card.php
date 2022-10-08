@@ -268,7 +268,7 @@ class Card extends Model
 
     public function download()
     {
-        if (is_null($this->image)) {
+        if (empty($this->image)) {
             return;
         }
 
