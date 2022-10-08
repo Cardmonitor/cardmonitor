@@ -3613,7 +3613,7 @@ __webpack_require__.r(__webpack_exports__);
     if (this.isSyncingOrders) {
       this.checkIsSyncingOrders();
     } else {
-      this.sync();
+      // this.sync();
       this.fetch();
     }
   },
@@ -4847,7 +4847,7 @@ __webpack_require__.r(__webpack_exports__);
         presale: null,
         searchtext: '',
         show: true,
-        state: null
+        state: 'paid'
       },
       selected: []
     };

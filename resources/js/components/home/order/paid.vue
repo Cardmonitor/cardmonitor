@@ -74,7 +74,7 @@
                 this.checkIsSyncingOrders();
             }
             else {
-                this.sync();
+                // this.sync();
                 this.fetch();
             }
         },

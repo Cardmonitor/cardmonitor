@@ -404,6 +404,7 @@ class Order extends Model
             $article_ids = array_merge($article_ids, $this->addArticleFromCardmarket($cardmarketArticle));
         }
 
+        // Überflüssige Artikel entknüpfen
         $this->articles()->sync($article_ids);
     }
 

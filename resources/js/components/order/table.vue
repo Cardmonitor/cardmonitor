@@ -129,7 +129,7 @@
                     presale: null,
                     searchtext: '',
                     show: true,
-                    state: null,
+                    state: 'paid',
                 },
                 selected: [],
             };
