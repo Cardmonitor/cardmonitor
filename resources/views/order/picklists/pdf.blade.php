@@ -66,7 +66,7 @@
                     @foreach ($articles as $article)
                         <tr>
                             <td class="align-middle">
-                                <img src="{{ $article->card->skryfall_image_small }}" width="75">
+                                <img src="{{ $article->card->image_path }}" width="75">
                             </td>
                             <td class="align-middle">{{ $article->card->color_name }}</td>
                             <td class="align-middle">{{ $article->card->cmc }}</td>

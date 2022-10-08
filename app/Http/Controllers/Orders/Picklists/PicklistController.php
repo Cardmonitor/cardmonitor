@@ -14,17 +14,20 @@ class PicklistController extends Controller
     {
         $user = auth()->user();
 
-        $articles = Article::getForPicklist($user->id);
+        $grouped_articles = Article::getForPicklist($user->id);
 
-        foreach ($articles as $article) {
-            if ($article->card->hasSkryfallData) {
+        foreach ($grouped_articles as $grouped_article) {
+
+            $grouped_article->card->download();
+
+            if ($grouped_article->card->hasSkryfallData) {
                 continue;
             }
 
-            $article->card->updateFromSkryfallByCardmarketId($article->card->cardmarket_product_id);
+            $grouped_article->card->updateFromSkryfallByCardmarketId($grouped_article->card->cardmarket_product_id);
         }
 
-        return view('order.picklists.index', compact('articles'));
+        return view('order.picklists.index', compact('grouped_articles'));
     }
 
     public function store(Request $request)

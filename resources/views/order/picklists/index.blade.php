@@ -5,13 +5,13 @@
     <div class="d-flex">
         <h2 class="col pl-0">Pickliste</h2>
         <div>
-            @if (count($articles))
+            @if (count($grouped_articles))
                 <a href="{{ route('order.picklist.pdf.index') }}" target="_blank" class="btn btn-sm btn-secondary">PDF</a>
             @endif
         </div>
     </div>
 
-    @empty($articles)
+    @empty($grouped_articles)
         <p>Keine Artikel vorhanden.</p>
     @else
 
@@ -28,22 +28,22 @@
                 <th class="text-right">#</th>
             </thead>
             <tbody>
-                @foreach ($articles as $article)
+                @foreach ($grouped_articles as $grouped_article)
                     <tr>
                         <td class="align-middle">
-                            <img src="{{ $article->card->skryfall_image_small }}" alt="{{ $article->card->name }}" width="146" height="204">
+                            <img src="{{ $grouped_article->card->image_path }}" alt="{{ $grouped_article->card->name }}" width="146" height="204">
                         </td>
-                        <td class="align-middle">{{ $article->card->color_name }}</td>
-                        <td class="align-middle">{{ $article->card->cmc }}</td>
+                        <td class="align-middle">{{ $grouped_article->card->color_name }}</td>
+                        <td class="align-middle">{{ $grouped_article->card->cmc }}</td>
                         <td class="align-middle">
-                            <div>{{ $article->local_name }}</div>
-                            <div class="text-muted">{{ $article->card->name }}</div>
+                            <div>{{ $grouped_article->local_name }}</div>
+                            <div class="text-muted">{{ $grouped_article->card->name }}</div>
                         </td>
-                        <td class="align-middle text-right">{{ $article->amount_picklist }}</td>
-                        <td class="align-middle">{{ $article->condition }}</td>
-                        <td class="align-middle">{{ $article->language->name }}</td>
-                        <td class="align-middle text-center">{{ $article->card->rarity }}</td>
-                        <td class="align-middle text-right">{{ $article->card->number }}</td>
+                        <td class="align-middle text-right">{{ $grouped_article->amount_picklist }}</td>
+                        <td class="align-middle">{{ $grouped_article->condition }}</td>
+                        <td class="align-middle">{{ $grouped_article->language->name }}</td>
+                        <td class="align-middle text-center">{{ $grouped_article->card->rarity }}</td>
+                        <td class="align-middle text-right">{{ $grouped_article->card->number }}</td>
                     </tr>
                 @endforeach
             </tbody>
