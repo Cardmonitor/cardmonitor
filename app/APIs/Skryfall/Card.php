@@ -29,7 +29,6 @@ class Card extends ApiModel
 
         try {
             $attributes = $api->card->findByCardmarketId($cardmarket_id);
-
             $model = new self();
             $model->fill($attributes);
 
@@ -38,11 +37,6 @@ class Card extends ApiModel
         catch(ClientException $e) {
             return null;
         }
-
-        $model = new self();
-        $model->fill($attributes);
-
-        return $model;
     }
 
     public static function findByCodeAndNumber(string $code, int $number)
@@ -60,11 +54,6 @@ class Card extends ApiModel
         catch(ClientException $e) {
             return null;
         }
-
-        $model = new self();
-        $model->fill($attributes);
-
-        return $model;
     }
 
     public static function search(array $parameters) : Collection

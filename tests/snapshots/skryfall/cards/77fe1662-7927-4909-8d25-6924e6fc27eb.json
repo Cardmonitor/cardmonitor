@@ -1,0 +1,111 @@
+{
+    "object": "card",
+    "id": "77fe1662-7927-4909-8d25-6924e6fc27eb",
+    "oracle_id": "ebd2b263-f2eb-435a-983e-b54f70c4580d",
+    "multiverse_ids": [
+        73947
+    ],
+    "tcgplayer_id": 37865,
+    "cardmarket_id": 14884,
+    "name": "Gleemax",
+    "lang": "en",
+    "released_at": "2004-11-19",
+    "uri": "https:\/\/api.scryfall.com\/cards\/77fe1662-7927-4909-8d25-6924e6fc27eb",
+    "scryfall_uri": "https:\/\/scryfall.com\/card\/unh\/121\/gleemax?utm_source=api",
+    "layout": "normal",
+    "highres_image": true,
+    "image_status": "highres_scan",
+    "image_uris": {
+        "small": "https:\/\/cards.scryfall.io\/small\/front\/7\/7\/77fe1662-7927-4909-8d25-6924e6fc27eb.jpg?1594900466",
+        "normal": "https:\/\/cards.scryfall.io\/normal\/front\/7\/7\/77fe1662-7927-4909-8d25-6924e6fc27eb.jpg?1594900466",
+        "large": "https:\/\/cards.scryfall.io\/large\/front\/7\/7\/77fe1662-7927-4909-8d25-6924e6fc27eb.jpg?1594900466",
+        "png": "https:\/\/cards.scryfall.io\/png\/front\/7\/7\/77fe1662-7927-4909-8d25-6924e6fc27eb.png?1594900466",
+        "art_crop": "https:\/\/cards.scryfall.io\/art_crop\/front\/7\/7\/77fe1662-7927-4909-8d25-6924e6fc27eb.jpg?1594900466",
+        "border_crop": "https:\/\/cards.scryfall.io\/border_crop\/front\/7\/7\/77fe1662-7927-4909-8d25-6924e6fc27eb.jpg?1594900466"
+    },
+    "mana_cost": "{1000000}",
+    "cmc": 1000000,
+    "type_line": "Legendary Artifact",
+    "oracle_text": "You choose all targets for all spells and abilities.",
+    "colors": [],
+    "color_identity": [],
+    "keywords": [],
+    "legalities": {
+        "standard": "not_legal",
+        "future": "not_legal",
+        "historic": "not_legal",
+        "gladiator": "not_legal",
+        "pioneer": "not_legal",
+        "explorer": "not_legal",
+        "modern": "not_legal",
+        "legacy": "not_legal",
+        "pauper": "not_legal",
+        "vintage": "not_legal",
+        "penny": "not_legal",
+        "commander": "not_legal",
+        "brawl": "not_legal",
+        "historicbrawl": "not_legal",
+        "alchemy": "not_legal",
+        "paupercommander": "not_legal",
+        "duel": "not_legal",
+        "oldschool": "not_legal",
+        "premodern": "not_legal"
+    },
+    "games": [
+        "paper"
+    ],
+    "reserved": false,
+    "foil": false,
+    "nonfoil": true,
+    "finishes": [
+        "nonfoil"
+    ],
+    "oversized": false,
+    "promo": false,
+    "reprint": false,
+    "variation": false,
+    "set_id": "4c8bc76a-05a5-43db-aaf0-34deb347b871",
+    "set": "unh",
+    "set_name": "Unhinged",
+    "set_type": "funny",
+    "set_uri": "https:\/\/api.scryfall.com\/sets\/4c8bc76a-05a5-43db-aaf0-34deb347b871",
+    "set_search_uri": "https:\/\/api.scryfall.com\/cards\/search?order=set&q=e%3Aunh&unique=prints",
+    "scryfall_set_uri": "https:\/\/scryfall.com\/sets\/unh?utm_source=api",
+    "rulings_uri": "https:\/\/api.scryfall.com\/cards\/77fe1662-7927-4909-8d25-6924e6fc27eb\/rulings",
+    "prints_search_uri": "https:\/\/api.scryfall.com\/cards\/search?order=released&q=oracleid%3Aebd2b263-f2eb-435a-983e-b54f70c4580d&unique=prints",
+    "collector_number": "121",
+    "digital": false,
+    "rarity": "rare",
+    "flavor_text": "Help us . . . R&D under mental domination of alien brain in jar . . . only chance . . . Gleemax's blatant disregard for flavor text . . . send help!",
+    "card_back_id": "0aeebaf5-8c7d-4636-9e82-8c27447861f7",
+    "artist": "Richard Thomas",
+    "artist_ids": [
+        "596b3aac-b331-4e1e-ae41-9ec2d3b653e1"
+    ],
+    "illustration_id": "7f6ba6a2-d3a8-47ce-ba1c-c1c63c86c2ce",
+    "border_color": "silver",
+    "frame": "2003",
+    "full_art": false,
+    "textless": false,
+    "booster": true,
+    "story_spotlight": false,
+    "prices": {
+        "usd": "4.22",
+        "usd_foil": null,
+        "usd_etched": null,
+        "eur": "1.25",
+        "eur_foil": null,
+        "tix": null
+    },
+    "related_uris": {
+        "gatherer": "https:\/\/gatherer.wizards.com\/Pages\/Card\/Details.aspx?multiverseid=73947",
+        "tcgplayer_infinite_articles": "https:\/\/infinite.tcgplayer.com\/search?contentMode=article&game=magic&partner=scryfall&q=Gleemax&utm_campaign=affiliate&utm_medium=api&utm_source=scryfall",
+        "tcgplayer_infinite_decks": "https:\/\/infinite.tcgplayer.com\/search?contentMode=deck&game=magic&partner=scryfall&q=Gleemax&utm_campaign=affiliate&utm_medium=api&utm_source=scryfall",
+        "edhrec": "https:\/\/edhrec.com\/route\/?cc=Gleemax"
+    },
+    "purchase_uris": {
+        "tcgplayer": "https:\/\/www.tcgplayer.com\/product\/37865?page=1&utm_campaign=affiliate&utm_medium=api&utm_source=scryfall",
+        "cardmarket": "https:\/\/www.cardmarket.com\/en\/Magic\/Products\/Search?referrer=scryfall&searchString=Gleemax&utm_campaign=card_prices&utm_medium=text&utm_source=scryfall",
+        "cardhoarder": "https:\/\/www.cardhoarder.com\/cards?affiliate_id=scryfall&data%5Bsearch%5D=Gleemax&ref=card-profile&utm_campaign=affiliate&utm_medium=card&utm_source=scryfall"
+    }
+}

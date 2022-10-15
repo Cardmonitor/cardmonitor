@@ -259,9 +259,8 @@ class CardTest extends TestCase
      */
     public function it_can_be_updated_from_skryfall_by_cardmarket_id()
     {
-        $this->markTestSkipped();
-
         $cardmarket_id = 265882;
+        $skryfall_card_id = '1c2b1eeb-6cc9-48a7-a068-afa1011c45f2';
 
         $expansion = factory(Expansion::class)->create([
             'name' => 'Born of the Gods',
@@ -272,14 +271,21 @@ class CardTest extends TestCase
             'expansion_id' => $expansion->id,
         ]);
 
+        $card_mock = Mockery::mock('overload:' . \Cardmonitor\Skryfall\Card::class);
+        $card_mock->shouldReceive('findByCardmarketId')
+            ->with($cardmarket_id)
+            ->andReturn(json_decode(file_get_contents('tests/snapshots/skryfall/cards/' . $skryfall_card_id . '.json'), true));
+
         $card->updateFromSkryfallByCardmarketId($cardmarket_id);
 
-        $this->assertEquals('1c2b1eeb-6cc9-48a7-a068-afa1011c45f2', $card->skryfall_card_id);
+        $this->assertEquals($skryfall_card_id, $card->skryfall_card_id);
         $this->assertEquals('Shrike Harpy', $card->name);
         $this->assertEquals(['B'], $card->color_identity);
         $this->assertEquals(['B'], $card->colors);
         $this->assertEquals('Creature — Harpy', $card->type_line);
         $this->assertEquals(83, $card->number);
+
+        Mockery::close();
     }
 
     /**

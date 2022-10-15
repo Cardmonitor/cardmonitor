@@ -1,0 +1,139 @@
+{
+    "object": "card",
+    "id": "531d60ad-39f6-4d79-b276-ec70636b123b",
+    "oracle_id": "98a5bf1a-1088-4339-9a9b-6ee5e4956cf1",
+    "multiverse_ids": [],
+    "tcgplayer_id": 222490,
+    "cardmarket_id": 497835,
+    "name": "Cut \/\/ Ribbons",
+    "lang": "en",
+    "released_at": "2020-09-26",
+    "uri": "https:\/\/api.scryfall.com\/cards\/531d60ad-39f6-4d79-b276-ec70636b123b",
+    "scryfall_uri": "https:\/\/scryfall.com\/card\/plist\/239\/cut-ribbons?utm_source=api",
+    "layout": "split",
+    "highres_image": true,
+    "image_status": "highres_scan",
+    "image_uris": {
+        "small": "https:\/\/cards.scryfall.io\/small\/front\/5\/3\/531d60ad-39f6-4d79-b276-ec70636b123b.jpg?1599766870",
+        "normal": "https:\/\/cards.scryfall.io\/normal\/front\/5\/3\/531d60ad-39f6-4d79-b276-ec70636b123b.jpg?1599766870",
+        "large": "https:\/\/cards.scryfall.io\/large\/front\/5\/3\/531d60ad-39f6-4d79-b276-ec70636b123b.jpg?1599766870",
+        "png": "https:\/\/cards.scryfall.io\/png\/front\/5\/3\/531d60ad-39f6-4d79-b276-ec70636b123b.png?1599766870",
+        "art_crop": "https:\/\/cards.scryfall.io\/art_crop\/front\/5\/3\/531d60ad-39f6-4d79-b276-ec70636b123b.jpg?1599766870",
+        "border_crop": "https:\/\/cards.scryfall.io\/border_crop\/front\/5\/3\/531d60ad-39f6-4d79-b276-ec70636b123b.jpg?1599766870"
+    },
+    "mana_cost": "{1}{R} \/\/ {X}{B}{B}",
+    "cmc": 4,
+    "type_line": "Sorcery \/\/ Sorcery",
+    "colors": [
+        "B",
+        "R"
+    ],
+    "color_identity": [
+        "B",
+        "R"
+    ],
+    "keywords": [
+        "Aftermath"
+    ],
+    "card_faces": [
+        {
+            "object": "card_face",
+            "name": "Cut",
+            "mana_cost": "{1}{R}",
+            "type_line": "Sorcery",
+            "oracle_text": "Cut deals 4 damage to target creature.",
+            "artist": "Raymond Swanland",
+            "artist_id": "e956bacc-077d-4c12-b6bc-ba798b718af9",
+            "illustration_id": "4acf8e25-40bb-484f-972f-eae19863a877"
+        },
+        {
+            "object": "card_face",
+            "name": "Ribbons",
+            "flavor_name": "",
+            "mana_cost": "{X}{B}{B}",
+            "type_line": "Sorcery",
+            "oracle_text": "Aftermath (Cast this spell only from your graveyard. Then exile it.)\nEach opponent loses X life.",
+            "artist": "Raymond Swanland",
+            "artist_id": "e956bacc-077d-4c12-b6bc-ba798b718af9"
+        }
+    ],
+    "legalities": {
+        "standard": "not_legal",
+        "future": "not_legal",
+        "historic": "legal",
+        "gladiator": "legal",
+        "pioneer": "legal",
+        "explorer": "legal",
+        "modern": "legal",
+        "legacy": "legal",
+        "pauper": "not_legal",
+        "vintage": "legal",
+        "penny": "not_legal",
+        "commander": "legal",
+        "brawl": "not_legal",
+        "historicbrawl": "legal",
+        "alchemy": "not_legal",
+        "paupercommander": "not_legal",
+        "duel": "legal",
+        "oldschool": "not_legal",
+        "premodern": "not_legal"
+    },
+    "games": [
+        "paper"
+    ],
+    "reserved": false,
+    "foil": false,
+    "nonfoil": true,
+    "finishes": [
+        "nonfoil"
+    ],
+    "oversized": false,
+    "promo": false,
+    "reprint": true,
+    "variation": false,
+    "set_id": "67e47ba2-b019-4181-9005-fe9fc021de44",
+    "set": "plist",
+    "set_name": "The List",
+    "set_type": "masters",
+    "set_uri": "https:\/\/api.scryfall.com\/sets\/67e47ba2-b019-4181-9005-fe9fc021de44",
+    "set_search_uri": "https:\/\/api.scryfall.com\/cards\/search?order=set&q=e%3Aplist&unique=prints",
+    "scryfall_set_uri": "https:\/\/scryfall.com\/sets\/plist?utm_source=api",
+    "rulings_uri": "https:\/\/api.scryfall.com\/cards\/531d60ad-39f6-4d79-b276-ec70636b123b\/rulings",
+    "prints_search_uri": "https:\/\/api.scryfall.com\/cards\/search?order=released&q=oracleid%3A98a5bf1a-1088-4339-9a9b-6ee5e4956cf1&unique=prints",
+    "collector_number": "239",
+    "digital": false,
+    "rarity": "rare",
+    "card_back_id": "0aeebaf5-8c7d-4636-9e82-8c27447861f7",
+    "artist": "Raymond Swanland",
+    "artist_ids": [
+        "e956bacc-077d-4c12-b6bc-ba798b718af9"
+    ],
+    "illustration_id": "4acf8e25-40bb-484f-972f-eae19863a877",
+    "border_color": "black",
+    "frame": "2015",
+    "security_stamp": "oval",
+    "full_art": false,
+    "textless": false,
+    "booster": true,
+    "story_spotlight": false,
+    "edhrec_rank": 3809,
+    "penny_rank": 1026,
+    "prices": {
+        "usd": "1.93",
+        "usd_foil": null,
+        "usd_etched": null,
+        "eur": "0.30",
+        "eur_foil": null,
+        "tix": null
+    },
+    "related_uris": {
+        "tcgplayer_infinite_articles": "https:\/\/infinite.tcgplayer.com\/search?contentMode=article&game=magic&partner=scryfall&q=Cut+%2F%2F+Ribbons&utm_campaign=affiliate&utm_medium=api&utm_source=scryfall",
+        "tcgplayer_infinite_decks": "https:\/\/infinite.tcgplayer.com\/search?contentMode=deck&game=magic&partner=scryfall&q=Cut+%2F%2F+Ribbons&utm_campaign=affiliate&utm_medium=api&utm_source=scryfall",
+        "edhrec": "https:\/\/edhrec.com\/route\/?cc=Cut+%2F%2F+Ribbons"
+    },
+    "purchase_uris": {
+        "tcgplayer": "https:\/\/www.tcgplayer.com\/product\/222490?page=1&utm_campaign=affiliate&utm_medium=api&utm_source=scryfall",
+        "cardmarket": "https:\/\/www.cardmarket.com\/en\/Magic\/Products\/Search?referrer=scryfall&searchString=Cut+%2F%2F+Ribbons&utm_campaign=card_prices&utm_medium=text&utm_source=scryfall",
+        "cardhoarder": "https:\/\/www.cardhoarder.com\/cards?affiliate_id=scryfall&data%5Bsearch%5D=Cut+%2F%2F+Ribbons&ref=card-profile&utm_campaign=affiliate&utm_medium=card&utm_source=scryfall"
+    }
+}

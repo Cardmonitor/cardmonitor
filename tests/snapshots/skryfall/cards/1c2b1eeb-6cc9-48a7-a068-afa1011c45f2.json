@@ -1,0 +1,124 @@
+{
+    "object": "card",
+    "id": "1c2b1eeb-6cc9-48a7-a068-afa1011c45f2",
+    "oracle_id": "9c38b337-487c-4cef-843b-b0a2ed3f1b27",
+    "multiverse_ids": [
+        378455
+    ],
+    "mtgo_id": 51677,
+    "mtgo_foil_id": 51678,
+    "tcgplayer_id": 79120,
+    "cardmarket_id": 265882,
+    "name": "Shrike Harpy",
+    "lang": "en",
+    "released_at": "2014-02-07",
+    "uri": "https:\/\/api.scryfall.com\/cards\/1c2b1eeb-6cc9-48a7-a068-afa1011c45f2",
+    "scryfall_uri": "https:\/\/scryfall.com\/card\/bng\/83\/shrike-harpy?utm_source=api",
+    "layout": "normal",
+    "highres_image": true,
+    "image_status": "highres_scan",
+    "image_uris": {
+        "small": "https:\/\/cards.scryfall.io\/small\/front\/1\/c\/1c2b1eeb-6cc9-48a7-a068-afa1011c45f2.jpg?1593092105",
+        "normal": "https:\/\/cards.scryfall.io\/normal\/front\/1\/c\/1c2b1eeb-6cc9-48a7-a068-afa1011c45f2.jpg?1593092105",
+        "large": "https:\/\/cards.scryfall.io\/large\/front\/1\/c\/1c2b1eeb-6cc9-48a7-a068-afa1011c45f2.jpg?1593092105",
+        "png": "https:\/\/cards.scryfall.io\/png\/front\/1\/c\/1c2b1eeb-6cc9-48a7-a068-afa1011c45f2.png?1593092105",
+        "art_crop": "https:\/\/cards.scryfall.io\/art_crop\/front\/1\/c\/1c2b1eeb-6cc9-48a7-a068-afa1011c45f2.jpg?1593092105",
+        "border_crop": "https:\/\/cards.scryfall.io\/border_crop\/front\/1\/c\/1c2b1eeb-6cc9-48a7-a068-afa1011c45f2.jpg?1593092105"
+    },
+    "mana_cost": "{3}{B}{B}",
+    "cmc": 5,
+    "type_line": "Creature \u2014 Harpy",
+    "oracle_text": "Flying\nTribute 2 (As this creature enters the battlefield, an opponent of your choice may put two +1\/+1 counters on it.)\nWhen Shrike Harpy enters the battlefield, if tribute wasn't paid, target opponent sacrifices a creature.",
+    "power": "2",
+    "toughness": "2",
+    "colors": [
+        "B"
+    ],
+    "color_identity": [
+        "B"
+    ],
+    "keywords": [
+        "Flying",
+        "Tribute"
+    ],
+    "legalities": {
+        "standard": "not_legal",
+        "future": "not_legal",
+        "historic": "not_legal",
+        "gladiator": "not_legal",
+        "pioneer": "legal",
+        "explorer": "not_legal",
+        "modern": "legal",
+        "legacy": "legal",
+        "pauper": "not_legal",
+        "vintage": "legal",
+        "penny": "legal",
+        "commander": "legal",
+        "brawl": "not_legal",
+        "historicbrawl": "not_legal",
+        "alchemy": "not_legal",
+        "paupercommander": "restricted",
+        "duel": "legal",
+        "oldschool": "not_legal",
+        "premodern": "not_legal"
+    },
+    "games": [
+        "paper",
+        "mtgo"
+    ],
+    "reserved": false,
+    "foil": true,
+    "nonfoil": true,
+    "finishes": [
+        "nonfoil",
+        "foil"
+    ],
+    "oversized": false,
+    "promo": false,
+    "reprint": false,
+    "variation": false,
+    "set_id": "50a80fe4-a757-408f-ad23-52c5cc5f45cc",
+    "set": "bng",
+    "set_name": "Born of the Gods",
+    "set_type": "expansion",
+    "set_uri": "https:\/\/api.scryfall.com\/sets\/50a80fe4-a757-408f-ad23-52c5cc5f45cc",
+    "set_search_uri": "https:\/\/api.scryfall.com\/cards\/search?order=set&q=e%3Abng&unique=prints",
+    "scryfall_set_uri": "https:\/\/scryfall.com\/sets\/bng?utm_source=api",
+    "rulings_uri": "https:\/\/api.scryfall.com\/cards\/1c2b1eeb-6cc9-48a7-a068-afa1011c45f2\/rulings",
+    "prints_search_uri": "https:\/\/api.scryfall.com\/cards\/search?order=released&q=oracleid%3A9c38b337-487c-4cef-843b-b0a2ed3f1b27&unique=prints",
+    "collector_number": "83",
+    "digital": false,
+    "rarity": "uncommon",
+    "card_back_id": "0aeebaf5-8c7d-4636-9e82-8c27447861f7",
+    "artist": "Christopher Moeller",
+    "artist_ids": [
+        "21e10012-06ae-44f2-b38d-3824dd2e73d4"
+    ],
+    "illustration_id": "2ea9e7d4-4514-46bc-8534-db3530f138ea",
+    "border_color": "black",
+    "frame": "2003",
+    "full_art": false,
+    "textless": false,
+    "booster": true,
+    "story_spotlight": false,
+    "edhrec_rank": 20528,
+    "prices": {
+        "usd": "0.06",
+        "usd_foil": "0.10",
+        "usd_etched": null,
+        "eur": "0.01",
+        "eur_foil": "0.17",
+        "tix": "0.03"
+    },
+    "related_uris": {
+        "gatherer": "https:\/\/gatherer.wizards.com\/Pages\/Card\/Details.aspx?multiverseid=378455",
+        "tcgplayer_infinite_articles": "https:\/\/infinite.tcgplayer.com\/search?contentMode=article&game=magic&partner=scryfall&q=Shrike+Harpy&utm_campaign=affiliate&utm_medium=api&utm_source=scryfall",
+        "tcgplayer_infinite_decks": "https:\/\/infinite.tcgplayer.com\/search?contentMode=deck&game=magic&partner=scryfall&q=Shrike+Harpy&utm_campaign=affiliate&utm_medium=api&utm_source=scryfall",
+        "edhrec": "https:\/\/edhrec.com\/route\/?cc=Shrike+Harpy"
+    },
+    "purchase_uris": {
+        "tcgplayer": "https:\/\/www.tcgplayer.com\/product\/79120?page=1&utm_campaign=affiliate&utm_medium=api&utm_source=scryfall",
+        "cardmarket": "https:\/\/www.cardmarket.com\/en\/Magic\/Products\/Search?referrer=scryfall&searchString=Shrike+Harpy&utm_campaign=card_prices&utm_medium=text&utm_source=scryfall",
+        "cardhoarder": "https:\/\/www.cardhoarder.com\/cards\/51677?affiliate_id=scryfall&ref=card-profile&utm_campaign=affiliate&utm_medium=card&utm_source=scryfall"
+    }
+}
