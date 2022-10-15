@@ -592,7 +592,13 @@ class Article extends Model
 
     public function getLocalNameAttribute() : string
     {
-        return $this->card->localizations()->where('language_id', $this->language_id)->first()->name;
+        $localization = $this->card->localizations()->where('language_id', $this->language_id)->first();
+
+        if (is_null($localization)) {
+            return $this->card->name;
+        }
+
+        return $localization->name;
     }
 
     public function getSkuAttribute() : string

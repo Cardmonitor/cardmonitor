@@ -157,17 +157,16 @@ class Card extends Model
 
         $model = self::updateOrCreate($attributes, $values);
 
-        if ($model->wasRecentlyCreated) {
-            foreach ($cardmarketCard['localization'] as $key => $localization) {
-                if ($localization['idLanguage'] == 1) {
-                    continue;
-                }
-
-                $model->localizations()->create([
-                    'language_id' => $localization['idLanguage'],
-                    'name' => $localization['name'],
-                ]);
+        foreach ($cardmarketCard['localization'] as $key => $localization) {
+            if ($localization['idLanguage'] == 1) {
+                continue;
             }
+
+            $model->localizations()->updateOrcreate([
+                'language_id' => $localization['idLanguage'],
+            ], [
+                'name' => $localization['name'],
+            ]);
         }
 
         $model->download();
