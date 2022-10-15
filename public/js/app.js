@@ -2192,7 +2192,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       id: this.item.id,
-      isEditing: this.item.sold_at ? false : true,
+      isEditing: false,
       isAdvancedEditing: false,
       form: {
         cardmarket_comments: this.item.cardmarket_comments,
@@ -7373,7 +7373,20 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fw fa-trash"
-  })])])])]) : _c("tr", [_vm._m(0), _vm._v(" "), _c("td", {
+  })])])])]) : _c("tr", [_c("td", {
+    staticClass: "align-middle d-none d-lg-table-cell text-center"
+  }, [_vm.item.orders.length ? _c("i", {
+    staticClass: "fas fa-fw fa-euro-sign text-success",
+    attrs: {
+      title: "Verkauft"
+    }
+  }) : _c("i", {
+    staticClass: "fas fa-fw",
+    "class": _vm.item.sync_icon,
+    attrs: {
+      title: _vm.item.sync_error || "Karte synchronisiert"
+    }
+  })]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell pointer"
   }, [_c("i", {
     staticClass: "fas fa-image",
@@ -7505,7 +7518,7 @@ var render = function render() {
     attrs: {
       role: "group"
     }
-  }, [_c("a", {
+  }, [_vm.item.orders.length ? _c("a", {
     staticClass: "btn btn-secondary",
     attrs: {
       href: _vm.item.orders[0].path,
@@ -7513,7 +7526,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-box"
-  })]), _vm._v(" "), _c("button", {
+  })]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -7526,22 +7539,21 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fw fa-save"
+  })]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      title: _vm.$t("app.actions.delete")
+    },
+    on: {
+      click: _vm.destroy
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-fw fa-trash"
   })])])])]);
 };
 
-var staticRenderFns = [function () {
-  var _vm = this,
-      _c = _vm._self._c;
-
-  return _c("td", {
-    staticClass: "align-middle d-none d-lg-table-cell text-center"
-  }, [_c("i", {
-    staticClass: "fas fa-fw fa-euro-sign text-success",
-    attrs: {
-      title: "Verkauft"
-    }
-  })]);
-}];
+var staticRenderFns = [];
 render._withStripped = true;
 
 

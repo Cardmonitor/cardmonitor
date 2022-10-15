@@ -68,7 +68,10 @@
         </td>
     </tr>
     <tr v-else>
-        <td class="align-middle d-none d-lg-table-cell text-center"><i class="fas fa-fw fa-euro-sign text-success" title="Verkauft"></i></td>
+        <td class="align-middle d-none d-lg-table-cell text-center">
+            <i class="fas fa-fw fa-euro-sign text-success" title="Verkauft" v-if="item.orders.length"></i>
+            <i class="fas fa-fw" :class="item.sync_icon" :title="item.sync_error || 'Karte synchronisiert'" v-else></i>
+        </td>
         <td class="align-middle d-none d-xl-table-cell pointer"><i class="fas fa-image" @mouseover="show($event)" @mouseout="$emit('hide')"></i></td>
         <td class="align-middle">
             <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.localName }} ({{ item.card.number }})
@@ -95,8 +98,9 @@
         <td class="align-middle d-none d-xl-table-cell text-right pointer">{{ Number(item.unit_price - item.unit_cost - item.provision).format(2, ',', '.') }} €</td>
         <td class="align-middle d-none d-sm-table-cell text-right">
             <div class="btn-group btn-group-sm" role="group">
-                <a class="btn btn-secondary" :href="item.orders[0].path" :title="'Bestellung ' + item.orders[0].cardmarket_order_id"><i class="fas fa-box"></i></a>
+                <a class="btn btn-secondary" :href="item.orders[0].path" :title="'Bestellung ' + item.orders[0].cardmarket_order_id" v-if="item.orders.length"><i class="fas fa-box"></i></a>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.save')" @click="update(false)"><i class="fas fa-fw fa-save"></i></button>
+                <button type="button" class="btn btn-secondary" :title="$t('app.actions.delete')" @click="destroy"><i class="fas fa-fw fa-trash"></i></button>
             </div>
         </td>
     </tr>
@@ -120,7 +124,7 @@
         data () {
             return {
                 id: this.item.id,
-                isEditing: (this.item.sold_at ? false : true),
+                isEditing: false,
                 isAdvancedEditing: false,
                 form: {
                     cardmarket_comments: this.item.cardmarket_comments,
