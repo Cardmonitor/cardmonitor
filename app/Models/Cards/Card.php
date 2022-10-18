@@ -2,15 +2,16 @@
 
 namespace App\Models\Cards;
 
-use App\Models\Expansions\Expansion;
-use App\Traits\HasLocalizations;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Games\Game;
 use Illuminate\Support\Arr;
+use App\Traits\HasLocalizations;
 use Illuminate\Support\Facades\App;
+use App\Models\Expansions\Expansion;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Card extends Model
 {
@@ -345,6 +346,20 @@ class Card extends Model
 
             default: return 'Not Available'; break;
         }
+    }
+
+    public function getSkuAttribute() : string
+    {
+        if (is_null($this->expansion_id)) {
+            return '';
+        }
+
+        return match ($this->game_id) {
+            Game::ID_MAGIC => 'A11360',
+            Game::ID_POKEMON => 'A11359',
+            Game::ID_FLESH_AND_BLOOD => 'A11433',
+            default => '',
+        };
     }
 
     public function expansion() : BelongsTo

@@ -603,7 +603,7 @@ class Article extends Model
 
     public function getSkuAttribute() : string
     {
-        return 'A11360';
+        return $this->card->sku;
     }
 
     public static function skuToAttributes(string $sku) : array

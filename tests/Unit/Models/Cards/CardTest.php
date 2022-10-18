@@ -4,6 +4,7 @@ namespace Tests\Unit\Models\Cards;
 
 use App\Models\Cards\Card;
 use App\Models\Expansions\Expansion;
+use App\Models\Games\Game;
 use App\Models\Localizations\Language;
 use App\Models\Localizations\Localization;
 use Cardmonitor\Cardmarket\Expansion as CardmarketExpansion;
@@ -308,5 +309,37 @@ class CardTest extends TestCase
 
         $model->color_order_by = 'L';
         $this->assertEquals('Land', $model->color_name);
+    }
+
+    /**
+     * @test
+     */
+    public function it_knows_its_sku()
+    {
+        $card_without_expansion = factory(Card::class)->create([
+            'expansion_id' => null,
+        ]);
+
+        $this->assertEquals('', $card_without_expansion->sku);
+
+        $card = factory(Card::class)->create([
+            'game_id' => Game::ID_MAGIC,
+        ]);
+        $this->assertEquals('A11360', $card->sku);
+
+        $card = factory(Card::class)->create([
+            'game_id' => Game::ID_POKEMON,
+        ]);
+        $this->assertEquals('A11359', $card->sku);
+
+        $card = factory(Card::class)->create([
+            'game_id' => Game::ID_FLESH_AND_BLOOD,
+        ]);
+        $this->assertEquals('A11433', $card->sku);
+
+        $card = factory(Card::class)->create([
+            'game_id' => Game::ID_YUGIOH,
+        ]);
+        $this->assertEquals('', $card->sku);
     }
 }
