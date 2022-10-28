@@ -3609,6 +3609,18 @@ __webpack_require__.r(__webpack_exports__);
       items: []
     };
   },
+  computed: {
+    revenue: function revenue() {
+      return this.items.reduce(function (a, b) {
+        return a + Number(b.revenue);
+      }, 0);
+    },
+    articles_count: function articles_count() {
+      return this.items.reduce(function (a, b) {
+        return a + Number(b.articles_count);
+      }, 0);
+    }
+  },
   mounted: function mounted() {
     if (this.isSyncingOrders) {
       this.checkIsSyncingOrders();
@@ -9688,7 +9700,13 @@ var render = function render() {
     staticClass: "fas fa-spinner fa-spin"
   }), _c("br")]), _vm._v("\n                    " + _vm._s(_vm.$t("app.loading")) + "\n                ")])], 1) : _c("table", {
     staticClass: "table table-sm table-striped table-hover"
-  }, [_c("tbody", _vm._l(_vm.items, function (item, key) {
+  }, [_c("thead", [_c("tr", [_c("th", [_vm._v("Bezahlt")]), _vm._v(" "), _c("th", [_vm._v("Bestellung")]), _vm._v(" "), _c("th", {
+    staticClass: "text-right"
+  }, [_vm._v("Umsatz")]), _vm._v(" "), _c("th", {
+    staticClass: "text-right"
+  }, [_vm._v(_vm._s(_vm.$t("app.article")))]), _vm._v(" "), _c("th", {
+    staticClass: "text-right"
+  })])]), _vm._v(" "), _c("tbody", _vm._l(_vm.items, function (item, key) {
     return _c("tr", [_c("td", {
       staticClass: "align-middle d-none d-md-table-cell"
     }, [_vm._v(_vm._s(item.paid_at_formatted))]), _vm._v(" "), _c("td", {
@@ -9700,8 +9718,10 @@ var render = function render() {
     }, [_vm._v(_vm._s(item.cardmarket_order_id))]), _vm._v(" "), item.buyer ? _c("div", {
       staticClass: "text-muted"
     }, [_vm._v(_vm._s(item.buyer.name))]) : _vm._e()]), _vm._v(" "), _c("td", {
-      staticClass: "align-middle d-none d-sm-table-cell"
-    }, [_c("div", [_vm._v(_vm._s(item.revenue_formatted) + " € ")]), _vm._v(" "), _c("div", [_vm._v(_vm._s(item.articles_count) + " " + _vm._s(_vm.$t("app.article")))])]), _vm._v(" "), _c("td", {
+      staticClass: "align-middle d-none d-sm-table-cell text-right"
+    }, [_vm._v("\n                            " + _vm._s(item.revenue_formatted) + " €\n                        ")]), _vm._v(" "), _c("td", {
+      staticClass: "align-middle d-none d-sm-table-cell text-right"
+    }, [_vm._v("\n                            " + _vm._s(item.articles_count) + "\n                        ")]), _vm._v(" "), _c("td", {
       staticClass: "align-middle text-right"
     }, [_c("button", {
       staticClass: "btn btn-sm btn-primary",
@@ -9714,7 +9734,29 @@ var render = function render() {
         }
       }
     }, [_vm._v(_vm._s(_vm.$t("app.actions.send")))])])]);
-  }), 0)])])])]) : _vm._e();
+  }), 0), _vm._v(" "), _c("tfoot", [_c("tr", {
+    staticClass: "font-weight-bold"
+  }, [_c("td", {
+    staticClass: "align-middle d-none d-md-table-cell"
+  }, [_vm._v(_vm._s(_vm.items.length) + " Bestellungen")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }), _vm._v(" "), _c("td", {
+    staticClass: "align-middle d-none d-sm-table-cell text-right"
+  }, [_vm._v("\n                            " + _vm._s(_vm.revenue.format(2, ",")) + " €\n                        ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle d-none d-sm-table-cell text-right"
+  }, [_vm._v("\n                            " + _vm._s(_vm.articles_count) + "\n                        ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle text-right"
+  }, [_c("button", {
+    staticClass: "btn btn-sm btn-primary",
+    attrs: {
+      title: _vm.$t("app.actions.send")
+    },
+    on: {
+      click: function click($event) {
+        return _vm.send(_vm.item);
+      }
+    }
+  }, [_vm._v(_vm._s(_vm.$t("app.actions.send")))])])])])])])])]) : _vm._e();
 };
 
 var staticRenderFns = [function () {

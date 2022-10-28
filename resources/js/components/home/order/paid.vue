@@ -20,6 +20,15 @@
                     </center>
                 </div>
                 <table class="table table-sm table-striped table-hover" v-else>
+                    <thead>
+                        <tr>
+                            <th>Bezahlt</th>
+                            <th>Bestellung</th>
+                            <th class="text-right">Umsatz</th>
+                            <th class="text-right">{{ $t('app.article') }}</th>
+                            <th class="text-right"></th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <tr v-for="(item, key) in items">
                             <td class="align-middle d-none d-md-table-cell">{{ item.paid_at_formatted }}</td>
@@ -27,15 +36,32 @@
                                 <a :href="item.path">{{ item.cardmarket_order_id }}</a>
                                 <div class="text-muted" v-if="item.buyer">{{ item.buyer.name }}</div>
                             </td>
-                            <td class="align-middle d-none d-sm-table-cell">
-                                <div>{{ item.revenue_formatted }} € </div>
-                                <div>{{ item.articles_count }} {{ $t('app.article') }}</div>
+                            <td class="align-middle d-none d-sm-table-cell text-right">
+                                {{ item.revenue_formatted }} €
+                            </td>
+                            <td class="align-middle d-none d-sm-table-cell text-right">
+                                {{ item.articles_count }}
                             </td>
                             <td class="align-middle text-right">
-                                <button class="btn btn-sm btn-primary":title="$t('app.actions.send')" @click="send(item)">{{ $t('app.actions.send') }}</button>
+                                <button class="btn btn-sm btn-primary" :title="$t('app.actions.send')" @click="send(item)">{{ $t('app.actions.send') }}</button>
                             </td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr class="font-weight-bold">
+                            <td class="align-middle d-none d-md-table-cell">{{ items.length }} Bestellungen</td>
+                            <td class="align-middle"></td>
+                            <td class="align-middle d-none d-sm-table-cell text-right">
+                                {{ revenue.format(2, ',') }} €
+                            </td>
+                            <td class="align-middle d-none d-sm-table-cell text-right">
+                                {{ articles_count }}
+                            </td>
+                            <td class="align-middle text-right">
+                                <button class="btn btn-sm btn-primary" :title="$t('app.actions.send')" @click="send(item)">{{ $t('app.actions.send') }}</button>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -67,6 +93,15 @@
                 },
                 items: [],
             };
+        },
+
+        computed: {
+            revenue: function () {
+                return this.items.reduce((a, b) => a + Number(b.revenue), 0);
+            },
+            articles_count: function () {
+                return this.items.reduce((a, b) => a + Number(b.articles_count), 0);
+            },
         },
 
         mounted() {
