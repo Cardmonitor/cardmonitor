@@ -3,8 +3,8 @@
 namespace App\Console\Commands\Article;
 
 use App\User;
+use App\Models\Games\Game;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 
 class DownloadCommand extends Command
 {
@@ -13,7 +13,7 @@ class DownloadCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'article:download {--user=}';
+    protected $signature = 'article:download {user}';
 
     /**
      * The console command description.
@@ -39,21 +39,21 @@ class DownloadCommand extends Command
      */
     public function handle()
     {
-        $user = User::with('api')->find($this->option('user'));
-        $filename = $user->id . '-stock.csv';
+        $user = User::with('api')->find($this->argument('user'));
 
-        $data = $user->cardmarketApi->stock->csv();
-        $zippedFilename = $filename . '.gz';
-        $created = Storage::disk('local')->put($zippedFilename, base64_decode($data['stock']));
-
-        if ($created) {
-            dump('gunzip ' . storage_path('app/' . $filename));
-            shell_exec('gunzip ' . storage_path('app/' . $filename));
-            $this->info('Downloaded ' . $filename);
-
-            return;
+        if (is_null($user)) {
+            $this->error('User not found');
+            return self::FAILURE;
         }
 
-        $this->error('Something went wrong!');
+        $this->line('Downloading stockfiles for user ' . $user->name);
+
+        $games = Game::importables();
+        foreach ($games as $game) {
+            $filename = $user->cardmarketApi->downloadStockFile($user->id, $game->id);
+            $this->line($game->name . ': ' . storage_path('app/' . $filename));
+        }
+
+        return self::SUCCESS;
     }
 }

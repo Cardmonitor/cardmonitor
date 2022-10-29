@@ -32,6 +32,7 @@ class Article extends Model
     const MIN_UNIT_PRICE = 0.02;
 
     const CSV_CARDMARKET_ARTICLE_ID = 0;
+    const CSV_CARDMARKET_PRODUCT_ID = 1;
 
     const CSV_AMOUNT = [
         Game::ID_MAGIC => 14,
@@ -168,24 +169,136 @@ class Article extends Model
         });
     }
 
-    public static function createOrUpdateFromCsv(int $userId, array $row, int $index, int $gameId) : self
+    public static function syncFromStockFile(int $user_id, int $game_id, string $path): array
     {
-        // TODO: get rarity from card
+        $cardmarket_article_ids = [];
 
-        $values = Transformer::transform($gameId, $row);
-        Arr::forget($values, 'amount');
+        $expansions = Expansion::where('game_id', $game_id)->get()->keyBy('abbreviation');
 
-        $values['user_id'] = $userId;
-        $values['storage_id'] = Content::defaultStorage($userId, $row['expansion_id']);
-        $values['unit_cost'] = \App\Models\Items\Card::defaultPrice($userId, '');
-        $values['exported_at'] = now();
+        $row_count = 0;
+        $stockfile = fopen($path, "r");
+        while (($data = fgetcsv($stockfile, 2000, ";")) !== FALSE) {
 
-        $attributes = [
-            'cardmarket_article_id' => $row[0],
-            'index' => $index,
-        ];
+            if ($row_count == 0) {
+                $row_count++;
+                continue;
+            }
 
-        return self::updateOrCreate($attributes, $values);
+            $data['expansion_id'] = $expansions[$data[4]]->id;
+            $cardmarket_article_id = $data[self::CSV_CARDMARKET_ARTICLE_ID];
+            $cardmarket_article_ids[] = $cardmarket_article_id;
+
+            Card::firstOrImport($data[self::CSV_CARDMARKET_PRODUCT_ID]);
+
+            self::reindex($cardmarket_article_id);
+
+            $cardmarket_article = Transformer::transform($game_id, $data);
+
+            $cardmarket_article['expansion_id'] = $data['expansion_id'];
+
+            $cardmarket_article['user_id'] = $user_id;
+            $cardmarket_article['storage_id'] = Content::defaultStorage($user_id, $cardmarket_article['expansion_id']);
+            $cardmarket_article['unit_cost'] = \App\Models\Items\Card::defaultPrice($user_id, '');
+            $cardmarket_article['exported_at'] = now();
+
+            $article_ids = self::createOrUpdateFromStockFile($cardmarket_article);
+
+            self::where('cardmarket_article_id', $cardmarket_article_id)
+                ->whereNull('sold_at')
+                ->whereNotIn('id', $article_ids)
+                ->delete();
+
+            $row_count++;
+        }
+
+        self::where('user_id', $user_id)
+            ->join('cards', 'cards.id', '=', 'articles.card_id')
+            ->where('cards.game_id', $game_id)
+            ->whereNull('sold_at')
+            ->whereNotNull('cardmarket_article_id')
+            ->whereNotIn('cardmarket_article_id', $cardmarket_article_ids)
+            ->delete();
+
+        return $cardmarket_article_ids;
+    }
+
+    public static function createOrUpdateFromStockFile(array $cardmarket_article): array
+    {
+        $articles_left_count = $cardmarket_article['amount'];
+        $article_ids = [];
+        $user_id = $cardmarket_article['user_id'];
+
+        // Article finden, und den Preis anpassen
+        $articles = self::where('cardmarket_article_id', $cardmarket_article['cardmarket_article_id'])
+            ->where('user_id', $user_id)
+            ->whereNull('sold_at')
+            ->limit($cardmarket_article['amount'])
+            ->get();
+        $articles_count = count($articles);
+        $articles_left_count -= $articles_count;
+        foreach ($articles as $article) {
+            $article->update([
+                'cardmarket_comments' => $cardmarket_article['cardmarket_comments'],
+                'unit_price' => $cardmarket_article['unit_price'],
+            ]);
+            $article_ids[] = $article->id;
+        }
+        if ($articles_left_count == 0) {
+            return $article_ids;
+        }
+
+        // Article mit anderer oder ohne cardmarket_article_id
+        $articles = Article::where('articles.user_id', $user_id)
+            ->where('articles.card_id', $cardmarket_article['card_id'])
+            ->whereNull('sold_at')
+            ->where('articles.cardmarket_article_id', '!=', $cardmarket_article['cardmarket_article_id'])
+            ->where('articles.language_id', $cardmarket_article['language_id'])
+            ->where('articles.condition', Arr::get($cardmarket_article, 'condition', ''))
+            ->where('is_foil', Arr::get($cardmarket_article, 'is_foil', false))
+            ->where('is_signed', Arr::get($cardmarket_article, 'isSigned', false))
+            ->where('is_altered', Arr::get($cardmarket_article, 'isAltered', false))
+            ->where('is_playset', Arr::get($cardmarket_article, 'isPlayset', false))
+            ->limit($articles_left_count)
+            ->get();
+        foreach ($articles as $article) {
+            $article->update([
+                'cardmarket_article_id' => $cardmarket_article['cardmarket_article_id'],
+                'cardmarket_comments' => $cardmarket_article['cardmarket_comments'],
+                'unit_price' => $cardmarket_article['unit_price'],
+            ]);
+            $article_ids[] = $article->id;
+        }
+        $articles_count = count($articles);
+        $articles_left_count -= $articles_count;
+        if ($articles_left_count == 0) {
+            return $article_ids;
+        }
+
+        // Artikel erstellen
+        foreach (range($articles_count, ($articles_left_count - 1)) as $index) {
+            $article = self::create([
+                'user_id' => $user_id,
+                'card_id' => $cardmarket_article['card_id'],
+                'cardmarket_article_id' => $cardmarket_article['cardmarket_article_id'],
+                'cardmarket_comments' => $cardmarket_article['cardmarket_comments'],
+                'language_id' => $cardmarket_article['language_id'],
+                'condition' => Arr::get($cardmarket_article, 'condition', ''),
+                'is_foil' => Arr::get($cardmarket_article, 'is_foil', false),
+                'is_signed' => Arr::get($cardmarket_article, 'isSigned', false),
+                'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
+                'is_playset' => Arr::get($cardmarket_article, 'isPlayset', false),
+                'unit_price' => $cardmarket_article['unit_price'],
+                'unit_cost' => $cardmarket_article['unit_cost'],
+                'storage_id' => $cardmarket_article['storage_id'],
+                'index' => $index,
+                'has_sync_error' => false,
+                'sync_error' => null,
+                'sold_at' => null,
+            ]);
+            $article_ids[] = $article->id;
+        }
+
+        return $article_ids;
     }
 
     public static function reindex(int $cardmarket_article_id, int $start = 1) : int

@@ -49,12 +49,12 @@ class CardmarketApi
         }
     }
 
-    public function downloadStockFile(int $userId, int $gameId = 1) : string
+    public function downloadStockFile(int $user_id, int $game_id = 1) : string
     {
-        $filename = $userId . '-stock-' . $gameId . '.csv';
+        $filename = $user_id . '-stock-' . $game_id . '.csv';
         $zippedFilename = $filename . '.gz';
 
-        $data = $this->cardmarketApi->stock->csv($gameId);
+        $data = $this->cardmarketApi->stock->csv($game_id);
         $created = Storage::disk('local')->put($zippedFilename, base64_decode($data['stock']));
 
         if ($created === false) {
@@ -68,48 +68,16 @@ class CardmarketApi
         return $filename;
     }
 
-    public function syncAllArticles(int $gameId = 1)
+    public function syncAllArticles(int $game_id = 1)
     {
-        $userId = $this->api->user_id;
-        $filename = $this->downloadStockFile($userId, $gameId);
+        $user_id = $this->api->user_id;
+        $filename = $this->downloadStockFile($user_id, $game_id);
 
         if (empty($filename)) {
             return;
         }
 
-        $expansions = Expansion::where('game_id', $gameId)->get()->keyBy('abbreviation');
-
-        $cardmarketArticleIds = [];
-
-        $row_count = 0;
-        $articlesFile = fopen(storage_path('app/' . $filename), "r");
-        while (($data = fgetcsv($articlesFile, 2000, ";")) !== FALSE) {
-            if ($row_count == 0) {
-                $row_count++;
-                continue;
-            }
-            $data['expansion_id'] = $expansions[$data[4]]->id;
-            $amount = $data[Article::CSV_AMOUNT[$gameId]];
-            $cardmarket_article_id = $data[Article::CSV_CARDMARKET_ARTICLE_ID];
-            $cardmarketArticleIds[] = $cardmarket_article_id;
-            for ($i = 1; $i <= $amount; $i++) {
-                Article::reindex($cardmarket_article_id);
-                Article::createOrUpdateFromCsv($userId, $data, $i, $gameId);
-                Article::where('cardmarket_article_id', $cardmarket_article_id)
-                    ->whereNull('sold_at')
-                    ->where('index', '>', $amount)
-                    ->delete();
-            }
-            $row_count++;
-        }
-
-        Article::where('user_id', $userId)
-            ->join('cards', 'cards.id', '=', 'articles.card_id')
-            ->where('cards.game_id', $gameId)
-            ->whereNull('sold_at')
-            ->whereNotNull('cardmarket_article_id')
-            ->whereNotIn('cardmarket_article_id', $cardmarketArticleIds)
-            ->delete();
+        $cardmarket_article_ids = Article::syncFromStockFile($user_id, $game_id, storage_path('app/' . $filename));
 
         Storage::disk('local')->delete($filename);
     }
@@ -133,7 +101,7 @@ class CardmarketApi
 
     public function syncOrders(string $actor, string $state) : Collection
     {
-        $userId = $this->api->user_id;
+        $user_id = $this->api->user_id;
         $cardmarketOrders_count = 0;
         $orderIds = new Collection();
         $start = 1;
@@ -143,7 +111,7 @@ class CardmarketApi
                 $data_count = count($data['order']);
                 $cardmarketOrders_count += $data_count;
                 foreach ($data['order'] as $cardmarketOrder) {
-                    $order = Order::updateOrCreateFromCardmarket($userId, $cardmarketOrder);
+                    $order = Order::updateOrCreateFromCardmarket($user_id, $cardmarketOrder);
                     if ($state == 'paid') {
                         $orderIds->push($order->id);
                     }
