@@ -2,19 +2,22 @@
 
 namespace Tests\Unit\Models\Articles;
 
-use App\Models\Articles\Article;
-use App\Models\Cards\Card;
-use App\Models\Localizations\Language;
-use App\Models\Orders\Order;
-use App\Models\Rules\Rule;
+use Mockery;
 use App\User;
+use Tests\TestCase;
+use App\Models\Cards\Card;
+use App\Models\Games\Game;
+use App\Models\Rules\Rule;
+use Illuminate\Support\Arr;
+use App\Models\Orders\Order;
+use App\Models\Articles\Article;
 use Cardmonitor\Cardmarket\Stock;
+use App\Models\Expansions\Expansion;
+use Tests\Traits\AttributeAssertions;
+use App\Models\Localizations\Language;
+use Tests\Traits\RelationshipAssertions;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Mockery;
-use Tests\TestCase;
-use Tests\Traits\AttributeAssertions;
-use Tests\Traits\RelationshipAssertions;
 
 /**
  * @runTestsInSeparateProcesses
@@ -616,5 +619,100 @@ class ArticleTest extends TestCase
         $this->assertEquals($model->language_id, $attributes['language_id']);
         $this->assertEquals($model->is_foil, (int) $attributes['is_foil']);
         $this->assertEquals($model->is_altered, (int) $attributes['is_altered']);
+    }
+
+    /**
+     * @test
+     */
+    public function articles_can_be_synced_by_stock_file()
+    {
+        $path = 'tests/snapshots/cardmarket/articles/stock-1.csv';
+
+        $game = factory(Game::class)->create([
+            'id' => Game::ID_MAGIC,
+            'name' => 'Magic the Gathering',
+            'abbreviation' => 'MtG',
+            'is_importable' => true,
+        ]);
+
+        $stockfile = fopen($path, "r");
+        $article_count = 0;
+        $cards = [];
+        $expansions = [];
+        $row_count = 0;
+        while (($data = fgetcsv($stockfile, 2000, ";")) !== false) {
+
+            if ($row_count == 0) {
+                $row_count++;
+                continue;
+            }
+
+            $article_count += $data[14];
+
+            if (Arr::has($cards, $data[1])) {
+                continue;
+            }
+
+            if (! Arr::has($expansions, $data[4])) {
+                $expansion = factory(Expansion::class)->create([
+                    'game_id' => $game->id,
+                    'name' => $data[3],
+                    'abbreviation' => $data[4],
+                ]);
+                $expansions[$data[4]] = $expansion;
+            }
+            else {
+                $expansion = Arr::get($expansions, $data[4]);
+            }
+
+            $card = factory(Card::class)->create([
+                'game_id' => $game->id,
+                'expansion_id' => $expansion->id,
+                'cardmarket_product_id' => $data[1],
+                'name' => $data[2],
+            ]);
+
+            if ($data[7] != Language::DEFAULT_ID) {
+                $card->localizations()->create([
+                    'language_id' => $data[7],
+                    'name' => $data[3],
+                ]);
+            }
+
+            $cards[$data[1]] = $card;
+
+            // Article with different cardmarket_article_id
+            if ($row_count === 1) {
+                $article_with_different_cardmarket_id = factory(Article::class)->create([
+                    'user_id' => $this->user->id,
+                    'card_id' => $data[1],
+                    'language_id' => $data[7],
+                    'cardmarket_article_id' => -1,
+                    'condition' => $data[8],
+                    'unit_price' => $data[6],
+                    'sold_at' => null,
+                    'is_in_shoppingcard' => false,
+                    'is_foil' => ($data[9] == 'X' ? true : false),
+                    'is_signed' => ($data[10] == 'X' ? true : false),
+                    'is_altered' => ($data[11] == 'X' ? true : false),
+                    'is_playset' => ($data[12] == 'X' ? true : false),
+                    'cardmarket_comments' => $data[13],
+                    'has_sync_error' => false,
+                    'sync_error' => null,
+                ]);
+            }
+
+            $row_count++;
+        }
+
+        $this->assertCount(1, Article::all());
+
+        $cardmarket_article_ids = Article::syncFromStockFile($this->user->id, Game::ID_MAGIC, $path);
+
+        $this->assertCount($article_count, Article::all());
+
+        $cardmarket_article_ids = Article::syncFromStockFile($this->user->id, Game::ID_MAGIC, $path);
+
+        $this->assertCount($article_count, Article::all());
     }
 }

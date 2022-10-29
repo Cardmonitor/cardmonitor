@@ -43,7 +43,6 @@ class SyncCommand extends Command
     public function handle()
     {
         $this->user = User::find($this->argument('user'));
-
         try {
             $this->processing();
             foreach (Game::keyValue() as $gameId => $name) {
