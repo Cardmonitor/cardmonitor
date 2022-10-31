@@ -72,7 +72,7 @@ class ImportCommand extends Command
         }
         catch (\Exception $e) {
             $this->error('Expansion ' . $expansionId . ' not available');
-            return;
+            return self::FAILURE;
         }
         $gameId = $singles['expansion']['idGame'];
         $expansion = Expansion::createOrUpdateFromCardmarket($singles['expansion']);
@@ -95,6 +95,8 @@ class ImportCommand extends Command
 
         $this->info('');
         $this->info('Finished');
+
+        return self::SUCCESS;
     }
 
     protected function isImportable(int $gameId) : bool

@@ -64,7 +64,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('card', 'Cards\CardController');
 
-    Route::get('expansion', 'ExpansionController@index');
+    Route::get('expansions', 'ExpansionController@index')->name('expansions.index');
+    Route::post('expansions', 'ExpansionController@store')->name('expansions.store');
+    Route::put('expansions/{expansion}', 'ExpansionController@update')->name('expansions.update');
 
     Route::post('item/reload', 'Items\ReloadController@store');
     Route::resource('item', 'Items\ItemController');
