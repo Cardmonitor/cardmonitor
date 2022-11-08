@@ -112,7 +112,7 @@ class StorageControllerTest extends TestCase
      */
     public function a_user_can_update_a_model()
     {
-        $this->withoutExceptionHandling();
+        // $this->withoutExceptionHandling();
 
         $model = $this->createModel();
 
@@ -120,6 +120,7 @@ class StorageControllerTest extends TestCase
 
         $data = [
             'name' => 'Updated Model',
+            'slots' => 100,
             'parent_id' => null,
         ];
 

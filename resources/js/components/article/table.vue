@@ -10,7 +10,7 @@
                 </div>
                 <button class="btn btn-sm btn-secondary ml-1" @click="filter.show = !filter.show"><i class="fas fa-filter"></i></button>
                 <button class="btn btn-sm btn-secondary ml-1" @click="sync" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i></button>
-                <button type="button" class="btn btn-sm btn-primary text-overflow-ellipsis ml-1" :title="$t('rule.apply')" data-toggle="modal" data-target="#confirm-rule-apply" :disabled="applying.status == 1">
+                <button type="button" class="btn btn-sm btn-primary text-overflow-ellipsis ml-1" :title="$t('rule.apply')" data-toggle="modal" data-target="#confirm-rule-apply" :disabled="applying.status == 1" v-if="false">
                     <i class="fas fa-spinner fa-spin mr-1" v-show="applying.status == 1"></i>{{ $t('rule.apply') }}
                 </button>
             </div>
@@ -53,6 +53,9 @@
                 </div>
                 <div class="col-auto">
                     <filter-language :options="languages" v-model="filter.language_id" @input="search"></filter-language>
+                </div>
+                <div class="col-auto">
+                    <filter-storage :options="storages" v-model="filter.storage_id" @input="search"></filter-storage>
                 </div>
                 <div class="col-auto">
                     <filter-rule :options="rules" v-model="filter.rule_id" @input="search" v-if="rules != null"></filter-rule>
@@ -99,17 +102,14 @@
                     <tr>
                         <th class="text-center d-none d-lg-table-cell w-icon">{{ $t('article.sync') }}</th>
                         <th class="text-right d-none d-xl-table-cell w-icon"></th>
-                        <th class="">{{ $t('app.name') }}</th>
+                        <th class="" width="100%">{{ $t('app.name') }}</th>
                         <th class="w-icon"></th>
                         <th class="text-center d-none d-xl-table-cell w-icon"></th>
-                        <th class="text-center d-none d-lg-table-cell">{{ $t('app.language') }}</th>
-                        <th class="text-center d-none d-lg-table-cell">{{ $t('app.condition') }}</th>
+                        <th class="text-center d-none d-lg-table-cell w-formatted-number">{{ $t('app.condition') }}</th>
                         <th class="d-none d-xl-table-cell" style="width: 100px;"></th>
-                        <th class="d-none d-xl-table-cell">{{ $t('storages.storage') }}</th>
-                        <th class="text-right d-none d-sm-table-cell">{{ $t('app.price_abbr') }}</th>
-                        <th class="text-right d-none d-xl-table-cell">{{ $t('app.price_buying_abbr') }}</th>
-                        <th class="text-right d-none d-xl-table-cell w-formatted-number">{{ $t('app.provision') }}</th>
-                        <th class="text-right d-none d-xl-table-cell w-formatted-number" :title="$t('app.profit_anticipated')" width="100">{{ $t('app.revenue') }}</th>
+                        <th class="text-right d-none d-sm-table-cell w-formatted-number">{{ $t('app.price_abbr') }}</th>
+                        <th class="d-none d-xl-table-cell" style="width: 150px;">{{ $t('storages.storage') }}</th>
+                        <th class="text-right d-none d-xl-table-cell w-formatted-number">Slot</th>
                         <th class="text-right d-none d-sm-table-cell w-action">{{ $t('app.actions.action') }}</th>
                     </tr>
                 </thead>
@@ -118,9 +118,31 @@
                         <row :item="item" :key="item.id" :uri="uri" :conditions="conditions" :languages="languages" :storages="storages" :selected="(selected.indexOf(item.id) == -1) ? false : true" @input="toggleSelected" @updated="updated(index, $event)" @show="showImgbox($event)" @hide="hideImgbox()" @deleted="remove(index)"></row>
                     </template>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td class="align-middle">{{ items.length }} von {{ paginate.total }}</td>
+                        <td class="align-middle" colspan="5">
+                                <select class="form-control form-control-sm" v-model="storageForm.articles">
+                                    <option value="filtered-to-storage_id">Alle gefilterten in Lagerplatz</option>
+                                    <option value="page-to-storage_id">Diese Seite in Lagerplatz</option>
+                                </select>
+                        </td>
+                        <td class="align-middle" colspan="5">
+                                <select class="form-control form-control-sm" v-model="storageForm.storage_id">
+                                    <option :value=null>Lagerplatz entfernen</option>
+                                    <option :value="storage.id" v-for="(storage, index) in storages">{{ storage.full_name }}</option>
+                                </select>
+                        </td>
+                        <td class="align-middle text-right">
+                            <button class="btn btn-sm btn-secondary">Einlagern</button>
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
-        <div class="alert alert-dark mt-3" v-else><center>{{ $t('article.errors.no_data') }}</center></div>
+        <div class="alert alert-dark mt-3" v-else><center>{{ $t('article.alerts.no_data') }}</center></div>
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center" v-show="paginate.lastPage > 1">
                 <li class="page-item" v-show="paginate.prevPageUrl">
@@ -172,6 +194,7 @@
     import filterRarity from "../filter/rarity.vue";
     import filterRule from "../filter/rule.vue";
     import filterSearch from "../filter/search.vue";
+    import filterStorage from "../filter/storage.vue";
     import row from "./row.vue";
 
     export default {
@@ -183,6 +206,7 @@
             filterRarity,
             filterRule,
             filterSearch,
+            filterStorage,
             row,
         },
 
@@ -248,6 +272,7 @@
                     nextPageUrl: null,
                     prevPageUrl: null,
                     lastPage: 0,
+                    total: 0,
                 },
                 filter: {
                     cardmarket_comments: '',
@@ -259,11 +284,16 @@
                     searchtext: '',
                     show: false,
                     sold: 0,
+                    storage_id: 0,
                     sync: -1,
                     unit_cost_max: 0,
                     unit_cost_min: 0,
                     unit_price_max: 0,
                     unit_price_min: 0,
+                },
+                storageForm: {
+                    articles: 'filtered-to-storage_id',
+                    storage_id: null,
                 },
                 selected: [],
                 errors: {},
@@ -403,6 +433,7 @@
                         component.paginate.nextPageUrl = response.data.next_page_url;
                         component.paginate.prevPageUrl = response.data.prev_page_url;
                         component.paginate.lastPage = response.data.last_page;
+                        component.paginate.total = response.data.total;
                         component.isLoading = false;
                     })
                     .catch(function (error) {

@@ -9,13 +9,13 @@
         <td class="align-middle text-center"><expansion-icon :expansion="item.card.expansion" :show-name="false"></expansion-icon></td>
         <td class="align-middle d-none d-xl-table-cell text-center"><rarity :value="item.card.rarity"></rarity></td>
         <td class="align-middle d-none d-lg-table-cell text-center">
-            <select class="form-control  form-control-sm" v-model="form.language_id">
+            <select class="form-control form-control-sm" v-model="form.language_id">
                 <option :value="language_id" v-for="(name, language_id) in languages">{{ name }}</option>
             </select>
             <div class="invalid-feedback" v-text="'unit_price_formatted' in errors ? errors.unit_price_formatted[0] : ''"></div>
         </td>
         <td class="align-middle d-none d-lg-table-cell text-center">
-            <select class="form-control  form-control-sm" v-model="form.condition">
+            <select class="form-control form-control-sm" v-model="form.condition">
                 <option :value="id" v-for="(name, id) in conditions">{{ name }}</option>
             </select>
             <div class="invalid-feedback" v-text="'condition' in errors ? errors.condition[0] : ''"></div>
@@ -36,7 +36,7 @@
             </div>
         </td>
         <td class="align-middle d-none d-xl-table-cell text-center">
-            <select class="form-control  form-control-sm" v-model="form.storage_id">
+            <select class="form-control form-control-sm" v-model="form.storage_id">
                 <option :value="null">{{ $t('storages.no_storage') }}</option>
                 <option :value="storage.id" v-for="(storage, key) in storages" v-html="storage.indentedName"></option>
             </select>
@@ -44,7 +44,7 @@
         </td>
         <td class="align-middle d-none d-sm-table-cell text-right">
             <div class="input-group">
-                <input class="form-control  form-control-sm text-right" :class="'unit_price_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_price_formatted" @keydown.enter="update(false)">
+                <input class="form-control form-control-sm text-right" :class="'unit_price_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_price_formatted" @keydown.enter="update(false)">
                 <div class="input-group-append" v-if="item.rule_id">
                     <span class="input-group-text text-left pointer" :title="'Regel ' + item.rule.name" @click="form.unit_price_formatted = item.price_rule_formatted">
                         {{ item.price_rule_formatted }}€
@@ -54,7 +54,7 @@
             <div class="invalid-feedback" v-text="'unit_price_formatted' in errors ? errors.unit_price_formatted[0] : ''"></div>
         </td>
         <td class="align-middle d-none d-xl-table-cell text-right">
-            <input class="form-control  form-control-sm text-right" :class="'unit_cost_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_cost_formatted" @keydown.enter="update(false)">
+            <input class="form-control form-control-sm text-right" :class="'unit_cost_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_cost_formatted" @keydown.enter="update(false)">
             <div class="invalid-feedback" v-text="'unit_cost_formatted' in errors ? errors.unit_cost_formatted[0] : ''"></div>
         </td>
         <td class="align-middle d-none d-xl-table-cell text-right">{{ Number(item.provision).format(2, ',', '.') }} €</td>
@@ -78,24 +78,24 @@
             <div class="text-muted" v-if="item.language_id != 1">{{ item.card.name }}</div></td>
         <td class="align-middle text-center"><expansion-icon :expansion="item.card.expansion" :show-name="false"></expansion-icon></td>
         <td class="align-middle d-none d-xl-table-cell text-center"><rarity :value="item.card.rarity"></rarity></td>
-        <td class="align-middle d-none d-lg-table-cell text-center"><span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span></td>
         <td class="align-middle d-none d-lg-table-cell text-center"><condition :value="item.condition"></condition></td>
         <td class="align-middle d-none d-xl-table-cell text-center">
             <i class="fas fa-star text-warning" v-if="item.is_foil"></i>
             <span v-if="item.is_signed">S</span>
             <span v-if="item.is_playset">P</span>
         </td>
-        <td class="align-middle d-none d-xl-table-cell">{{ item.storage_id ? item.storage.full_name : 'Kein Lagerplatz' }}</td>
         <td class="align-middle d-none d-sm-table-cell text-right">{{ Number(item.unit_price).format(2, ',', '.') }} €</td>
-        <td class="align-middle d-none d-xl-table-cell text-right">
-            <input class="form-control  form-control-sm text-right" :class="'unit_cost_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_cost_formatted" @keydown.enter="update(false)">
-            <div class="invalid-feedback" v-text="'unit_cost_formatted' in errors ? errors.unit_cost_formatted[0] : ''"></div>
+        <td class="align-middle d-none d-xl-table-cell">
+            <select class="form-control form-control-sm" v-model="form.storage_id">
+                <option :value="null">{{ $t('storages.no_storage') }}</option>
+                <option :value="storage.id" v-for="(storage, key) in storages" v-html="storage.indentedName"></option>
+            </select>
+            <div class="invalid-feedback" v-text="'storage_id' in errors ? errors.storage_id[0] : ''"></div>
         </td>
         <td class="align-middle d-none d-xl-table-cell text-right">
-            <input class="form-control  form-control-sm text-right" :class="'provision_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.provision_formatted" @keydown.enter="update">
-            <div class="invalid-feedback" v-text="'provision_formatted' in errors ? errors.provision_formatted[0] : ''"></div>
+            <input class="form-control form-control-sm text-right" :class="'slot' in errors ? 'is-invalid' : ''" type="text" v-model="form.slot" @keydown.enter="update(false)">
+            <div class="invalid-feedback" v-text="'slot' in errors ? errors.slot[0] : ''"></div>
         </td>
-        <td class="align-middle d-none d-xl-table-cell text-right pointer">{{ Number(item.unit_price - item.unit_cost - item.provision).format(2, ',', '.') }} €</td>
         <td class="align-middle d-none d-sm-table-cell text-right">
             <div class="btn-group btn-group-sm" role="group">
                 <a class="btn btn-secondary" :href="item.orders[0].path" :title="'Bestellung ' + item.orders[0].cardmarket_order_id" v-if="item.orders.length"><i class="fas fa-box"></i></a>
@@ -138,6 +138,7 @@
                     is_playset: this.item.is_playset,
                     sync: false,
                     storage_id: this.item.storage_id,
+                    slot: this.item.slot,
                 },
                 errors: {},
             };
@@ -150,6 +151,7 @@
                     condition: newValue.condition,
                     language_id: newValue.language_id,
                     storage_id: newValue.storage_id,
+                    slot: newValue.slot,
                     unit_cost_formatted: newValue.unit_cost_formatted,
                     unit_price_formatted: newValue.unit_price_formatted,
                     provision_formatted: newValue.provision_formatted,

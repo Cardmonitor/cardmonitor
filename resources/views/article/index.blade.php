@@ -6,6 +6,7 @@
         <h2 class="col pl-0">{{ __('app.nav.article') }}</h2>
         <div>
             <a class="btn btn-sm btn-secondary" href="/article/stock">Bestände</a>
+            <a class="btn btn-sm btn-secondary" href="">TODO: Einlagerungen (Historie)</a>
         </div>
     </div>
     <article-table

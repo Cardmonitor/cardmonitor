@@ -12,5 +12,6 @@ $factory->define(Storage::class, function (Faker $faker) {
         'parent_id' => null,
         'number' => null,
         'name' => $faker->word,
+        'slots' => $faker->randomNumber(),
     ];
 });

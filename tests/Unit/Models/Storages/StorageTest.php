@@ -106,4 +106,78 @@ class StorageTest extends TestCase
 
         $this->assertHasMany($model, $related, 'contents');
     }
+
+    /**
+     * @test
+     */
+    public function it_finds_the_no_storage()
+    {
+        $this->assertNull(Storage::noStorage($this->user->id)->first());
+
+        $no_storage = factory(Storage::class)->create([
+            'user_id' => $this->user->id,
+            'name' => Storage::NAME_NO_STORAGE,
+        ]);
+
+        $storage = Storage::noStorage($this->user->id)->first();
+        $this->assertInstanceOf(Storage::class, $storage);
+        $this->assertEquals($no_storage->id, $storage->id);
+
+        $storage = factory(Storage::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        $storage = Storage::noStorage($this->user->id)->first();
+        $this->assertInstanceOf(Storage::class, $storage);
+        $this->assertEquals($no_storage->id, $storage->id);
+    }
+
+    /**
+     * @test
+     */
+    public function it_knows_its_open_slot_count()
+    {
+        $storage = factory(Storage::class)->create([
+            'user_id' => $this->user->id,
+            'slots' => 0,
+        ]);
+
+        $this->assertEquals(0, $storage->open_slots_count);
+
+        $storage = factory(Storage::class)->create([
+            'user_id' => $this->user->id,
+            'slots' => 100,
+        ]);
+
+        $this->assertEquals(100, $storage->open_slots_count);
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        $article->setStorage($storage, 1)->save();
+
+        $this->assertEquals(99, $storage->open_slots_count);
+    }
+
+    /**
+     * @test
+     */
+    public function it_knows_its_open_slots()
+    {
+        $storage = factory(Storage::class)->create([
+            'user_id' => $this->user->id,
+            'slots' => 5,
+        ]);
+
+        $this->assertCount(5, Storage::openSlots($storage->id));
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'storage_id' => $storage->id,
+            'slot' => 1,
+        ]);
+
+        $this->assertCount(4, Storage::openSlots($storage->id));
+    }
 }

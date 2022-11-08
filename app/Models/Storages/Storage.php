@@ -4,6 +4,7 @@ namespace App\Models\Storages;
 
 use App\Models\Articles\Article;
 use App\Models\Storages\Content;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 class Storage extends Model
 {
     use \Kalnoy\Nestedset\NodeTrait;
+
+    const NAME_NO_STORAGE = 'Kein Lagerplatz';
 
     protected $appends = [
         'editPath',
@@ -70,6 +73,27 @@ class Storage extends Model
             ]);
     }
 
+    public static function openSlots(int $storage_id, int $article_id = 0): array
+    {
+        $storage = self::find($storage_id);
+
+        if (is_null($storage)) {
+            return [];
+        }
+
+        $slots = $storage->slots;
+
+        $openSlots = [];
+
+        for ($i = 1; $i <= $slots; $i++) {
+            $openSlots[$i] = $i;
+        }
+
+        $openSlots = array_diff($openSlots, $storage->articles()->where('id', '!=', $article_id)->pluck('slot')->toArray());
+
+        return $openSlots;
+    }
+
     public function isDeletable() : bool
     {
         return (! $this->articles()->exists() && ! $this->descendants()->exists() && ! $this->contents()->exists());
@@ -96,6 +120,28 @@ class Storage extends Model
     public function getIndentedNameAttribute()
     {
         return str_repeat('&nbsp;', $this->depth * 4) . $this->name;
+    }
+
+    public function getOpenSlotsCountAttribute(): int
+    {
+        if (! $this->slots) {
+            return 0;
+        }
+
+        return $this->slots - $this->articles()->count();
+    }
+
+    public function IsSlotAvailable(int $slot): bool
+    {
+        if (! $this->slots) {
+            return true;
+        }
+
+        if ($slot < 0 || $slot > $this->slots) {
+            return false;
+        }
+
+        return !$this->articles()->where('slot', $slot)->exists();
     }
 
     public function getPathAttribute()
@@ -155,6 +201,12 @@ class Storage extends Model
     public function contents() : HasMany
     {
         return $this->hasMany(Content::class);
+    }
+
+    public function scopeNoStorage(Builder $query, int $user_id): Builder
+    {
+        return $query->where('user_id', $user_id)
+            ->where('name', self::NAME_NO_STORAGE);
     }
 
 }

@@ -6,7 +6,9 @@ return [
         'alert_no_filter' => 'Bitte eine Erweiterung wählen oder mindestens 3 Zeichen in der Suche eingeben.',
         'loading_latest_prices' => 'Lade aktuelle Preise',
     ],
-    'alert_no_data' => 'Keine Karten gefunden',
+    'alerts' => [
+        'no_data' => 'Keine Karten vorhanden',
+    ],
     'sync' => 'Sync',
     'is_syncing' => 'Synchronisiere Artikel',
     'snyc' => 'Artikel synchronisieren',

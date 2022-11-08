@@ -120,6 +120,7 @@ class Article extends Model
         'state',
         'state_comments',
         'storage_id',
+        'slot',
         'sync_error',
         'synced_at',
         'unit_cost',
@@ -174,6 +175,8 @@ class Article extends Model
         $cardmarket_article_ids = [];
 
         $expansions = Expansion::where('game_id', $game_id)->get()->keyBy('abbreviation');
+        $no_storage = Storage::noStorage($user_id)->first();
+        $no_storage_id = $no_storage->id ?? null;
 
         $row_count = 0;
         $stockfile = fopen($path, "r");
@@ -197,7 +200,7 @@ class Article extends Model
             $cardmarket_article['expansion_id'] = $data['expansion_id'];
 
             $cardmarket_article['user_id'] = $user_id;
-            $cardmarket_article['storage_id'] = Content::defaultStorage($user_id, $cardmarket_article['expansion_id']);
+            $cardmarket_article['storage_id'] = $no_storage_id;
             $cardmarket_article['unit_cost'] = \App\Models\Items\Card::defaultPrice($user_id, '');
             $cardmarket_article['exported_at'] = now();
 
@@ -565,6 +568,7 @@ class Article extends Model
             'is_signed',
             'language_id',
             'storage_id',
+            'slot',
             'unit_cost',
             'unit_price',
             'user_id',
@@ -642,6 +646,22 @@ class Article extends Model
             'amount' => $amount,
             'affected' => $deleted_count,
         ];
+    }
+
+    public function setStorage(\App\Models\Storages\Storage $storage, int $slot = 0): self
+    {
+        $this->storage()->associate($storage);
+        $this->slot = $slot;
+
+        return $this;
+    }
+
+    public function unsetStorage(): self
+    {
+        $this->storage()->dissociate();
+        $this->slot = 0;
+
+        return $this;
     }
 
     public function setBoughtAtFormattedAttribute($value)
@@ -968,6 +988,19 @@ class Article extends Model
         }
 
         return $query;
+    }
+
+    public function scopeStorage(Builder $query, $value) : Builder
+    {
+        if (empty($value)) {
+            return $query;
+        }
+
+        if ($value == -1) {
+            return $query->whereNull('articles.storage_id');
+        }
+
+        return $query->where('articles.storage_id', $value);
     }
 
     public function scopeUnitPrice(Builder $query, $min, $max) : Builder

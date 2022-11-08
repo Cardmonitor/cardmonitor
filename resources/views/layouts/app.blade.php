@@ -13,8 +13,6 @@
                 <a href="/home"><li>{{ __('app.nav.home') }}</li></a>
                 <a href="/article"><li>{{ __('app.nav.article') }}</li></a>
                 <a href="/order"><li>{{ __('app.nav.order') }}</li></a>
-                <a href="/item"><li>{{ __('app.nav.item') }}</li></a>
-                <a href="/rule"><li>{{ __('app.nav.rule') }}</li></a>
                 <a href="/storages"><li>{{ __('app.nav.storages') }}</li></a>
                 <a href="/expansions"><li>Erweiterungen</li></a>
             </ul>
