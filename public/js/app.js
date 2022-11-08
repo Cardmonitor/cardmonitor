@@ -2205,7 +2205,8 @@ __webpack_require__.r(__webpack_exports__);
         is_signed: this.item.is_signed,
         is_playset: this.item.is_playset,
         sync: false,
-        storage_id: this.item.storage_id
+        storage_id: this.item.storage_id,
+        slot: this.item.slot
       },
       errors: {}
     };
@@ -2217,6 +2218,7 @@ __webpack_require__.r(__webpack_exports__);
         condition: newValue.condition,
         language_id: newValue.language_id,
         storage_id: newValue.storage_id,
+        slot: newValue.slot,
         unit_cost_formatted: newValue.unit_cost_formatted,
         unit_price_formatted: newValue.unit_price_formatted,
         provision_formatted: newValue.provision_formatted,
@@ -2676,7 +2678,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _filter_rarity_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../filter/rarity.vue */ "./resources/js/components/filter/rarity.vue");
 /* harmony import */ var _filter_rule_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../filter/rule.vue */ "./resources/js/components/filter/rule.vue");
 /* harmony import */ var _filter_search_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../filter/search.vue */ "./resources/js/components/filter/search.vue");
-/* harmony import */ var _row_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./row.vue */ "./resources/js/components/article/row.vue");
+/* harmony import */ var _filter_storage_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../filter/storage.vue */ "./resources/js/components/filter/storage.vue");
+/* harmony import */ var _row_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./row.vue */ "./resources/js/components/article/row.vue");
+
 
 
 
@@ -2692,7 +2696,8 @@ __webpack_require__.r(__webpack_exports__);
     filterRarity: _filter_rarity_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     filterRule: _filter_rule_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
     filterSearch: _filter_search_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
-    row: _row_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
+    filterStorage: _filter_storage_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+    row: _row_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
   props: {
     conditions: {
@@ -2754,7 +2759,8 @@ __webpack_require__.r(__webpack_exports__);
       paginate: {
         nextPageUrl: null,
         prevPageUrl: null,
-        lastPage: 0
+        lastPage: 0,
+        total: 0
       },
       filter: {
         cardmarket_comments: '',
@@ -2766,11 +2772,16 @@ __webpack_require__.r(__webpack_exports__);
         searchtext: '',
         show: false,
         sold: 0,
+        storage_id: 0,
         sync: -1,
         unit_cost_max: 0,
         unit_cost_min: 0,
         unit_price_max: 0,
         unit_price_min: 0
+      },
+      storageForm: {
+        articles: 'filtered-to-storage_id',
+        storage_id: null
       },
       selected: [],
       errors: {}
@@ -2896,6 +2907,7 @@ __webpack_require__.r(__webpack_exports__);
         component.paginate.nextPageUrl = response.data.next_page_url;
         component.paginate.prevPageUrl = response.data.prev_page_url;
         component.paginate.lastPage = response.data.last_page;
+        component.paginate.total = response.data.total;
         component.isLoading = false;
       })["catch"](function (error) {
         Vue.error('Artikel konnten nicht geladen werden!');
@@ -3358,6 +3370,43 @@ __webpack_require__.r(__webpack_exports__);
         name: 'Wie Magic Erweiterung'
       });
       return sorted;
+    }
+  },
+  data: function data() {
+    return {
+      value: this.initialValue || 0
+    };
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/filter/storage.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/filter/storage.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['initialValue', 'options'],
+  computed: {
+    sortedOptions: function sortedOptions() {
+      function compare(a, b) {
+        if (a.name < b.name) {
+          return -1;
+        }
+
+        if (a.name > b.name) {
+          return 1;
+        }
+
+        return 0;
+      }
+
+      return this.options.sort(compare);
     }
   },
   data: function data() {
@@ -7423,14 +7472,6 @@ var render = function render() {
     }
   })], 1), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-lg-table-cell text-center"
-  }, [_c("span", {
-    staticClass: "fi",
-    "class": "fi-" + _vm.item.language.code,
-    attrs: {
-      title: _vm.item.language.name
-    }
-  })]), _vm._v(" "), _c("td", {
-    staticClass: "align-middle d-none d-lg-table-cell text-center"
   }, [_c("condition", {
     attrs: {
       value: _vm.item.condition
@@ -7440,25 +7481,61 @@ var render = function render() {
   }, [_vm.item.is_foil ? _c("i", {
     staticClass: "fas fa-star text-warning"
   }) : _vm._e(), _vm._v(" "), _vm.item.is_signed ? _c("span", [_vm._v("S")]) : _vm._e(), _vm._v(" "), _vm.item.is_playset ? _c("span", [_vm._v("P")]) : _vm._e()]), _vm._v(" "), _c("td", {
-    staticClass: "align-middle d-none d-xl-table-cell"
-  }, [_vm._v(_vm._s(_vm.item.storage_id ? _vm.item.storage.full_name : "Kein Lagerplatz"))]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-sm-table-cell text-right"
   }, [_vm._v(_vm._s(Number(_vm.item.unit_price).format(2, ",", ".")) + " €")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle d-none d-xl-table-cell"
+  }, [_c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.storage_id,
+      expression: "form.storage_id"
+    }],
+    staticClass: "form-control form-control-sm",
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+
+        _vm.$set(_vm.form, "storage_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    domProps: {
+      value: null
+    }
+  }, [_vm._v(_vm._s(_vm.$t("storages.no_storage")))]), _vm._v(" "), _vm._l(_vm.storages, function (storage, key) {
+    return _c("option", {
+      domProps: {
+        value: storage.id,
+        innerHTML: _vm._s(storage.indentedName)
+      }
+    });
+  })], 2), _vm._v(" "), _c("div", {
+    staticClass: "invalid-feedback",
+    domProps: {
+      textContent: _vm._s("storage_id" in _vm.errors ? _vm.errors.storage_id[0] : "")
+    }
+  })]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell text-right"
   }, [_c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.form.unit_cost_formatted,
-      expression: "form.unit_cost_formatted"
+      value: _vm.form.slot,
+      expression: "form.slot"
     }],
     staticClass: "form-control form-control-sm text-right",
-    "class": "unit_cost_formatted" in _vm.errors ? "is-invalid" : "",
+    "class": "slot" in _vm.errors ? "is-invalid" : "",
     attrs: {
       type: "text"
     },
     domProps: {
-      value: _vm.form.unit_cost_formatted
+      value: _vm.form.slot
     },
     on: {
       keydown: function keydown($event) {
@@ -7468,50 +7545,15 @@ var render = function render() {
       input: function input($event) {
         if ($event.target.composing) return;
 
-        _vm.$set(_vm.form, "unit_cost_formatted", $event.target.value);
+        _vm.$set(_vm.form, "slot", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("div", {
     staticClass: "invalid-feedback",
     domProps: {
-      textContent: _vm._s("unit_cost_formatted" in _vm.errors ? _vm.errors.unit_cost_formatted[0] : "")
+      textContent: _vm._s("slot" in _vm.errors ? _vm.errors.slot[0] : "")
     }
   })]), _vm._v(" "), _c("td", {
-    staticClass: "align-middle d-none d-xl-table-cell text-right"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.form.provision_formatted,
-      expression: "form.provision_formatted"
-    }],
-    staticClass: "form-control form-control-sm text-right",
-    "class": "provision_formatted" in _vm.errors ? "is-invalid" : "",
-    attrs: {
-      type: "text"
-    },
-    domProps: {
-      value: _vm.form.provision_formatted
-    },
-    on: {
-      keydown: function keydown($event) {
-        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
-        return _vm.update.apply(null, arguments);
-      },
-      input: function input($event) {
-        if ($event.target.composing) return;
-
-        _vm.$set(_vm.form, "provision_formatted", $event.target.value);
-      }
-    }
-  }), _vm._v(" "), _c("div", {
-    staticClass: "invalid-feedback",
-    domProps: {
-      textContent: _vm._s("provision_formatted" in _vm.errors ? _vm.errors.provision_formatted[0] : "")
-    }
-  })]), _vm._v(" "), _c("td", {
-    staticClass: "align-middle d-none d-xl-table-cell text-right pointer"
-  }, [_vm._v(_vm._s(Number(_vm.item.unit_price - _vm.item.unit_cost - _vm.item.provision).format(2, ",", ".")) + " €")]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-sm-table-cell text-right"
   }, [_c("div", {
     staticClass: "btn-group btn-group-sm",
@@ -8160,24 +8202,7 @@ var render = function render() {
     "class": {
       "fa-spin": _vm.syncing.status == 1
     }
-  })]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-sm btn-primary text-overflow-ellipsis ml-1",
-    attrs: {
-      type: "button",
-      title: _vm.$t("rule.apply"),
-      "data-toggle": "modal",
-      "data-target": "#confirm-rule-apply",
-      disabled: _vm.applying.status == 1
-    }
-  }, [_c("i", {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: _vm.applying.status == 1,
-      expression: "applying.status == 1"
-    }],
-    staticClass: "fas fa-spinner fa-spin mr-1"
-  }), _vm._v(_vm._s(_vm.$t("rule.apply")) + "\n            ")])])]), _vm._v(" "), _vm.filter.show ? _c("form", {
+  })]), _vm._v(" "), false ? undefined : _vm._e()])]), _vm._v(" "), _vm.filter.show ? _c("form", {
     staticClass: "mt-1",
     attrs: {
       id: "filter"
@@ -8341,6 +8366,22 @@ var render = function render() {
     }
   })], 1), _vm._v(" "), _c("div", {
     staticClass: "col-auto"
+  }, [_c("filter-storage", {
+    attrs: {
+      options: _vm.storages
+    },
+    on: {
+      input: _vm.search
+    },
+    model: {
+      value: _vm.filter.storage_id,
+      callback: function callback($$v) {
+        _vm.$set(_vm.filter, "storage_id", $$v);
+      },
+      expression: "filter.storage_id"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-auto"
   }, [_vm.rules != null ? _c("filter-rule", {
     attrs: {
       options: _vm.rules
@@ -8491,34 +8532,31 @@ var render = function render() {
     staticClass: "text-center d-none d-lg-table-cell w-icon"
   }, [_vm._v(_vm._s(_vm.$t("article.sync")))]), _vm._v(" "), _c("th", {
     staticClass: "text-right d-none d-xl-table-cell w-icon"
-  }), _vm._v(" "), _c("th", {}, [_vm._v(_vm._s(_vm.$t("app.name")))]), _vm._v(" "), _c("th", {
+  }), _vm._v(" "), _c("th", {
+    attrs: {
+      width: "100%"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("app.name")))]), _vm._v(" "), _c("th", {
     staticClass: "w-icon"
   }), _vm._v(" "), _c("th", {
     staticClass: "text-center d-none d-xl-table-cell w-icon"
   }), _vm._v(" "), _c("th", {
-    staticClass: "text-center d-none d-lg-table-cell"
-  }, [_vm._v(_vm._s(_vm.$t("app.language")))]), _vm._v(" "), _c("th", {
-    staticClass: "text-center d-none d-lg-table-cell"
+    staticClass: "text-center d-none d-lg-table-cell w-formatted-number"
   }, [_vm._v(_vm._s(_vm.$t("app.condition")))]), _vm._v(" "), _c("th", {
     staticClass: "d-none d-xl-table-cell",
     staticStyle: {
       width: "100px"
     }
   }), _vm._v(" "), _c("th", {
-    staticClass: "d-none d-xl-table-cell"
-  }, [_vm._v(_vm._s(_vm.$t("storages.storage")))]), _vm._v(" "), _c("th", {
-    staticClass: "text-right d-none d-sm-table-cell"
+    staticClass: "text-right d-none d-sm-table-cell w-formatted-number"
   }, [_vm._v(_vm._s(_vm.$t("app.price_abbr")))]), _vm._v(" "), _c("th", {
-    staticClass: "text-right d-none d-xl-table-cell"
-  }, [_vm._v(_vm._s(_vm.$t("app.price_buying_abbr")))]), _vm._v(" "), _c("th", {
-    staticClass: "text-right d-none d-xl-table-cell w-formatted-number"
-  }, [_vm._v(_vm._s(_vm.$t("app.provision")))]), _vm._v(" "), _c("th", {
-    staticClass: "text-right d-none d-xl-table-cell w-formatted-number",
-    attrs: {
-      title: _vm.$t("app.profit_anticipated"),
-      width: "100"
+    staticClass: "d-none d-xl-table-cell",
+    staticStyle: {
+      width: "150px"
     }
-  }, [_vm._v(_vm._s(_vm.$t("app.revenue")))]), _vm._v(" "), _c("th", {
+  }, [_vm._v(_vm._s(_vm.$t("storages.storage")))]), _vm._v(" "), _c("th", {
+    staticClass: "text-right d-none d-xl-table-cell w-formatted-number"
+  }, [_vm._v("Slot")]), _vm._v(" "), _c("th", {
     staticClass: "text-right d-none d-sm-table-cell w-action"
   }, [_vm._v(_vm._s(_vm.$t("app.actions.action")))])])]), _vm._v(" "), _c("tbody", [_vm._l(_vm.items, function (item, index) {
     return [_c("row", {
@@ -8547,9 +8585,79 @@ var render = function render() {
         }
       }
     })];
-  })], 2)])]) : _c("div", {
+  })], 2), _vm._v(" "), _c("tfoot", [_c("tr", [_c("td"), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_vm._v(_vm._s(_vm.items.length) + " von " + _vm._s(_vm.paginate.total))]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle",
+    attrs: {
+      colspan: "5"
+    }
+  }, [_c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.storageForm.articles,
+      expression: "storageForm.articles"
+    }],
+    staticClass: "form-control form-control-sm",
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+
+        _vm.$set(_vm.storageForm, "articles", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: "filtered-to-storage_id"
+    }
+  }, [_vm._v("Alle gefilterten in Lagerplatz")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "page-to-storage_id"
+    }
+  }, [_vm._v("Diese Seite in Lagerplatz")])])]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle",
+    attrs: {
+      colspan: "5"
+    }
+  }, [_c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.storageForm.storage_id,
+      expression: "storageForm.storage_id"
+    }],
+    staticClass: "form-control form-control-sm",
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+
+        _vm.$set(_vm.storageForm, "storage_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    domProps: {
+      value: null
+    }
+  }, [_vm._v("Lagerplatz entfernen")]), _vm._v(" "), _vm._l(_vm.storages, function (storage, index) {
+    return _c("option", {
+      domProps: {
+        value: storage.id
+      }
+    }, [_vm._v(_vm._s(storage.full_name))]);
+  })], 2)]), _vm._v(" "), _vm._m(1)])])])]) : _c("div", {
     staticClass: "alert alert-dark mt-3"
-  }, [_c("center", [_vm._v(_vm._s(_vm.$t("article.errors.no_data")))])], 1), _vm._v(" "), _c("nav", {
+  }, [_c("center", [_vm._v(_vm._s(_vm.$t("article.alerts.no_data")))])], 1), _vm._v(" "), _c("nav", {
     attrs: {
       "aria-label": "Page navigation example"
     }
@@ -8651,7 +8759,7 @@ var render = function render() {
     staticClass: "modal-header"
   }, [_c("h5", {
     staticClass: "modal-title"
-  }, [_vm._v(_vm._s(_vm.$t("rule.apply")))]), _vm._v(" "), _vm._m(1)]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("rule.apply")))]), _vm._v(" "), _vm._m(2)]), _vm._v(" "), _c("div", {
     staticClass: "modal-body"
   }, [_c("p", [_vm._v(_vm._s(_vm.$t("rule.modal_apply.body.question")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.$t("rule.modal_apply.body.comment")))]), _vm._v(" "), _c("div", {
     staticClass: "alert alert-danger",
@@ -8703,6 +8811,15 @@ var staticRenderFns = [function () {
   }, [_c("i", {
     staticClass: "fas fa-plus-square"
   })])]);
+}, function () {
+  var _vm = this,
+      _c = _vm._self._c;
+
+  return _c("td", {
+    staticClass: "align-middle text-right"
+  }, [_c("button", {
+    staticClass: "btn btn-sm btn-secondary"
+  }, [_vm._v("Einlagern")])]);
 }, function () {
   var _vm = this,
       _c = _vm._self._c;
@@ -9322,6 +9439,74 @@ var render = function render() {
       }
     }])
   })], 1);
+};
+
+var staticRenderFns = [];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/filter/storage.vue?vue&type=template&id=c27c2022&":
+/*!***********************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/filter/storage.vue?vue&type=template&id=c27c2022& ***!
+  \***********************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function render() {
+  var _vm = this,
+      _c = _vm._self._c;
+
+  return _c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "filter-rule"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("storages.storage")))]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.value,
+      expression: "value"
+    }],
+    staticClass: "form-control form-control-sm",
+    attrs: {
+      id: "filter-rule"
+    },
+    on: {
+      change: [function ($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.value = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
+      }, function ($event) {
+        return _vm.$emit("input", _vm.value);
+      }]
+    }
+  }, [_c("option", {
+    domProps: {
+      value: 0
+    }
+  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: -1
+    }
+  }, [_vm._v(_vm._s(_vm.$t("storages.no_storage")))]), _vm._v(" "), _vm._l(_vm.sortedOptions, function (option, key) {
+    return _c("option", {
+      domProps: {
+        value: option.id
+      }
+    }, [_vm._v(_vm._s(option.name))]);
+  })], 2)]);
 };
 
 var staticRenderFns = [];
@@ -71531,7 +71716,7 @@ module.exports = function(module) {
 /*! exports provided: app, article, auth, cardmarket, emails, expansion, filter, image, item, order, pagination, passwords, rule, storages, user, validation, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"app\":{\"actions\":{\"action\":\"Aktion\",\"activate\":\"Aktivieren\",\"cancel\":\"Abbrechen\",\"create\":\"Anlegen\",\"deactivate\":\"Deaktivieren\",\"delete\":\"Löschen\",\"edit\":\"Bearbeiten\",\"save\":\"Speichern\",\"save_upload\":\"Speichern & Exportieren\",\"send\":\"Versenden\",\"show\":\"Anzeigen\",\"upload\":\"Exportieren\"},\"amount\":\"Anzahl\",\"article\":\"Artikel\",\"articles\":\"Artikel\",\"cards\":\"Karten\",\"comments\":\"Hinweise\",\"condition\":\"Zustand\",\"costs\":\"Kosten\",\"date\":\"Datum\",\"description\":\"Verwalte dein Cardmarket Konto\",\"difference\":\"Differenz\",\"errors\":{\"created\":\"Datensatz konnte nicht angelegt werden!\",\"deleted\":\"Datensatz konnte nicht gelöscht werden!\",\"loaded\":\"Datensätze konnten nicht geladen werden!\",\"no_data\":\"Keine Daten vorhanden\",\"sorted\":\"Reihenfolge konnte nicht gespeichert werden!\",\"updated\":\"Datensatz konnte nicht gespeichert werden!\"},\"expansion\":\"Erweiterung\",\"game\":\"Spiel\",\"images\":\"Bilder\",\"impressum\":{\"link\":\"Impressum & Datenschutz\"},\"language\":\"Sprache\",\"loading\":\"Lade Daten..\",\"message\":\"Nachricht\",\"months\":{\"1\":\"Januar\",\"2\":\"Februar\",\"3\":\"März\",\"4\":\"April\",\"5\":\"Mai\",\"6\":\"Juni\",\"7\":\"Juli\",\"8\":\"August\",\"9\":\"September\",\"10\":\"Oktober\",\"11\":\"November\",\"12\":\"Dezember\"},\"name\":\"Name\",\"nav\":{\"article\":\"Artikel\",\"home\":\"Start\",\"item\":\"Kosten\",\"order\":\"Bestellungen\",\"rule\":\"Regeln\",\"settings\":\"Einstellungen\",\"storages\":\"Lagerplätze\"},\"offer\":\"Angebot\",\"offers\":\"Angebote\",\"other\":\"Sonstiges\",\"overview\":\"Übersicht\",\"paginate\":{\"next\":\"Weiter\",\"previous\":\"Zurück\"},\"price\":\"Verkaufspreis\",\"price_abbr\":\"VK\",\"price_buying\":\"Einkaufspreis\",\"price_buying_abbr\":\"EK\",\"price_rule\":\"Regelpreis\",\"profit\":\"Gewinn\",\"profit_anticipated\":\"Voraussichtlicher Gewinn ohne allgemeine Kosten\",\"provision\":\"Provision\",\"purchase\":\"Einkauf\",\"purchases\":\"Einkäufe\",\"rarity\":\"Seltenheit\",\"revenue\":\"Umsatz\",\"sale\":\"Verkauf\",\"sales\":\"Verkäufe\",\"search\":\"suchen..\",\"shipping\":\"Versand\",\"state\":\"Status\",\"successes\":{\"created\":\"Datensatz wurde erstellt.\",\"created_uploaded\":\"Datensatz wurde erstellt und hochgeladen.\",\"deleted\":\"Datensatz wurde gelöscht\",\"sorted\":\"Reihenfolge wurde gespeichert.\",\"updated\":\"Datensatz wurde gespeichert\",\"uploaded\":\"Datensatz wurde hochgeladen.\"},\"total\":\"Gesamt\"},\"article\":{\"alert_no_data\":\"Keine Karten gefunden\",\"create\":{\"alert_no_filter\":\"Bitte eine Erweiterung wählen oder mindestens 3 Zeichen in der Suche eingeben.\",\"heading\":\"Artikel hinzufügen\",\"loading_latest_prices\":\"Lade aktuelle Preise\"},\"is_syncing\":\"Synchronisiere Artikel\",\"snyc\":\"Artikel synchronisieren\",\"sync\":\"Sync\",\"synced\":\"Artikel wurden synchronisiert.\",\"syncing_background\":\"Artikel werden im Hintergrund aktualisiert.\",\"syncing_error\":\"Artikel konnten nicht synchronisiert werden! Ist das Cardmarket Konto verbunden?\"},\"auth\":{\"button_remember\":\"Angemeldet bleiben\",\"confirmation_again\":\"Wenn Sie Ihre E-Mail-Adresse ändern möchten, <a href=\\\":url\\\" class=\\\"alert-link\\\">klicken Sie bitte hier</a>.\",\"confirmation_check\":\"Bevor sie weitermachen, überprüfen sie bitte ihre E-mails nach einem Bestätigungslink.\",\"confirmation_fresh\":\"Ein Bestätigungslink wurde an Ihre E-Mail-Adresse geschickt.\",\"confirmation_request_another\":\"If you did not receive the email <a :action>click here to request another</a>.\",\"confirmation_title\":\"E-Mail-Adresse bestätigen\",\"email\":\"E-Mail Adresse\",\"failed\":\"Diese Kombination aus Zugangsdaten wurde nicht in unserer Datenbank gefunden.\",\"login\":\"Anmelden\",\"logout\":\"Abmelden\",\"password\":\"Passwort\",\"password_confirmation\":\"Passwort wiederholen\",\"password_forget\":\"Passwort vergessen?\",\"password_reset\":\"Passwort zurücksetzen\",\"password_reset_action\":\"Passwort zurücksetzen\",\"password_reset_email\":\"E-Mail-Adresse\",\"password_reset_email_content\":\"Hier klicken, um das Passwort zurückzusetzen:\",\"password_reset_password\":\"Passwort\",\"password_reset_password_confirm\":\"Passwort bestätigen\",\"password_reset_send_link\":\"E-Mail zum Zurücksetzen des Passworts senden\",\"password_reset_title\":\"Passwort zurücksetzen\",\"register_create_account\":\"Sie benötigen ein Konto, um Monica zu verwenden\",\"register_email\":\"E-Mail Adresse\",\"register_login\":\"<a href=\\\":url\\\">Einloggen</a> wenn Sie bereits ein Konto haben.\",\"register_name\":\"Name\",\"register_title_create\":\"Monica Konto erstellen\",\"register_title_welcome\":\"Herzlich Willkommen in Ihrer neu installierten Instanz von Monica\",\"signup\":\"Registrieren\"},\"cardmarket\":{\"create\":{\"action\":\"Konto verknüpfen\",\"header\":\"Cardmarket Konto verknüpfen\"}},\"emails\":[],\"expansion\":{\"alerts\":{\"no_data\":\"Keine Erweiterungen vorhanden\"},\"errors\":{\"loaded\":\"Erweiterungen konnten nicht geladen werden!\"},\"successes\":[]},\"filter\":{\"all\":\"Alle\",\"expansion\":{\"all\":\"Alle Erweiterungen\"},\"price\":{\"max\":\"Verkaufspreis max\",\"min\":\"Verkaufspreis min\"},\"price_buying\":{\"max\":\"Einkaufspreis max\",\"min\":\"Einkaufspreis min\"},\"rarity\":{\"all\":\"Alle Seltenheiten\"},\"rule\":{\"label\":\"Regel\",\"without\":\"Ohne Regel\"},\"sold\":{\"label\":\"Verkauft\",\"not_sold\":\"Nicht Verkauft\",\"sold\":\"Verkauft\"},\"sync\":{\"error\":\"Fehler\",\"label\":\"Sync\",\"success\":\"Erfolg\"}},\"image\":{\"alerts\":{\"no_data\":\"Keine Bilder vorhanden\"},\"create\":{\"instruction\":\"Dateien hier ablegen, oder klicken\",\"is_creating\":\"Lade {files_count} Dateien hoch..\"},\"imageable\":{\"index\":{\"heading\":\"Gallerie deiner Bestellung :order\"}},\"plural\":\"Bilder\"},\"item\":{\"actions\":{\"reload\":\"Kosten neu berechnen\"},\"alerts\":{\"no_data\":\"Keine Kosten vorhanden\"},\"errors\":{\"reloaded\":\"Kosten konnten nicht neu berechnet werden!\"},\"piece\":\"Stück\",\"quantities\":\"Staffelung\",\"quantity\":{\"plural\":\"Staffelung\",\"table\":{\"create_small\":\"Maximaler bis Karten Wert erreicht.\",\"from_cards\":\"Von Karten\",\"no_data\":\"Keine Staffelung vorhanden\",\"to_cards\":\"Bis Karten\",\"units\":\"Einheiten\"}},\"successes\":{\"reload_background\":\"Regeln werden im Hintergrund simuliert.\",\"reloaded\":\"Regeln wurden simuliert.\"},\"table\":{\"option_create\":\"Kosten hinzufügen\"},\"transaction\":[],\"transactions\":\"Bewegungen\",\"unit_cost\":\"Kosten / Einheit\"},\"order\":{\"alerts\":{\"no_data\":\"Keine Bestellungen vorhanden\"},\"article\":{\"show\":{\"actions\":{\"next\":\"Weiter\",\"next_ok\":\"Nächste Karte (Status OK)\",\"next_problem\":\"Nächste Karte (Status Problem)\"},\"alerts\":{\"no_open_cards\":\"Alle Karten bearbeitet.\"},\"problems\":{\"label\":\"Probleme?\",\"not_available\":\"ist nicht vorhanden\",\"placeholder\":\"Problem auswählen\",\"plural\":\"Probleme\",\"singular\":\"Problem\",\"wrong_condition\":\"ist in schlechterem Zusatnd als angegeben\",\"wrong_language\":\"ist in falscher Sprache\"},\"state_comments\":{\"label\":\"Status Kommentar\",\"placeholder\":\"Kommentar für Nachricht\"}},\"table\":{\"ok\":\"OK\",\"open\":\"Offen\"}},\"buyer\":\"Käufer\",\"calculation\":\"Kalkulation\",\"errors\":{\"loaded\":\"Bestellungen konnten nicht geladen werden!\",\"send\":\"Bestellung konnten nicht verschickt werden!\",\"synced\":\"Bestellungen konnten nicht synchronisiert werden! Ist das Cardmarket Konto verbunden?\"},\"evaluations\":{\"1\":\"Sehr gut\",\"2\":\"Gut\",\"3\":\"Neutral\",\"4\":\"Schlecht\",\"comment\":\"Kommentar\",\"complaint\":\"Beschwerden\",\"grade\":\"Allgemeine Bewertung\",\"item_description\":\"Beschreibung der Artikelzustände\",\"packaging\":\"Verpackung der Bestellung\",\"singular\":\"Bewertung\"},\"home\":{\"month\":{\"chart\":{\"title\":\"Bestellungen im :month\"},\"errors\":{\"no_data\":\"Keine Bestellungen im {month} vorhanden\"},\"title\":\"Bestellungen pro Tag\"},\"paid\":{\"title\":\"Bezahlte Bestellungen\"},\"per\":{\"card\":\"Pro Karte\",\"day\":\"Pro Tag\",\"month\":\"Pro Monat\",\"order\":\"Pro Bestellung\"},\"year\":{\"chart\":{\"title\":\"Bestellungen in :year\",\"title_latest\":\"Bestellungen der letzten 12 Monate\"},\"errors\":{\"no_data\":\"Keine Bestellungen im Zeitraum vorhanden\"},\"latest\":\"Letzte 12 Monate\",\"title\":\"Bestellungen pro Jahr\"}},\"id\":\"Bestellnummer\",\"plural\":\"Bestellungen\",\"seller\":\"Verkäufer\",\"shipping_address\":\"Versandadresse\",\"show\":{\"message_modal\":{\"title\":\"Nachricht an :buyer versenden\"}},\"singular\":\"Bestellung\",\"states\":{\"bought\":\"Unbezahlt\",\"cancelled\":\"Storniert\",\"evaluated\":\"Bewertet\",\"lost\":\"Nicht Angekommen\",\"paid\":\"Bezahlt\",\"received\":\"Angekommen\",\"sent\":\"Versandt\"},\"successes\":{\"send\":\"Bestellung wurde verschickt.\",\"synced\":\"Bestellungen wurden synchronisiert.\",\"syncing_background\":\"Bestellungen werden im Hintergrund aktualisiert.\"}},\"pagination\":{\"next\":\"Weiter &raquo;\",\"previous\":\"&laquo; Zurück\"},\"passwords\":{\"password\":\"Passwörter müssen mindestens 8 Zeichen lang sein und korrekt bestätigt werden.\",\"reset\":\"Das Passwort wurde zurückgesetzt!\",\"sent\":\"Passworterinnerung wurde gesendet!\",\"throttled\":\"Please wait before retrying.\",\"token\":\"Der Passwort-Wiederherstellungs-Schlüssel ist ungültig oder abgelaufen.\",\"user\":\"Es konnte leider kein Nutzer mit dieser E-Mail-Adresse gefunden werden.\"},\"rule\":{\"alerts\":{\"no_data\":\"Keine Regeln vorhanden\"},\"apply\":\"Regeln anwenden\",\"description\":\"Beschreibung\",\"errors\":{\"simulated\":\"Regeln konnten nicht simuliert werden!\"},\"modal_apply\":{\"body\":{\"alert\":{\"danger\":\"Ausführung auf eigene Gefahr!\",\"text\":\"Es werden Preise in deinem Cardmarket Konto verändert! Versichere dich vorher, ob alle Regeln angewendet werden, wie Du es möchtest!\"},\"comment\":\"Der Prozess läuft maximal 1 Stunde. Das entspricht etwa 30.000 Artikeln\",\"question\":\"\"}},\"multiplikator\":\"Multiplikator\",\"plural\":\"Regeln\",\"price_base\":\"Basispreis\",\"show\":{\"alert_info\":\"Regeln müssen erst simuliert oder angewendet werden, um hier eine Änderung zu sehen.\"},\"simulate\":\"Regeln simulieren\",\"successes\":{\"activated\":\"Regel {rule} wurde aktiviert.\",\"deactivated\":\"Regel {rule} wurde deaktiviert.\",\"simulate_background\":\"Regeln werden im Hintergrund simuliert.\",\"simulated\":\"Regeln wurden simuliert.\"}},\"storages\":{\"actions\":{\"assign\":\"Lagerplätze neu zuweisen\"},\"alerts\":{\"no_data\":\"Keine Lagerplätze vorhanden\"},\"articles\":\"Artikel\",\"content\":{\"alerts\":{\"no_data\":\"\"},\"errors\":{\"loaded\":\"Zuordnungen konnten nicht geladen werden!\"},\"plural\":\"Zuordnungen\",\"singular\":\"Zuordnung\"},\"errors\":{\"assigned\":\"Lagerplätze konnten nicht neu zugewiesen werden!\"},\"index\":{\"alert_info\":\"Anzahl Artikel und Summe Verkaufspreis ist inklusive Unterlagerpläze.\"},\"main_storage\":\"Hauptlagerplatz\",\"no_storage\":\"Kein Lagerplatz\",\"price\":\"Verkaufspreis\",\"storage\":\"Lagerplatz\",\"sub_storages\":\"Unterlagerplätze\",\"successes\":{\"assigned\":\"Lagerplätze wurden neu zugewiesen.\"}},\"user\":{\"edit\":{\"locale\":\"Sprache\",\"personalization\":\"Personalisierung\",\"prepared_message\":\"Vorbereitete Nachricht\"},\"locale\":{\"de\":\"Deutsch\",\"en\":\"Englisch\"}},\"validation\":{\"accepted\":\":attribute muss akzeptiert werden.\",\"active_url\":\":attribute ist keine gültige Internet-Adresse.\",\"after\":\":attribute muss ein Datum nach dem :date sein.\",\"after_or_equal\":\":attribute muss ein Datum nach dem :date oder gleich dem :date sein.\",\"alpha\":\":attribute darf nur aus Buchstaben bestehen.\",\"alpha_dash\":\":attribute darf nur aus Buchstaben, Zahlen, Binde- und Unterstrichen bestehen.\",\"alpha_num\":\":attribute darf nur aus Buchstaben und Zahlen bestehen.\",\"array\":\":attribute muss ein Array sein.\",\"attributes\":{\"address\":\"Adresse\",\"age\":\"Alter\",\"available\":\"verfügbar\",\"city\":\"Stadt\",\"content\":\"Inhalt\",\"country\":\"Land\",\"date\":\"Datum\",\"day\":\"Tag\",\"description\":\"Beschreibung\",\"email\":\"E-Mail Adresse\",\"excerpt\":\"Auszug\",\"first_name\":\"Vorname\",\"gender\":\"Geschlecht\",\"hour\":\"Stunde\",\"last_name\":\"Nachname\",\"minute\":\"Minute\",\"mobile\":\"Handynummer\",\"month\":\"Monat\",\"name\":\"Name\",\"password\":\"Passwort\",\"password_confirmation\":\"Passwort Bestätigung\",\"phone\":\"Telefonnummer\",\"second\":\"Sekunde\",\"sex\":\"Geschlecht\",\"size\":\"Größe\",\"time\":\"Uhrzeit\",\"title\":\"Titel\",\"username\":\"Benutzername\",\"year\":\"Jahr\"},\"before\":\":attribute muss ein Datum vor dem :date sein.\",\"before_or_equal\":\":attribute muss ein Datum vor dem :date oder gleich dem :date sein.\",\"between\":{\"array\":\":attribute muss zwischen :min & :max Elemente haben.\",\"file\":\":attribute muss zwischen :min & :max Kilobytes groß sein.\",\"numeric\":\":attribute muss zwischen :min & :max liegen.\",\"string\":\":attribute muss zwischen :min & :max Zeichen lang sein.\"},\"boolean\":\":attribute muss entweder 'true' oder 'false' sein.\",\"confirmed\":\":attribute stimmt nicht mit der Bestätigung überein.\",\"custom\":{\"attribute-name\":{\"rule-name\":\"custom-message\"}},\"date\":\":attribute muss ein gültiges Datum sein.\",\"date_equals\":\":attribute muss ein Datum gleich :date sein.\",\"date_format\":\":attribute entspricht nicht dem gültigen Format für :format.\",\"different\":\":attribute und :other müssen sich unterscheiden.\",\"digits\":\":attribute muss :digits Stellen haben.\",\"digits_between\":\":attribute muss zwischen :min und :max Stellen haben.\",\"dimensions\":\":attribute hat ungültige Bildabmessungen.\",\"distinct\":\":attribute beinhaltet einen bereits vorhandenen Wert.\",\"email\":\":attribute muss eine gültige E-Mail-Adresse sein.\",\"ends_with\":\":attribute muss eine der folgenden Endungen aufweisen: :values\",\"exists\":\"Der gewählte Wert für :attribute ist ungültig.\",\"file\":\":attribute muss eine Datei sein.\",\"filled\":\":attribute muss ausgefüllt sein.\",\"gt\":{\"array\":\":attribute muss mehr als :value Elemente haben.\",\"file\":\":attribute muss größer als :value Kilobytes sein.\",\"numeric\":\":attribute muss größer als :value sein.\",\"string\":\":attribute muss länger als :value Zeichen sein.\"},\"gte\":{\"array\":\":attribute muss mindestens :value Elemente haben.\",\"file\":\":attribute muss größer oder gleich :value Kilobytes sein.\",\"numeric\":\":attribute muss größer oder gleich :value sein.\",\"string\":\":attribute muss mindestens :value Zeichen lang sein.\"},\"image\":\":attribute muss ein Bild sein.\",\"in\":\"Der gewählte Wert für :attribute ist ungültig.\",\"in_array\":\"Der gewählte Wert für :attribute kommt nicht in :other vor.\",\"integer\":\":attribute muss eine ganze Zahl sein.\",\"ip\":\":attribute muss eine gültige IP-Adresse sein.\",\"ipv4\":\":attribute muss eine gültige IPv4-Adresse sein.\",\"ipv6\":\":attribute muss eine gültige IPv6-Adresse sein.\",\"json\":\":attribute muss ein gültiger JSON-String sein.\",\"lt\":{\"array\":\":attribute muss weniger als :value Elemente haben.\",\"file\":\":attribute muss kleiner als :value Kilobytes sein.\",\"numeric\":\":attribute muss kleiner als :value sein.\",\"string\":\":attribute muss kürzer als :value Zeichen sein.\"},\"lte\":{\"array\":\":attribute darf maximal :value Elemente haben.\",\"file\":\":attribute muss kleiner oder gleich :value Kilobytes sein.\",\"numeric\":\":attribute muss kleiner oder gleich :value sein.\",\"string\":\":attribute darf maximal :value Zeichen lang sein.\"},\"max\":{\"array\":\":attribute darf maximal :max Elemente haben.\",\"file\":\":attribute darf maximal :max Kilobytes groß sein.\",\"numeric\":\":attribute darf maximal :max sein.\",\"string\":\":attribute darf maximal :max Zeichen haben.\"},\"mimes\":\":attribute muss den Dateityp :values haben.\",\"mimetypes\":\":attribute muss den Dateityp :values haben.\",\"min\":{\"array\":\":attribute muss mindestens :min Elemente haben.\",\"file\":\":attribute muss mindestens :min Kilobytes groß sein.\",\"numeric\":\":attribute muss mindestens :min sein.\",\"string\":\":attribute muss mindestens :min Zeichen lang sein.\"},\"not_in\":\"Der gewählte Wert für :attribute ist ungültig.\",\"not_regex\":\":attribute hat ein ungültiges Format.\",\"numeric\":\":attribute muss eine Zahl sein.\",\"password\":\"Das Passwort ist falsch.\",\"present\":\":attribute muss vorhanden sein.\",\"regex\":\":attribute Format ist ungültig.\",\"required\":\":attribute muss ausgefüllt werden.\",\"required_if\":\":attribute muss ausgefüllt werden, wenn :other den Wert :value hat.\",\"required_unless\":\":attribute muss ausgefüllt werden, wenn :other nicht den Wert :values hat.\",\"required_with\":\":attribute muss ausgefüllt werden, wenn :values ausgefüllt wurde.\",\"required_with_all\":\":attribute muss ausgefüllt werden, wenn :values ausgefüllt wurde.\",\"required_without\":\":attribute muss ausgefüllt werden, wenn :values nicht ausgefüllt wurde.\",\"required_without_all\":\":attribute muss ausgefüllt werden, wenn keines der Felder :values ausgefüllt wurde.\",\"same\":\":attribute und :other müssen übereinstimmen.\",\"size\":{\"array\":\":attribute muss genau :size Elemente haben.\",\"file\":\":attribute muss :size Kilobyte groß sein.\",\"numeric\":\":attribute muss gleich :size sein.\",\"string\":\":attribute muss :size Zeichen lang sein.\"},\"starts_with\":\":attribute muss mit einem der folgenden Anfänge aufweisen: :values\",\"string\":\":attribute muss ein String sein.\",\"timezone\":\":attribute muss eine gültige Zeitzone sein.\",\"unique\":\":attribute ist bereits vergeben.\",\"uploaded\":\":attribute konnte nicht hochgeladen werden.\",\"url\":\":attribute muss eine URL sein.\",\"uuid\":\":attribute muss ein UUID sein.\"}}");
+module.exports = JSON.parse("{\"app\":{\"actions\":{\"action\":\"Aktion\",\"activate\":\"Aktivieren\",\"cancel\":\"Abbrechen\",\"create\":\"Anlegen\",\"deactivate\":\"Deaktivieren\",\"delete\":\"Löschen\",\"edit\":\"Bearbeiten\",\"save\":\"Speichern\",\"save_upload\":\"Speichern & Exportieren\",\"send\":\"Versenden\",\"show\":\"Anzeigen\",\"upload\":\"Exportieren\"},\"amount\":\"Anzahl\",\"article\":\"Artikel\",\"articles\":\"Artikel\",\"cards\":\"Karten\",\"comments\":\"Hinweise\",\"condition\":\"Zustand\",\"costs\":\"Kosten\",\"date\":\"Datum\",\"description\":\"Verwalte dein Cardmarket Konto\",\"difference\":\"Differenz\",\"errors\":{\"created\":\"Datensatz konnte nicht angelegt werden!\",\"deleted\":\"Datensatz konnte nicht gelöscht werden!\",\"loaded\":\"Datensätze konnten nicht geladen werden!\",\"no_data\":\"Keine Daten vorhanden\",\"sorted\":\"Reihenfolge konnte nicht gespeichert werden!\",\"updated\":\"Datensatz konnte nicht gespeichert werden!\"},\"expansion\":\"Erweiterung\",\"game\":\"Spiel\",\"images\":\"Bilder\",\"impressum\":{\"link\":\"Impressum & Datenschutz\"},\"language\":\"Sprache\",\"loading\":\"Lade Daten..\",\"message\":\"Nachricht\",\"months\":{\"1\":\"Januar\",\"2\":\"Februar\",\"3\":\"März\",\"4\":\"April\",\"5\":\"Mai\",\"6\":\"Juni\",\"7\":\"Juli\",\"8\":\"August\",\"9\":\"September\",\"10\":\"Oktober\",\"11\":\"November\",\"12\":\"Dezember\"},\"name\":\"Name\",\"nav\":{\"article\":\"Artikel\",\"home\":\"Start\",\"item\":\"Kosten\",\"order\":\"Bestellungen\",\"rule\":\"Regeln\",\"settings\":\"Einstellungen\",\"storages\":\"Lagerplätze\"},\"offer\":\"Angebot\",\"offers\":\"Angebote\",\"other\":\"Sonstiges\",\"overview\":\"Übersicht\",\"paginate\":{\"next\":\"Weiter\",\"previous\":\"Zurück\"},\"price\":\"Verkaufspreis\",\"price_abbr\":\"VK\",\"price_buying\":\"Einkaufspreis\",\"price_buying_abbr\":\"EK\",\"price_rule\":\"Regelpreis\",\"profit\":\"Gewinn\",\"profit_anticipated\":\"Voraussichtlicher Gewinn ohne allgemeine Kosten\",\"provision\":\"Provision\",\"purchase\":\"Einkauf\",\"purchases\":\"Einkäufe\",\"rarity\":\"Seltenheit\",\"revenue\":\"Umsatz\",\"sale\":\"Verkauf\",\"sales\":\"Verkäufe\",\"search\":\"suchen..\",\"shipping\":\"Versand\",\"state\":\"Status\",\"successes\":{\"created\":\"Datensatz wurde erstellt.\",\"created_uploaded\":\"Datensatz wurde erstellt und hochgeladen.\",\"deleted\":\"Datensatz wurde gelöscht\",\"sorted\":\"Reihenfolge wurde gespeichert.\",\"updated\":\"Datensatz wurde gespeichert\",\"uploaded\":\"Datensatz wurde hochgeladen.\"},\"total\":\"Gesamt\"},\"article\":{\"alerts\":{\"no_data\":\"Keine Karten vorhanden\"},\"create\":{\"alert_no_filter\":\"Bitte eine Erweiterung wählen oder mindestens 3 Zeichen in der Suche eingeben.\",\"heading\":\"Artikel hinzufügen\",\"loading_latest_prices\":\"Lade aktuelle Preise\"},\"is_syncing\":\"Synchronisiere Artikel\",\"snyc\":\"Artikel synchronisieren\",\"sync\":\"Sync\",\"synced\":\"Artikel wurden synchronisiert.\",\"syncing_background\":\"Artikel werden im Hintergrund aktualisiert.\",\"syncing_error\":\"Artikel konnten nicht synchronisiert werden! Ist das Cardmarket Konto verbunden?\"},\"auth\":{\"button_remember\":\"Angemeldet bleiben\",\"confirmation_again\":\"Wenn Sie Ihre E-Mail-Adresse ändern möchten, <a href=\\\":url\\\" class=\\\"alert-link\\\">klicken Sie bitte hier</a>.\",\"confirmation_check\":\"Bevor sie weitermachen, überprüfen sie bitte ihre E-mails nach einem Bestätigungslink.\",\"confirmation_fresh\":\"Ein Bestätigungslink wurde an Ihre E-Mail-Adresse geschickt.\",\"confirmation_request_another\":\"If you did not receive the email <a :action>click here to request another</a>.\",\"confirmation_title\":\"E-Mail-Adresse bestätigen\",\"email\":\"E-Mail Adresse\",\"failed\":\"Diese Kombination aus Zugangsdaten wurde nicht in unserer Datenbank gefunden.\",\"login\":\"Anmelden\",\"logout\":\"Abmelden\",\"password\":\"Passwort\",\"password_confirmation\":\"Passwort wiederholen\",\"password_forget\":\"Passwort vergessen?\",\"password_reset\":\"Passwort zurücksetzen\",\"password_reset_action\":\"Passwort zurücksetzen\",\"password_reset_email\":\"E-Mail-Adresse\",\"password_reset_email_content\":\"Hier klicken, um das Passwort zurückzusetzen:\",\"password_reset_password\":\"Passwort\",\"password_reset_password_confirm\":\"Passwort bestätigen\",\"password_reset_send_link\":\"E-Mail zum Zurücksetzen des Passworts senden\",\"password_reset_title\":\"Passwort zurücksetzen\",\"register_create_account\":\"Sie benötigen ein Konto, um Monica zu verwenden\",\"register_email\":\"E-Mail Adresse\",\"register_login\":\"<a href=\\\":url\\\">Einloggen</a> wenn Sie bereits ein Konto haben.\",\"register_name\":\"Name\",\"register_title_create\":\"Monica Konto erstellen\",\"register_title_welcome\":\"Herzlich Willkommen in Ihrer neu installierten Instanz von Monica\",\"signup\":\"Registrieren\"},\"cardmarket\":{\"create\":{\"action\":\"Konto verknüpfen\",\"header\":\"Cardmarket Konto verknüpfen\"}},\"emails\":[],\"expansion\":{\"alerts\":{\"no_data\":\"Keine Erweiterungen vorhanden\"},\"errors\":{\"loaded\":\"Erweiterungen konnten nicht geladen werden!\"},\"successes\":[]},\"filter\":{\"all\":\"Alle\",\"expansion\":{\"all\":\"Alle Erweiterungen\"},\"price\":{\"max\":\"Verkaufspreis max\",\"min\":\"Verkaufspreis min\"},\"price_buying\":{\"max\":\"Einkaufspreis max\",\"min\":\"Einkaufspreis min\"},\"rarity\":{\"all\":\"Alle Seltenheiten\"},\"rule\":{\"label\":\"Regel\",\"without\":\"Ohne Regel\"},\"sold\":{\"label\":\"Verkauft\",\"not_sold\":\"Nicht Verkauft\",\"sold\":\"Verkauft\"},\"sync\":{\"error\":\"Fehler\",\"label\":\"Sync\",\"success\":\"Erfolg\"}},\"image\":{\"alerts\":{\"no_data\":\"Keine Bilder vorhanden\"},\"create\":{\"instruction\":\"Dateien hier ablegen, oder klicken\",\"is_creating\":\"Lade {files_count} Dateien hoch..\"},\"imageable\":{\"index\":{\"heading\":\"Gallerie deiner Bestellung :order\"}},\"plural\":\"Bilder\"},\"item\":{\"actions\":{\"reload\":\"Kosten neu berechnen\"},\"alerts\":{\"no_data\":\"Keine Kosten vorhanden\"},\"errors\":{\"reloaded\":\"Kosten konnten nicht neu berechnet werden!\"},\"piece\":\"Stück\",\"quantities\":\"Staffelung\",\"quantity\":{\"plural\":\"Staffelung\",\"table\":{\"create_small\":\"Maximaler bis Karten Wert erreicht.\",\"from_cards\":\"Von Karten\",\"no_data\":\"Keine Staffelung vorhanden\",\"to_cards\":\"Bis Karten\",\"units\":\"Einheiten\"}},\"successes\":{\"reload_background\":\"Regeln werden im Hintergrund simuliert.\",\"reloaded\":\"Regeln wurden simuliert.\"},\"table\":{\"option_create\":\"Kosten hinzufügen\"},\"transaction\":[],\"transactions\":\"Bewegungen\",\"unit_cost\":\"Kosten / Einheit\"},\"order\":{\"alerts\":{\"no_data\":\"Keine Bestellungen vorhanden\"},\"article\":{\"show\":{\"actions\":{\"next\":\"Weiter\",\"next_ok\":\"Nächste Karte (Status OK)\",\"next_problem\":\"Nächste Karte (Status Problem)\"},\"alerts\":{\"no_open_cards\":\"Alle Karten bearbeitet.\"},\"problems\":{\"label\":\"Probleme?\",\"not_available\":\"ist nicht vorhanden\",\"placeholder\":\"Problem auswählen\",\"plural\":\"Probleme\",\"singular\":\"Problem\",\"wrong_condition\":\"ist in schlechterem Zusatnd als angegeben\",\"wrong_language\":\"ist in falscher Sprache\"},\"state_comments\":{\"label\":\"Status Kommentar\",\"placeholder\":\"Kommentar für Nachricht\"}},\"table\":{\"ok\":\"OK\",\"open\":\"Offen\"}},\"buyer\":\"Käufer\",\"calculation\":\"Kalkulation\",\"errors\":{\"loaded\":\"Bestellungen konnten nicht geladen werden!\",\"send\":\"Bestellung konnten nicht verschickt werden!\",\"synced\":\"Bestellungen konnten nicht synchronisiert werden! Ist das Cardmarket Konto verbunden?\"},\"evaluations\":{\"1\":\"Sehr gut\",\"2\":\"Gut\",\"3\":\"Neutral\",\"4\":\"Schlecht\",\"comment\":\"Kommentar\",\"complaint\":\"Beschwerden\",\"grade\":\"Allgemeine Bewertung\",\"item_description\":\"Beschreibung der Artikelzustände\",\"packaging\":\"Verpackung der Bestellung\",\"singular\":\"Bewertung\"},\"home\":{\"month\":{\"chart\":{\"title\":\"Bestellungen im :month\"},\"errors\":{\"no_data\":\"Keine Bestellungen im {month} vorhanden\"},\"title\":\"Bestellungen pro Tag\"},\"paid\":{\"title\":\"Bezahlte Bestellungen\"},\"per\":{\"card\":\"Pro Karte\",\"day\":\"Pro Tag\",\"month\":\"Pro Monat\",\"order\":\"Pro Bestellung\"},\"year\":{\"chart\":{\"title\":\"Bestellungen in :year\",\"title_latest\":\"Bestellungen der letzten 12 Monate\"},\"errors\":{\"no_data\":\"Keine Bestellungen im Zeitraum vorhanden\"},\"latest\":\"Letzte 12 Monate\",\"title\":\"Bestellungen pro Jahr\"}},\"id\":\"Bestellnummer\",\"plural\":\"Bestellungen\",\"seller\":\"Verkäufer\",\"shipping_address\":\"Versandadresse\",\"show\":{\"message_modal\":{\"title\":\"Nachricht an :buyer versenden\"}},\"singular\":\"Bestellung\",\"states\":{\"bought\":\"Unbezahlt\",\"cancelled\":\"Storniert\",\"evaluated\":\"Bewertet\",\"lost\":\"Nicht Angekommen\",\"paid\":\"Bezahlt\",\"received\":\"Angekommen\",\"sent\":\"Versandt\"},\"successes\":{\"send\":\"Bestellung wurde verschickt.\",\"synced\":\"Bestellungen wurden synchronisiert.\",\"syncing_background\":\"Bestellungen werden im Hintergrund aktualisiert.\"}},\"pagination\":{\"next\":\"Weiter &raquo;\",\"previous\":\"&laquo; Zurück\"},\"passwords\":{\"password\":\"Passwörter müssen mindestens 8 Zeichen lang sein und korrekt bestätigt werden.\",\"reset\":\"Das Passwort wurde zurückgesetzt!\",\"sent\":\"Passworterinnerung wurde gesendet!\",\"throttled\":\"Please wait before retrying.\",\"token\":\"Der Passwort-Wiederherstellungs-Schlüssel ist ungültig oder abgelaufen.\",\"user\":\"Es konnte leider kein Nutzer mit dieser E-Mail-Adresse gefunden werden.\"},\"rule\":{\"alerts\":{\"no_data\":\"Keine Regeln vorhanden\"},\"apply\":\"Regeln anwenden\",\"description\":\"Beschreibung\",\"errors\":{\"simulated\":\"Regeln konnten nicht simuliert werden!\"},\"modal_apply\":{\"body\":{\"alert\":{\"danger\":\"Ausführung auf eigene Gefahr!\",\"text\":\"Es werden Preise in deinem Cardmarket Konto verändert! Versichere dich vorher, ob alle Regeln angewendet werden, wie Du es möchtest!\"},\"comment\":\"Der Prozess läuft maximal 1 Stunde. Das entspricht etwa 30.000 Artikeln\",\"question\":\"\"}},\"multiplikator\":\"Multiplikator\",\"plural\":\"Regeln\",\"price_base\":\"Basispreis\",\"show\":{\"alert_info\":\"Regeln müssen erst simuliert oder angewendet werden, um hier eine Änderung zu sehen.\"},\"simulate\":\"Regeln simulieren\",\"successes\":{\"activated\":\"Regel {rule} wurde aktiviert.\",\"deactivated\":\"Regel {rule} wurde deaktiviert.\",\"simulate_background\":\"Regeln werden im Hintergrund simuliert.\",\"simulated\":\"Regeln wurden simuliert.\"}},\"storages\":{\"actions\":{\"assign\":\"Lagerplätze neu zuweisen\"},\"alerts\":{\"no_data\":\"Keine Lagerplätze vorhanden\"},\"articles\":\"Artikel\",\"content\":{\"alerts\":{\"no_data\":\"\"},\"errors\":{\"loaded\":\"Zuordnungen konnten nicht geladen werden!\"},\"plural\":\"Zuordnungen\",\"singular\":\"Zuordnung\"},\"errors\":{\"assigned\":\"Lagerplätze konnten nicht neu zugewiesen werden!\"},\"index\":{\"alert_info\":\"Anzahl Artikel und Summe Verkaufspreis ist inklusive Unterlagerpläze.\"},\"main_storage\":\"Hauptlagerplatz\",\"no_storage\":\"Kein Lagerplatz\",\"price\":\"Verkaufspreis\",\"storage\":\"Lagerplatz\",\"sub_storages\":\"Unterlagerplätze\",\"successes\":{\"assigned\":\"Lagerplätze wurden neu zugewiesen.\"}},\"user\":{\"edit\":{\"locale\":\"Sprache\",\"personalization\":\"Personalisierung\",\"prepared_message\":\"Vorbereitete Nachricht\"},\"locale\":{\"de\":\"Deutsch\",\"en\":\"Englisch\"}},\"validation\":{\"accepted\":\":attribute muss akzeptiert werden.\",\"active_url\":\":attribute ist keine gültige Internet-Adresse.\",\"after\":\":attribute muss ein Datum nach dem :date sein.\",\"after_or_equal\":\":attribute muss ein Datum nach dem :date oder gleich dem :date sein.\",\"alpha\":\":attribute darf nur aus Buchstaben bestehen.\",\"alpha_dash\":\":attribute darf nur aus Buchstaben, Zahlen, Binde- und Unterstrichen bestehen.\",\"alpha_num\":\":attribute darf nur aus Buchstaben und Zahlen bestehen.\",\"array\":\":attribute muss ein Array sein.\",\"attributes\":{\"address\":\"Adresse\",\"age\":\"Alter\",\"available\":\"verfügbar\",\"city\":\"Stadt\",\"content\":\"Inhalt\",\"country\":\"Land\",\"date\":\"Datum\",\"day\":\"Tag\",\"description\":\"Beschreibung\",\"email\":\"E-Mail Adresse\",\"excerpt\":\"Auszug\",\"first_name\":\"Vorname\",\"gender\":\"Geschlecht\",\"hour\":\"Stunde\",\"last_name\":\"Nachname\",\"minute\":\"Minute\",\"mobile\":\"Handynummer\",\"month\":\"Monat\",\"name\":\"Name\",\"password\":\"Passwort\",\"password_confirmation\":\"Passwort Bestätigung\",\"phone\":\"Telefonnummer\",\"second\":\"Sekunde\",\"sex\":\"Geschlecht\",\"size\":\"Größe\",\"time\":\"Uhrzeit\",\"title\":\"Titel\",\"username\":\"Benutzername\",\"year\":\"Jahr\"},\"before\":\":attribute muss ein Datum vor dem :date sein.\",\"before_or_equal\":\":attribute muss ein Datum vor dem :date oder gleich dem :date sein.\",\"between\":{\"array\":\":attribute muss zwischen :min & :max Elemente haben.\",\"file\":\":attribute muss zwischen :min & :max Kilobytes groß sein.\",\"numeric\":\":attribute muss zwischen :min & :max liegen.\",\"string\":\":attribute muss zwischen :min & :max Zeichen lang sein.\"},\"boolean\":\":attribute muss entweder 'true' oder 'false' sein.\",\"confirmed\":\":attribute stimmt nicht mit der Bestätigung überein.\",\"custom\":{\"attribute-name\":{\"rule-name\":\"custom-message\"}},\"date\":\":attribute muss ein gültiges Datum sein.\",\"date_equals\":\":attribute muss ein Datum gleich :date sein.\",\"date_format\":\":attribute entspricht nicht dem gültigen Format für :format.\",\"different\":\":attribute und :other müssen sich unterscheiden.\",\"digits\":\":attribute muss :digits Stellen haben.\",\"digits_between\":\":attribute muss zwischen :min und :max Stellen haben.\",\"dimensions\":\":attribute hat ungültige Bildabmessungen.\",\"distinct\":\":attribute beinhaltet einen bereits vorhandenen Wert.\",\"email\":\":attribute muss eine gültige E-Mail-Adresse sein.\",\"ends_with\":\":attribute muss eine der folgenden Endungen aufweisen: :values\",\"exists\":\"Der gewählte Wert für :attribute ist ungültig.\",\"file\":\":attribute muss eine Datei sein.\",\"filled\":\":attribute muss ausgefüllt sein.\",\"gt\":{\"array\":\":attribute muss mehr als :value Elemente haben.\",\"file\":\":attribute muss größer als :value Kilobytes sein.\",\"numeric\":\":attribute muss größer als :value sein.\",\"string\":\":attribute muss länger als :value Zeichen sein.\"},\"gte\":{\"array\":\":attribute muss mindestens :value Elemente haben.\",\"file\":\":attribute muss größer oder gleich :value Kilobytes sein.\",\"numeric\":\":attribute muss größer oder gleich :value sein.\",\"string\":\":attribute muss mindestens :value Zeichen lang sein.\"},\"image\":\":attribute muss ein Bild sein.\",\"in\":\"Der gewählte Wert für :attribute ist ungültig.\",\"in_array\":\"Der gewählte Wert für :attribute kommt nicht in :other vor.\",\"integer\":\":attribute muss eine ganze Zahl sein.\",\"ip\":\":attribute muss eine gültige IP-Adresse sein.\",\"ipv4\":\":attribute muss eine gültige IPv4-Adresse sein.\",\"ipv6\":\":attribute muss eine gültige IPv6-Adresse sein.\",\"json\":\":attribute muss ein gültiger JSON-String sein.\",\"lt\":{\"array\":\":attribute muss weniger als :value Elemente haben.\",\"file\":\":attribute muss kleiner als :value Kilobytes sein.\",\"numeric\":\":attribute muss kleiner als :value sein.\",\"string\":\":attribute muss kürzer als :value Zeichen sein.\"},\"lte\":{\"array\":\":attribute darf maximal :value Elemente haben.\",\"file\":\":attribute muss kleiner oder gleich :value Kilobytes sein.\",\"numeric\":\":attribute muss kleiner oder gleich :value sein.\",\"string\":\":attribute darf maximal :value Zeichen lang sein.\"},\"max\":{\"array\":\":attribute darf maximal :max Elemente haben.\",\"file\":\":attribute darf maximal :max Kilobytes groß sein.\",\"numeric\":\":attribute darf maximal :max sein.\",\"string\":\":attribute darf maximal :max Zeichen haben.\"},\"mimes\":\":attribute muss den Dateityp :values haben.\",\"mimetypes\":\":attribute muss den Dateityp :values haben.\",\"min\":{\"array\":\":attribute muss mindestens :min Elemente haben.\",\"file\":\":attribute muss mindestens :min Kilobytes groß sein.\",\"numeric\":\":attribute muss mindestens :min sein.\",\"string\":\":attribute muss mindestens :min Zeichen lang sein.\"},\"not_in\":\"Der gewählte Wert für :attribute ist ungültig.\",\"not_regex\":\":attribute hat ein ungültiges Format.\",\"numeric\":\":attribute muss eine Zahl sein.\",\"password\":\"Das Passwort ist falsch.\",\"present\":\":attribute muss vorhanden sein.\",\"regex\":\":attribute Format ist ungültig.\",\"required\":\":attribute muss ausgefüllt werden.\",\"required_if\":\":attribute muss ausgefüllt werden, wenn :other den Wert :value hat.\",\"required_unless\":\":attribute muss ausgefüllt werden, wenn :other nicht den Wert :values hat.\",\"required_with\":\":attribute muss ausgefüllt werden, wenn :values ausgefüllt wurde.\",\"required_with_all\":\":attribute muss ausgefüllt werden, wenn :values ausgefüllt wurde.\",\"required_without\":\":attribute muss ausgefüllt werden, wenn :values nicht ausgefüllt wurde.\",\"required_without_all\":\":attribute muss ausgefüllt werden, wenn keines der Felder :values ausgefüllt wurde.\",\"same\":\":attribute und :other müssen übereinstimmen.\",\"size\":{\"array\":\":attribute muss genau :size Elemente haben.\",\"file\":\":attribute muss :size Kilobyte groß sein.\",\"numeric\":\":attribute muss gleich :size sein.\",\"string\":\":attribute muss :size Zeichen lang sein.\"},\"starts_with\":\":attribute muss mit einem der folgenden Anfänge aufweisen: :values\",\"string\":\":attribute muss ein String sein.\",\"timezone\":\":attribute muss eine gültige Zeitzone sein.\",\"unique\":\":attribute ist bereits vergeben.\",\"uploaded\":\":attribute konnte nicht hochgeladen werden.\",\"url\":\":attribute muss eine URL sein.\",\"uuid\":\":attribute muss ein UUID sein.\"}}");
 
 /***/ }),
 
@@ -72803,6 +72988,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_skryfall_expansion_vue_vue_type_template_id_2f920ff0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_skryfall_expansion_vue_vue_type_template_id_2f920ff0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/filter/storage.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/components/filter/storage.vue ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _storage_vue_vue_type_template_id_c27c2022___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./storage.vue?vue&type=template&id=c27c2022& */ "./resources/js/components/filter/storage.vue?vue&type=template&id=c27c2022&");
+/* harmony import */ var _storage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./storage.vue?vue&type=script&lang=js& */ "./resources/js/components/filter/storage.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _storage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _storage_vue_vue_type_template_id_c27c2022___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _storage_vue_vue_type_template_id_c27c2022___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/filter/storage.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/filter/storage.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/filter/storage.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_storage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./storage.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/filter/storage.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_storage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/filter/storage.vue?vue&type=template&id=c27c2022&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/filter/storage.vue?vue&type=template&id=c27c2022& ***!
+  \***********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_storage_vue_vue_type_template_id_c27c2022___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!../../../../node_modules/vue-loader/lib??vue-loader-options!./storage.vue?vue&type=template&id=c27c2022& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/filter/storage.vue?vue&type=template&id=c27c2022&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_storage_vue_vue_type_template_id_c27c2022___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_storage_vue_vue_type_template_id_c27c2022___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

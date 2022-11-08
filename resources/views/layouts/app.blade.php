@@ -13,8 +13,6 @@
                 <a href="/home"><li>{{ __('app.nav.home') }}</li></a>
                 <a href="/article"><li>{{ __('app.nav.article') }}</li></a>
                 <a href="/order"><li>{{ __('app.nav.order') }}</li></a>
-                <a href="/item"><li>{{ __('app.nav.item') }}</li></a>
-                <a href="/rule"><li>{{ __('app.nav.rule') }}</li></a>
                 <a href="/storages"><li>{{ __('app.nav.storages') }}</li></a>
             </ul>
             <div class="px-3 text-white text-center"><p>Alle Daten sind von <a href="https://www.cardmarket.eu">Cardmarket</a></p></div>

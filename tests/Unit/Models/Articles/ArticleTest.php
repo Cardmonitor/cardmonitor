@@ -11,6 +11,7 @@ use App\Models\Rules\Rule;
 use Illuminate\Support\Arr;
 use App\Models\Orders\Order;
 use App\Models\Articles\Article;
+use App\Models\Storages\Storage;
 use Cardmonitor\Cardmarket\Stock;
 use App\Models\Expansions\Expansion;
 use Tests\Traits\AttributeAssertions;
@@ -714,5 +715,46 @@ class ArticleTest extends TestCase
         $cardmarket_article_ids = Article::syncFromStockFile($this->user->id, Game::ID_MAGIC, $path);
 
         $this->assertCount($article_count, Article::all());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_set_a_storage_and_a_slot()
+    {
+        $slot = 1;
+        $slots = 100;
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        $storage = factory(Storage::class)->create([
+            'user_id' => $this->user->id,
+            'slots' => $slots,
+        ]);
+
+        $this->assertEquals($slots, $storage->slots);
+        $this->assertEquals(0, $storage->articles()->count());
+
+        $this->assertFalse($storage->isSlotAvailable(-1));
+        $this->assertFalse($storage->isSlotAvailable($slot + $slots));
+
+        $this->assertTrue($storage->isSlotAvailable($slot));
+
+        $article->setStorage($storage, $slot)
+            ->save();
+
+        $this->assertFalse($storage->isSlotAvailable($slot));
+
+        $this->assertEquals($storage->id, $article->storage_id);
+        $this->assertEquals($slot, $article->slot);
+        $this->assertEquals(1, $storage->articles()->count());
+
+        $article->unsetStorage()
+            ->save();
+
+        $this->assertEquals(null, $article->storage_id);
+        $this->assertEquals(0, $article->slot);
+        $this->assertEquals(0, $storage->articles()->count());
     }
 }

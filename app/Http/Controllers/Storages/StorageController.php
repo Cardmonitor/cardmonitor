@@ -73,6 +73,15 @@ class StorageController extends Controller
     public function show(Storage $storage)
     {
         $storage->load([
+            'articles' => function ($query) {
+                $query->with([
+                    'card',
+                    'language',
+                ])->orderBy('slot', 'ASC');
+            }
+        ]);
+
+        $storage->load([
             'contents',
             'descendants',
             'parent',
@@ -114,6 +123,7 @@ class StorageController extends Controller
     {
         $attributes = $request->validate([
             'name' => 'required|string',
+            'slots' => 'required|integer',
             'parent_id' => 'nullable|exists:storages,id',
         ]);
 

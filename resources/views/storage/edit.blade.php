@@ -5,7 +5,7 @@
     <div class="d-flex mb-1">
         <h2 class="col mb-0"><a class="text-body" href="/item">{{ __('app.nav.storages') }}</a><span class="d-none d-md-inline"> > {{ $model->full_name }}</span></h2>
         <div class="d-flex align-items-center">
-            <a href="{{ $model->path }}" class="btn btn-secondary ml-1">{{ __('app.overview') }}</a>
+            <a href="{{ $model->path }}" class="btn btn-sm btn-secondary ml-1">{{ __('app.overview') }}</a>
         </div>
     </div>
     <form action="{{ $model->path }}" method="POST">
@@ -22,6 +22,10 @@
                             <input type="text" class="form-control" id="name" name="name" placeholder="{{ __('app.name') }}" value="{{ $model->name }}">
                         </div>
                         <div class="form-group">
+                            <label for="slots">Slots</label>
+                            <input type="text" class="form-control" id="slots" name="slots" placeholder="Slots" value="{{ $model->slots }}">
+                        </div>
+                        <div class="form-group">
                             <label for="parent_id">{{ __('storages.main_storage') }}</label>
                             <select class="form-control" id="parent_id" name="parent_id">
                                 <option value="">{{ __('storages.main_storage') }}</option>
@@ -34,7 +38,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">{{ __('app.actions.save') }}</button>
+                        <button type="submit" class="btn btn-sm btn-primary">{{ __('app.actions.save') }}</button>
                     </div>
                 </div>
             </div>

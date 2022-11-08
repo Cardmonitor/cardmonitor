@@ -47,6 +47,7 @@ class ArticleController extends Controller
                 ->unitCost($request->input('unit_cost_min'), $request->input('unit_cost_max'))
                 ->search($request->input('searchtext'))
                 ->sold($request->input('sold'))
+                ->storage($request->input('storage_id'))
                 ->sync($request->input('sync'))
                 ->with([
                     'card.expansion',
@@ -192,6 +193,7 @@ class ArticleController extends Controller
             'language_id' => 'sometimes|required|integer',
             'condition' => 'sometimes|required|string',
             'storage_id' => 'sometimes|nullable|exists:storages,id',
+            'slot' => 'sometimes|nullable|integer' . ($request->has('storage_id') ? '|in:' . implode(',', \App\Models\Storages\Storage::openSlots($request->input('storage_id'), $article->id)) : ''),
             // 'bought_at_formatted' => 'required|date_format:"d.m.Y H:i"',
             // 'sold_at_formatted' => 'required|date_format:"d.m.Y H:i"',
             'is_foil' => 'sometimes|required|boolean',
