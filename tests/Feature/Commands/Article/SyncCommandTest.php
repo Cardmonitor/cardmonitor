@@ -15,7 +15,7 @@ class SyncCommandTest extends TestCase
      */
     public function it_syncs_articles()
     {
-        // $this->markTestSkipped();
+        $this->markTestSkipped();
 
         $game = factory(Game::class)->create([
             'id' => Game::ID_MAGIC,
