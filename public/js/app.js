@@ -5810,6 +5810,10 @@ __webpack_require__.r(__webpack_exports__);
     games: {
       type: Object,
       required: true
+    },
+    expansions: {
+      type: Array,
+      required: true
     }
   },
   data: function data() {
@@ -5817,7 +5821,6 @@ __webpack_require__.r(__webpack_exports__);
       uri: this.model.path + '/content',
       isLoading: false,
       items: [],
-      expansions: [],
       filter: {
         game_id: 1
       },
@@ -5828,7 +5831,6 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    this.fetchExpansion();
     this.fetch();
   },
   computed: {
@@ -5878,17 +5880,6 @@ __webpack_require__.r(__webpack_exports__);
         component.isLoading = false;
       })["catch"](function (error) {
         Vue.error(component.$t('storages.content.errors.loaded'));
-        console.log(error);
-      });
-    },
-    fetchExpansion: function fetchExpansion() {
-      var component = this;
-      axios.get('/expansion', {
-        params: component.filter
-      }).then(function (response) {
-        component.expansions = response.data;
-      })["catch"](function (error) {
-        Vue.error(component.$t('expansion.errors.loaded'));
         console.log(error);
       });
     },
@@ -7595,12 +7586,12 @@ var render = function render() {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.item.card.name))]) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "align-middle text-center"
-  }, [_c("expansion-icon", {
+  }, [_vm.item.card.expansion ? _c("expansion-icon", {
     attrs: {
       expansion: _vm.item.card.expansion,
       "show-name": false
     }
-  })], 1), _vm._v(" "), _c("td", {
+  }) : _vm._e()], 1), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell text-center"
   }, [_c("rarity", {
     attrs: {
@@ -8759,7 +8750,7 @@ var render = function render() {
   }, [_vm._v("Diese Seite in Lagerplatz")])])]), _vm._v(" "), _c("td", {
     staticClass: "align-middle",
     attrs: {
-      colspan: "5"
+      colspan: "2"
     }
   }, [_c("select", {
     directives: [{

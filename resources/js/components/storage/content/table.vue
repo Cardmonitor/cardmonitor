@@ -66,6 +66,10 @@
                 type: Object,
                 required: true,
             },
+            expansions: {
+                type: Array,
+                required: true,
+            },
         },
 
         data () {
@@ -73,7 +77,6 @@
                 uri: this.model.path + '/content',
                 isLoading: false,
                 items: [],
-                expansions: [],
                 filter: {
                     game_id: 1,
                 },
@@ -85,8 +88,6 @@
         },
 
         mounted() {
-
-            this.fetchExpansion();
 
             this.fetch();
 
@@ -147,19 +148,6 @@
                         Vue.error(component.$t('storages.content.errors.loaded'));
                         console.log(error);
                     });
-            },
-            fetchExpansion() {
-                var component = this;
-                axios.get('/expansion', {
-                    params: component.filter
-                })
-                    .then(function (response) {
-                        component.expansions = response.data;
-                    })
-                    .catch(function (error) {
-                        Vue.error(component.$t('expansion.errors.loaded'));
-                        console.log(error);
-                });
             },
             updated(index, item) {
                 Vue.set(this.items, index, item);
