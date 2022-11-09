@@ -187,11 +187,16 @@ class Article extends Model
                 continue;
             }
 
+            $card = Card::firstOrImport($data[self::CSV_CARDMARKET_PRODUCT_ID]);
+
+            if (! Arr::has($expansions, $data[4])) {
+                $expansions[$card->expansion->abbreviation] = $card->expansion;
+            }
+
             $data['expansion_id'] = $expansions[$data[4]]->id;
+
             $cardmarket_article_id = $data[self::CSV_CARDMARKET_ARTICLE_ID];
             $cardmarket_article_ids[] = $cardmarket_article_id;
-
-            Card::firstOrImport($data[self::CSV_CARDMARKET_PRODUCT_ID]);
 
             self::reindex($cardmarket_article_id);
 
