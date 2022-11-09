@@ -76,7 +76,7 @@
         <td class="align-middle">
             <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.localName }} ({{ item.card.number }})
             <div class="text-muted" v-if="item.language_id != 1">{{ item.card.name }}</div></td>
-        <td class="align-middle text-center"><expansion-icon :expansion="item.card.expansion" :show-name="false"></expansion-icon></td>
+        <td class="align-middle text-center"><expansion-icon :expansion="item.card.expansion" :show-name="false" v-if="item.card.expansion"></expansion-icon></td>
         <td class="align-middle d-none d-xl-table-cell text-center"><rarity :value="item.card.rarity"></rarity></td>
         <td class="align-middle d-none d-lg-table-cell text-center"><condition :value="item.condition"></condition></td>
         <td class="align-middle d-none d-xl-table-cell text-center">

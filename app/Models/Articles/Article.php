@@ -187,10 +187,11 @@ class Article extends Model
                 continue;
             }
 
-            $card = Card::firstOrImport($data[self::CSV_CARDMARKET_PRODUCT_ID]);
+            Card::firstOrImport($data[self::CSV_CARDMARKET_PRODUCT_ID]);
 
             if (! Arr::has($expansions, $data[4])) {
-                $expansions[$card->expansion->abbreviation] = $card->expansion;
+                Card::import($data[self::CSV_CARDMARKET_PRODUCT_ID]);
+                $expansions = Expansion::where('game_id', $game_id)->get()->keyBy('abbreviation');
             }
 
             $data['expansion_id'] = $expansions[$data[4]]->id;
@@ -985,11 +986,11 @@ class Article extends Model
     public function scopeSold(Builder $query, $value) : Builder
     {
         if ($value == 1) {
-            return $query->whereNotNull('sold_at');
+            return $query->whereHas('orders');
         }
 
         if ($value == 0) {
-            return $query->whereNull('sold_at');
+            return $query->whereDoesntHave('orders');
         }
 
         return $query;

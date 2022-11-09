@@ -129,7 +129,7 @@
                                     <option value="page-to-storage_id">Diese Seite in Lagerplatz</option>
                                 </select>
                         </td>
-                        <td class="align-middle" colspan="5">
+                        <td class="align-middle" colspan="2">
                                 <select class="form-control form-control-sm" v-model="storageForm.storage_id">
                                     <option :value=null>Lagerplatz entfernen</option>
                                     <option :value="storage.id" v-for="(storage, index) in storages">{{ storage.full_name }}</option>
