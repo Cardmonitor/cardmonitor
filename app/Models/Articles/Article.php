@@ -14,6 +14,7 @@ use App\Models\Storages\Storage;
 use App\Transformers\Articles\Csvs\Transformer;
 use App\User;
 use Carbon\Carbon;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -480,6 +481,7 @@ class Article extends Model
                 'has_sync_error' => true,
                 'sync_error' => $response['inserted']['error'],
                 'should_sync' => true,
+                'cardmarket_article_id' => null,
             ]);
         }
     }
@@ -504,6 +506,7 @@ class Article extends Model
                     'has_sync_error' => true,
                     'sync_error' => $response['notUpdatedArticles']['error'],
                     'should_sync' => true,
+                    'cardmarket_article_id' => null,
                 ]);
             }
             else {
@@ -511,6 +514,7 @@ class Article extends Model
                     'has_sync_error' => true,
                     'sync_error' => 'Artikel nicht vorhanden. Alle Artikel synchronisieren.',
                     'should_sync' => true,
+                    'cardmarket_article_id' => null,
                 ]);
             }
         }
@@ -853,8 +857,8 @@ class Article extends Model
             return 'fa-exclamation text-danger';
         }
 
-        if (is_null($this->exported_at)) {
-            return 'fa-sqare text-danger';
+        if (is_null($this->exported_at) && is_null($this->synced_at)) {
+            return 'fa-square text-danger';
         }
 
         return 'fa-check text-success';
@@ -980,6 +984,27 @@ class Article extends Model
         }
 
         return $query->where('articles.language_id', $value);
+    }
+
+    public function scopeFilter(Builder $query, array $filter) : Builder
+    {
+        if (empty($filter)) {
+            return $query;
+        }
+
+        return $query->condition(Arr::get($filter, 'condition_sort'), Arr::get($filter, 'condition_operator'))
+            ->expansion(Arr::get($filter, 'expansion_id'))
+            ->game(Arr::get($filter, 'game_id'))
+            ->rule(Arr::get($filter, 'rule_id'))
+            ->isFoil(Arr::get($filter, 'is_foil'))
+            ->language(Arr::get($filter, 'language_id'))
+            ->rarity(Arr::get($filter, 'rarity'))
+            ->unitPrice(Arr::get($filter, 'unit_price_min'), Arr::get($filter, 'unit_price_max'))
+            ->unitCost(Arr::get($filter, 'unit_cost_min'), Arr::get($filter, 'unit_cost_max'))
+            ->search(Arr::get($filter, 'searchtext'))
+            ->sold(Arr::get($filter, 'sold'))
+            ->storage(Arr::get($filter, 'storage_id'))
+            ->sync(Arr::get($filter, 'sync'));
     }
 
     public function scopeRarity(Builder $query, $value) : Builder

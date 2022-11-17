@@ -7,7 +7,7 @@
             <div class="d-none d-xl-table-cell text-muted" v-if="item.language_id != 1">{{ item.card.name }}</div>
         </td>
         <td class="align-middle text-center"><expansion-icon :expansion="item.card.expansion" :show-name="false"></expansion-icon></td>
-        <td class="align-middle d-none d-xl-table-cell text-center"><rarity :value="item.card.rarity"></rarity></td>
+        <td class="align-middle d-none d-xl-table-cell text-center"><rarity :value="item.card.rarity" v-if="item.card.rarity"></rarity></td>
         <td class="align-middle d-none d-lg-table-cell text-center">
             <select class="form-control form-control-sm" v-model="form.language_id">
                 <option :value="language_id" v-for="(name, language_id) in languages">{{ name }}</option>
@@ -77,7 +77,7 @@
             <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.localName }} ({{ item.card.number }})
             <div class="text-muted" v-if="item.language_id != 1">{{ item.card.name }}</div></td>
         <td class="align-middle text-center"><expansion-icon :expansion="item.card.expansion" :show-name="false" v-if="item.card.expansion"></expansion-icon></td>
-        <td class="align-middle d-none d-xl-table-cell text-center"><rarity :value="item.card.rarity"></rarity></td>
+        <td class="align-middle d-none d-xl-table-cell text-center"><rarity :value="item.card.rarity" v-if="item.card.rarity"></rarity></td>
         <td class="align-middle d-none d-lg-table-cell text-center"><condition :value="item.condition"></condition></td>
         <td class="align-middle d-none d-xl-table-cell text-center">
             <i class="fas fa-star text-warning" v-if="item.is_foil"></i>
@@ -95,12 +95,13 @@
         <td class="align-middle d-none d-xl-table-cell text-right">
             <input class="form-control form-control-sm text-right" :class="'number' in errors ? 'is-invalid' : ''" type="text" v-model="form.number" @keydown.enter="update(false)">
             <div class="invalid-feedback" v-text="'number' in errors ? errors.number[0] : ''"></div>
-            <button class="btn btn-sm btn-secondary" @click="getNextNumber">Nächste</button>
+            <button class="btn btn-sm btn-link" @click="getNextNumber" v-if="!item.number">Nächste</button>
         </td>
         <td class="align-middle d-none d-sm-table-cell text-right">
             <div class="btn-group btn-group-sm" role="group">
                 <a class="btn btn-secondary" :href="item.orders[0].path" :title="'Bestellung ' + item.orders[0].cardmarket_order_id" v-if="item.orders.length"><i class="fas fa-box"></i></a>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.save')" @click="update(false)"><i class="fas fa-fw fa-save"></i></button>
+                <button type="button" class="btn btn-secondary" :title="$t('app.actions.save_upload')" @click="update(true)"><i class="fas fa-fw fa-cloud-upload-alt"></i></button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.delete')" @click="destroy"><i class="fas fa-fw fa-trash"></i></button>
             </div>
         </td>

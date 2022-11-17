@@ -62,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('article/number', 'Articles\NumberController@index')->name('article.number.index');
     Route::put('article/{article}/number', 'Articles\NumberController@update')->name('article.number.update');
+    Route::post('article/action', 'Articles\ActionController@store')->name('article.action.store');
     Route::resource('article', 'Articles\ArticleController');
 
     Route::resource('card', 'Cards\CardController');

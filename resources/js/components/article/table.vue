@@ -124,24 +124,27 @@
                         <td></td>
                         <td class="align-middle">{{ items.length }} von {{ paginate.total }}</td>
                         <td class="align-middle" colspan="5">
-                                <select class="form-control form-control-sm" v-model="storageForm.articles">
-                                    <option value="filtered-to-storage_id">Alle gefilterten</option>
-                                    <option value="page-to-storage_id">Diese Seite</option>
-                                </select>
+                            <select class="form-control form-control-sm" v-model="actionForm.action">
+                                <optgroup label="Bearbeiten">
+                                    <option value="setNumber">Nummern automatisch setzen</option>
+                                    <option value="resetNumber">Nummern entfernen</option>
+                                </optgroup>
+                                <optgroup label="Cardmarktet">
+                                    <option value="syncCardmarket">Upload zu Cardmarket</option>
+                                </optgroup>
+                                <optgroup label="Lagerplatz" v-if="storages.length">
+                                    <option value="setStorage">Lagerplatz setzen</option>
+                                    <option value="resetStorage">Lagerplatz entfernen</option>
+                                </optgroup>
+                            </select>
                         </td>
                         <td class="align-middle" colspan="2">
-                                <select class="form-control form-control-sm" v-model="storageForm.storage_id">
-                                    <optgroup label="Bearbeiten">
-                                        <option value="setNumber">Nummern automatisch setzen (TODO)</option>
-                                    </optgroup>
-                                    <optgroup label="Lagerplatz">
-                                        <option :value=null>Lagerplatz entfernen</option>
-                                        <option :value="storage.id" v-for="(storage, index) in storages">{{ storage.full_name }}</option>
-                                    </optgroup>
-                                </select>
+                            <select class="form-control form-control-sm" v-model="actionForm.storage_id" v-show="actionForm.action == 'setStorage'">
+                                <option :value="storage.id" v-for="(storage, index) in storages">{{ storage.full_name }}</option>
+                            </select>
                         </td>
                         <td class="align-middle text-right">
-                            <button class="btn btn-sm btn-secondary">Einlagern</button>
+                            <button class="btn btn-sm btn-secondary" @click="action">Ausführen</button>
                         </td>
                     </tr>
                 </tfoot>
@@ -296,9 +299,10 @@
                     unit_price_max: 0,
                     unit_price_min: 0,
                 },
-                storageForm: {
+                actionForm: {
                     articles: 'filtered-to-storage_id',
-                    storage_id: null,
+                    storage_id: this.storages[0].id || 0,
+                    action: 'setNumber',
                 },
                 selected: [],
                 errors: {},
@@ -357,6 +361,17 @@
         },
 
         methods: {
+            action() {
+                var component = this;
+                axios.post('/article/action', {
+                    filter: component.filter,
+                    ...component.actionForm,
+                })
+                .then( function (response) {
+                    Vue.success(response.data.message);
+                    component.fetch();
+                });
+            },
             apply(sync) {
                 $('#confirm-rule-apply').modal('hide');
                 var component = this;

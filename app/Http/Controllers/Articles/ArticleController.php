@@ -36,19 +36,7 @@ class ArticleController extends Controller
             return $user->articles()
                 ->select('articles.*')
                 ->join('cards', 'cards.id', 'articles.card_id')
-                ->condition($request->input('condition_sort'), $request->input('condition_operator'))
-                ->expansion($request->input('expansion_id'))
-                ->game($request->input('game_id'))
-                ->rule($request->input('rule_id'))
-                ->isFoil($request->input('is_foil'))
-                ->language($request->input('language_id'))
-                ->rarity($request->input('rarity'))
-                ->unitPrice($request->input('unit_price_min'), $request->input('unit_price_max'))
-                ->unitCost($request->input('unit_cost_min'), $request->input('unit_cost_max'))
-                ->search($request->input('searchtext'))
-                ->sold($request->input('sold'))
-                ->storage($request->input('storage_id'))
-                ->sync($request->input('sync'))
+                ->filter($request->all())
                 ->with([
                     'card.expansion',
                     'language',

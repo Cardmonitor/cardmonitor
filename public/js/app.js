@@ -2690,6 +2690,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _filter_search_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../filter/search.vue */ "./resources/js/components/filter/search.vue");
 /* harmony import */ var _filter_storage_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../filter/storage.vue */ "./resources/js/components/filter/storage.vue");
 /* harmony import */ var _row_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./row.vue */ "./resources/js/components/article/row.vue");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -2789,9 +2795,10 @@ __webpack_require__.r(__webpack_exports__);
         unit_price_max: 0,
         unit_price_min: 0
       },
-      storageForm: {
+      actionForm: {
         articles: 'filtered-to-storage_id',
-        storage_id: null
+        storage_id: this.storages[0].id || 0,
+        action: 'setNumber'
       },
       selected: [],
       errors: {}
@@ -2850,6 +2857,15 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    action: function action() {
+      var component = this;
+      axios.post('/article/action', _objectSpread({
+        filter: component.filter
+      }, component.actionForm)).then(function (response) {
+        Vue.success(response.data.message);
+        component.fetch();
+      });
+    },
     apply: function apply(sync) {
       $('#confirm-rule-apply').modal('hide');
       var component = this;
@@ -7195,11 +7211,11 @@ var render = function render() {
     }
   })], 1), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell text-center"
-  }, [_c("rarity", {
+  }, [_vm.item.card.rarity ? _c("rarity", {
     attrs: {
       value: _vm.item.card.rarity
     }
-  })], 1), _vm._v(" "), _c("td", {
+  }) : _vm._e()], 1), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-lg-table-cell text-center"
   }, [_c("select", {
     directives: [{
@@ -7603,11 +7619,11 @@ var render = function render() {
     }
   }) : _vm._e()], 1), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell text-center"
-  }, [_c("rarity", {
+  }, [_vm.item.card.rarity ? _c("rarity", {
     attrs: {
       value: _vm.item.card.rarity
     }
-  })], 1), _vm._v(" "), _c("td", {
+  }) : _vm._e()], 1), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-lg-table-cell text-center"
   }, [_c("condition", {
     attrs: {
@@ -7690,12 +7706,12 @@ var render = function render() {
     domProps: {
       textContent: _vm._s("number" in _vm.errors ? _vm.errors.number[0] : "")
     }
-  }), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-sm btn-secondary",
+  }), _vm._v(" "), !_vm.item.number ? _c("button", {
+    staticClass: "btn btn-sm btn-link",
     on: {
       click: _vm.getNextNumber
     }
-  }, [_vm._v("Nächste")])]), _vm._v(" "), _c("td", {
+  }, [_vm._v("Nächste")]) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-sm-table-cell text-right"
   }, [_c("div", {
     staticClass: "btn-group btn-group-sm",
@@ -7723,6 +7739,19 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fw fa-save"
+  })]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      title: _vm.$t("app.actions.save_upload")
+    },
+    on: {
+      click: function click($event) {
+        return _vm.update(true);
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-fw fa-cloud-upload-alt"
   })]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
@@ -8738,8 +8767,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.storageForm.articles,
-      expression: "storageForm.articles"
+      value: _vm.actionForm.action,
+      expression: "actionForm.action"
     }],
     staticClass: "form-control form-control-sm",
     on: {
@@ -8751,18 +8780,22 @@ var render = function render() {
           return val;
         });
 
-        _vm.$set(_vm.storageForm, "articles", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+        _vm.$set(_vm.actionForm, "action", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
       }
+    }
+  }, [_vm._m(1), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm.storages.length ? _c("optgroup", {
+    attrs: {
+      label: "Lagerplatz"
     }
   }, [_c("option", {
     attrs: {
-      value: "filtered-to-storage_id"
+      value: "setStorage"
     }
-  }, [_vm._v("Alle gefilterten")]), _vm._v(" "), _c("option", {
+  }, [_vm._v("Lagerplatz setzen")]), _vm._v(" "), _c("option", {
     attrs: {
-      value: "page-to-storage_id"
+      value: "resetStorage"
     }
-  }, [_vm._v("Diese Seite")])])]), _vm._v(" "), _c("td", {
+  }, [_vm._v("Lagerplatz entfernen")])]) : _vm._e()])]), _vm._v(" "), _c("td", {
     staticClass: "align-middle",
     attrs: {
       colspan: "2"
@@ -8771,8 +8804,13 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.storageForm.storage_id,
-      expression: "storageForm.storage_id"
+      value: _vm.actionForm.storage_id,
+      expression: "actionForm.storage_id"
+    }, {
+      name: "show",
+      rawName: "v-show",
+      value: _vm.actionForm.action == "setStorage",
+      expression: "actionForm.action == 'setStorage'"
     }],
     staticClass: "form-control form-control-sm",
     on: {
@@ -8784,24 +8822,23 @@ var render = function render() {
           return val;
         });
 
-        _vm.$set(_vm.storageForm, "storage_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+        _vm.$set(_vm.actionForm, "storage_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
       }
     }
-  }, [_vm._m(1), _vm._v(" "), _c("optgroup", {
-    attrs: {
-      label: "Lagerplatz"
-    }
-  }, [_c("option", {
-    domProps: {
-      value: null
-    }
-  }, [_vm._v("Lagerplatz entfernen")]), _vm._v(" "), _vm._l(_vm.storages, function (storage, index) {
+  }, _vm._l(_vm.storages, function (storage, index) {
     return _c("option", {
       domProps: {
         value: storage.id
       }
     }, [_vm._v(_vm._s(storage.full_name))]);
-  })], 2)])]), _vm._v(" "), _vm._m(2)])])])]) : _c("div", {
+  }), 0)]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle text-right"
+  }, [_c("button", {
+    staticClass: "btn btn-sm btn-secondary",
+    on: {
+      click: _vm.action
+    }
+  }, [_vm._v("Ausführen")])])])])])]) : _c("div", {
     staticClass: "alert alert-dark mt-3"
   }, [_c("center", [_vm._v(_vm._s(_vm.$t("article.alerts.no_data")))])], 1), _vm._v(" "), _c("nav", {
     attrs: {
@@ -8969,16 +9006,24 @@ var staticRenderFns = [function () {
     attrs: {
       value: "setNumber"
     }
-  }, [_vm._v("Nummern automatisch setzen (TODO)")])]);
+  }, [_vm._v("Nummern automatisch setzen")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "resetNumber"
+    }
+  }, [_vm._v("Nummern entfernen")])]);
 }, function () {
   var _vm = this,
       _c = _vm._self._c;
 
-  return _c("td", {
-    staticClass: "align-middle text-right"
-  }, [_c("button", {
-    staticClass: "btn btn-sm btn-secondary"
-  }, [_vm._v("Einlagern")])]);
+  return _c("optgroup", {
+    attrs: {
+      label: "Cardmarktet"
+    }
+  }, [_c("option", {
+    attrs: {
+      value: "syncCardmarket"
+    }
+  }, [_vm._v("Upload zu Cardmarket")])]);
 }, function () {
   var _vm = this,
       _c = _vm._self._c;
