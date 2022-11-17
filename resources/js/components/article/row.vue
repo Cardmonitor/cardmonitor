@@ -1,6 +1,6 @@
 <template>
     <tr v-if="isEditing">
-        <td class="align-middle d-none d-lg-table-cell text-center"><i class="fas fa-fw" :class="item.sync_icon" :title="item.sync_error || 'Karte synchronisiert'"></i></td>
+        <td class="align-middle d-none d-lg-table-cell text-center"><i class="fas fa-fw" :class="item.sync_icon" :title="item.sync_error || 'Karte synchronisiert'"></i></td>
         <td class="align-middle d-none d-xl-table-cell text-center pointer"><i class="fas fa-image" @mouseover="show($event)" @mouseout="$emit('hide')"></i></td>
         <td class="align-middle">
             <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.localName }}<span v-if="item.card.number"> ({{ item.card.number }})</span>
@@ -93,8 +93,9 @@
             <div class="invalid-feedback" v-text="'storage_id' in errors ? errors.storage_id[0] : ''"></div>
         </td>
         <td class="align-middle d-none d-xl-table-cell text-right">
-            <input class="form-control form-control-sm text-right" :class="'slot' in errors ? 'is-invalid' : ''" type="text" v-model="form.slot" @keydown.enter="update(false)">
-            <div class="invalid-feedback" v-text="'slot' in errors ? errors.slot[0] : ''"></div>
+            <input class="form-control form-control-sm text-right" :class="'number' in errors ? 'is-invalid' : ''" type="text" v-model="form.number" @keydown.enter="update(false)">
+            <div class="invalid-feedback" v-text="'number' in errors ? errors.number[0] : ''"></div>
+            <button class="btn btn-sm btn-secondary" @click="getNextNumber">Nächste</button>
         </td>
         <td class="align-middle d-none d-sm-table-cell text-right">
             <div class="btn-group btn-group-sm" role="group">
@@ -129,16 +130,17 @@
                 form: {
                     cardmarket_comments: this.item.cardmarket_comments,
                     condition: this.item.condition,
+                    is_foil: this.item.is_foil,
+                    is_playset: this.item.is_playset,
+                    is_signed: this.item.is_signed,
                     language_id: this.item.language_id,
+                    number: this.item.number,
+                    provision_formatted: this.item.provision_formatted,
+                    slot: this.item.slot,
+                    storage_id: this.item.storage_id,
+                    sync: false,
                     unit_cost_formatted: this.item.unit_cost_formatted,
                     unit_price_formatted: this.item.unit_price_formatted,
-                    provision_formatted: this.item.provision_formatted,
-                    is_foil: this.item.is_foil,
-                    is_signed: this.item.is_signed,
-                    is_playset: this.item.is_playset,
-                    sync: false,
-                    storage_id: this.item.storage_id,
-                    slot: this.item.slot,
                 },
                 errors: {},
             };
@@ -149,16 +151,17 @@
                 this.form = {
                     cardmarket_comments: newValue.cardmarket_comments,
                     condition: newValue.condition,
+                    is_foil: newValue.is_foil,
+                    is_playset: newValue.is_playset,
+                    is_signed: newValue.is_signed,
                     language_id: newValue.language_id,
-                    storage_id: newValue.storage_id,
+                    number: newValue.number,
+                    provision_formatted: newValue.provision_formatted,
                     slot: newValue.slot,
+                    storage_id: newValue.storage_id,
+                    sync: false,
                     unit_cost_formatted: newValue.unit_cost_formatted,
                     unit_price_formatted: newValue.unit_price_formatted,
-                    provision_formatted: newValue.provision_formatted,
-                    is_foil: newValue.is_foil,
-                    is_signed: newValue.is_signed,
-                    is_playset: newValue.is_playset,
-                    sync: false,
                 };
             }, {
                 deep: true
@@ -200,6 +203,16 @@
                         component.errors = error.response.data.errors;
                         Vue.error(component.$t('app.errors.updated'));
                 });
+            },
+            getNextNumber() {
+                var component = this;
+                axios.get('/article/number')
+                    .then( function (response) {
+                        component.form.number = response.data.number;
+                    })
+                    .catch(function (error) {
+                        Vue.error('Nummer konnte nicht ermittelt werden.');
+                    });
             },
         },
     };

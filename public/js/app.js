@@ -2197,16 +2197,17 @@ __webpack_require__.r(__webpack_exports__);
       form: {
         cardmarket_comments: this.item.cardmarket_comments,
         condition: this.item.condition,
-        language_id: this.item.language_id,
-        unit_cost_formatted: this.item.unit_cost_formatted,
-        unit_price_formatted: this.item.unit_price_formatted,
-        provision_formatted: this.item.provision_formatted,
         is_foil: this.item.is_foil,
-        is_signed: this.item.is_signed,
         is_playset: this.item.is_playset,
-        sync: false,
+        is_signed: this.item.is_signed,
+        language_id: this.item.language_id,
+        number: this.item.number,
+        provision_formatted: this.item.provision_formatted,
+        slot: this.item.slot,
         storage_id: this.item.storage_id,
-        slot: this.item.slot
+        sync: false,
+        unit_cost_formatted: this.item.unit_cost_formatted,
+        unit_price_formatted: this.item.unit_price_formatted
       },
       errors: {}
     };
@@ -2216,16 +2217,17 @@ __webpack_require__.r(__webpack_exports__);
       this.form = {
         cardmarket_comments: newValue.cardmarket_comments,
         condition: newValue.condition,
-        language_id: newValue.language_id,
-        storage_id: newValue.storage_id,
-        slot: newValue.slot,
-        unit_cost_formatted: newValue.unit_cost_formatted,
-        unit_price_formatted: newValue.unit_price_formatted,
-        provision_formatted: newValue.provision_formatted,
         is_foil: newValue.is_foil,
-        is_signed: newValue.is_signed,
         is_playset: newValue.is_playset,
-        sync: false
+        is_signed: newValue.is_signed,
+        language_id: newValue.language_id,
+        number: newValue.number,
+        provision_formatted: newValue.provision_formatted,
+        slot: newValue.slot,
+        storage_id: newValue.storage_id,
+        sync: false,
+        unit_cost_formatted: newValue.unit_cost_formatted,
+        unit_price_formatted: newValue.unit_price_formatted
       };
     }, {
       deep: true
@@ -2262,6 +2264,14 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         component.errors = error.response.data.errors;
         Vue.error(component.$t('app.errors.updated'));
+      });
+    },
+    getNextNumber: function getNextNumber() {
+      var component = this;
+      axios.get('/article/number').then(function (response) {
+        component.form.number = response.data.number;
+      })["catch"](function (error) {
+        Vue.error('Nummer konnte nicht ermittelt werden.');
       });
     }
   }
@@ -7653,16 +7663,16 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.form.slot,
-      expression: "form.slot"
+      value: _vm.form.number,
+      expression: "form.number"
     }],
     staticClass: "form-control form-control-sm text-right",
-    "class": "slot" in _vm.errors ? "is-invalid" : "",
+    "class": "number" in _vm.errors ? "is-invalid" : "",
     attrs: {
       type: "text"
     },
     domProps: {
-      value: _vm.form.slot
+      value: _vm.form.number
     },
     on: {
       keydown: function keydown($event) {
@@ -7672,15 +7682,20 @@ var render = function render() {
       input: function input($event) {
         if ($event.target.composing) return;
 
-        _vm.$set(_vm.form, "slot", $event.target.value);
+        _vm.$set(_vm.form, "number", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("div", {
     staticClass: "invalid-feedback",
     domProps: {
-      textContent: _vm._s("slot" in _vm.errors ? _vm.errors.slot[0] : "")
+      textContent: _vm._s("number" in _vm.errors ? _vm.errors.number[0] : "")
     }
-  })]), _vm._v(" "), _c("td", {
+  }), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-sm btn-secondary",
+    on: {
+      click: _vm.getNextNumber
+    }
+  }, [_vm._v("Nächste")])]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-sm-table-cell text-right"
   }, [_c("div", {
     staticClass: "btn-group btn-group-sm",
@@ -8683,7 +8698,7 @@ var render = function render() {
     }
   }, [_vm._v(_vm._s(_vm.$t("storages.storage")))]), _vm._v(" "), _c("th", {
     staticClass: "text-right d-none d-xl-table-cell w-formatted-number"
-  }, [_vm._v("Slot")]), _vm._v(" "), _c("th", {
+  }, [_vm._v("Nummer")]), _vm._v(" "), _c("th", {
     staticClass: "text-right d-none d-sm-table-cell w-action"
   }, [_vm._v(_vm._s(_vm.$t("app.actions.action")))])])]), _vm._v(" "), _c("tbody", [_vm._l(_vm.items, function (item, index) {
     return [_c("row", {
@@ -8743,11 +8758,11 @@ var render = function render() {
     attrs: {
       value: "filtered-to-storage_id"
     }
-  }, [_vm._v("Alle gefilterten in Lagerplatz")]), _vm._v(" "), _c("option", {
+  }, [_vm._v("Alle gefilterten")]), _vm._v(" "), _c("option", {
     attrs: {
       value: "page-to-storage_id"
     }
-  }, [_vm._v("Diese Seite in Lagerplatz")])])]), _vm._v(" "), _c("td", {
+  }, [_vm._v("Diese Seite")])])]), _vm._v(" "), _c("td", {
     staticClass: "align-middle",
     attrs: {
       colspan: "2"
@@ -8772,6 +8787,10 @@ var render = function render() {
         _vm.$set(_vm.storageForm, "storage_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
       }
     }
+  }, [_vm._m(1), _vm._v(" "), _c("optgroup", {
+    attrs: {
+      label: "Lagerplatz"
+    }
   }, [_c("option", {
     domProps: {
       value: null
@@ -8782,7 +8801,7 @@ var render = function render() {
         value: storage.id
       }
     }, [_vm._v(_vm._s(storage.full_name))]);
-  })], 2)]), _vm._v(" "), _vm._m(1)])])])]) : _c("div", {
+  })], 2)])]), _vm._v(" "), _vm._m(2)])])])]) : _c("div", {
     staticClass: "alert alert-dark mt-3"
   }, [_c("center", [_vm._v(_vm._s(_vm.$t("article.alerts.no_data")))])], 1), _vm._v(" "), _c("nav", {
     attrs: {
@@ -8886,7 +8905,7 @@ var render = function render() {
     staticClass: "modal-header"
   }, [_c("h5", {
     staticClass: "modal-title"
-  }, [_vm._v(_vm._s(_vm.$t("rule.apply")))]), _vm._v(" "), _vm._m(2)]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("rule.apply")))]), _vm._v(" "), _vm._m(3)]), _vm._v(" "), _c("div", {
     staticClass: "modal-body"
   }, [_c("p", [_vm._v(_vm._s(_vm.$t("rule.modal_apply.body.question")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.$t("rule.modal_apply.body.comment")))]), _vm._v(" "), _c("div", {
     staticClass: "alert alert-danger",
@@ -8938,6 +8957,19 @@ var staticRenderFns = [function () {
   }, [_c("i", {
     staticClass: "fas fa-plus-square"
   })])]);
+}, function () {
+  var _vm = this,
+      _c = _vm._self._c;
+
+  return _c("optgroup", {
+    attrs: {
+      label: "Bearbeiten"
+    }
+  }, [_c("option", {
+    attrs: {
+      value: "setNumber"
+    }
+  }, [_vm._v("Nummern automatisch setzen (TODO)")])]);
 }, function () {
   var _vm = this,
       _c = _vm._self._c;

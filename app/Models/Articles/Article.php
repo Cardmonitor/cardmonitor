@@ -87,14 +87,14 @@ class Article extends Model
     ];
 
     protected $fillable = [
-        'bought_at',
         'bought_at_formatted',
+        'bought_at',
         'card_id',
         'cardmarket_article_id',
         'cardmarket_comments',
         'cardmarket_last_edited',
-        'condition',
         'condition_sort',
+        'condition',
         'exported_at',
         'has_sync_error',
         'hash',
@@ -105,28 +105,29 @@ class Article extends Model
         'is_playset',
         'is_signed',
         'language_id',
-        'price_rule',
+        'number',
         'price_rule_formatted',
+        'price_rule',
+        'provision_formatted',
+        'provision_formatted',
         'provision',
-        'provision_formatted',
-        'provision_formatted',
         'rule_applied_at',
-        'rule_difference',
         'rule_difference_percent',
+        'rule_difference',
         'rule_id',
         'should_sync',
-        'sold_at',
-        'sold_at_formatted',
-        'state',
-        'state_comments',
-        'storage_id',
         'slot',
+        'sold_at_formatted',
+        'sold_at',
+        'state_comments',
+        'state',
+        'storage_id',
         'sync_error',
         'synced_at',
-        'unit_cost',
         'unit_cost_formatted',
-        'unit_price',
+        'unit_cost',
         'unit_price_formatted',
+        'unit_price',
         'user_id',
     ];
 
@@ -372,6 +373,40 @@ class Article extends Model
             ->groupBy('articles.language_id')
             ->groupBy('articles.condition')
             ->get();
+    }
+
+    /**
+     * Increments the aticle number
+     *
+     * @param string $max_number
+     * @return string
+     */
+    public static function incrementNumber(string $max_number = ''): string
+    {
+        $storage_code = 'A000';
+        $number = 1;
+
+        if ($max_number) {
+            [$storage_code, $number] = explode('.', $max_number);
+            if ($number == 999) {
+                $number = 0;
+                $storage_code++;
+            }
+            $number++;
+        }
+
+        return $storage_code . '.' . str_pad($number, 3, '0', STR_PAD_LEFT);
+    }
+
+    public static function maxNumber(int $user_id): string
+    {
+        $article = self::where('user_id', $user_id)->orderBy('number', 'DESC')->first();
+
+        if ($article) {
+            return $article->number ?? '';
+        }
+
+        return '';
     }
 
     /**

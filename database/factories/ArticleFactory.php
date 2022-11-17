@@ -23,5 +23,6 @@ $factory->define(Article::class, function (Faker $faker) {
         'exported_at' => null,
         'sold_at' => null,
         'hash' => null,
+        'number' => null,
     ];
 });

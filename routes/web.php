@@ -60,6 +60,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('article/stock/import', 'Articles\Stock\ImportController@store')->name('article.stock.store');
     Route::get('article/stock/import/dropbox', 'Articles\Stock\Import\DropboxController@index')->name('article.stock.import.dropbox.index');
 
+    Route::get('article/number', 'Articles\NumberController@index')->name('article.number.index');
+    Route::put('article/{article}/number', 'Articles\NumberController@update')->name('article.number.update');
     Route::resource('article', 'Articles\ArticleController');
 
     Route::resource('card', 'Cards\CardController');

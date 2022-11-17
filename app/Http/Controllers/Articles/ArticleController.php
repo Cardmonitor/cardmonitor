@@ -187,13 +187,15 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
+        $storage_id = $request->input('storage_id');
 
         $article->update($request->validate([
             'cardmarket_comments' => 'sometimes|nullable|string',
             'language_id' => 'sometimes|required|integer',
             'condition' => 'sometimes|required|string',
+            'number' => 'sometimes|nullable|string',
             'storage_id' => 'sometimes|nullable|exists:storages,id',
-            'slot' => 'sometimes|nullable|integer' . ($request->has('storage_id') ? '|in:' . implode(',', \App\Models\Storages\Storage::openSlots($request->input('storage_id'), $article->id)) : ''),
+            'slot' => 'sometimes|nullable|integer' . ($storage_id ? '|in:0,' . implode(',', \App\Models\Storages\Storage::openSlots($storage_id, $article->id)) : ''),
             // 'bought_at_formatted' => 'required|date_format:"d.m.Y H:i"',
             // 'sold_at_formatted' => 'required|date_format:"d.m.Y H:i"',
             'is_foil' => 'sometimes|required|boolean',

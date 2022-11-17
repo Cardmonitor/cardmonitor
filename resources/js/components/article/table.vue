@@ -109,7 +109,7 @@
                         <th class="d-none d-xl-table-cell" style="width: 100px;"></th>
                         <th class="text-right d-none d-sm-table-cell w-formatted-number">{{ $t('app.price_abbr') }}</th>
                         <th class="d-none d-xl-table-cell" style="width: 150px;">{{ $t('storages.storage') }}</th>
-                        <th class="text-right d-none d-xl-table-cell w-formatted-number">Slot</th>
+                        <th class="text-right d-none d-xl-table-cell w-formatted-number">Nummer</th>
                         <th class="text-right d-none d-sm-table-cell w-action">{{ $t('app.actions.action') }}</th>
                     </tr>
                 </thead>
@@ -125,14 +125,19 @@
                         <td class="align-middle">{{ items.length }} von {{ paginate.total }}</td>
                         <td class="align-middle" colspan="5">
                                 <select class="form-control form-control-sm" v-model="storageForm.articles">
-                                    <option value="filtered-to-storage_id">Alle gefilterten in Lagerplatz</option>
-                                    <option value="page-to-storage_id">Diese Seite in Lagerplatz</option>
+                                    <option value="filtered-to-storage_id">Alle gefilterten</option>
+                                    <option value="page-to-storage_id">Diese Seite</option>
                                 </select>
                         </td>
                         <td class="align-middle" colspan="2">
                                 <select class="form-control form-control-sm" v-model="storageForm.storage_id">
-                                    <option :value=null>Lagerplatz entfernen</option>
-                                    <option :value="storage.id" v-for="(storage, index) in storages">{{ storage.full_name }}</option>
+                                    <optgroup label="Bearbeiten">
+                                        <option value="setNumber">Nummern automatisch setzen (TODO)</option>
+                                    </optgroup>
+                                    <optgroup label="Lagerplatz">
+                                        <option :value=null>Lagerplatz entfernen</option>
+                                        <option :value="storage.id" v-for="(storage, index) in storages">{{ storage.full_name }}</option>
+                                    </optgroup>
                                 </select>
                         </td>
                         <td class="align-middle text-right">
