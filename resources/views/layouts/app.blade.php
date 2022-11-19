@@ -14,6 +14,7 @@
                 <a href="/article"><li>{{ __('app.nav.article') }}</li></a>
                 <a href="/order"><li>{{ __('app.nav.order') }}</li></a>
                 <a href="/storages"><li>{{ __('app.nav.storages') }}</li></a>
+                <a href="/expansions"><li>Erweiterungen</li></a>
             </ul>
             <div class="px-3 text-white text-center"><p>Alle Daten sind von <a href="https://www.cardmarket.eu">Cardmarket</a></p></div>
             <div class="d-flex justify-content-around">

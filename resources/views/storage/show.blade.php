@@ -68,7 +68,7 @@
             <div class="card mb-3">
                 <div class="card-header">Standard Zuordnung</div>
                 <div class="card-body">
-                    <storage-content-table :model="{{ json_encode($model) }}" :games="{{ json_encode($games) }}"></storage-content-table>
+                    <storage-content-table :model="{{ json_encode($model) }}" :games="{{ json_encode($games) }}" :expansions="{{ json_encode($expansions) }}"></storage-content-table>
                 </div>
             </div>
 

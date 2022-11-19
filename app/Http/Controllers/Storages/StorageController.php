@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Storages;
 
-use App\Http\Controllers\Controller;
 use App\Models\Games\Game;
-use App\Models\Storages\Storage;
 use Illuminate\Http\Request;
+use App\Models\Storages\Storage;
+use App\Http\Controllers\Controller;
+use App\Models\Expansions\Expansion;
 
 class StorageController extends Controller
 {
@@ -93,7 +94,8 @@ class StorageController extends Controller
 
         return view($this->baseViewPath . '.show')
             ->with('model', $storage)
-            ->with('games', Game::keyValue());
+            ->with('games', Game::keyValue())
+            ->with('expansions', Expansion::game(Game::ID_MAGIC)->orderBy('name', 'ASC')->get());
     }
 
     /**

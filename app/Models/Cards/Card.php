@@ -274,10 +274,7 @@ class Card extends Model
 
         $CardmarketApi = App::make('CardmarketApi');
 
-        $filename = storage_path('app/public/items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg');
-
-        // if image exists and is valid, do nothing
-        if (Storage::exists('public/items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg') && exif_imagetype($filename) !== false) {
+        if ($this->hasValidCardmarketImage()) {
             return;
         }
 
@@ -286,11 +283,29 @@ class Card extends Model
         }
 
         try {
+            $filename = storage_path('app/public/items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg');
             $CardmarketApi->product->download($this->image, $filename);
         }
         catch(\Exception $e) {
             return;
         }
+    }
+
+    public function hasValidCardmarketImage(): bool
+    {
+        if (! Storage::exists('public/items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg')) {
+            return false;
+        }
+
+        if (! Storage::size('public/items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg')) {
+            return false;
+        }
+
+        if (exif_imagetype(storage_path('app/public/items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg')) === false) {
+            return false;
+        }
+
+        return true;
     }
 
     public function getHasLatestPricesAttribute() : bool

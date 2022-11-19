@@ -923,4 +923,47 @@ class ArticleTest extends TestCase
         $this->assertEquals(0, $article->slot);
         $this->assertEquals(0, $storage->articles()->count());
     }
+
+    /**
+     * @test
+     */
+    public function it_can_genereate_the_next_number()
+    {
+        $this->assertEquals('A000.001', Article::incrementNumber());
+        $this->assertEquals('A000.002', Article::incrementNumber('A000.001'));
+        $this->assertEquals('A001.001', Article::incrementNumber('A000.250'));
+        $this->assertEquals('B000.001', Article::incrementNumber('A999.250'));
+        $this->assertEquals('B001.001', Article::incrementNumber('B000.250'));
+        $this->assertEquals('AA000.001', Article::incrementNumber('Z999.250'));
+        $this->assertEquals('AA000.002', Article::incrementNumber('AA000.001'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_gets_the_highest_article_number()
+    {
+        $this->assertEquals('', Article::maxNumber($this->user->id));
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'number' => null,
+        ]);
+
+        $this->assertEquals('', Article::maxNumber($this->user->id));
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'number' => 'A000.001',
+        ]);
+
+        $this->assertEquals('A000.001', Article::maxNumber($this->user->id));
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'number' => 'A99.999',
+        ]);
+
+        $this->assertEquals('A99.999', Article::maxNumber($this->user->id));
+    }
 }

@@ -67,6 +67,7 @@ Vue.component('article-create', require('./components/article/create.vue').defau
 Vue.component('article-table', require('./components/article/table.vue').default);
 Vue.component('article-stock-table', require('./components/article/stock/table.vue').default);
 Vue.component('evaluation-icon', require('./components/partials/emoji/evaluation.vue').default);
+Vue.component('expansion-table', require('./components/expansion/table.vue').default);
 Vue.component('home-article-index', require('./components/home/article/index.vue').default);
 Vue.component('home-order-index', require('./components/home/order/index.vue').default);
 Vue.component('home-order-paid', require('./components/home/order/paid.vue').default);

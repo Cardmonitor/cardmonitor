@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expansions\Expansion;
+use Exception;
+use App\Models\Cards\Card;
+use App\Models\Games\Game;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use App\Models\Expansions\Expansion;
+use Illuminate\Support\Facades\Artisan;
 
 class ExpansionController extends Controller
 {
+    protected $baseViewPath = 'expansion';
+
     /**
      * Display a listing of the resource.
      *
@@ -15,11 +22,14 @@ class ExpansionController extends Controller
     public function index(Request $request)
     {
         if ($request->wantsJson()) {
-            return Expansion::orderBy('name', 'ASC')->get();
+            return Expansion::game($request->input('game_id'))
+                ->search($request->input('searchtext'))
+                ->orderBy('name', 'ASC')
+                ->paginate();
         }
 
-        return view('expansion.pdf')
-            ->with('expansions', Expansion::where('game_id', 1)->orderBy('id', 'ASC')->get());
+        return view($this->baseViewPath . '.index')
+            ->with('games', Game::keyValue());
     }
 
     /**
@@ -40,29 +50,30 @@ class ExpansionController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $attributes = $request->validate([
+            'abbreviation' => 'required|string',
+            'game_id' => 'required|int'
+        ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Expansions\Expansion  $expansion
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Expansion $expansion)
-    {
-        //
-    }
+        $cardmarketApi = App::make('CardmarketApi');
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Expansions\Expansion  $expansion
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Expansion $expansion)
-    {
-        //
+        $response = $cardmarketApi->expansion->find(Game::ID_MAGIC);
+        $cardmarket_expansions = array_filter($response['expansion'], function ($cardmarket_expansion) use ($attributes) {
+            return $cardmarket_expansion['abbreviation'] == strtoupper($attributes['abbreviation']);
+        });
+
+        if (count($cardmarket_expansions) !== 1) {
+            throw new Exception("Error Processing Request", 1);
+        }
+
+        Artisan::queue('expansion:import', [
+            'expansion' => $cardmarket_expansions[array_key_first($cardmarket_expansions)]['idExpansion'],
+        ]);
+
+        return [
+            'status' => 'Import started',
+            'expansion_id' => $cardmarket_expansions[array_key_first($cardmarket_expansions)]['idExpansion'],
+        ];
     }
 
     /**
@@ -74,17 +85,13 @@ class ExpansionController extends Controller
      */
     public function update(Request $request, Expansion $expansion)
     {
-        //
-    }
+        Artisan::queue('expansion:import', [
+            'expansion' => $expansion->id,
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Expansions\Expansion  $expansion
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Expansion $expansion)
-    {
-        //
+        return [
+            'status' => 'Import started',
+            'expansion_id' => $expansion->id,
+        ];
     }
 }

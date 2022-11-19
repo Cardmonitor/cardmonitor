@@ -36,19 +36,7 @@ class ArticleController extends Controller
             return $user->articles()
                 ->select('articles.*')
                 ->join('cards', 'cards.id', 'articles.card_id')
-                ->condition($request->input('condition_sort'), $request->input('condition_operator'))
-                ->expansion($request->input('expansion_id'))
-                ->game($request->input('game_id'))
-                ->rule($request->input('rule_id'))
-                ->isFoil($request->input('is_foil'))
-                ->language($request->input('language_id'))
-                ->rarity($request->input('rarity'))
-                ->unitPrice($request->input('unit_price_min'), $request->input('unit_price_max'))
-                ->unitCost($request->input('unit_cost_min'), $request->input('unit_cost_max'))
-                ->search($request->input('searchtext'))
-                ->sold($request->input('sold'))
-                ->storage($request->input('storage_id'))
-                ->sync($request->input('sync'))
+                ->filter($request->all())
                 ->with([
                     'card.expansion',
                     'language',
@@ -187,13 +175,15 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
+        $storage_id = $request->input('storage_id');
 
         $article->update($request->validate([
             'cardmarket_comments' => 'sometimes|nullable|string',
             'language_id' => 'sometimes|required|integer',
             'condition' => 'sometimes|required|string',
+            'number' => 'sometimes|nullable|string',
             'storage_id' => 'sometimes|nullable|exists:storages,id',
-            'slot' => 'sometimes|nullable|integer' . ($request->has('storage_id') ? '|in:' . implode(',', \App\Models\Storages\Storage::openSlots($request->input('storage_id'), $article->id)) : ''),
+            'slot' => 'sometimes|nullable|integer' . ($storage_id ? '|in:0,' . implode(',', \App\Models\Storages\Storage::openSlots($storage_id, $article->id)) : ''),
             // 'bought_at_formatted' => 'required|date_format:"d.m.Y H:i"',
             // 'sold_at_formatted' => 'required|date_format:"d.m.Y H:i"',
             'is_foil' => 'sometimes|required|boolean',

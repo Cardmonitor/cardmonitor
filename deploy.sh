@@ -11,6 +11,5 @@ composer install  > /dev/null 2>&1 & echo $! #--no-interaction --no-dev --prefer
 npm install > /dev/null 2>&1 & echo $!
 npm run production > /dev/null 2>&1 & echo $!
 php artisan lang:generate --quiet
-php artisan optimize
 
 echo "Deployed"

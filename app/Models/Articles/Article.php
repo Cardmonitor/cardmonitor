@@ -14,6 +14,7 @@ use App\Models\Storages\Storage;
 use App\Transformers\Articles\Csvs\Transformer;
 use App\User;
 use Carbon\Carbon;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -87,14 +88,14 @@ class Article extends Model
     ];
 
     protected $fillable = [
-        'bought_at',
         'bought_at_formatted',
+        'bought_at',
         'card_id',
         'cardmarket_article_id',
         'cardmarket_comments',
         'cardmarket_last_edited',
-        'condition',
         'condition_sort',
+        'condition',
         'exported_at',
         'has_sync_error',
         'hash',
@@ -105,28 +106,29 @@ class Article extends Model
         'is_playset',
         'is_signed',
         'language_id',
-        'price_rule',
+        'number',
         'price_rule_formatted',
+        'price_rule',
+        'provision_formatted',
+        'provision_formatted',
         'provision',
-        'provision_formatted',
-        'provision_formatted',
         'rule_applied_at',
-        'rule_difference',
         'rule_difference_percent',
+        'rule_difference',
         'rule_id',
         'should_sync',
-        'sold_at',
-        'sold_at_formatted',
-        'state',
-        'state_comments',
-        'storage_id',
         'slot',
+        'sold_at_formatted',
+        'sold_at',
+        'state_comments',
+        'state',
+        'storage_id',
         'sync_error',
         'synced_at',
-        'unit_cost',
         'unit_cost_formatted',
-        'unit_price',
+        'unit_cost',
         'unit_price_formatted',
+        'unit_price',
         'user_id',
     ];
 
@@ -436,6 +438,40 @@ class Article extends Model
     }
 
     /**
+     * Increments the aticle number
+     *
+     * @param string $max_number
+     * @return string
+     */
+    public static function incrementNumber(string $max_number = ''): string
+    {
+        $storage_code = 'A000';
+        $number = 1;
+
+        if ($max_number) {
+            [$storage_code, $number] = explode('.', $max_number);
+            if ($number == 250) {
+                $number = 0;
+                $storage_code++;
+            }
+            $number++;
+        }
+
+        return $storage_code . '.' . str_pad($number, 3, '0', STR_PAD_LEFT);
+    }
+
+    public static function maxNumber(int $user_id): string
+    {
+        $article = self::where('user_id', $user_id)->orderBy('number', 'DESC')->first();
+
+        if ($article) {
+            return $article->number ?? '';
+        }
+
+        return '';
+    }
+
+    /**
      * Create a new Eloquent Collection instance.
      *
      * @param  array  $models
@@ -506,6 +542,7 @@ class Article extends Model
                 'has_sync_error' => true,
                 'sync_error' => $response['inserted']['error'],
                 'should_sync' => true,
+                'cardmarket_article_id' => null,
             ]);
         }
     }
@@ -530,6 +567,7 @@ class Article extends Model
                     'has_sync_error' => true,
                     'sync_error' => $response['notUpdatedArticles']['error'],
                     'should_sync' => true,
+                    'cardmarket_article_id' => null,
                 ]);
             }
             else {
@@ -537,6 +575,7 @@ class Article extends Model
                     'has_sync_error' => true,
                     'sync_error' => 'Artikel nicht vorhanden. Alle Artikel synchronisieren.',
                     'should_sync' => true,
+                    'cardmarket_article_id' => null,
                 ]);
             }
         }
@@ -879,8 +918,8 @@ class Article extends Model
             return 'fa-exclamation text-danger';
         }
 
-        if (is_null($this->exported_at)) {
-            return 'fa-sqare text-danger';
+        if (is_null($this->exported_at) && is_null($this->synced_at)) {
+            return 'fa-square text-danger';
         }
 
         return 'fa-check text-success';
@@ -1008,6 +1047,27 @@ class Article extends Model
         return $query->where('articles.language_id', $value);
     }
 
+    public function scopeFilter(Builder $query, array $filter) : Builder
+    {
+        if (empty($filter)) {
+            return $query;
+        }
+
+        return $query->condition(Arr::get($filter, 'condition_sort'), Arr::get($filter, 'condition_operator'))
+            ->expansion(Arr::get($filter, 'expansion_id'))
+            ->game(Arr::get($filter, 'game_id'))
+            ->rule(Arr::get($filter, 'rule_id'))
+            ->isFoil(Arr::get($filter, 'is_foil'))
+            ->language(Arr::get($filter, 'language_id'))
+            ->rarity(Arr::get($filter, 'rarity'))
+            ->unitPrice(Arr::get($filter, 'unit_price_min'), Arr::get($filter, 'unit_price_max'))
+            ->unitCost(Arr::get($filter, 'unit_cost_min'), Arr::get($filter, 'unit_cost_max'))
+            ->search(Arr::get($filter, 'searchtext'))
+            ->sold(Arr::get($filter, 'sold'))
+            ->storage(Arr::get($filter, 'storage_id'))
+            ->sync(Arr::get($filter, 'sync'));
+    }
+
     public function scopeRarity(Builder $query, $value) : Builder
     {
         if (! $value) {
@@ -1047,11 +1107,11 @@ class Article extends Model
     public function scopeSold(Builder $query, $value) : Builder
     {
         if ($value == 1) {
-            return $query->whereNotNull('sold_at');
+            return $query->whereHas('orders');
         }
 
         if ($value == 0) {
-            return $query->whereNull('sold_at');
+            return $query->whereDoesntHave('orders');
         }
 
         return $query;

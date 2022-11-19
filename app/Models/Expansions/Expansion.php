@@ -2,17 +2,22 @@
 
 namespace App\Models\Expansions;
 
+use Carbon\Carbon;
 use App\Models\Cards\Card;
 use App\Traits\HasLocalizations;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Expansion extends Model
 {
     use HasLocalizations;
+
+    protected $appends = [
+        'released_at_formatted',
+    ];
 
     protected $dates = [
         'released_at',
@@ -180,5 +185,33 @@ class Expansion extends Model
     public function cards() : HasMany
     {
         return $this->hasMany(Card::class, 'expansion_id');
+    }
+
+    public function getReleasedAtFormattedAttribute(): string
+    {
+        if (is_null($this->released_at)) {
+            return '';
+        }
+
+        return $this->released_at->format('d.m.Y');
+    }
+
+    public function scopeGame(Builder $query, $value) : Builder
+    {
+        if (! $value) {
+            return $query;
+        }
+
+        return $query->where('expansions.game_id', $value);
+    }
+
+    public function scopeSearch(Builder $query, $value) : Builder
+    {
+        if (! $value) {
+            return $query;
+        }
+
+        return $query->where('expansions.abbreviation', 'like', '%' . $value . '%')
+            ->orWhere('expansions.name', 'like', '%' . $value . '%');;
     }
 }

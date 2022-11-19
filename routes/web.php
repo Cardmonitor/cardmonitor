@@ -60,11 +60,16 @@ Route::middleware(['auth'])->group(function () {
     Route::post('article/stock/import', 'Articles\Stock\ImportController@store')->name('article.stock.store');
     Route::get('article/stock/import/dropbox', 'Articles\Stock\Import\DropboxController@index')->name('article.stock.import.dropbox.index');
 
+    Route::get('article/number', 'Articles\NumberController@index')->name('article.number.index');
+    Route::put('article/{article}/number', 'Articles\NumberController@update')->name('article.number.update');
+    Route::post('article/action', 'Articles\ActionController@store')->name('article.action.store');
     Route::resource('article', 'Articles\ArticleController');
 
     Route::resource('card', 'Cards\CardController');
 
-    Route::get('expansion', 'ExpansionController@index');
+    Route::get('expansions', 'ExpansionController@index')->name('expansions.index');
+    Route::post('expansions', 'ExpansionController@store')->name('expansions.store');
+    Route::put('expansions/{expansion}', 'ExpansionController@update')->name('expansions.update');
 
     Route::post('item/reload', 'Items\ReloadController@store');
     Route::resource('item', 'Items\ItemController');
