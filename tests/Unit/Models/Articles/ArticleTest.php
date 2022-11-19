@@ -720,6 +720,172 @@ class ArticleTest extends TestCase
     /**
      * @test
      */
+    public function articles_syncs_the_cards_if_the_prices_change()
+    {
+        $path_same_prices = 'tests/snapshots/cardmarket/articles/stock-same-prices.csv';
+        $path_same_prices_again = 'tests/snapshots/cardmarket/articles/stock-same-prices-again.csv';
+        $path_different_prices = 'tests/snapshots/cardmarket/articles/stock-different-prices.csv';
+
+        $game = factory(Game::class)->create([
+            'id' => Game::ID_MAGIC,
+            'name' => 'Magic the Gathering',
+            'abbreviation' => 'MtG',
+            'is_importable' => true,
+        ]);
+
+        $expansion = factory(Expansion::class)->create([
+            'game_id' => $game->id,
+            'name' => 'Future Sight',
+            'abbreviation' => 'FUT',
+        ]);
+
+        $card = factory(Card::class)->create([
+            'game_id' => $game->id,
+            'expansion_id' => $expansion->id,
+            'cardmarket_product_id' => 15073,
+            'name' => 'Bridge from Below',
+        ]);
+
+        $this->assertCount(0, Article::all());
+
+        Article::syncFromStockFile($this->user->id, Game::ID_MAGIC, $path_same_prices);
+
+        $articles = Article::all();
+
+        $this->assertCount(2, $articles);
+
+        $article_1 = $articles->first();
+        $article_2 = $articles->last();
+
+        $this->assertDatabaseHas('articles', [
+            'id' => $article_1->id,
+            'unit_price' => 3.45,
+            'cardmarket_article_id' => 361434871,
+        ]);
+        $this->assertDatabaseHas('articles', [
+            'id' => $article_2->id,
+            'unit_price' => 3.45,
+            'cardmarket_article_id' => 361434871,
+        ]);
+
+        Article::syncFromStockFile($this->user->id, Game::ID_MAGIC, $path_different_prices);
+
+        $this->assertCount(2, Article::all());
+        $this->assertDatabaseHas('articles', [
+            'id' => $article_1->id,
+            'unit_price' => 3,
+            'cardmarket_article_id' => 361434871,
+        ]);
+        $this->assertDatabaseHas('articles', [
+            'id' => $article_2->id,
+            'unit_price' => 4,
+            'cardmarket_article_id' => 361434959,
+        ]);
+
+        Article::syncFromStockFile($this->user->id, Game::ID_MAGIC, $path_same_prices_again);
+
+        $this->assertCount(2, Article::all());
+        $this->assertDatabaseHas('articles', [
+            'id' => $article_1->id,
+            'unit_price' => 4,
+            'cardmarket_article_id' => 361434959,
+        ]);
+        $this->assertDatabaseHas('articles', [
+            'id' => $article_2->id,
+            'unit_price' => 4,
+            'cardmarket_article_id' => 361434959,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function articles_syncs_the_cards_if_the_condition_changes()
+    {
+        $path_same_prices = 'tests/snapshots/cardmarket/articles/stock-same-prices.csv';
+        $path_same_prices_again = 'tests/snapshots/cardmarket/articles/stock-same-prices-again.csv';
+        $path_different_condition = 'tests/snapshots/cardmarket/articles/stock-different-condition.csv';
+
+        $game = factory(Game::class)->create([
+            'id' => Game::ID_MAGIC,
+            'name' => 'Magic the Gathering',
+            'abbreviation' => 'MtG',
+            'is_importable' => true,
+        ]);
+
+        $expansion = factory(Expansion::class)->create([
+            'game_id' => $game->id,
+            'name' => 'Future Sight',
+            'abbreviation' => 'FUT',
+        ]);
+
+        $card = factory(Card::class)->create([
+            'game_id' => $game->id,
+            'expansion_id' => $expansion->id,
+            'cardmarket_product_id' => 15073,
+            'name' => 'Bridge from Below',
+        ]);
+
+        $this->assertCount(0, Article::all());
+
+        Article::syncFromStockFile($this->user->id, Game::ID_MAGIC, $path_same_prices);
+
+        $articles = Article::all();
+
+        $this->assertCount(2, $articles);
+
+        $article_1 = $articles->first();
+        $article_2 = $articles->last();
+
+        $this->assertDatabaseHas('articles', [
+            'id' => $article_1->id,
+            'unit_price' => 3.45,
+            'cardmarket_article_id' => 361434871,
+            'condition' => 'NM',
+        ]);
+        $this->assertDatabaseHas('articles', [
+            'id' => $article_2->id,
+            'unit_price' => 3.45,
+            'cardmarket_article_id' => 361434871,
+            'condition' => 'NM',
+        ]);
+
+        Article::syncFromStockFile($this->user->id, Game::ID_MAGIC, $path_different_condition);
+
+        $this->assertCount(2, Article::all());
+        $this->assertDatabaseHas('articles', [
+            'id' => $article_1->id,
+            'unit_price' => 3,
+            'cardmarket_article_id' => 361434871,
+            'condition' => 'NM',
+        ]);
+        $this->assertDatabaseHas('articles', [
+            'id' => $article_2->id,
+            'unit_price' => 4,
+            'cardmarket_article_id' => 361434959,
+            'condition' => 'EX',
+        ]);
+
+        Article::syncFromStockFile($this->user->id, Game::ID_MAGIC, $path_same_prices_again);
+
+        $this->assertCount(2, Article::all());
+        $this->assertDatabaseHas('articles', [
+            'id' => $article_1->id,
+            'unit_price' => 4,
+            'cardmarket_article_id' => 361434959,
+            'condition' => 'NM',
+        ]);
+        $this->assertDatabaseHas('articles', [
+            'id' => $article_2->id,
+            'unit_price' => 4,
+            'cardmarket_article_id' => 361434959,
+            'condition' => 'NM',
+        ]);
+    }
+
+    /**
+     * @test
+     */
     public function it_can_set_a_storage_and_a_slot()
     {
         $slot = 1;

@@ -173,6 +173,8 @@ class Article extends Model
     public static function syncFromStockFile(int $user_id, int $game_id, string $path): array
     {
         $cardmarket_article_ids = [];
+        $cardmarket_cards = [];
+        $all_updates_article_ids = [];
 
         $expansions = Expansion::where('game_id', $game_id)->get()->keyBy('abbreviation');
         $no_storage = Storage::noStorage($user_id)->first();
@@ -180,128 +182,193 @@ class Article extends Model
 
         $row_count = 0;
         $stockfile = fopen($path, "r");
-        while (($data = fgetcsv($stockfile, 2000, ";")) !== FALSE) {
+        while (($stock_row = fgetcsv($stockfile, 2000, ";")) !== FALSE) {
 
             if ($row_count == 0) {
                 $row_count++;
                 continue;
             }
 
-            $data['expansion_id'] = $expansions[$data[4]]->id;
-            $cardmarket_article_id = $data[self::CSV_CARDMARKET_ARTICLE_ID];
-            $cardmarket_article_ids[] = $cardmarket_article_id;
+            $stock_row['expansion_id'] = $expansions[$stock_row[4]]->id;
+            $stock_row_id = $stock_row[self::CSV_CARDMARKET_ARTICLE_ID];
+            $stock_row_ids[] = $stock_row_id;
 
-            Card::firstOrImport($data[self::CSV_CARDMARKET_PRODUCT_ID]);
+            Card::firstOrImport($stock_row[self::CSV_CARDMARKET_PRODUCT_ID]);
 
-            self::reindex($cardmarket_article_id);
+            $cardmarket_article = Transformer::transform($game_id, $stock_row);
 
-            $cardmarket_article = Transformer::transform($game_id, $data);
-
-            $cardmarket_article['expansion_id'] = $data['expansion_id'];
+            $cardmarket_article['expansion_id'] = $stock_row['expansion_id'];
 
             $cardmarket_article['user_id'] = $user_id;
             $cardmarket_article['storage_id'] = $no_storage_id;
             $cardmarket_article['unit_cost'] = \App\Models\Items\Card::defaultPrice($user_id, '');
             $cardmarket_article['exported_at'] = now();
 
-            $article_ids = self::createOrUpdateFromStockFile($cardmarket_article);
+            if (! Arr::has($cardmarket_cards, $stock_row[self::CSV_CARDMARKET_PRODUCT_ID])) {
+                $cardmarket_cards[$stock_row[self::CSV_CARDMARKET_PRODUCT_ID]] = [
+                    'articles' => [],
+                    'amount' => 0,
+                ];
+            }
 
-            self::where('cardmarket_article_id', $cardmarket_article_id)
-                ->whereNull('sold_at')
-                ->whereNotIn('id', $article_ids)
-                ->delete();
-
-            $row_count++;
+            $cardmarket_cards[$stock_row[self::CSV_CARDMARKET_PRODUCT_ID]]['articles'][$stock_row[self::CSV_CARDMARKET_ARTICLE_ID]] = $cardmarket_article;
+            $cardmarket_cards[$stock_row[self::CSV_CARDMARKET_PRODUCT_ID]]['amount'] += $stock_row[self::CSV_AMOUNT[$game_id]];
         }
 
+        foreach ($cardmarket_cards as $cardmarket_product_id => &$cardmarket_card) {
+            $articles_for_card = Article::where('user_id', $user_id)
+                ->where('card_id', $cardmarket_product_id)
+                ->whereNull('sold_at')
+                ->get();
+
+            $available_article_ids = $articles_for_card->pluck('id')->toArray();
+            $updated_article_ids = [];
+            $cardmarket_articles = $cardmarket_card['articles'];
+
+            // Alle vorhandenen Artikel synchronisieren
+            foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
+                $articles = self::whereIn('id', $available_article_ids)
+                    ->where('cardmarket_article_id', $cardmarket_article['cardmarket_article_id'])
+                    ->where('user_id', $user_id)
+                    ->whereNull('sold_at')
+                    ->limit($cardmarket_article['amount'])
+                    ->get();
+                foreach ($articles as $article) {
+                    $article->update([
+                        'cardmarket_comments' => $cardmarket_article['cardmarket_comments'],
+                        'language_id' => $cardmarket_article['language_id'],
+                        'condition' => Arr::get($cardmarket_article, 'condition', ''),
+                        'is_foil' => Arr::get($cardmarket_article, 'is_foil', false),
+                        'is_signed' => Arr::get($cardmarket_article, 'isSigned', false),
+                        'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
+                        'is_playset' => Arr::get($cardmarket_article, 'isPlayset', false),
+                        'unit_price' => $cardmarket_article['unit_price'],
+                    ]);
+                    $updated_article_ids[] = $article->id;
+                    $cardmarket_article['amount']--;
+                }
+
+                if ($cardmarket_article['amount'] == 0) {
+                    unset($cardmarket_articles[$cardmarket_article_id]);
+                }
+            }
+
+            $available_article_ids = array_diff($available_article_ids, $updated_article_ids);
+
+            // Gleiche Artikel anpassen
+            foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
+                $articles = self::whereIn('id', $available_article_ids)
+                    ->where('user_id', $user_id)
+                    ->whereNull('sold_at')
+                    ->where('articles.language_id', $cardmarket_article['language_id'])
+                    ->where('articles.condition', Arr::get($cardmarket_article, 'condition', ''))
+                    ->where('is_foil', Arr::get($cardmarket_article, 'is_foil', false))
+                    ->where('is_signed', Arr::get($cardmarket_article, 'isSigned', false))
+                    ->where('is_altered', Arr::get($cardmarket_article, 'isAltered', false))
+                    ->where('is_playset', Arr::get($cardmarket_article, 'isPlayset', false))
+                    ->limit($cardmarket_article['amount'])
+                    ->get();
+                foreach ($articles as $article) {
+                    $article->update([
+                        'cardmarket_article_id' => $cardmarket_article['cardmarket_article_id'],
+                        'cardmarket_comments' => $cardmarket_article['cardmarket_comments'],
+                        'language_id' => $cardmarket_article['language_id'],
+                        'condition' => Arr::get($cardmarket_article, 'condition', ''),
+                        'is_foil' => Arr::get($cardmarket_article, 'is_foil', false),
+                        'is_signed' => Arr::get($cardmarket_article, 'isSigned', false),
+                        'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
+                        'is_playset' => Arr::get($cardmarket_article, 'isPlayset', false),
+                        'unit_price' => $cardmarket_article['unit_price'],
+                    ]);
+                    $updated_article_ids[] = $article->id;
+                    $cardmarket_article['amount']--;
+                }
+
+                if ($cardmarket_article['amount'] == 0) {
+                    unset($cardmarket_articles[$cardmarket_article_id]);
+                }
+            }
+
+            $available_article_ids = array_diff($available_article_ids, $updated_article_ids);
+
+            // Restliche Artikel anpassen
+            foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
+                $articles = self::whereIn('id', $available_article_ids)
+                    ->where('user_id', $user_id)
+                    ->whereNull('sold_at')
+                    ->limit($cardmarket_article['amount'])
+                    ->get();
+                foreach ($articles as $article) {
+                    $article->update([
+                        'cardmarket_article_id' => $cardmarket_article['cardmarket_article_id'],
+                        'cardmarket_comments' => $cardmarket_article['cardmarket_comments'],
+                        'language_id' => $cardmarket_article['language_id'],
+                        'condition' => Arr::get($cardmarket_article, 'condition', ''),
+                        'is_foil' => Arr::get($cardmarket_article, 'is_foil', false),
+                        'is_signed' => Arr::get($cardmarket_article, 'isSigned', false),
+                        'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
+                        'is_playset' => Arr::get($cardmarket_article, 'isPlayset', false),
+                        'unit_price' => $cardmarket_article['unit_price'],
+                    ]);
+                    $updated_article_ids[] = $article->id;
+                    $cardmarket_article['amount']--;
+                }
+
+                if ($cardmarket_article['amount'] == 0) {
+                    unset($cardmarket_articles[$cardmarket_article_id]);
+                }
+            }
+
+            $available_article_ids = array_diff($available_article_ids, $updated_article_ids);
+
+            // Nicht vorhandene Artikel erstellen
+            foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
+                if ($cardmarket_article['amount'] < 1) {
+                    continue;
+                }
+                foreach (range(0, ($cardmarket_article['amount'] - 1)) as $index) {
+                    $article = self::create([
+                        'user_id' => $user_id,
+                        'card_id' => $cardmarket_article['card_id'],
+                        'cardmarket_article_id' => $cardmarket_article['cardmarket_article_id'],
+                        'cardmarket_comments' => $cardmarket_article['cardmarket_comments'],
+                        'language_id' => $cardmarket_article['language_id'],
+                        'condition' => Arr::get($cardmarket_article, 'condition', ''),
+                        'is_foil' => Arr::get($cardmarket_article, 'is_foil', false),
+                        'is_signed' => Arr::get($cardmarket_article, 'isSigned', false),
+                        'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
+                        'is_playset' => Arr::get($cardmarket_article, 'isPlayset', false),
+                        'unit_price' => $cardmarket_article['unit_price'],
+                        'unit_cost' => $cardmarket_article['unit_cost'],
+                        'storage_id' => $cardmarket_article['storage_id'],
+                        'index' => $index,
+                        'has_sync_error' => false,
+                        'sync_error' => null,
+                        'sold_at' => null,
+                    ]);
+                    $updated_article_ids[] = $article->id;
+                }
+            }
+
+            // Überflüssige Artikel löschen
+            Article::where('user_id', $user_id)
+                ->whereIn('id', $available_article_ids)
+                ->whereNotNull('cardmarket_article_id')
+                ->delete();
+
+            $all_updates_article_ids = array_merge($all_updates_article_ids, $updated_article_ids);
+        }
+
+        // Restliche Artikel löschen
         self::where('user_id', $user_id)
             ->join('cards', 'cards.id', '=', 'articles.card_id')
             ->where('cards.game_id', $game_id)
-            ->whereNull('sold_at')
-            ->whereNotNull('cardmarket_article_id')
-            ->whereNotIn('cardmarket_article_id', $cardmarket_article_ids)
+            ->whereNull('articles.sold_at')
+            ->whereNotNull('articles.cardmarket_article_id')
+            ->whereNotIn('articles.id', $all_updates_article_ids)
             ->delete();
 
         return $cardmarket_article_ids;
-    }
-
-    public static function createOrUpdateFromStockFile(array $cardmarket_article): array
-    {
-        $articles_left_count = $cardmarket_article['amount'];
-        $article_ids = [];
-        $user_id = $cardmarket_article['user_id'];
-
-        // Article finden, und den Preis anpassen
-        $articles = self::where('cardmarket_article_id', $cardmarket_article['cardmarket_article_id'])
-            ->where('user_id', $user_id)
-            ->whereNull('sold_at')
-            ->limit($cardmarket_article['amount'])
-            ->get();
-        $articles_count = count($articles);
-        $articles_left_count -= $articles_count;
-        foreach ($articles as $article) {
-            $article->update([
-                'cardmarket_comments' => $cardmarket_article['cardmarket_comments'],
-                'unit_price' => $cardmarket_article['unit_price'],
-            ]);
-            $article_ids[] = $article->id;
-        }
-        if ($articles_left_count == 0) {
-            return $article_ids;
-        }
-
-        // Article mit anderer oder ohne cardmarket_article_id
-        $articles = Article::where('articles.user_id', $user_id)
-            ->where('articles.card_id', $cardmarket_article['card_id'])
-            ->whereNull('sold_at')
-            ->where('articles.cardmarket_article_id', '!=', $cardmarket_article['cardmarket_article_id'])
-            ->where('articles.language_id', $cardmarket_article['language_id'])
-            ->where('articles.condition', Arr::get($cardmarket_article, 'condition', ''))
-            ->where('is_foil', Arr::get($cardmarket_article, 'is_foil', false))
-            ->where('is_signed', Arr::get($cardmarket_article, 'isSigned', false))
-            ->where('is_altered', Arr::get($cardmarket_article, 'isAltered', false))
-            ->where('is_playset', Arr::get($cardmarket_article, 'isPlayset', false))
-            ->limit($articles_left_count)
-            ->get();
-        foreach ($articles as $article) {
-            $article->update([
-                'cardmarket_article_id' => $cardmarket_article['cardmarket_article_id'],
-                'cardmarket_comments' => $cardmarket_article['cardmarket_comments'],
-                'unit_price' => $cardmarket_article['unit_price'],
-            ]);
-            $article_ids[] = $article->id;
-        }
-        $articles_count = count($articles);
-        $articles_left_count -= $articles_count;
-        if ($articles_left_count == 0) {
-            return $article_ids;
-        }
-
-        // Artikel erstellen
-        foreach (range($articles_count, ($articles_left_count - 1)) as $index) {
-            $article = self::create([
-                'user_id' => $user_id,
-                'card_id' => $cardmarket_article['card_id'],
-                'cardmarket_article_id' => $cardmarket_article['cardmarket_article_id'],
-                'cardmarket_comments' => $cardmarket_article['cardmarket_comments'],
-                'language_id' => $cardmarket_article['language_id'],
-                'condition' => Arr::get($cardmarket_article, 'condition', ''),
-                'is_foil' => Arr::get($cardmarket_article, 'is_foil', false),
-                'is_signed' => Arr::get($cardmarket_article, 'isSigned', false),
-                'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
-                'is_playset' => Arr::get($cardmarket_article, 'isPlayset', false),
-                'unit_price' => $cardmarket_article['unit_price'],
-                'unit_cost' => $cardmarket_article['unit_cost'],
-                'storage_id' => $cardmarket_article['storage_id'],
-                'index' => $index,
-                'has_sync_error' => false,
-                'sync_error' => null,
-                'sold_at' => null,
-            ]);
-            $article_ids[] = $article->id;
-        }
-
-        return $article_ids;
     }
 
     public static function reindex(int $cardmarket_article_id, int $start = 1) : int
