@@ -389,7 +389,7 @@ class Article extends Model
 
         if ($max_number) {
             [$storage_code, $number] = explode('.', $max_number);
-            if ($number == 999) {
+            if ($number == 250) {
                 $number = 0;
                 $storage_code++;
             }

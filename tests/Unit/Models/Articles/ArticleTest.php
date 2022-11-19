@@ -765,10 +765,10 @@ class ArticleTest extends TestCase
     {
         $this->assertEquals('A000.001', Article::incrementNumber());
         $this->assertEquals('A000.002', Article::incrementNumber('A000.001'));
-        $this->assertEquals('A001.001', Article::incrementNumber('A000.999'));
-        $this->assertEquals('B000.001', Article::incrementNumber('A999.999'));
-        $this->assertEquals('B001.001', Article::incrementNumber('B000.999'));
-        $this->assertEquals('AA000.001', Article::incrementNumber('Z999.999'));
+        $this->assertEquals('A001.001', Article::incrementNumber('A000.250'));
+        $this->assertEquals('B000.001', Article::incrementNumber('A999.250'));
+        $this->assertEquals('B001.001', Article::incrementNumber('B000.250'));
+        $this->assertEquals('AA000.001', Article::incrementNumber('Z999.250'));
         $this->assertEquals('AA000.002', Article::incrementNumber('AA000.001'));
     }
 
