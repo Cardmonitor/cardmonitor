@@ -176,7 +176,7 @@ class Article extends Model
     {
         $cardmarket_article_ids = [];
         $cardmarket_cards = [];
-        $all_updates_article_ids = [];
+        $all_updated_article_ids = [];
 
         $expansions = Expansion::where('game_id', $game_id)->get()->keyBy('abbreviation');
         $no_storage = Storage::noStorage($user_id)->first();
@@ -218,10 +218,12 @@ class Article extends Model
         }
 
         foreach ($cardmarket_cards as $cardmarket_product_id => &$cardmarket_card) {
+
             $articles_for_card = Article::where('user_id', $user_id)
                 ->where('card_id', $cardmarket_product_id)
                 ->whereNull('sold_at')
-                ->get();
+                ->get()
+                ->keyBy('id');
 
             $available_article_ids = $articles_for_card->pluck('id')->toArray();
             $updated_article_ids = [];
@@ -229,12 +231,8 @@ class Article extends Model
 
             // Alle vorhandenen Artikel synchronisieren
             foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
-                $articles = self::whereIn('id', $available_article_ids)
-                    ->where('cardmarket_article_id', $cardmarket_article['cardmarket_article_id'])
-                    ->where('user_id', $user_id)
-                    ->whereNull('sold_at')
-                    ->limit($cardmarket_article['amount'])
-                    ->get();
+                $articles = $articles_for_card->where('cardmarket_article_id', $cardmarket_article['cardmarket_article_id'])
+                    ->take($cardmarket_article['amount']);
                 foreach ($articles as $article) {
                     $article->update([
                         'cardmarket_comments' => $cardmarket_article['cardmarket_comments'],
@@ -247,6 +245,7 @@ class Article extends Model
                         'unit_price' => $cardmarket_article['unit_price'],
                     ]);
                     $updated_article_ids[] = $article->id;
+                    $articles_for_card->forget($article->id);
                     $cardmarket_article['amount']--;
                 }
 
@@ -259,17 +258,13 @@ class Article extends Model
 
             // Gleiche Artikel anpassen
             foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
-                $articles = self::whereIn('id', $available_article_ids)
-                    ->where('user_id', $user_id)
-                    ->whereNull('sold_at')
-                    ->where('articles.language_id', $cardmarket_article['language_id'])
-                    ->where('articles.condition', Arr::get($cardmarket_article, 'condition', ''))
+                $articles = $articles_for_card->where('articles.language_id', $cardmarket_article['language_id'])
+                    ->where('condition', Arr::get($cardmarket_article, 'condition', ''))
                     ->where('is_foil', Arr::get($cardmarket_article, 'is_foil', false))
                     ->where('is_signed', Arr::get($cardmarket_article, 'isSigned', false))
                     ->where('is_altered', Arr::get($cardmarket_article, 'isAltered', false))
                     ->where('is_playset', Arr::get($cardmarket_article, 'isPlayset', false))
-                    ->limit($cardmarket_article['amount'])
-                    ->get();
+                    ->take($cardmarket_article['amount']);
                 foreach ($articles as $article) {
                     $article->update([
                         'cardmarket_article_id' => $cardmarket_article['cardmarket_article_id'],
@@ -283,6 +278,7 @@ class Article extends Model
                         'unit_price' => $cardmarket_article['unit_price'],
                     ]);
                     $updated_article_ids[] = $article->id;
+                    $articles_for_card->forget($article->id);
                     $cardmarket_article['amount']--;
                 }
 
@@ -295,11 +291,10 @@ class Article extends Model
 
             // Restliche Artikel anpassen
             foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
-                $articles = self::whereIn('id', $available_article_ids)
+                $articles = $articles_for_card
                     ->where('user_id', $user_id)
                     ->whereNull('sold_at')
-                    ->limit($cardmarket_article['amount'])
-                    ->get();
+                    ->take($cardmarket_article['amount']);
                 foreach ($articles as $article) {
                     $article->update([
                         'cardmarket_article_id' => $cardmarket_article['cardmarket_article_id'],
@@ -313,6 +308,7 @@ class Article extends Model
                         'unit_price' => $cardmarket_article['unit_price'],
                     ]);
                     $updated_article_ids[] = $article->id;
+                    $articles_for_card->forget($article->id);
                     $cardmarket_article['amount']--;
                 }
 
@@ -354,11 +350,11 @@ class Article extends Model
 
             // Überflüssige Artikel löschen
             Article::where('user_id', $user_id)
-                ->whereIn('id', $available_article_ids)
+                ->whereIn('id', $articles_for_card->pluck('id')->toArray())
                 ->whereNotNull('cardmarket_article_id')
                 ->delete();
 
-            $all_updates_article_ids = array_merge($all_updates_article_ids, $updated_article_ids);
+            $all_updated_article_ids = array_merge($all_updated_article_ids, $updated_article_ids);
         }
 
         // Restliche Artikel löschen
@@ -367,7 +363,7 @@ class Article extends Model
             ->where('cards.game_id', $game_id)
             ->whereNull('articles.sold_at')
             ->whereNotNull('articles.cardmarket_article_id')
-            ->whereNotIn('articles.id', $all_updates_article_ids)
+            ->whereNotIn('articles.id', $all_updated_article_ids)
             ->delete();
 
         return $cardmarket_article_ids;
