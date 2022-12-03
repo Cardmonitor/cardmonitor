@@ -48,4 +48,10 @@ return [
         'redirect' => '/login/dropbox/callback',
     ],
 
+    'woocommerce' => [
+        'url' => env('WOO_COMMERCE_URL'),
+        'consumer_key' => env('WOO_COMMERCE_CONSUMER_KEY'),
+        'consumer_secret' => env('WOO_COMMERCE_CONSUMER_SECRET'),
+    ],
+
 ];

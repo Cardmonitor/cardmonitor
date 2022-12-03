@@ -151,4 +151,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/settings/api_token', 'Users\ApiTokenController@store')->name('user.api_token.store');
     Route::put('/user/settings/api_token', 'Users\ApiTokenController@update')->name('user.api_token.update');
 
+    Route::get('/woocommerce/order', 'WooCommerce\OrderController@index')->name('woocommerce.order.index');
+    Route::post('/woocommerce/order', 'WooCommerce\OrderController@store')->name('woocommerce.order.store');
+
 });

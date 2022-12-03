@@ -9,7 +9,6 @@ use App\Models\Games\Game;
 use App\Models\Localizations\Language;
 use App\Models\Orders\Order;
 use App\Models\Rules\Rule;
-use App\Models\Storages\Content;
 use App\Models\Storages\Storage;
 use App\Transformers\Articles\Csvs\Transformer;
 use App\User;
@@ -120,6 +119,8 @@ class Article extends Model
         'slot',
         'sold_at_formatted',
         'sold_at',
+        'source_id',
+        'source_slug',
         'state_comments',
         'state',
         'storage_id',
@@ -411,6 +412,79 @@ class Article extends Model
         $article = self::updateOrCreate(['cardmarket_article_id' => $cardmarketArticle['idArticle']], $values);
 
         return $article;
+    }
+
+    public static function updateOrCreateFromWooCommerceAPIOrder(int $user_id, array $woocommerce_order)
+    {
+        $bonus = ($woocommerce_order['payment_method'] == 'cod') ? 0.15 : 0;
+
+        $storage_woocommerce = Storage::firstOrCreate([
+            'user_id' => $user_id,
+            'name' => 'WooCommerce',
+        ]);
+
+        $storage_order = Storage::firstOrCreate([
+            'user_id' => $user_id,
+            'name' => 'Bestellung #' . $woocommerce_order['id'],
+            'parent_id' => $storage_woocommerce->id,
+        ]);
+
+        foreach ($woocommerce_order['line_items'] as $line_item) {
+            $line_item['bonus'] = $bonus;
+            $line_item['storage_id'] = $storage_order->id;
+            Article::updateOrCreateFromWooCommerceApi($user_id, $line_item);
+        }
+    }
+
+    public static function updateOrCreateFromWooCommerceAPI(int $user_id, array $line_item): array
+    {
+        [$cardmarket_product_id, $is_foil] = explode('-', $line_item['sku']);
+        $card = Card::firstOrImport($cardmarket_product_id);
+        $number = self::maxNumber($user_id);
+
+        $language = Arr::first($line_item['meta_data'], function ($meta) {
+            return $meta['key'] == 'sprache';
+        });
+
+        $condition = Arr::first($line_item['meta_data'], function ($meta) {
+            return $meta['key'] == 'zustand';
+        });
+
+        $unit_cost = $line_item['total'] / $line_item['quantity'] * (1 + Arr::get($line_item, 'bonus', 0));
+
+
+        for ($index=1; $index <= $line_item['quantity']; $index++) {
+            $number = self::incrementNumber($number);
+            $values = [
+                'user_id' => $user_id,
+                'card_id' => $card->id,
+                'language_id' => Language::getIdByGermanName($language['value']),
+                'cardmarket_article_id' => null,
+                'condition' => array_search(substr($condition['value'], 0, strrpos($condition['value'], ' ')), Article::CONDITIONS),
+                'unit_price' => $unit_cost * 3,
+                'unit_cost' => $unit_cost,
+                'sold_at' => null,
+                'is_in_shoppingcard' => $cardmarketArticle['inShoppingCart'] ?? false,
+                'is_foil' => ($is_foil == 'true'),
+                'is_signed' => false,
+                'is_altered' => false,
+                'is_playset' => false,
+                'cardmarket_comments' => null,
+                'has_sync_error' => false,
+                'sync_error' => null,
+                'number' => $number,
+                'storage_id' => $line_item['storage_id'],
+            ];
+            $attributes = [
+                'source_slug' => 'woocommerce-api',
+                'source_id' => $line_item['id'],
+                'index' => $index,
+            ];
+
+            $articles[] = self::updateOrCreate($attributes, $values);
+        }
+
+        return $articles;
     }
 
     public static function getForPicklist(int $user_id): ArticleCollection
