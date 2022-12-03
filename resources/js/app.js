@@ -84,6 +84,7 @@ Vue.component('storage-content-table', require('./components/storage/content/tab
 Vue.component('storage-table', require('./components/storage/table.vue').default);
 Vue.component('user-balance-table', require('./components/user/balance/table.vue').default);
 Vue.component('card-export-index', require('./components/card/export/index.vue').default);
+Vue.component('woocommerce-order-table', require('./components/woocommerce/order/table.vue').default);
 
 var common = require('./common').default;
 

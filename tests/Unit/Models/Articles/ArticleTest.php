@@ -16,6 +16,7 @@ use Cardmonitor\Cardmarket\Stock;
 use App\Models\Expansions\Expansion;
 use Tests\Traits\AttributeAssertions;
 use App\Models\Localizations\Language;
+use Barryvdh\Debugbar\Twig\Extension\Dump;
 use Tests\Traits\RelationshipAssertions;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -965,5 +966,87 @@ class ArticleTest extends TestCase
         ]);
 
         $this->assertEquals('A99.999', Article::maxNumber($this->user->id));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_update_or_create_an_article_from_woocommerce_api_line_item()
+    {
+        $line_item = json_decode('{"id":180779,"name":"Force of Negation (V.1) - Foil","product_id":609530,"variation_id":0,"quantity":2,"tax_class":"","subtotal":"46.50","subtotal_tax":"0.00","total":"100.00","total_tax":"0.00","taxes":[],"meta_data":[{"id":1499559,"key":"zustand","value":"Near Mint (NM)","display_key":"Kartenzustand","display_value":"Near Mint"},{"id":1499560,"key":"sprache","value":"Englisch","display_key":"Sprache","display_value":"Englisch"},{"id":1499561,"key":"foil","value":"Ja","display_key":"Foil","display_value":"Ja"}],"sku":"265882-true","price":46.5,"image":{"id":"609529","src":"https:\/\/sammelkartenankauf.de\/wp-content\/uploads\/5396b405-6fa0-43d7-a8f6-f64154e95e98.jpg"},"parent_name":null}', true);
+
+        $card = factory(Card::class)->create([
+            'game_id' => Game::ID_MAGIC,
+            'cardmarket_product_id' => 265882,
+        ]);
+
+        $storage = factory(Storage::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        $number = 'A000.001';
+        $line_item['number'] = $number;
+        $line_item['bonus'] = 0;
+        $line_item['storage_id'] = $storage->id;
+
+        $articles = Article::updateOrCreateFromWooCommerceApi($this->user->id, $line_item);
+        // var_dump($article->toArray());
+        $this->assertCount($line_item['quantity'], $articles);
+        $this->assertCount($line_item['quantity'], Article::all());
+        $this->assertEquals($this->user->id, $articles[0]->user_id);
+        $this->assertEquals($card->id, $articles[0]->card_id);
+        $this->assertEquals('woocommerce-api', $articles[0]->source_slug);
+        $this->assertEquals($line_item['id'], $articles[0]->source_id);
+        $this->assertEquals(Language::DEFAULT_ID, $articles[0]->language_id);
+        $this->assertEquals('NM', $articles[0]->condition);
+        $this->assertEquals(50, $articles[0]->unit_cost);
+        $this->assertEquals(150, $articles[0]->unit_price);
+        $this->assertEquals($number, $articles[0]->number);
+        $this->assertEquals($storage->id, $articles[0]->storage_id);
+
+        $articles = Article::updateOrCreateFromWooCommerceApi($this->user->id, $line_item);
+        $this->assertCount($line_item['quantity'], Article::all());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_update_or_create_an_order_from_woocommerce_api()
+    {
+        $path_order = 'tests/snapshots/woocommerce/orders/619687.json';
+        $woocommerce_order = json_decode(file_get_contents($path_order), true);
+        $number = Article::maxNumber($this->user->id);
+
+        $storage_woocommerce = factory(Storage::class)->create([
+            'user_id' => $this->user->id,
+            'name' => 'WooCommerce',
+        ]);
+
+        $storage_order = factory(Storage::class)->create([
+            'user_id' => $this->user->id,
+            'name' => 'Bestellung #' . $woocommerce_order['id'],
+            'parent_id' => $storage_woocommerce->id,
+        ]);
+
+        $quantity = 0;
+        foreach ($woocommerce_order['line_items'] as $line_item) {
+            $card = factory(Card::class)->create([
+                'game_id' => Game::ID_MAGIC,
+                'cardmarket_product_id' => trim($line_item['sku'], '-'),
+            ]);
+
+            $quantity += $line_item['quantity'];
+        }
+
+        Article::updateOrCreateFromWooCommerceAPIOrder($this->user->id, $woocommerce_order);
+
+        $this->assertCount($quantity, Article::all());
+        $this->assertCount($quantity, $storage_order->articles);
+
+        foreach (Article::all() as $article) {
+            $number = Article::incrementNumber($number);
+            $this->assertEquals($number, $article->number);
+            echo $article->unit_cost . PHP_EOL;
+        }
     }
 }

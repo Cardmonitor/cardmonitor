@@ -1,0 +1,361 @@
+{
+    "id": 619687,
+    "parent_id": 0,
+    "status": "completed",
+    "currency": "EUR",
+    "version": "7.0.0",
+    "prices_include_tax": false,
+    "date_created": "2022-11-25T17:05:25",
+    "date_modified": "2022-11-29T11:46:39",
+    "discount_total": "0.00",
+    "discount_tax": "0.00",
+    "shipping_total": "0.00",
+    "shipping_tax": "0.00",
+    "cart_tax": "0.00",
+    "total": "66.03",
+    "total_tax": "0.00",
+    "customer_id": 0,
+    "order_key": "wc_order_v1PC6r1uhLvbb",
+    "billing": {
+        "first_name": "Daniel",
+        "last_name": "Wessel",
+        "company": "",
+        "address_1": "M\u00fchlenstra\u00dfe 27",
+        "address_2": "",
+        "city": "L\u00fcbeck",
+        "state": "",
+        "postcode": "23552",
+        "country": "DE",
+        "email": "daswiessel@gmail.com",
+        "phone": ""
+    },
+    "shipping": {
+        "first_name": "Daniel",
+        "last_name": "Wessel",
+        "company": "",
+        "address_1": "M\u00fchlenstra\u00dfe 27",
+        "address_2": "",
+        "city": "L\u00fcbeck",
+        "state": "",
+        "postcode": "23552",
+        "country": "DE",
+        "phone": ""
+    },
+    "payment_method": "cod",
+    "payment_method_title": "Loyalty (+15%)",
+    "transaction_id": "",
+    "customer_ip_address": "95.90.249.199",
+    "customer_user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko\/20100101 Firefox\/107.0",
+    "created_via": "checkout",
+    "customer_note": "",
+    "date_completed": "2022-11-29T11:46:39",
+    "date_paid": "2022-11-29T11:46:39",
+    "cart_hash": "d8a0ffa88b0faf87db76dfd5944fb1ec",
+    "number": "619687",
+    "meta_data": [
+        {
+            "id": 4389556,
+            "key": "_relevanssi_noindex_reason",
+            "value": "WooCommerce Yoast SEO"
+        },
+        {
+            "id": 4389589,
+            "key": "_shipping_calculator",
+            "value": ""
+        },
+        {
+            "id": 4389590,
+            "key": "is_vat_exempt",
+            "value": "no"
+        },
+        {
+            "id": 4389592,
+            "key": "_woofunnel_cid",
+            "value": "33968"
+        },
+        {
+            "id": 4389593,
+            "key": "_wfacp_post_id",
+            "value": "614680"
+        },
+        {
+            "id": 4389594,
+            "key": "_wfacp_source",
+            "value": "https:\/\/sammelkartenankauf.de\/checkouts\/k7-checkout-v2-copy-2\/"
+        },
+        {
+            "id": 4389595,
+            "key": "_wfacp_timezone",
+            "value": "Europe\/Berlin"
+        },
+        {
+            "id": 4389596,
+            "key": "kartenzustand",
+            "value": "1"
+        },
+        {
+            "id": 4389597,
+            "key": "ankaufliste",
+            "value": "1"
+        },
+        {
+            "id": 4389598,
+            "key": "sleeved",
+            "value": "1"
+        },
+        {
+            "id": 4389614,
+            "key": "_new_order_email_sent",
+            "value": "true"
+        },
+        {
+            "id": 4389615,
+            "key": "woo_thank_you_page_coupon_code",
+            "value": ""
+        },
+        {
+            "id": 4389751,
+            "key": "wf_order_exported_status",
+            "value": "1"
+        }
+    ],
+    "line_items": [
+        {
+            "id": 181113,
+            "name": "Kozilek, Butcher of Truth",
+            "product_id": 609694,
+            "variation_id": 0,
+            "quantity": 1,
+            "tax_class": "",
+            "subtotal": "18.98",
+            "subtotal_tax": "0.00",
+            "total": "18.98",
+            "total_tax": "0.00",
+            "taxes": [],
+            "meta_data": [
+                {
+                    "id": 1503139,
+                    "key": "zustand",
+                    "value": "Near Mint (NM)",
+                    "display_key": "Kartenzustand",
+                    "display_value": "'Near Mint'"
+                },
+                {
+                    "id": 1503140,
+                    "key": "sprache",
+                    "value": "Englisch",
+                    "display_key": "Sprache",
+                    "display_value": "'Englisch'"
+                }
+            ],
+            "sku": "663977-",
+            "price": 18.98,
+            "image": {
+                "id": "609695",
+                "src": "https:\/\/sammelkartenankauf.de\/wp-content\/uploads\/d27cf7b7-7982-46bd-a559-7789c0e74bae.jpg"
+            },
+            "parent_name": null
+        },
+        {
+            "id": 181114,
+            "name": "Vanquisher's Banner",
+            "product_id": 606384,
+            "variation_id": 0,
+            "quantity": 1,
+            "tax_class": "",
+            "subtotal": "5.77",
+            "subtotal_tax": "0.00",
+            "total": "5.77",
+            "total_tax": "0.00",
+            "taxes": [],
+            "meta_data": [
+                {
+                    "id": 1503150,
+                    "key": "zustand",
+                    "value": "Near Mint (NM)",
+                    "display_key": "Kartenzustand",
+                    "display_value": "'Near Mint'"
+                },
+                {
+                    "id": 1503151,
+                    "key": "sprache",
+                    "value": "Englisch",
+                    "display_key": "Sprache",
+                    "display_value": "'Englisch'"
+                }
+            ],
+            "sku": "298491-",
+            "price": 5.77,
+            "image": {
+                "id": "606381",
+                "src": "https:\/\/sammelkartenankauf.de\/wp-content\/uploads\/60b7a85f-3a30-4ece-9bbb-61f3c4b796b8.jpg"
+            },
+            "parent_name": null
+        },
+        {
+            "id": 181115,
+            "name": "Revel in Riches",
+            "product_id": 599425,
+            "variation_id": 0,
+            "quantity": 1,
+            "tax_class": "",
+            "subtotal": "4.21",
+            "subtotal_tax": "0.00",
+            "total": "4.21",
+            "total_tax": "0.00",
+            "taxes": [],
+            "meta_data": [
+                {
+                    "id": 1503161,
+                    "key": "zustand",
+                    "value": "Near Mint (NM)",
+                    "display_key": "Kartenzustand",
+                    "display_value": "'Near Mint'"
+                },
+                {
+                    "id": 1503162,
+                    "key": "sprache",
+                    "value": "Englisch",
+                    "display_key": "Sprache",
+                    "display_value": "'Englisch'"
+                }
+            ],
+            "sku": "301209-",
+            "price": 4.21,
+            "image": {
+                "id": "599421",
+                "src": "https:\/\/sammelkartenankauf.de\/wp-content\/uploads\/79b0e035-8716-469d-99ae-a530cd96ef09.jpg"
+            },
+            "parent_name": null
+        },
+        {
+            "id": 181116,
+            "name": "Neheb, the Eternal",
+            "product_id": 595909,
+            "variation_id": 0,
+            "quantity": 1,
+            "tax_class": "",
+            "subtotal": "6.57",
+            "subtotal_tax": "0.00",
+            "total": "6.57",
+            "total_tax": "0.00",
+            "taxes": [],
+            "meta_data": [
+                {
+                    "id": 1503172,
+                    "key": "zustand",
+                    "value": "Near Mint (NM)",
+                    "display_key": "Kartenzustand",
+                    "display_value": "'Near Mint'"
+                },
+                {
+                    "id": 1503173,
+                    "key": "sprache",
+                    "value": "Englisch",
+                    "display_key": "Sprache",
+                    "display_value": "'Englisch'"
+                }
+            ],
+            "sku": "298650-",
+            "price": 6.57,
+            "image": {
+                "id": "595908",
+                "src": "https:\/\/sammelkartenankauf.de\/wp-content\/uploads\/54231832-d492-4812-b658-4ab9a30fefe2.jpg"
+            },
+            "parent_name": null
+        },
+        {
+            "id": 181117,
+            "name": "Avacyn, Angel of Hope",
+            "product_id": 579695,
+            "variation_id": 0,
+            "quantity": 1,
+            "tax_class": "",
+            "subtotal": "21.89",
+            "subtotal_tax": "0.00",
+            "total": "21.89",
+            "total_tax": "0.00",
+            "taxes": [],
+            "meta_data": [
+                {
+                    "id": 1503183,
+                    "key": "zustand",
+                    "value": "Near Mint (NM)",
+                    "display_key": "Kartenzustand",
+                    "display_value": "'Near Mint'"
+                },
+                {
+                    "id": 1503184,
+                    "key": "sprache",
+                    "value": "Englisch",
+                    "display_key": "Sprache",
+                    "display_value": "'Englisch'"
+                }
+            ],
+            "sku": "301414-",
+            "price": 21.89,
+            "image": {
+                "id": "579690",
+                "src": "https:\/\/sammelkartenankauf.de\/wp-content\/uploads\/ddb92ef6-0ef8-4b1d-8a45-3064fea23926.jpg"
+            },
+            "parent_name": null
+        }
+    ],
+    "tax_lines": [],
+    "shipping_lines": [
+        {
+            "id": 181119,
+            "method_title": "Ich bring' die Karten vorbei!",
+            "method_id": "flat_rate",
+            "instance_id": "19",
+            "total": "0.00",
+            "total_tax": "0.00",
+            "taxes": [],
+            "meta_data": [
+                {
+                    "id": 1503196,
+                    "key": "Positionen",
+                    "value": "Kozilek, Butcher of Truth &times; 1, Vanquisher's Banner &times; 1, Revel in Riches &times; 1, Neheb, the Eternal &times; 1, Avacyn, Angel of Hope &times; 1",
+                    "display_key": "Positionen",
+                    "display_value": "Kozilek, Butcher of Truth &times; 1, Vanquisher's Banner &times; 1, Revel in Riches &times; 1, Neheb, the Eternal &times; 1, Avacyn, Angel of Hope &times; 1"
+                }
+            ]
+        }
+    ],
+    "fee_lines": [
+        {
+            "id": 181118,
+            "name": "+15% extra Loyalty im Wert von",
+            "tax_class": "",
+            "tax_status": "taxable",
+            "amount": "8.613",
+            "total": "8.61",
+            "total_tax": "0.00",
+            "taxes": [],
+            "meta_data": []
+        }
+    ],
+    "coupon_lines": [],
+    "refunds": [],
+    "payment_url": "https:\/\/sammelkartenankauf.de\/checkout\/order-pay\/619687\/?pay_for_order=true&key=wc_order_v1PC6r1uhLvbb",
+    "is_editable": false,
+    "needs_payment": false,
+    "needs_processing": true,
+    "date_created_gmt": "2022-11-25T15:05:25",
+    "date_modified_gmt": "2022-11-29T09:46:39",
+    "date_completed_gmt": "2022-11-29T09:46:39",
+    "date_paid_gmt": "2022-11-29T09:46:39",
+    "currency_symbol": "\u20ac",
+    "_links": {
+        "self": [
+            {
+                "href": "https:\/\/sammelkartenankauf.de\/wp-json\/wc\/v3\/orders\/619687"
+            }
+        ],
+        "collection": [
+            {
+                "href": "https:\/\/sammelkartenankauf.de\/wp-json\/wc\/v3\/orders"
+            }
+        ]
+    }
+}
