@@ -49,7 +49,7 @@
                         Vue.success(component.$t('order.successes.synced'));
                     })
                     .catch(function (error) {
-                        Vue.error(component.$t('order.errors.synced'));
+                        Vue.error('Die Bestellung konnte nicht importiert werden.');
                         console.log(error);
                     })
                     .finally ( function () {
