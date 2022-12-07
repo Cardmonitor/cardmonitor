@@ -7,7 +7,10 @@
         <td class="align-middle text-right">{{ item.line_items.length }}</td>
         <td class="align-middle text-right">
             <div class="btn-group btn-group-sm" role="group">
-                <button type="button" class="btn btn-sm btn-secondary" title="Importieren" @click="store()"><i class="fas fa-file-import"></i></button>
+                <button type="button" class="btn btn-sm btn-secondary" title="Importieren" @click="store()">
+                    <i class="fas fa-file-import" v-show="!is_storing"></i>
+                    <i class="fas fa-spinner fa-spin" v-show="is_storing"></i>
+                </button>
             </div>
         </td>
     </tr>
@@ -24,6 +27,7 @@
 
         data () {
             return {
+                is_storing: false,
                 id: this.item.id,
             };
         },
@@ -31,6 +35,12 @@
         methods: {
             store(item) {
                 var component = this;
+
+                if (component.is_storing) {
+                    return;
+                }
+
+                component.is_storing = true;
                 axios.post('/woocommerce/order', {
                     id: component.id,
                 })
@@ -43,7 +53,7 @@
                         console.log(error);
                     })
                     .finally ( function () {
-
+                        component.is_storing = false;
                 });
             },
         },

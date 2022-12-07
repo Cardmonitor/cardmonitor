@@ -6236,12 +6236,19 @@ __webpack_require__.r(__webpack_exports__);
   props: ['item'],
   data: function data() {
     return {
+      is_storing: false,
       id: this.item.id
     };
   },
   methods: {
     store: function store(item) {
       var component = this;
+
+      if (component.is_storing) {
+        return;
+      }
+
+      component.is_storing = true;
       axios.post('/woocommerce/order', {
         id: component.id
       }).then(function (response) {
@@ -6250,7 +6257,9 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         Vue.error(component.$t('order.errors.synced'));
         console.log(error);
-      })["finally"](function () {});
+      })["finally"](function () {
+        component.is_storing = false;
+      });
     }
   }
 });
@@ -15038,7 +15047,21 @@ var render = function render() {
       }
     }
   }, [_c("i", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: !_vm.is_storing,
+      expression: "!is_storing"
+    }],
     staticClass: "fas fa-file-import"
+  }), _vm._v(" "), _c("i", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.is_storing,
+      expression: "is_storing"
+    }],
+    staticClass: "fas fa-spinner fa-spin"
   })])])])]);
 };
 
