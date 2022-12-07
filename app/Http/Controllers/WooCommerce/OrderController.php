@@ -43,7 +43,8 @@ class OrderController extends Controller
         ]);
 
         $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
-        $order = $WooCommerce->order($attributes['id']);
+        $response = $WooCommerce->order($attributes['id']);
+        $order = $response['data'];
 
         Article::updateOrCreateFromWooCommerceAPIOrder(auth()->user()->id, $order);
 
