@@ -4,7 +4,7 @@
         <td class="align-middle d-none d-xl-table-cell text-center pointer"><i class="fas fa-image" @mouseover="show($event)" @mouseout="$emit('hide')"></i></td>
         <td class="align-middle">
             <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.localName }}<span v-if="item.card.number"> ({{ item.card.number }})</span>
-            <div class="d-none d-xl-table-cell text-muted" v-if="item.language_id != 1">{{ item.card.name }}</div>
+            <div class="d-none d-xl-table-cell text-muted" v-if="item.language_id != 1">{{ item.card.name }}</div>
         </td>
         <td class="align-middle text-center"><expansion-icon :expansion="item.card.expansion" :show-name="false"></expansion-icon></td>
         <td class="align-middle d-none d-xl-table-cell text-center"><rarity :value="item.card.rarity" v-if="item.card.rarity"></rarity></td>
@@ -35,13 +35,6 @@
                 <label class="form-check-label" for="is_playset">Playset</label>
             </div>
         </td>
-        <td class="align-middle d-none d-xl-table-cell text-center">
-            <select class="form-control form-control-sm" v-model="form.storage_id">
-                <option :value="null">{{ $t('storages.no_storage') }}</option>
-                <option :value="storage.id" v-for="(storage, key) in storages" v-html="storage.indentedName"></option>
-            </select>
-            <div class="invalid-feedback" v-text="'unit_price_formatted' in errors ? errors.unit_price_formatted[0] : ''"></div>
-        </td>
         <td class="align-middle d-none d-sm-table-cell text-right">
             <div class="input-group">
                 <input class="form-control form-control-sm text-right" :class="'unit_price_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_price_formatted" @keydown.enter="update(false)">
@@ -53,14 +46,10 @@
             </div>
             <div class="invalid-feedback" v-text="'unit_price_formatted' in errors ? errors.unit_price_formatted[0] : ''"></div>
         </td>
-        <td class="align-middle d-none d-xl-table-cell text-right">
-            <input class="form-control form-control-sm text-right" :class="'unit_cost_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_cost_formatted" @keydown.enter="update(false)">
-            <div class="invalid-feedback" v-text="'unit_cost_formatted' in errors ? errors.unit_cost_formatted[0] : ''"></div>
-        </td>
-        <td class="align-middle d-none d-xl-table-cell text-right">{{ Number(item.provision).format(2, ',', '.') }} €</td>
         <td class="align-middle text-right d-none d-xl-table-cell pointer">{{ Number(item.unit_price - item.unit_cost - item.provision).format(2, ',', '.') }} €</td>
         <td class="align-middle d-none d-sm-table-cell text-right">
             <div class="btn-group btn-group-sm" role="group">
+                <button type="button" class="btn btn-secondary" title="Abbrechen" @click="isEditing = false;"><i class="fas fa-fw fa-times"></i></button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.save')" @click="update(false)"><i class="fas fa-fw fa-save"></i></button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.save_upload')" @click="update(true)"><i class="fas fa-fw fa-cloud-upload-alt"></i></button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.delete')" @click="destroy"><i class="fas fa-fw fa-trash"></i></button>
@@ -70,12 +59,12 @@
     <tr v-else>
         <td class="align-middle d-none d-lg-table-cell text-center">
             <i class="fas fa-fw fa-euro-sign text-success" title="Verkauft" v-if="item.orders.length"></i>
-            <i class="fas fa-fw" :class="item.sync_icon" :title="item.sync_error || 'Karte synchronisiert'" v-else></i>
+            <i class="fas fa-fw" :class="item.sync_icon" :title="item.sync_error || 'Karte synchronisiert'" v-else></i>
         </td>
         <td class="align-middle d-none d-xl-table-cell pointer"><i class="fas fa-image" @mouseover="show($event)" @mouseout="$emit('hide')"></i></td>
         <td class="align-middle">
             <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.localName }} ({{ item.card.number }})
-            <div class="text-muted" v-if="item.language_id != 1">{{ item.card.name }}</div></td>
+            <div class="text-muted" v-if="item.language_id != 1">{{ item.card.name }}</div></td>
         <td class="align-middle text-center"><expansion-icon :expansion="item.card.expansion" :show-name="false" v-if="item.card.expansion"></expansion-icon></td>
         <td class="align-middle d-none d-xl-table-cell text-center"><rarity :value="item.card.rarity" v-if="item.card.rarity"></rarity></td>
         <td class="align-middle d-none d-lg-table-cell text-center"><condition :value="item.condition"></condition></td>
@@ -100,6 +89,7 @@
         <td class="align-middle d-none d-sm-table-cell text-right">
             <div class="btn-group btn-group-sm" role="group">
                 <a class="btn btn-secondary" :href="item.orders[0].path" :title="'Bestellung ' + item.orders[0].cardmarket_order_id" v-if="item.orders.length"><i class="fas fa-box"></i></a>
+                <button type="button" class="btn btn-secondary" title="Bearbeiten" @click="isEditing = true;"><i class="fas fa-fw fa-edit"></i></button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.save')" @click="update(false)"><i class="fas fa-fw fa-save"></i></button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.save_upload')" @click="update(true)"><i class="fas fa-fw fa-cloud-upload-alt"></i></button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.delete')" @click="destroy"><i class="fas fa-fw fa-trash"></i></button>

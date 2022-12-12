@@ -7556,44 +7556,6 @@ var render = function render() {
       "for": "is_playset"
     }
   }, [_vm._v("Playset")])])]), _vm._v(" "), _c("td", {
-    staticClass: "align-middle d-none d-xl-table-cell text-center"
-  }, [_c("select", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.form.storage_id,
-      expression: "form.storage_id"
-    }],
-    staticClass: "form-control form-control-sm",
-    on: {
-      change: function change($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-          return o.selected;
-        }).map(function (o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val;
-        });
-
-        _vm.$set(_vm.form, "storage_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
-      }
-    }
-  }, [_c("option", {
-    domProps: {
-      value: null
-    }
-  }, [_vm._v(_vm._s(_vm.$t("storages.no_storage")))]), _vm._v(" "), _vm._l(_vm.storages, function (storage, key) {
-    return _c("option", {
-      domProps: {
-        value: storage.id,
-        innerHTML: _vm._s(storage.indentedName)
-      }
-    });
-  })], 2), _vm._v(" "), _c("div", {
-    staticClass: "invalid-feedback",
-    domProps: {
-      textContent: _vm._s("unit_price_formatted" in _vm.errors ? _vm.errors.unit_price_formatted[0] : "")
-    }
-  })]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-sm-table-cell text-right"
   }, [_c("div", {
     staticClass: "input-group"
@@ -7641,41 +7603,6 @@ var render = function render() {
       textContent: _vm._s("unit_price_formatted" in _vm.errors ? _vm.errors.unit_price_formatted[0] : "")
     }
   })]), _vm._v(" "), _c("td", {
-    staticClass: "align-middle d-none d-xl-table-cell text-right"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.form.unit_cost_formatted,
-      expression: "form.unit_cost_formatted"
-    }],
-    staticClass: "form-control form-control-sm text-right",
-    "class": "unit_cost_formatted" in _vm.errors ? "is-invalid" : "",
-    attrs: {
-      type: "text"
-    },
-    domProps: {
-      value: _vm.form.unit_cost_formatted
-    },
-    on: {
-      keydown: function keydown($event) {
-        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
-        return _vm.update(false);
-      },
-      input: function input($event) {
-        if ($event.target.composing) return;
-
-        _vm.$set(_vm.form, "unit_cost_formatted", $event.target.value);
-      }
-    }
-  }), _vm._v(" "), _c("div", {
-    staticClass: "invalid-feedback",
-    domProps: {
-      textContent: _vm._s("unit_cost_formatted" in _vm.errors ? _vm.errors.unit_cost_formatted[0] : "")
-    }
-  })]), _vm._v(" "), _c("td", {
-    staticClass: "align-middle d-none d-xl-table-cell text-right"
-  }, [_vm._v(_vm._s(Number(_vm.item.provision).format(2, ",", ".")) + " €")]), _vm._v(" "), _c("td", {
     staticClass: "align-middle text-right d-none d-xl-table-cell pointer"
   }, [_vm._v(_vm._s(Number(_vm.item.unit_price - _vm.item.unit_cost - _vm.item.provision).format(2, ",", ".")) + " €")]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-sm-table-cell text-right"
@@ -7685,6 +7612,19 @@ var render = function render() {
       role: "group"
     }
   }, [_c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      title: "Abbrechen"
+    },
+    on: {
+      click: function click($event) {
+        _vm.isEditing = false;
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-fw fa-times"
+  })]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -7873,6 +7813,19 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-box"
   })]) : _vm._e(), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      title: "Bearbeiten"
+    },
+    on: {
+      click: function click($event) {
+        _vm.isEditing = true;
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-fw fa-edit"
+  })]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
