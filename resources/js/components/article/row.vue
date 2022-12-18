@@ -191,6 +191,13 @@
                         Vue.success((sync ? component.$t('app.successes.created_uploaded') : component.$t('app.successes.updated')));
                     })
                     .catch(function (error) {
+                        if (error.response.status === 422) {
+                            component.errors = {};
+                            component.$emit('updated', error.response.data);
+                            Vue.error(error.response.data.sync_error);
+                            return;
+                        }
+
                         component.errors = error.response.data.errors;
                         Vue.error(component.$t('app.errors.updated'));
                 });

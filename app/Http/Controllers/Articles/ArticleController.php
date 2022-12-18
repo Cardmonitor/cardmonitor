@@ -203,17 +203,20 @@ class ArticleController extends Controller
             }
         }
 
+        $is_synced = true;
         if ($request->input('sync')) {
-            $article->sync();
+            $is_synced = $article->sync();
         }
 
-        return $article->load([
+        $article->load([
             'card.expansion',
             'card.localizations',
             'language',
             'orders',
             'storage',
         ]);
+
+        return response()->json($article, $is_synced ? Response::HTTP_OK : Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     /**

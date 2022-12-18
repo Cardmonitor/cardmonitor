@@ -580,19 +580,16 @@ class Article extends Model
         return $cardmarketArticle;
     }
 
-    public function sync() : self
+    public function sync(): bool
     {
         if ($this->cardmarket_article_id) {
-            $this->syncUpdate();
-        }
-        else {
-            $this->syncAdd();
+            return $this->syncUpdate();
         }
 
-        return $this;
+        return $this->syncAdd();
     }
 
-    public function syncAdd()
+    public function syncAdd(): bool
     {
         $response = $this->user->cardmarketApi->stock->add([$this->toCardmarket()]);
         if ($response['inserted']['success']) {
@@ -606,18 +603,21 @@ class Article extends Model
                 'sync_error' => null,
                 'should_sync' => false,
             ]);
+
+            return true;
         }
-        else {
-            $this->update([
-                'has_sync_error' => true,
-                'sync_error' => $response['inserted']['error'],
-                'should_sync' => true,
-                'cardmarket_article_id' => null,
-            ]);
-        }
+
+        $this->update([
+            'has_sync_error' => true,
+            'sync_error' => $response['inserted']['error'],
+            'should_sync' => true,
+            // 'cardmarket_article_id' => null,
+        ]);
+
+        return false;
     }
 
-    public function syncUpdate()
+    public function syncUpdate(): bool
     {
         try {
             $response = $this->user->cardmarketApi->stock->update([$this->toCardmarket()]);
@@ -631,22 +631,29 @@ class Article extends Model
                     'sync_error' => null,
                     'should_sync' => false,
                 ]);
+
+                return true;
             }
             elseif (is_array($response['notUpdatedArticles'])) {
                 $this->update([
                     'has_sync_error' => true,
                     'sync_error' => $response['notUpdatedArticles']['error'],
                     'should_sync' => true,
-                    'cardmarket_article_id' => null,
+                    // 'cardmarket_article_id' => null,
                 ]);
+
+                return false;
             }
             else {
+                // Artikel nicht vorhanden, wahrscheinlich auf Cardmarket verändert und die Cardmarket Article ID hat sich verändert -> Alle Artikel synchronisieren
                 $this->update([
                     'has_sync_error' => true,
-                    'sync_error' => 'Artikel nicht vorhanden. Alle Artikel synchronisieren.',
+                    'sync_error' => 'Artikel nicht auf Cardmarket vorhanden. Bitte alle Artikel synchronisieren.',
                     'should_sync' => true,
                     'cardmarket_article_id' => null,
                 ]);
+
+                return false;
             }
         }
         catch (\Exception $e) {
