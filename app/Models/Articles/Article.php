@@ -429,9 +429,28 @@ class Article extends Model
             'parent_id' => $storage_woocommerce->id,
         ]);
 
+        $article_count = 0;
+        $additional_costs = 0;
         foreach ($woocommerce_order['line_items'] as $line_item) {
+            if (strpos($line_item['sku'], '-') === false) {
+                $additional_costs += $line_item['total'];
+            }
+            else {
+                $article_count += $line_item['quantity'];
+            }
+        }
+        $additional_costs *= 1 + $bonus;
+        $additional_costs_per_card = $additional_costs / $article_count;
+
+        foreach ($woocommerce_order['line_items'] as $line_item) {
+
+            if (strpos($line_item['sku'], '-') === false) {
+                continue;
+            }
+
             $line_item['bonus'] = $bonus;
             $line_item['storage_id'] = $storage_order->id;
+            $line_item['additional_costs_per_card'] = $additional_costs_per_card;
             Article::updateOrCreateFromWooCommerceApi($user_id, $line_item);
         }
     }
@@ -450,8 +469,7 @@ class Article extends Model
             return $meta['key'] == 'zustand';
         });
 
-        $unit_cost = $line_item['total'] / $line_item['quantity'] * (1 + Arr::get($line_item, 'bonus', 0));
-
+        $unit_cost = $line_item['total'] / $line_item['quantity'] * (1 + Arr::get($line_item, 'bonus', 0)) + Arr::get($line_item, 'additional_costs_per_card', 0);
 
         for ($index=1; $index <= $line_item['quantity']; $index++) {
             $number = self::incrementNumber($number);
