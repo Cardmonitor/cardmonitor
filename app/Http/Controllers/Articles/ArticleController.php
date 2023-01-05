@@ -162,8 +162,18 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
+        $languages = Language::all()->mapWithKeys(function ($item) {
+            return [$item['id'] => $item['name']];
+        });
+
         return view($this->baseViewPath . '.edit')
-            ->with('model', $article);
+            ->with('model', $article)
+            ->with('conditions', Article::CONDITIONS)
+            ->with('languages', $languages)
+            ->with('storages', auth()->user()->storages()
+                ->withDepth()
+                ->defaultOrder()
+                ->get());
     }
 
     /**
@@ -178,6 +188,7 @@ class ArticleController extends Controller
         $storage_id = $request->input('storage_id');
 
         $article->update($request->validate([
+            'cardmarket_article_id' => 'sometimes|nullable|integer',
             'cardmarket_comments' => 'sometimes|nullable|string',
             'language_id' => 'sometimes|required|integer',
             'condition' => 'sometimes|required|string',

@@ -13,7 +13,6 @@ use App\Models\Storages\Storage;
 use App\Transformers\Articles\Csvs\Transformer;
 use App\User;
 use Carbon\Carbon;
-use GuzzleHttp\Psr7\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -71,6 +70,7 @@ class Article extends Model
     protected $appends = [
         'localName',
         'path',
+        'edit_path',
         'price_rule_formatted',
         'provision_formatted',
         'state_icon',
@@ -141,6 +141,7 @@ class Article extends Model
     ];
 
     protected $dates = [
+        'cardmarket_last_edited',
         'bought_at',
         'exported_at',
         'sold_at',
@@ -983,7 +984,24 @@ class Article extends Model
 
     public function getPathAttribute()
     {
-        return '/article/' . $this->id;
+        return $this->path('show');
+    }
+
+    public function getEditPathAttribute()
+    {
+        return $this->path('edit');
+    }
+
+    protected function path(string $action = '') : string
+    {
+        return ($this->id ? route($this->baseRoute() . '.' . $action, [
+            'article' => $this->id
+        ]) : '');
+    }
+
+    protected function baseRoute() : string
+    {
+        return 'article';
     }
 
     public function getProvisionFormattedAttribute()
