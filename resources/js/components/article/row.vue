@@ -62,7 +62,7 @@
             <i class="fas fa-fw" :class="item.sync_icon" :title="item.sync_error || 'Karte synchronisiert'" v-else></i>
         </td>
         <td class="align-middle d-none d-xl-table-cell pointer"><i class="fas fa-image" @mouseover="show($event)" @mouseout="$emit('hide')"></i></td>
-        <td class="align-middle">
+        <td class="align-middle pointer" @click="show()">
             <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.localName }} ({{ item.card.number }})
             <div class="text-muted" v-if="item.language_id != 1">{{ item.card.name }}</div></td>
         <td class="align-middle text-center"><expansion-icon :expansion="item.card.expansion" :show-name="false" v-if="item.card.expansion"></expansion-icon></td>
@@ -84,12 +84,12 @@
         <td class="align-middle d-none d-xl-table-cell text-right">
             <input class="form-control form-control-sm text-right" :class="'number' in errors ? 'is-invalid' : ''" type="text" v-model="form.number" @keydown.enter="update(false)">
             <div class="invalid-feedback" v-text="'number' in errors ? errors.number[0] : ''"></div>
-            <button class="btn btn-sm btn-link" @click="getNextNumber" v-if="!item.number">Nächste</button>
+            <button class="btn btn-sm btn-link" @click="getNextNumber" v-show="!form.number">Nächste</button>
         </td>
         <td class="align-middle d-none d-sm-table-cell text-right">
             <div class="btn-group btn-group-sm" role="group">
                 <a class="btn btn-secondary" :href="item.orders[0].path" :title="'Bestellung ' + item.orders[0].cardmarket_order_id" v-if="item.orders.length"><i class="fas fa-box"></i></a>
-                <button type="button" class="btn btn-secondary" title="Bearbeiten" @click="isEditing = true;"><i class="fas fa-fw fa-edit"></i></button>
+                <button type="button" class="btn btn-secondary" title="Bearbeiten" @click="isEditing = true"><i class="fas fa-fw fa-edit"></i></button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.save')" @click="update(false)"><i class="fas fa-fw fa-save"></i></button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.save_upload')" @click="update(true)"><i class="fas fa-fw fa-cloud-upload-alt"></i></button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.delete')" @click="destroy"><i class="fas fa-fw fa-trash"></i></button>
@@ -212,6 +212,9 @@
                         Vue.error('Nummer konnte nicht ermittelt werden.');
                     });
             },
+            show() {
+                location.href = this.item.path;
+            }
         },
     };
 </script>

@@ -27,14 +27,14 @@ class WooCommerceTest extends TestCase
      */
     public function it_gets_an_order()
     {
-        $id = 619705;
+        $id = 620236;
         $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
         $response = $WooCommerce->order($id);
         $order = $response['data'];
 
         echo PHP_EOL;
         foreach ($order['line_items'] as $line_item) {
-            echo $line_item['name'] . ': ' . $line_item['quantity'] . PHP_EOL;
+            echo $line_item['name'] . ': ' . $line_item['sku'] . PHP_EOL;
         }
     }
 }
