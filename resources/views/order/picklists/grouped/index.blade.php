@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="d-flex">
-        <h2 class="col pl-0">Pickliste</h2>
+        <h2 class="col pl-0">Pickliste Gruppiert</h2>
         <div>
             @if (count($grouped_articles))
                 <a href="{{ route('order.picklist.grouped.pdf.index') }}" target="_blank" class="btn btn-sm btn-secondary">PDF</a>
@@ -37,7 +37,9 @@
                         <td class="align-middle">{{ $grouped_article->card->cmc }}</td>
                         <td class="align-middle">
                             <div>{{ $grouped_article->local_name }}</div>
-                            <div class="text-muted">{{ $grouped_article->card->name }}</div>
+                            @if ($grouped_article->language_id != \App\Models\Localizations\Language::DEFAULT_ID)
+                                <div class="text-muted">{{ $grouped_article->card->name }}</div>
+                            @endif
                         </td>
                         <td class="align-middle text-right">{{ $grouped_article->amount_picklist }}</td>
                         <td class="align-middle">{{ $grouped_article->condition }}</td>

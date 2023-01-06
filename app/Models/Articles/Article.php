@@ -526,6 +526,21 @@ class Article extends Model
             ->get();
     }
 
+    public static function getForPicklist(int $user_id): ArticleCollection
+    {
+        return self::select('articles.*', 'orders.id AS order_id')
+            ->join('article_order', 'articles.id', '=', 'article_order.article_id')
+            ->join('orders', 'orders.id', '=', 'article_order.order_id')
+            ->with([
+                'card',
+                'language',
+            ])
+            ->where('articles.user_id', $user_id)
+            ->where('orders.state', 'paid')
+            ->orderBy('articles.number', 'ASC')
+            ->get();
+    }
+
     /**
      * Increments the aticle number
      *

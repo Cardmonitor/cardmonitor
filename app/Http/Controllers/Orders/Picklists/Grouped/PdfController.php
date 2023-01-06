@@ -11,10 +11,10 @@ class PdfController extends Controller
     {
         $user = auth()->user();
 
-        $articles = Article::getForGroupedPicklist($user->id);
+        $grouped_articles = Article::getForGroupedPicklist($user->id);
 
         return \PDF::loadView('order.picklists.grouped.pdf', [
-            'articles' => $articles,
+            'grouped_articles' => $grouped_articles,
         ], [], [
             'margin_top' => 10,
             'margin_left' => 0,
@@ -22,6 +22,6 @@ class PdfController extends Controller
             'margin_bottom' => 10,
             'margin_header' => 0,
             'margin_footer' => 0,
-        ])->stream('picklist.pdf');
+        ])->stream('picklist-grouped.pdf');
     }
 }
