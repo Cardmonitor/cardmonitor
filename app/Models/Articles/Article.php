@@ -506,7 +506,7 @@ class Article extends Model
         return $articles;
     }
 
-    public static function getForPicklist(int $user_id): ArticleCollection
+    public static function getForGroupedPicklist(int $user_id): ArticleCollection
     {
         return self::select('articles.*', DB::raw('COUNT(articles.id) AS amount_picklist'))
             ->join('article_order', 'articles.id', '=', 'article_order.article_id')
@@ -523,6 +523,21 @@ class Article extends Model
             ->groupBy('articles.card_id')
             ->groupBy('articles.language_id')
             ->groupBy('articles.condition')
+            ->get();
+    }
+
+    public static function getForPicklist(int $user_id): ArticleCollection
+    {
+        return self::select('articles.*', 'orders.id AS order_id')
+            ->join('article_order', 'articles.id', '=', 'article_order.article_id')
+            ->join('orders', 'orders.id', '=', 'article_order.order_id')
+            ->with([
+                'card',
+                'language',
+            ])
+            ->where('articles.user_id', $user_id)
+            ->where('orders.state', 'paid')
+            ->orderBy('articles.number', 'ASC')
             ->get();
     }
 

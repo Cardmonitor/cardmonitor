@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Orders\Picklists;
+namespace App\Http\Controllers\Orders\Picklists\Grouped;
 
-use App\Models\Orders\Order;
 use Illuminate\Http\Request;
 use App\Models\Articles\Article;
 use App\Http\Controllers\Controller;
@@ -15,21 +14,20 @@ class PicklistController extends Controller
     {
         $user = auth()->user();
 
-        $articles = Article::getForPicklist($user->id);
-        $order_ids = $articles->pluck('order_id')->unique()->toArray();
-        $orders = Order::where('user_id', $user->id)->whereIn('id', $order_ids)->get()->keyBy('id');
+        $grouped_articles = Article::getForGroupedPicklist($user->id);
 
-        foreach ($articles as $article) {
+        foreach ($grouped_articles as $grouped_article) {
 
-            $article->card->download();
+            $grouped_article->card->download();
 
-            $article->order = $orders[$article->order_id];
-            $article->order->number = array_search($article->order_id, $order_ids) + 1;
+            if ($grouped_article->card->hasSkryfallData) {
+                continue;
+            }
 
+            $grouped_article->card->updateFromSkryfallByCardmarketId($grouped_article->card->cardmarket_product_id);
         }
 
-        return view('order.picklists.index')
-            ->with('articles', $articles);
+        return view('order.picklists.grouped.index', compact('grouped_articles'));
     }
 
     public function store(Request $request)

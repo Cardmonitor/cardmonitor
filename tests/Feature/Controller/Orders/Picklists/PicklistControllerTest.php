@@ -39,7 +39,7 @@ class PicklistControllerTest extends TestCase
         $filename = 'imports/articles_in_orders/articles_in_orders.csv';
         $path = Storage::disk('local')->path($filename);
 
-        $response = $this->post('/order/picklist', [
+        $response = $this->post(route('order.picklist.grouped.store'), [
             'articles_in_orders' => new UploadedFile($path, $filename, null, null, true),
         ]);
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
