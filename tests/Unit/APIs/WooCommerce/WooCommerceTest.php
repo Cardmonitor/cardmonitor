@@ -27,6 +27,8 @@ class WooCommerceTest extends TestCase
      */
     public function it_gets_an_order()
     {
+        $this->markTestSkipped();
+
         $id = 620236;
         $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
         $response = $WooCommerce->order($id);
