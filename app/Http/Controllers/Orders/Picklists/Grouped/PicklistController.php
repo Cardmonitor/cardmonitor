@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Orders\Picklists;
+namespace App\Http\Controllers\Orders\Picklists\Grouped;
 
 use Illuminate\Http\Request;
 use App\Models\Articles\Article;
@@ -14,7 +14,7 @@ class PicklistController extends Controller
     {
         $user = auth()->user();
 
-        $grouped_articles = Article::getForPicklist($user->id);
+        $grouped_articles = Article::getForGroupedPicklist($user->id);
 
         foreach ($grouped_articles as $grouped_article) {
 
@@ -27,7 +27,7 @@ class PicklistController extends Controller
             $grouped_article->card->updateFromSkryfallByCardmarketId($grouped_article->card->cardmarket_product_id);
         }
 
-        return view('order.picklists.index', compact('grouped_articles'));
+        return view('order.picklists.grouped.index', compact('grouped_articles'));
     }
 
     public function store(Request $request)
@@ -37,7 +37,7 @@ class PicklistController extends Controller
         ]);
 
         $user_id = auth()->user()->id;
-        $cache_key = 'orders.picklist.' . $user_id . '.article_ids';
+        $cache_key = 'orders.picklist.grouped.' . $user_id . '.article_ids';
         Cache::forget($cache_key);
 
         $orders = ArticlesInOrdersCsvImporter::importFromFilePath($user_id, $attributes['articles_in_orders']->path());

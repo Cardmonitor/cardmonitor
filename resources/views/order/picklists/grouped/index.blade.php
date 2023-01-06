@@ -6,7 +6,7 @@
         <h2 class="col pl-0">Pickliste</h2>
         <div>
             @if (count($grouped_articles))
-                <a href="{{ route('order.picklist.pdf.index') }}" target="_blank" class="btn btn-sm btn-secondary">PDF</a>
+                <a href="{{ route('order.picklist.grouped.pdf.index') }}" target="_blank" class="btn btn-sm btn-secondary">PDF</a>
             @endif
         </div>
     </div>

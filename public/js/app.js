@@ -11083,9 +11083,9 @@ var staticRenderFns = [function () {
   return _c("div", [_c("a", {
     staticClass: "text-body",
     attrs: {
-      href: "/order/picklist"
+      href: "/order/picklist/grouped"
     }
-  }, [_vm._v("Pickliste")])]);
+  }, [_vm._v("Pickliste Gruppiert")])]);
 }, function () {
   var _vm = this,
       _c = _vm._self._c;

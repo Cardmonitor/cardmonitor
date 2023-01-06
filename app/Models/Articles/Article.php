@@ -506,7 +506,7 @@ class Article extends Model
         return $articles;
     }
 
-    public static function getForPicklist(int $user_id): ArticleCollection
+    public static function getForGroupedPicklist(int $user_id): ArticleCollection
     {
         return self::select('articles.*', DB::raw('COUNT(articles.id) AS amount_picklist'))
             ->join('article_order', 'articles.id', '=', 'article_order.article_id')

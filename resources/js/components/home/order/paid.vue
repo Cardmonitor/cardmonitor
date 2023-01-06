@@ -3,7 +3,7 @@
         <div class="card h-100">
             <div class="card-header d-flex align-items-center">
                 <div class="col">{{ $t('order.home.paid.title') }}</div>
-                <div><a class="text-body" href="/order/picklist">Pickliste</a></div>
+                <div><a class="text-body" href="/order/picklist/grouped">Pickliste Gruppiert</a></div>
                 <div class="ml-3"><i class="fas fa-sync pointer" @click="sync" :class="{'fa-spin': syncing.status == 1}"></i></div>
                 <div class="ml-3" ><i class="fas fa-download pointer" @click="download" :disabled="syncing.status == 1"></i></div>
                 <div class="ml-3" ><a href="/order/export/dropbox" class="text-body"><i class="fab fa-dropbox pointer"></i></a></div>

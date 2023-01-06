@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Orders\Picklists;
+namespace App\Http\Controllers\Orders\Picklists\Grouped;
 
 use App\Models\Articles\Article;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Cache;
 
 class PdfController extends Controller
 {
@@ -12,9 +11,9 @@ class PdfController extends Controller
     {
         $user = auth()->user();
 
-        $articles = Article::getForPicklist($user->id);
+        $articles = Article::getForGroupedPicklist($user->id);
 
-        return \PDF::loadView('order.picklists.pdf', [
+        return \PDF::loadView('order.picklists.grouped.pdf', [
             'articles' => $articles,
         ], [], [
             'margin_top' => 10,
