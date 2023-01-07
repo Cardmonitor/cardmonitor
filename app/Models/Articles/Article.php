@@ -861,6 +861,11 @@ class Article extends Model
         return $localization->name;
     }
 
+    public function getLanguageNameAttribute() : string
+    {
+        return $this->language->name;
+    }
+
     public function getSkuAttribute() : string
     {
         return $this->card->sku;
