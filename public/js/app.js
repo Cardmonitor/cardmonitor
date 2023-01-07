@@ -2882,6 +2882,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         searchtext: '',
         show: false,
         sold: 0,
+        is_numbered: -1,
         storage_id: 0,
         sync: -1,
         unit_cost_max: 0,
@@ -9402,7 +9403,50 @@ var render = function render() {
         _vm.$set(_vm.filter, "unit_cost_max", $event.target.value);
       }, _vm.search]
     }
-  })])])])]) : _vm._e(), _vm._v(" "), _vm.isLoading ? _c("div", {
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-auto"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "filter-is-numbered"
+    }
+  }, [_vm._v("Nummer vergeben")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.is_numbered,
+      expression: "filter.is_numbered"
+    }],
+    staticClass: "form-control form-control-sm",
+    attrs: {
+      id: "filter-is-numbered"
+    },
+    on: {
+      change: [function ($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+
+        _vm.$set(_vm.filter, "is_numbered", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }, _vm.search]
+    }
+  }, [_c("option", {
+    domProps: {
+      value: -1
+    }
+  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: 0
+    }
+  }, [_vm._v("Ohne Nummer")]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: 1
+    }
+  }, [_vm._v("Mit Nummer")])])])])])]) : _vm._e(), _vm._v(" "), _vm.isLoading ? _c("div", {
     staticClass: "mt-3 p-5"
   }, [_c("center", [_c("span", {
     staticStyle: {

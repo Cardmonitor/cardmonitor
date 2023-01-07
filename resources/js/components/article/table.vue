@@ -84,6 +84,16 @@
                         <input class="form-control form-control-sm" id="filter-unit_cost_max" type="text" v-model="filter.unit_cost_max" @input="search">
                     </div>
                 </div>
+                <div class="col-auto">
+                    <div class="form-group">
+                        <label for="filter-is-numbered">Nummer vergeben</label>
+                        <select class="form-control form-control-sm" id="filter-is-numbered" v-model="filter.is_numbered" @change="search">
+                            <option :value="-1">{{ $t('filter.all') }}</option>
+                            <option :value="0">Ohne Nummer</option>
+                            <option :value="1">Mit Nummer</option>
+                        </select>
+                    </div>
+                </div>
 
             </div>
         </form>
@@ -292,6 +302,7 @@
                     searchtext: '',
                     show: false,
                     sold: 0,
+                    is_numbered: -1,
                     storage_id: 0,
                     sync: -1,
                     unit_cost_max: 0,
