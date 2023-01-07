@@ -125,6 +125,7 @@ class Article extends Model
         'state_comments',
         'state',
         'storage_id',
+        'storing_history_id',
         'sync_error',
         'synced_at',
         'unit_cost_formatted',
@@ -1008,9 +1009,14 @@ class Article extends Model
         return $this->belongsTo(Rule::class, 'rule_id');
     }
 
-    public function storage() : BelongsTo
+    public function storage(): BelongsTo
     {
         return $this->belongsTo(Storage::class);
+    }
+
+    public function storingHistory(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Articles\StoringHistory::class);
     }
 
     public function user() : BelongsTo
@@ -1090,6 +1096,36 @@ class Article extends Model
         return $query->where('articles.language_id', $value);
     }
 
+    public function scopeIsNumbered(Builder $query, $value) : Builder
+    {
+        if ($value == 0) {
+            return $query->whereNull('articles.number');
+        }
+
+        if ($value == 1) {
+            return $query->whereNotNull('articles.number');
+        }
+
+        return $query;
+    }
+
+    public function scopeIsStored(Builder $query, $value) : Builder
+    {
+        if (is_null($value)) {
+            return $query;
+        }
+
+        if ($value == 0) {
+            return $query->whereNull('articles.storing_history_id');
+        }
+
+        if ($value == 1) {
+            return $query->whereNotNull('articles.storing_history_id');
+        }
+
+        return $query;
+    }
+
     public function scopeFilter(Builder $query, array $filter) : Builder
     {
         if (empty($filter)) {
@@ -1102,6 +1138,8 @@ class Article extends Model
             ->rule(Arr::get($filter, 'rule_id'))
             ->isFoil(Arr::get($filter, 'is_foil'))
             ->language(Arr::get($filter, 'language_id'))
+            ->isNumbered(Arr::get($filter, 'is_numbered'))
+            ->isStored(Arr::get($filter, 'is_stored'))
             ->rarity(Arr::get($filter, 'rarity'))
             ->unitPrice(Arr::get($filter, 'unit_price_min'), Arr::get($filter, 'unit_price_max'))
             ->unitCost(Arr::get($filter, 'unit_cost_min'), Arr::get($filter, 'unit_cost_max'))

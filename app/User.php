@@ -4,21 +4,22 @@ namespace App;
 
 use App\Auth\Provider;
 use App\Models\Apis\Api;
-use App\Models\Articles\Article;
 use App\Models\Items\Item;
-use App\Models\Orders\Order;
 use App\Models\Rules\Rule;
-use App\Models\Storages\Storage;
+use App\Models\Orders\Order;
 use App\Models\Users\Balance;
-use App\Support\Users\CardmarketApi;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use App\Models\Articles\Article;
+use App\Models\Storages\Storage;
 use Illuminate\Support\Facades\App;
+use App\Support\Users\CardmarketApi;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Articles\StoringHistory;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -172,6 +173,11 @@ class User extends Authenticatable
     public function items() : HasMany
     {
         return $this->hasMany(Item::class);
+    }
+
+    public function storingHistories(): HasMany
+    {
+        return $this->hasMany(StoringHistory::class, 'user_id');
     }
 
     public function orders() : HasMany

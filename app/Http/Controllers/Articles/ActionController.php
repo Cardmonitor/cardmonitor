@@ -3,22 +3,19 @@
 namespace App\Http\Controllers\Articles;
 
 use App\User;
-use Carbon\Carbon;
-use App\Models\Cards\Card;
-use App\Models\Games\Game;
-use App\Models\Rules\Rule;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use App\Models\Articles\Article;
 use App\Http\Controllers\Controller;
-use App\Models\Expansions\Expansion;
-use App\Models\Items\Card as ItemCard;
-use App\Models\Localizations\Language;
+use App\Models\Articles\StoringHistory;
 use App\Models\Storages\Storage;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Artisan;
 
 class ActionController extends Controller
 {
+    private string $message = '';
+    private $model = null;
+
     public function __construct()
     {
         $this->authorizeResource(Article::class, 'article');
@@ -56,22 +53,24 @@ class ActionController extends Controller
                 ->get();
 
         switch ($attributes['action']) {
-            case 'setNumber': $message = $this->setNumber($user, $articles); break;
-            case 'resetNumber': $message = $this->resetNumber($articles); break;
-            case 'setStorage': $message = $this->setStorage($articles, $attributes['storage_id']); break;
-            case 'resetStorage': $message = $this->resetStorage($articles); break;
-            case 'syncCardmarket': $message = $this->syncCardmarket($articles); break;
+            case 'setNumber': $this->setNumber($user, $articles); break;
+            case 'resetNumber': $this->resetNumber($articles); break;
+            case 'setStorage': $this->setStorage($articles, $attributes['storage_id']); break;
+            case 'resetStorage': $this->resetStorage($articles); break;
+            case 'syncCardmarket': $this->syncCardmarket($articles); break;
+            case 'storing': $this->storing($user, $articles); break;
 
             default: $message = 'Aktion nicht verfügbar'; break;
         }
 
         return [
-            'message' => $message,
+            'message' => $this->message,
             'arcicles_count' => $articles->count(),
+            'model' => $this->model
         ];
     }
 
-    private function setNumber(User $user, Collection $articles): string
+    private function setNumber(User $user, Collection $articles): void
     {
         $articles_count = 0;
         $number = Article::maxNumber($user->id);
@@ -87,10 +86,10 @@ class ActionController extends Controller
             $articles_count++;
         });
 
-        return 'Nummern bei ' . $articles_count . ' Artikeln gesetzt. Letzte Nummer: ' . $number;
+        $this->message = 'Nummern bei ' . $articles_count . ' Artikeln gesetzt. Letzte Nummer: ' . $number;
     }
 
-    private function resetNumber(Collection $articles): string
+    private function resetNumber(Collection $articles): void
     {
         $articles->each(function ($article) {
             $article->update([
@@ -98,10 +97,10 @@ class ActionController extends Controller
             ]);
         });
 
-        return 'Nummern bei ' . $articles->count() . ' Artikeln entfernt.';
+        $this->message = 'Nummern bei ' . $articles->count() . ' Artikeln entfernt.';
     }
 
-    private function setStorage(Collection $articles, int $storage_id): string
+    private function setStorage(Collection $articles, int $storage_id): void
     {
         $storage = Storage::find($storage_id);
 
@@ -109,24 +108,42 @@ class ActionController extends Controller
             $article->setStorage($storage)->save();
         });
 
-        return 'Lagerplatz bei ' . $articles->count() . ' Artikeln gesetzt.';
+        $this->message = 'Lagerplatz bei ' . $articles->count() . ' Artikeln gesetzt.';
     }
 
-    private function resetStorage(Collection $articles): string
+    private function resetStorage(Collection $articles): void
     {
         $articles->each(function ($article) {
             $article->unsetStorage()->save();
         });
 
-        return 'Lagerplatz bei ' . $articles->count() . ' Artikeln entfernt.';
+        $this->message = 'Lagerplatz bei ' . $articles->count() . ' Artikeln entfernt.';
     }
 
-    private function syncCardmarket(Collection $articles): string
+    private function syncCardmarket(Collection $articles): void
     {
         $articles->each(function ($article) {
             $article->sync();
         });
 
-        return $articles->count() . ' zu Cardmarket hochgeladen.';
+        $this->message = $articles->count() . ' zu Cardmarket hochgeladen.';
+    }
+
+    private function storing(User $user, Collection $articles): void
+    {
+        $storing_history = $user->storingHistories()->create();
+
+        $articles->each(function ($article) use ($storing_history) {
+            $article->update([
+                'storing_history_id' => $storing_history->id,
+            ]);
+        });
+
+        Artisan::queue('article:exports:dropbox', [
+            'user_id' => $user->id,
+        ]);
+
+        $this->message = $articles->count() . ' Artikel Eingelagert.';
+        $this->model = $storing_history;
     }
 }

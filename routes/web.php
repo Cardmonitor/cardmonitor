@@ -63,6 +63,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('article/number', 'Articles\NumberController@index')->name('article.number.index');
     Route::put('article/{article}/number', 'Articles\NumberController@update')->name('article.number.update');
     Route::post('article/action', 'Articles\ActionController@store')->name('article.action.store');
+
+    Route::get('article/storing_history', 'Articles\StoringHistoryController@index')->name('article.storing_history.index');
+    Route::get('article/storing_history/{storing_history}', 'Articles\StoringHistoryController@show')->name('article.storing_history.show');
+    Route::get('article/storing_history/{storing_history}/pdf', 'Articles\StoringHistory\PdfController@show')->name('article.storing_history.pdf.show');
+
     Route::resource('article', 'Articles\ArticleController');
 
     Route::resource('card', 'Cards\CardController');
