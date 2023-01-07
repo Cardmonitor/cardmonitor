@@ -84,6 +84,7 @@
                         <input class="form-control form-control-sm" id="filter-unit_cost_max" type="text" v-model="filter.unit_cost_max" @input="search">
                     </div>
                 </div>
+
                 <div class="col-auto">
                     <div class="form-group">
                         <label for="filter-is-numbered">Nummer vergeben</label>
@@ -91,6 +92,17 @@
                             <option :value="-1">{{ $t('filter.all') }}</option>
                             <option :value="0">Ohne Nummer</option>
                             <option :value="1">Mit Nummer</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-auto">
+                    <div class="form-group">
+                        <label for="filter-is-stored">Eingelagert</label>
+                        <select class="form-control form-control-sm" id="filter-is-stored" v-model="filter.is_stored" @change="search">
+                            <option :value="-1">{{ $t('filter.all') }}</option>
+                            <option :value="0">Nicht Eingelagert</option>
+                            <option :value="1">Eingelagert</option>
                         </select>
                     </div>
                 </div>
@@ -138,6 +150,9 @@
                                 <optgroup label="Bearbeiten">
                                     <option value="setNumber">Nummern automatisch setzen</option>
                                     <option value="resetNumber">Nummern entfernen</option>
+                                </optgroup>
+                                <optgroup label="Einlagern" v-show="(filter.is_numbered == 1 && filter.is_stored == 0)">
+                                    <option value="storing">Einlagern</option>
                                 </optgroup>
                                 <optgroup label="Cardmarktet">
                                     <option value="syncCardmarket">Upload zu Cardmarket</option>
@@ -303,6 +318,7 @@
                     show: false,
                     sold: 0,
                     is_numbered: -1,
+                    is_stored: -1,
                     storage_id: 0,
                     sync: -1,
                     unit_cost_max: 0,
@@ -380,7 +396,13 @@
                 })
                 .then( function (response) {
                     Vue.success(response.data.message);
-                    component.fetch();
+                    if (response.data.model) {
+                        location.href = response.data.model.path;
+                    }
+                    else {
+                        component.actionForm.action = 'setNumber';
+                        component.fetch();
+                    }
                 });
             },
             apply(sync) {
