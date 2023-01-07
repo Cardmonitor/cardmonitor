@@ -1132,9 +1132,6 @@ class Article extends Model
             return $query;
         }
 
-        $query->select('articles.*')
-            ->join('cards', 'cards.id', 'articles.card_id');
-
         return $query->condition(Arr::get($filter, 'condition_sort'), Arr::get($filter, 'condition_operator'))
             ->expansion(Arr::get($filter, 'expansion_id'))
             ->game(Arr::get($filter, 'game_id'))

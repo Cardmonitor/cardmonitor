@@ -39,6 +39,8 @@ class ActionController extends Controller
         $user = auth()->user();
 
         $articles = $user->articles()
+                ->select('articles.*')
+                ->join('cards', 'cards.id', 'articles.card_id')
                 ->filter($attributes['filter'])
                 ->with([
                     'card.expansion',

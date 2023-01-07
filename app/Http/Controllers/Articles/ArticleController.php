@@ -34,6 +34,8 @@ class ArticleController extends Controller
 
         if ($request->wantsJson()) {
             return $user->articles()
+                ->select('articles.*')
+                ->join('cards', 'cards.id', 'articles.card_id')
                 ->filter($request->all())
                 ->with([
                     'card.expansion',
