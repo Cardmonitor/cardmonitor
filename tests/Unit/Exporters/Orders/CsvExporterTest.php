@@ -4,11 +4,8 @@ namespace Tests\Unit\Exporters\Orders;
 
 use App\Exporters\Orders\CsvExporter;
 use App\Models\Articles\Article;
-use App\Models\Cards\Card;
 use App\Models\Expansions\Expansion;
 use App\Models\Orders\Order;
-use Illuminate\Http\File;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;

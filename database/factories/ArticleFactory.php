@@ -24,5 +24,9 @@ $factory->define(Article::class, function (Faker $faker) {
         'sold_at' => null,
         'hash' => null,
         'number' => null,
+        'is_foil' => 0,
+        'is_altered' => 0,
+        'is_playset' => 0,
+        'is_signed' => 0,
     ];
 });
