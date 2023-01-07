@@ -33,10 +33,10 @@ class WooCommerceOrderImporter
         $this->user_id = $user_id;
     }
 
-    public function importOrder(array $woocommerce_order): void
+    public function importOrder(array $woocommerce_order): array
     {
-        $this->bonus = ($woocommerce_order['payment_method'] == 'cod') ? 0.15 : 0;
-        $this->setStorage($woocommerce_order['id']);
+        $this->setBonus($woocommerce_order);
+        $this->setStorage($woocommerce_order);
         $this->setAdditionalUnitCost($woocommerce_order);
 
         foreach ($woocommerce_order['line_items'] as $line_item) {
@@ -47,23 +47,11 @@ class WooCommerceOrderImporter
 
             $this->importLineItem($line_item);
         }
+
+        return $this->articles;
     }
 
-    private function setStorage(int $order_id): void
-    {
-        $storage_woocommerce = Storage::firstOrCreate([
-            'user_id' => $this->user_id,
-            'name' => 'WooCommerce',
-        ]);
-
-        $this->storage = Storage::firstOrCreate([
-            'user_id' => $this->user_id,
-            'name' => 'Bestellung #' . $order_id,
-            'parent_id' => $storage_woocommerce->id,
-        ]);
-    }
-
-    private function setAdditionalUnitCost(array $woocommerce_order): void
+    public function setAdditionalUnitCost(array $woocommerce_order): void
     {
         $article_count = 0;
         $additional_costs = 0;
@@ -79,7 +67,27 @@ class WooCommerceOrderImporter
         $this->additional_unit_cost = $additional_costs / $article_count;
     }
 
-    private function importLineItem(array $line_item): void
+    public function setBonus(array $woocommerce_order): void
+    {
+        $this->bonus = ($woocommerce_order['payment_method'] == 'cod') ? 0.15 : 0;
+    }
+
+    public function setStorage(array $woocommerce_order): void
+    {
+        $storage_woocommerce = Storage::firstOrCreate([
+            'user_id' => $this->user_id,
+            'name' => 'WooCommerce',
+        ]);
+
+        $this->storage = Storage::firstOrCreate([
+            'user_id' => $this->user_id,
+            'name' => 'Bestellung #' . $woocommerce_order['id'],
+            'parent_id' => $storage_woocommerce->id,
+        ]);
+    }
+
+
+    public function importLineItem(array $line_item): void
     {
         [$cardmarket_product_id, $is_foil] = explode('-', $line_item['sku']);
         $card = Card::firstOrImport($cardmarket_product_id);
