@@ -1007,46 +1007,4 @@ class ArticleTest extends TestCase
         $articles = Article::updateOrCreateFromWooCommerceApi($this->user->id, $line_item);
         $this->assertCount($line_item['quantity'], Article::all());
     }
-
-    /**
-     * @test
-     */
-    public function it_can_update_or_create_an_order_from_woocommerce_api()
-    {
-        $path_order = 'tests/snapshots/woocommerce/orders/619687.json';
-        $woocommerce_order = json_decode(file_get_contents($path_order), true);
-        $number = Article::maxNumber($this->user->id);
-
-        $storage_woocommerce = factory(Storage::class)->create([
-            'user_id' => $this->user->id,
-            'name' => 'WooCommerce',
-        ]);
-
-        $storage_order = factory(Storage::class)->create([
-            'user_id' => $this->user->id,
-            'name' => 'Bestellung #' . $woocommerce_order['id'],
-            'parent_id' => $storage_woocommerce->id,
-        ]);
-
-        $quantity = 0;
-        foreach ($woocommerce_order['line_items'] as $line_item) {
-            $card = factory(Card::class)->create([
-                'game_id' => Game::ID_MAGIC,
-                'cardmarket_product_id' => trim($line_item['sku'], '-'),
-            ]);
-
-            $quantity += $line_item['quantity'];
-        }
-
-        Article::updateOrCreateFromWooCommerceAPIOrder($this->user->id, $woocommerce_order);
-
-        $this->assertCount($quantity, Article::all());
-        $this->assertCount($quantity, $storage_order->articles);
-
-        foreach (Article::all() as $article) {
-            $number = Article::incrementNumber($number);
-            $this->assertEquals($number, $article->number);
-            echo $article->unit_cost . PHP_EOL;
-        }
-    }
 }

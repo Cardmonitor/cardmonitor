@@ -4,7 +4,7 @@ namespace App\Console\Commands\Article\Imports;
 
 use App\User;
 use Illuminate\Console\Command;
-use App\Models\Articles\Article;
+use App\Importers\Articles\WooCommerceOrderImporter;
 
 class WooCommerceCommand extends Command
 {
@@ -41,11 +41,10 @@ class WooCommerceCommand extends Command
     {
         $user = User::findOrFail($this->argument('user'));
 
-        $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
         $orders = $this->getOrders();
 
         foreach ($orders['data'] as $order) {
-            Article::updateOrCreateFromWooCommerceAPIOrder($user->id, $order);
+            WooCommerceOrderImporter::import($user->id, $order);
         }
 
         return self::SUCCESS;

@@ -121,6 +121,7 @@ class Article extends Model
         'sold_at',
         'source_id',
         'source_slug',
+        'source_sort',
         'state_comments',
         'state',
         'storage_id',
@@ -413,97 +414,6 @@ class Article extends Model
         $article = self::updateOrCreate(['cardmarket_article_id' => $cardmarketArticle['idArticle']], $values);
 
         return $article;
-    }
-
-    public static function updateOrCreateFromWooCommerceAPIOrder(int $user_id, array $woocommerce_order)
-    {
-        $bonus = ($woocommerce_order['payment_method'] == 'cod') ? 0.15 : 0;
-
-        $storage_woocommerce = Storage::firstOrCreate([
-            'user_id' => $user_id,
-            'name' => 'WooCommerce',
-        ]);
-
-        $storage_order = Storage::firstOrCreate([
-            'user_id' => $user_id,
-            'name' => 'Bestellung #' . $woocommerce_order['id'],
-            'parent_id' => $storage_woocommerce->id,
-        ]);
-
-        $article_count = 0;
-        $additional_costs = 0;
-        foreach ($woocommerce_order['line_items'] as $line_item) {
-            if (strpos($line_item['sku'], '-') === false) {
-                $additional_costs += $line_item['total'];
-            }
-            else {
-                $article_count += $line_item['quantity'];
-            }
-        }
-        $additional_costs *= 1 + $bonus;
-        $additional_costs_per_card = $additional_costs / $article_count;
-
-        foreach ($woocommerce_order['line_items'] as $line_item) {
-
-            if (strpos($line_item['sku'], '-') === false) {
-                continue;
-            }
-
-            $line_item['bonus'] = $bonus;
-            $line_item['storage_id'] = $storage_order->id;
-            $line_item['additional_costs_per_card'] = $additional_costs_per_card;
-            Article::updateOrCreateFromWooCommerceApi($user_id, $line_item);
-        }
-    }
-
-    public static function updateOrCreateFromWooCommerceAPI(int $user_id, array $line_item): array
-    {
-        [$cardmarket_product_id, $is_foil] = explode('-', $line_item['sku']);
-        $card = Card::firstOrImport($cardmarket_product_id);
-        $number = self::maxNumber($user_id);
-
-        $language = Arr::first($line_item['meta_data'], function ($meta) {
-            return $meta['key'] == 'sprache';
-        });
-
-        $condition = Arr::first($line_item['meta_data'], function ($meta) {
-            return $meta['key'] == 'zustand';
-        });
-
-        $unit_cost = $line_item['total'] / $line_item['quantity'] * (1 + Arr::get($line_item, 'bonus', 0)) + Arr::get($line_item, 'additional_costs_per_card', 0);
-
-        for ($index=1; $index <= $line_item['quantity']; $index++) {
-            $number = self::incrementNumber($number);
-            $values = [
-                'user_id' => $user_id,
-                'card_id' => $card->id,
-                'language_id' => Language::getIdByGermanName($language['value']),
-                'cardmarket_article_id' => null,
-                'condition' => array_search(substr($condition['value'], 0, strrpos($condition['value'], ' ')), Article::CONDITIONS),
-                'unit_price' => $unit_cost * 3,
-                'unit_cost' => $unit_cost,
-                'sold_at' => null,
-                'is_in_shoppingcard' => $cardmarketArticle['inShoppingCart'] ?? false,
-                'is_foil' => ($is_foil == 'true'),
-                'is_signed' => false,
-                'is_altered' => false,
-                'is_playset' => false,
-                'cardmarket_comments' => null,
-                'has_sync_error' => false,
-                'sync_error' => null,
-                'number' => $number,
-                'storage_id' => $line_item['storage_id'],
-            ];
-            $attributes = [
-                'source_slug' => 'woocommerce-api',
-                'source_id' => $line_item['id'],
-                'index' => $index,
-            ];
-
-            $articles[] = self::updateOrCreate($attributes, $values);
-        }
-
-        return $articles;
     }
 
     public static function getForGroupedPicklist(int $user_id): ArticleCollection
@@ -1250,6 +1160,9 @@ class Article extends Model
         if (empty($value)) {
             return $query;
         }
+
+        $query->orderBy('articles.number', 'ASC')
+            ->orderBy('articles.source_sort', 'ASC');
 
         if ($value == -1) {
             return $query->whereNull('articles.storage_id');
