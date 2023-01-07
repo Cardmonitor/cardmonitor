@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\WooCommerce;
 
 use Illuminate\Http\Request;
-use App\Models\Articles\Article;
 use App\Http\Controllers\Controller;
+use App\Importers\Articles\WooCommerceOrderImporter;
 
 class OrderController extends Controller
 {
@@ -46,7 +46,7 @@ class OrderController extends Controller
         $response = $WooCommerce->order($attributes['id']);
         $order = $response['data'];
 
-        Article::updateOrCreateFromWooCommerceAPIOrder(auth()->user()->id, $order);
+        WooCommerceOrderImporter::import(auth()->user()->id, $order);
 
         return back()->with('status', [
             'type' => 'success',
