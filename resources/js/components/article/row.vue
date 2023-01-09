@@ -1,7 +1,7 @@
 <template>
     <tr v-if="isEditing">
         <td class="align-middle d-none d-lg-table-cell text-center"><i class="fas fa-fw" :class="item.sync_icon" :title="item.sync_error || 'Karte synchronisiert'"></i></td>
-        <td class="align-middle d-none d-xl-table-cell text-center pointer"><i class="fas fa-image" @mouseover="show($event)" @mouseout="$emit('hide')"></i></td>
+        <td class="align-middle d-none d-xl-table-cell text-center pointer"><i class="fas fa-image" @mouseover="showImage($event)" @mouseout="$emit('hide')"></i></td>
         <td class="align-middle">
             <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.localName }}<span v-if="item.card.number"> ({{ item.card.number }})</span>
             <div class="d-none d-xl-table-cell text-muted" v-if="item.language_id != 1">{{ item.card.name }}</div>
@@ -61,7 +61,7 @@
             <i class="fas fa-fw fa-euro-sign text-success" title="Verkauft" v-if="item.orders.length"></i>
             <i class="fas fa-fw" :class="item.sync_icon" :title="item.sync_error || 'Karte synchronisiert'" v-else></i>
         </td>
-        <td class="align-middle d-none d-xl-table-cell pointer"><i class="fas fa-image" @mouseover="show($event)" @mouseout="$emit('hide')"></i></td>
+        <td class="align-middle d-none d-xl-table-cell pointer"><i class="fas fa-image" @mouseover="showImage($event)" @mouseout="$emit('hide')"></i></td>
         <td class="align-middle pointer" @click="show()">
             <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.localName }} ({{ item.card.number }})
             <div class="text-muted" v-if="item.language_id != 1">{{ item.card.name }}</div></td>
@@ -160,7 +160,7 @@
         },
 
         methods: {
-            show(event) {
+            showImage(event) {
                 this.$emit('show', {
                     src: this.item.card.imagePath,
                 });

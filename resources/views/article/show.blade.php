@@ -22,10 +22,107 @@
 
         <div class="col-md-6 mb-3">
             <div class="card mb-3">
-                <div class="card-header">{{ $model->local_name }}</div>
+                <div class="card-header">Karte</div>
                 <div class="card-body">
                     <div class="col-12 col-sm text-center p-3">
                         <img class="img-fluid" src="{{ $model->card->imagePath }}">
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>{{ __('app.name') }}</b></div>
+                        <div class="col-value">
+                            <a href="https://www.cardmarket.com{{ $model->card->website }}" target="_blank">{{ $model->local_name }}</a>
+                            @if ($model->language_id != \App\Models\Localizations\Language::DEFAULT_ID)
+                                <div class="text-muted">{{ $model->card->name }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>Seltenheit</b></div>
+                        <div class="col-value">{{ $model->card->rarity }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>Skryfall ID</b></div>
+                        <div class="col-value">
+                            @if ($model->card->skryfall_card_id)
+                                <a href="https://scryfall.com/card/{{ $model->card->skryfall_card_id }}" target="_blank">{{ $model->card->skryfall_card_id }}</a>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>Farbe</b></div>
+                        <div class="col-value">
+                            @if ($model->card->colors)
+                                {{ implode(', ', $model->card->colors) }} ({{ $model->card->color_name }})
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>CMC</b></div>
+                        <div class="col-value">{{ $model->card->cmc }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Erweiterung</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-label"><b>{{ __('app.name') }}</b></div>
+                        <div class="col-value">{{ $model->card->expansion->name }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>Abkürung</b></div>
+                        <div class="col-value">{{ $model->card->expansion->abbreviation }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>ID</b></div>
+                        <div class="col-value">{{ $model->card->expansion->id }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>Skryfall ID</b></div>
+                        <div class="col-value">{{ $model->card->expansion->skryfall_expansion_id }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>Veröffentlicht</b></div>
+                        <div class="col-value">{{ $model->card->expansion->released_at ? $model->card->expansion->released_at->format('d.m.Y H:i') : 'Noch nicht veröffentlicht' }}</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-6 mb-3">
+
+            <div class="card mb-3">
+                <div class="card-header">Cardmarket</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-label"><b>Produkt ID</b></div>
+                        <div class="col-value">{{ $model->card->cardmarket_product_id ?: 'nicht vorhanden' }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>Artikel ID</b></div>
+                        <div class="col-value">{{ $model->cardmarket_article_id ?: 'nicht vorhanden' }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>Bearbeitet</b></div>
+                        <div class="col-value">{{ $model->cardmarket_last_edited ? $model->cardmarket_last_edited->format('d.m.Y H:i') : 'Nicht bearbeitet' }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>Sprache</b></div>
+                        <div class="col-value">{{ $model->language->name }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>Zustand</b></div>
+                        <div class="col-value">{{ $model->condition }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>Foil</b></div>
+                        <div class="col-value">{{ $model->is_foil }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>Verkaufspreis</b></div>
+                        <div class="col-value">{{ $model->unit_price_formatted }} €</div>
                     </div>
                 </div>
             </div>
@@ -67,52 +164,7 @@
                     @endif
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-6 mb-3">
-
-            <div class="card">
-                <div class="card-header">Cardmarket</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-label"><b>{{ __('app.name') }}</b></div>
-                        <div class="col-value">
-                            <a href="https://www.cardmarket.com{{ $model->card->website }}" target="_blank">{{ $model->local_name }}</a>
-                            @if ($model->language_id != \App\Models\Localizations\Language::DEFAULT_ID)
-                                <div class="text-muted">{{ $model->card->name }}</div>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label"><b>Produkt ID</b></div>
-                        <div class="col-value">{{ $model->card->cardmarket_product_id ?: 'nicht vorhanden' }}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label"><b>Artikel ID</b></div>
-                        <div class="col-value">{{ $model->cardmarket_article_id ?: 'nicht vorhanden' }}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label"><b>Bearbeitet</b></div>
-                        <div class="col-value">{{ $model->cardmarket_last_edited ? $model->cardmarket_last_edited->format('d.m.Y H:i') : 'Nicht bearbeitet' }}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label"><b>Sprache</b></div>
-                        <div class="col-value">{{ $model->language->name }}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label"><b>Zustand</b></div>
-                        <div class="col-value">{{ $model->condition }}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label"><b>Foil</b></div>
-                        <div class="col-value">{{ $model->is_foil }}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label"><b>Verkaufspreis</b></div>
-                        <div class="col-value">{{ $model->unit_price_formatted }} €</div>
-                    </div>
-                </div>
-            </div>
         </div>
 
     </div>

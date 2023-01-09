@@ -539,7 +539,7 @@
                 this.items.splice(index, 1);
             },
             showPageButton(page) {
-                if (page == 1 || page == this.paginate.lastPage) {
+                if (page == 1 || page == this.paginate.lastPage) {
                     return true;
                 }
 

@@ -2262,8 +2262,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _partials_emoji_condition_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../partials/emoji/condition.vue */ "./resources/js/components/partials/emoji/condition.vue");
 /* harmony import */ var _partials_emoji_rarity_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../partials/emoji/rarity.vue */ "./resources/js/components/partials/emoji/rarity.vue");
 /* harmony import */ var _expansion_icon_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../expansion/icon.vue */ "./resources/js/components/expansion/icon.vue");
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 
 
 
@@ -2318,8 +2316,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       deep: true
     });
   },
-  methods: _defineProperty({
-    show: function show(event) {
+  methods: {
+    showImage: function showImage(event) {
       this.$emit('show', {
         src: this.item.card.imagePath
       });
@@ -2365,10 +2363,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       })["catch"](function (error) {
         Vue.error('Nummer konnte nicht ermittelt werden.');
       });
+    },
+    show: function show() {
+      location.href = this.item.path;
     }
-  }, "show", function show() {
-    location.href = this.item.path;
-  })
+  }
 });
 
 /***/ }),
@@ -8313,7 +8312,7 @@ var render = function render() {
     staticClass: "fas fa-image",
     on: {
       mouseover: function mouseover($event) {
-        return _vm.show($event);
+        return _vm.showImage($event);
       },
       mouseout: function mouseout($event) {
         return _vm.$emit("hide");
@@ -8661,7 +8660,7 @@ var render = function render() {
     staticClass: "fas fa-image",
     on: {
       mouseover: function mouseover($event) {
-        return _vm.show($event);
+        return _vm.showImage($event);
       },
       mouseout: function mouseout($event) {
         return _vm.$emit("hide");

@@ -293,7 +293,7 @@
                 this.imgbox.show = false;
             },
             showPageButton(page) {
-                if (page == 1 || page == this.paginate.lastPage) {
+                if (page == 1 || page == this.paginate.lastPage) {
                     return true;
                 }
 
