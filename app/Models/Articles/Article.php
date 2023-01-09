@@ -195,6 +195,12 @@ class Article extends Model
                 continue;
             }
 
+            // Expansion not found, import it
+            if (! Arr::has($expansions, $stock_row[4])) {
+                Card::import($stock_row[self::CSV_CARDMARKET_PRODUCT_ID]);
+                $expansions = Expansion::where('game_id', $game_id)->get()->keyBy('abbreviation');
+            }
+
             $stock_row['expansion_id'] = $expansions[$stock_row[4]]->id;
             $stock_row_id = $stock_row[self::CSV_CARDMARKET_ARTICLE_ID];
             $stock_row_ids[] = $stock_row_id;
