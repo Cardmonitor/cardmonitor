@@ -3245,6 +3245,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         game_id: 0,
         language_id: 0,
         page: 1,
+        product_type: 1,
         rule_id: 0,
         searchtext: '',
         show: false,
@@ -10604,7 +10605,50 @@ var render = function render() {
     domProps: {
       value: 1
     }
-  }, [_vm._v("Eingelagert")])])])])])]) : _vm._e(), _vm._v(" "), _vm.isLoading ? _c("div", {
+  }, [_vm._v("Eingelagert")])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-auto"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "filter-product-type"
+    }
+  }, [_vm._v("Artikeltyp")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.product_type,
+      expression: "filter.product_type"
+    }],
+    staticClass: "form-control form-control-sm",
+    attrs: {
+      id: "filter-product-type"
+    },
+    on: {
+      change: [function ($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+
+        _vm.$set(_vm.filter, "product_type", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }, _vm.search]
+    }
+  }, [_c("option", {
+    domProps: {
+      value: -1
+    }
+  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: 1
+    }
+  }, [_vm._v("Einzelkarten")]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: 0
+    }
+  }, [_vm._v("Andere Artikel")])])])])])]) : _vm._e(), _vm._v(" "), _vm.isLoading ? _c("div", {
     staticClass: "mt-3 p-5"
   }, [_c("center", [_c("span", {
     staticStyle: {

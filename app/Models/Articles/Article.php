@@ -1149,6 +1149,7 @@ class Article extends Model
             ->language(Arr::get($filter, 'language_id'))
             ->isNumbered(Arr::get($filter, 'is_numbered'))
             ->isStored(Arr::get($filter, 'is_stored'))
+            ->productType(Arr::get($filter, 'product_type'))
             ->rarity(Arr::get($filter, 'rarity'))
             ->unitPrice(Arr::get($filter, 'unit_price_min'), Arr::get($filter, 'unit_price_max'))
             ->unitCost(Arr::get($filter, 'unit_cost_min'), Arr::get($filter, 'unit_cost_max'))
@@ -1156,6 +1157,23 @@ class Article extends Model
             ->sold(Arr::get($filter, 'sold'))
             ->storage(Arr::get($filter, 'storage_id'))
             ->sync(Arr::get($filter, 'sync'));
+    }
+
+    public function scopeProductType(Builder $query, $value) : Builder
+    {
+        if (is_null($value)) {
+            return $query;
+        }
+
+        if ($value == 0) {
+            return $query->whereNull('cards.expansion_id');
+        }
+
+        if ($value == 1) {
+            return $query->whereNotNull('cards.expansion_id');
+        }
+
+        return $query;
     }
 
     public function scopeRarity(Builder $query, $value) : Builder

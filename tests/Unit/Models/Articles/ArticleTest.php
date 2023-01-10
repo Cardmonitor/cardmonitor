@@ -1009,6 +1009,41 @@ class ArticleTest extends TestCase
         $not_sold_articles = Article::sold(0)->get();
         $this->assertCount(2, $not_sold_articles);
         $this->assertEquals([ $article->id, $article_in_cancelled_order->id ], $not_sold_articles->pluck('id')->toArray());
+    }
 
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_product_type() {
+
+        $card_with_expansion = factory(Card::class)->create([
+
+        ]);
+
+        $card_without_expansion = factory(Card::class)->create([
+            'expansion_id' => null,
+        ]);
+
+        $article_with_expansion = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'card_id' => $card_with_expansion->id,
+        ]);
+
+        $article_without_expansion = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'card_id' => $card_without_expansion->id,
+        ]);
+
+        $this->assertCount(2, Article::all());
+        $this->assertCount(2, Article::productType(null)->get());
+        $this->assertCount(2, Article::productType(-1)->get());
+
+        $articles_with_expansion = Article::select('articles.*')->join('cards', 'cards.id', 'articles.card_id')->productType(1)->get();
+        $this->assertCount(1, $articles_with_expansion);
+        $this->assertEquals($article_with_expansion->id, $articles_with_expansion->first()->id);
+
+        $articles_without_expansion = Article::select('articles.*')->join('cards', 'cards.id', 'articles.card_id')->productType(0)->get();
+        $this->assertCount(1, $articles_without_expansion);
+        $this->assertEquals($article_without_expansion->id, $articles_without_expansion->first()->id);
     }
 }

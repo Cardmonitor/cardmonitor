@@ -107,6 +107,17 @@
                     </div>
                 </div>
 
+                <div class="col-auto">
+                    <div class="form-group">
+                        <label for="filter-product-type">Artikeltyp</label>
+                        <select class="form-control form-control-sm" id="filter-product-type" v-model="filter.product_type" @change="search">
+                            <option :value="-1">{{ $t('filter.all') }}</option>
+                            <option :value="1">Einzelkarten</option>
+                            <option :value="0">Andere Artikel</option>
+                        </select>
+                    </div>
+                </div>
+
             </div>
         </form>
 
@@ -313,6 +324,7 @@
                     game_id: 0,
                     language_id: 0,
                     page: 1,
+                    product_type: 1,
                     rule_id: 0,
                     searchtext: '',
                     show: false,
