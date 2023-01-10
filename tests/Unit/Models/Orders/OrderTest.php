@@ -4,6 +4,7 @@ namespace Tests\Unit\Models\Orders;
 
 use Tests\TestCase;
 use App\Models\Items\Item;
+use Illuminate\Support\Arr;
 use App\Models\Images\Image;
 use App\Models\Orders\Order;
 use App\Models\Articles\Article;
@@ -262,5 +263,41 @@ class OrderTest extends TestCase
             'released_at' => now()->addDay(),
         ]);
         $this->assertFalse($model->fresh()->isPresale());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_state_cancelled()
+    {
+        $orders = [];
+        $orders_count = 0;
+        foreach (Order::STATES as $state => $label) {
+            $orders[$state] = factory(Order::class)->create([
+                'user_id' => $this->user->id,
+                'state' => $state,
+            ]);
+            $orders_count++;
+        }
+
+        $cancelled_order = $orders[Order::STATE_CANCELLED];
+
+        Arr::forget($orders, Order::STATE_CANCELLED);
+        $not_canceled_order_count = count($orders);
+
+        $not_cancelled_order_ids = Arr::pluck($orders, 'id');
+        sort($not_cancelled_order_ids);
+
+        $cancelled_orders = Order::cancelled(1)->get();
+        $this->assertCount(1, $cancelled_orders);
+        $this->assertEquals($cancelled_order->id, $cancelled_orders->first()->id);
+
+        $not_cancelled_orders = Order::cancelled(0)->get();
+        $this->assertCount($not_canceled_order_count, $not_cancelled_orders);
+        $this->assertEquals($not_cancelled_order_ids, $not_cancelled_orders->pluck('id')->toArray());
+
+        $this->assertCount($orders_count, Order::cancelled(-1)->get());
+        $this->assertCount($orders_count, Order::cancelled(null)->get());
+        $this->assertCount($orders_count, Order::all());
     }
 }

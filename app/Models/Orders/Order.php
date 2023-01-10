@@ -7,7 +7,6 @@ use App\Models\Cards\Card;
 use App\Models\Images\Image;
 use App\Models\Items\Item;
 use App\Models\Items\Transactions\Sale;
-use App\Models\Items\Transactions\Transaction;
 use App\Models\Orders\Evaluation;
 use App\Models\Storages\Content;
 use App\Models\Users\CardmarketUser;
@@ -40,14 +39,22 @@ class Order extends Model
         'Grossbrief International' => 0.5,
     ];
 
+    const STATE_CANCELLED = 'cancelled';
+    const STATE_PAID = 'paid';
+    const STATE_SENT = 'sent';
+    const STATE_RECEIVED = 'received';
+    const STATE_EVALUATED = 'evaluated';
+    const STATE_LOST = 'lost';
+    const STATE_BOUGHT = 'bought';
+
     const STATES = [
-        // 'bought' => 'Unbezahlt',
-        'paid' => 'Bezahlt',
-        'sent' => 'Versandt',
-        'received' => 'Angekommen',
-        'evaluated' => 'Bewertet',
-        'lost' => 'Nicht Angekommen',
-        'cancelled' => 'Storniert',
+        // self::STATE_BOUGHT => 'Unbezahlt',
+        self::STATE_PAID => 'Bezahlt',
+        self::STATE_SENT => 'Versandt',
+        self::STATE_RECEIVED => 'Angekommen',
+        self::STATE_EVALUATED => 'Bewertet',
+        self::STATE_LOST => 'Nicht Angekommen',
+        self::STATE_CANCELLED => 'Storniert',
     ];
 
     protected $appends = [
@@ -769,13 +776,29 @@ class Order extends Model
         })->groupBy('cardmarket_order_id');
     }
 
-    public function scopeState(Builder $query, $value) : Builder
+    public function scopeState(Builder $query, $value): Builder
     {
         if (! $value) {
             return $query;
         }
 
         return $query->where('state', $value);
+    }
+
+    public function scopeCancelled(Builder $query, $value): Builder
+    {
+        if (is_null($value)) {
+            return $query;
+        }
+
+        if ($value == 1) {
+            $query->where('state', self::STATE_CANCELLED);
+        }
+        elseif ($value == 0) {
+            $query->where('state', '!=', self::STATE_CANCELLED);
+        }
+
+        return $query;
     }
 
 }

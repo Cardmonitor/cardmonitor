@@ -10645,7 +10645,10 @@ var render = function render() {
   }, [_vm._v(_vm._s(_vm.$t("storages.storage")))]), _vm._v(" "), _c("th", {
     staticClass: "text-right d-none d-xl-table-cell w-formatted-number"
   }, [_vm._v("Nummer")]), _vm._v(" "), _c("th", {
-    staticClass: "text-right d-none d-sm-table-cell w-action"
+    staticClass: "text-right d-none d-sm-table-cell",
+    staticStyle: {
+      width: "175px"
+    }
   }, [_vm._v(_vm._s(_vm.$t("app.actions.action")))])])]), _vm._v(" "), _c("tbody", [_vm._l(_vm.items, function (item, index) {
     return [_c("row", {
       key: item.id,

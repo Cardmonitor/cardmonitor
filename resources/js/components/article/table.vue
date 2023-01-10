@@ -132,7 +132,7 @@
                         <th class="text-right d-none d-sm-table-cell w-formatted-number">{{ $t('app.price_abbr') }}</th>
                         <th class="d-none d-xl-table-cell" style="width: 150px;">{{ $t('storages.storage') }}</th>
                         <th class="text-right d-none d-xl-table-cell w-formatted-number">Nummer</th>
-                        <th class="text-right d-none d-sm-table-cell w-action">{{ $t('app.actions.action') }}</th>
+                        <th class="text-right d-none d-sm-table-cell" style="width: 175px;">{{ $t('app.actions.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -967,4 +967,48 @@ class ArticleTest extends TestCase
 
         $this->assertEquals('A99.999', Article::maxNumber($this->user->id));
     }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_sold() {
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        $article_in_cancelled_order = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        $article_in_paid_order = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        $cancelled_order = factory(Order::class)->create([
+            'user_id' => $this->user->id,
+            'state' => Order::STATE_CANCELLED,
+        ]);
+
+        $cancelled_order->articles()->attach($article_in_cancelled_order->id);
+
+        $paid_order = factory(Order::class)->create([
+            'user_id' => $this->user->id,
+            'state' => Order::STATE_PAID,
+        ]);
+
+        $paid_order->articles()->attach($article_in_paid_order->id);
+
+        $this->assertCount(3, Article::all());
+        $this->assertCount(3, Article::sold(null)->get());
+        $this->assertCount(3, Article::sold(-1)->get());
+
+        $sold_articles = Article::sold(1)->get();
+        $this->assertCount(1, $sold_articles);
+        $this->assertEquals($article_in_paid_order->id, $sold_articles->first()->id);
+
+        $not_sold_articles = Article::sold(0)->get();
+        $this->assertCount(2, $not_sold_articles);
+        $this->assertEquals([ $article->id, $article_in_cancelled_order->id ], $not_sold_articles->pluck('id')->toArray());
+
+    }
 }

@@ -1196,12 +1196,22 @@ class Article extends Model
 
     public function scopeSold(Builder $query, $value) : Builder
     {
+        if (is_null($value)) {
+            return $query;
+        }
+
         if ($value == 1) {
-            return $query->whereHas('orders');
+            // has orders who are not cancelled
+            return $query->whereHas('orders', function ($query) {
+                $query->cancelled(0);
+            });
         }
 
         if ($value == 0) {
-            return $query->whereDoesntHave('orders');
+            // has no orders who are not cancelled
+            return $query->whereDoesntHave('orders', function ($query) {
+                $query->cancelled(0);
+            });
         }
 
         return $query;
