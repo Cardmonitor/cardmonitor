@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 class Article extends Model
@@ -197,8 +198,10 @@ class Article extends Model
 
             // Expansion not found, import it
             if (! Arr::has($expansions, $stock_row[4])) {
-                Card::import($stock_row[self::CSV_CARDMARKET_PRODUCT_ID]);
+                $card = Card::import($stock_row[self::CSV_CARDMARKET_PRODUCT_ID]);
                 $expansions = Expansion::where('game_id', $game_id)->get()->keyBy('abbreviation');
+
+                Artisan::queue('expansion:import', ['expansion' => $card->expansion_id]);
             }
 
             $stock_row['expansion_id'] = $expansions[$stock_row[4]]->id;
