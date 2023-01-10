@@ -25,15 +25,23 @@ class CsvExporter
     const ARTICLE_ATTRIBUTES = [
         'id',
         'number',
+        'storing_history_id',
         'cardmarket_article_id',
+        'index',
         'local_name',
         'unit_price',
+        'unit_cost',
+        'language_id',
         'language_name',
         'condition',
         'is_foil',
         'is_altered',
         'is_playset',
         'is_signed',
+        'source_slug',
+        'source_id',
+        'source_sort',
+        'storage_id',
     ];
 
     public static function all(LazyCollection $articles, string $path)
