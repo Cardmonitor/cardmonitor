@@ -1219,17 +1219,10 @@ class Article extends Model
         }
 
         if ($value == 1) {
-            // has orders who are not cancelled
-            return $query->whereHas('orders', function ($query) {
-                $query->cancelled(0);
-            });
+            $query->whereNotNull('sold_at');
         }
-
-        if ($value == 0) {
-            // has no orders who are not cancelled
-            return $query->whereDoesntHave('orders', function ($query) {
-                $query->cancelled(0);
-            });
+        elseif ($value == 0) {
+            $query->whereNull('sold_at');
         }
 
         return $query;

@@ -449,7 +449,7 @@ class Order extends Model
             foreach ($articles as $key => $article) {
                 $this->articles()->syncWithoutDetaching([$article->id]);
                 $article->update([
-                    'sold_at' => $this->paid_at,
+                    'sold_at' => $this->paid_at ?? $this->bought_at,
                 ]);
                 $article_ids[] = $article->id;
             }
@@ -477,7 +477,7 @@ class Order extends Model
         foreach ($articles as $key => $article) {
             $this->articles()->syncWithoutDetaching([$article->id]);
             $article->update([
-                'sold_at' => $this->paid_at,
+                'sold_at' => $this->paid_at ?? $this->bought_at,
                 'cardmarket_article_id' => $cardmarketArticle['idArticle'],
             ]);
             $article_ids[] = $article->id;
@@ -499,7 +499,7 @@ class Order extends Model
             'condition' => Arr::get($cardmarketArticle, 'condition', ''),
             'unit_price' => $cardmarketArticle['price'],
             'unit_cost' => Arr::get($this->cardDefaultPrices, ($cardmarketArticle['product']['rarity'] ?? ''), 0.02),
-            'sold_at' => $this->paid_at, // "2019-08-30T10:59:53+0200"
+            'sold_at' => $this->paid_at ?? $this->bought_at, // "2019-08-30T10:59:53+0200"
             'is_in_shoppingcard' => $cardmarketArticle['inShoppingCart'] ?? false,
             'is_foil' => $cardmarketArticle['isFoil'] ?? false,
             'is_signed' => $cardmarketArticle['isSigned'] ?? false,
