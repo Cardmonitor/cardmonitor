@@ -15,6 +15,7 @@
                     <button type="submit" class="btn btn-sm btn-danger" title="{{ __('app.actions.delete') }}"><i class="fas fa-trash"></i></button>
                 </form>
             @endif
+            <a href="{{ route('article.cardmarket.show', ['article' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1">Cardmarket Data</a>
         </div>
     </div>
 

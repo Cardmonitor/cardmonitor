@@ -68,4 +68,20 @@ class ArticleController extends Controller
         ]);
         \App\Jobs\Articles\SyncAll::dispatch($user);
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Articles\Article  $article
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Article $article)
+    {
+        $user = auth()->user();
+        $this->CardmarketApi = $user->cardmarketApi;
+
+        $cardmarket_article = $this->CardmarketApi->stock->article($article->cardmarket_article_id);
+
+        return $cardmarket_article;
+    }
 }
