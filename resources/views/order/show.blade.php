@@ -5,21 +5,22 @@
     <div class="d-flex mb-3">
         <h2 class="col mb-0"><a class="text-body" href="/order">{{ __('app.nav.order') }}</a><span class="d-none d-md-inline"> > {{ $model->cardmarket_order_id }}<span class="d-none d-lg-inline"> - {{ $model->stateFormatted }}</span></span></h2>
         <div class="d-flex align-items-center">
-            <button class="btn btn-secondary ml-1" data-toggle="modal" data-target="#message-create" data-model-id="{{ $model->id }}"><i class="fas fa-envelope"></i></button>
+            <button class="btn btn-sm btn-secondary ml-1" data-toggle="modal" data-target="#message-create" data-model-id="{{ $model->id }}"><i class="fas fa-envelope"></i></button>
             @if ($model->state == 'paid')
                 <form action="{{ $model->path . '/send' }}" class="ml-1" method="POST">
                     @csrf
 
-                    <button type="submit" class="btn btn-primary" title="{{ __('app.actions.send') }}">{{ __('app.actions.send') }}</button>
+                    <button type="submit" class="btn btn-sm btn-primary" title="{{ __('app.actions.send') }}">{{ __('app.actions.send') }}</button>
                 </form>
             @endif
             <form action="{{ $model->path . '/sync' }}" class="ml-1" method="POST">
                 @csrf
                 @method('PUT')
 
-                <button type="submit" class="btn btn-secondary" title="Aktualisieren"><i class="fas fa-fw fa-sync"></i></button>
+                <button type="submit" class="btn btn-sm btn-secondary" title="Aktualisieren"><i class="fas fa-fw fa-sync"></i></button>
             </form>
-            <a href="{{ url('/order') }}" class="btn btn-secondary ml-1">{{ __('app.overview') }}</a>
+            <a href="{{ url('/order') }}" class="btn btn-sm btn-secondary ml-1">{{ __('app.overview') }}</a>
+            <a href="{{ route('order.cardmarket.show', ['order' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1">Cardmarket Data</a>
         </div>
     </div>
 
@@ -249,8 +250,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">{{ __('app.actions.send') }}</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('app.actions.cancel') }}</button>
+                        <button type="submit" class="btn btn-sm btn-primary">{{ __('app.actions.send') }}</button>
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">{{ __('app.actions.cancel') }}</button>
                     </div>
                 </div>
             </form>

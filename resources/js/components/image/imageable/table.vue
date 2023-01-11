@@ -13,7 +13,7 @@
                 {{ $t('app.loading') }}
             </center>
         </div>
-        <table class="table table-hover table-striped bg-white" v-else-if="items.length">
+        <table class="table table-sm table-hover table-striped bg-white" v-else-if="items.length">
             <thead>
                 <tr>
                     <th width="100%">{{ $t('app.name') }}</th>

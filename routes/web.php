@@ -100,6 +100,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('order/sync', 'Cardmarket\Orders\OrderController@index');
     Route::put('order/sync', 'Cardmarket\Orders\OrderController@update')->name('order.sync.update');
+    Route::get('order/{order}/cardmarket', 'Cardmarket\Orders\OrderController@show')->name('order.cardmarket.show');
 
     Route::resource('order', 'Orders\OrderController')->except([
         'create',

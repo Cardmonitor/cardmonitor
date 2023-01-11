@@ -92,4 +92,20 @@ class OrderController extends Controller
         \App\Jobs\Orders\SyncAll::dispatch($user);
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Articles\Article  $article
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Order $order)
+    {
+        $user = auth()->user();
+        $this->CardmarketApi = $user->cardmarketApi;
+
+        $cardmarket_order = $this->CardmarketApi->order->get($order->cardmarket_order_id);
+
+        return $cardmarket_order;
+    }
+
 }
