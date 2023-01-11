@@ -3668,16 +3668,41 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     this.fetch();
   },
-  computed: {},
+  computed: {
+    page: function page() {
+      return this.filter.page;
+    },
+    pages: function pages() {
+      var pages = [];
+
+      for (var i = 1; i <= this.paginate.lastPage; i++) {
+        if (this.showPageButton(i)) {
+          var lastItem = pages[pages.length - 1];
+
+          if (lastItem < i - 1 && lastItem != '...') {
+            pages.push('...');
+          }
+
+          pages.push(i);
+        }
+      }
+
+      return pages;
+    }
+  },
+  watch: {
+    page: function page() {
+      this.fetch();
+    }
+  },
   methods: {
     create: function create() {
       var component = this;
-      component.game_id = component.filter.game_id;
       axios.post(component.uri, component.form).then(function (response) {
         Vue.success('Erweiterung wird im Hintergrund importiert.');
       })["catch"](function (error) {
         component.errors = error.response.data.errors;
-        Vue.error(component.$t('app.errors.created'));
+        Vue.error('Erweiterung nicht auf Cardmarket vorhanden.');
       });
     },
     fetch: function fetch() {
@@ -3696,6 +3721,21 @@ __webpack_require__.r(__webpack_exports__);
         Vue.error('Erweiterungen konnten nicht geladen werden!');
         console.log(error);
       });
+    },
+    search: function search() {
+      this.filter.page = 1;
+      this.fetch();
+    },
+    showPageButton: function showPageButton(page) {
+      if (page == 1 || page == this.paginate.lastPage) {
+        return true;
+      }
+
+      if (page <= this.filter.page + 2 && page >= this.filter.page - 2) {
+        return true;
+      }
+
+      return false;
     }
   }
 });
@@ -11423,7 +11463,75 @@ var render = function render() {
     })];
   })], 2)])]) : _c("div", {
     staticClass: "alert alert-dark mt-3"
-  }, [_c("center", [_vm._v(_vm._s(_vm.$t("expansion.alerts.no_data")))])], 1)]);
+  }, [_c("center", [_vm._v(_vm._s(_vm.$t("expansion.alerts.no_data")))])], 1), _vm._v(" "), _c("nav", {
+    attrs: {
+      "aria-label": "Page navigation example"
+    }
+  }, [_c("ul", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.paginate.lastPage > 1,
+      expression: "paginate.lastPage > 1"
+    }],
+    staticClass: "pagination justify-content-center"
+  }, [_c("li", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.paginate.prevPageUrl,
+      expression: "paginate.prevPageUrl"
+    }],
+    staticClass: "page-item"
+  }, [_c("a", {
+    staticClass: "page-link",
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        _vm.filter.page--;
+      }
+    }
+  }, [_vm._v(_vm._s(_vm.$t("app.paginate.previous")))])]), _vm._v(" "), _vm._l(_vm.pages, function (n, i) {
+    return _c("li", {
+      staticClass: "page-item",
+      "class": {
+        active: n == _vm.filter.page
+      }
+    }, [_c("a", {
+      staticClass: "page-link",
+      attrs: {
+        href: "#"
+      },
+      on: {
+        click: function click($event) {
+          $event.preventDefault();
+          _vm.filter.page = n;
+        }
+      }
+    }, [_vm._v(_vm._s(n))])]);
+  }), _vm._v(" "), _c("li", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.paginate.nextPageUrl,
+      expression: "paginate.nextPageUrl"
+    }],
+    staticClass: "page-item"
+  }, [_c("a", {
+    staticClass: "page-link",
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        _vm.filter.page++;
+      }
+    }
+  }, [_vm._v(_vm._s(_vm.$t("app.paginate.next")))])])], 2)])]);
 };
 
 var staticRenderFns = [];

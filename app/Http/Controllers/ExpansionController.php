@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use App\Models\Expansions\Expansion;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Validation\ValidationException;
 
 class ExpansionController extends Controller
 {
@@ -51,7 +52,7 @@ class ExpansionController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->validate([
-            'abbreviation' => 'required|string',
+            'abbreviation' => 'required|string|min:3',
             'game_id' => 'required|int'
         ]);
 
@@ -63,7 +64,7 @@ class ExpansionController extends Controller
         });
 
         if (count($cardmarket_expansions) !== 1) {
-            throw new Exception("Error Processing Request", 1);
+            throw ValidationException::withMessages(['abbreviation' => 'Not available on Cardmarket.']);
         }
 
         Artisan::queue('expansion:import', [
