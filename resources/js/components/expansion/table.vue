@@ -34,7 +34,7 @@
                 <span style="font-size: 48px;">
                     <i class="fas fa-spinner fa-spin"></i><br />
                 </span>
-                {{ $t('app.loading') }}s
+                {{ $t('app.loading') }}s
             </center>
         </div>
         <div class="table-responsive mt-3" v-else-if="items.length">
@@ -56,6 +56,19 @@
             </table>
         </div>
         <div class="alert alert-dark mt-3" v-else><center>{{ $t('expansion.alerts.no_data') }}</center></div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center" v-show="paginate.lastPage > 1">
+                <li class="page-item" v-show="paginate.prevPageUrl">
+                    <a class="page-link" href="#" @click.prevent="filter.page--">{{ $t('app.paginate.previous') }}</a>
+                </li>
+
+                <li class="page-item" v-for="(n, i) in pages" v-bind:class="{ active: (n == filter.page) }"><a class="page-link" href="#" @click.prevent="filter.page = n">{{ n }}</a></li>
+
+                <li class="page-item" v-show="paginate.nextPageUrl">
+                    <a class="page-link" href="#" @click.prevent="filter.page++">{{ $t('app.paginate.next') }}</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </template>
 
@@ -110,20 +123,41 @@
         },
 
         computed: {
+            page() {
+                return this.filter.page;
+            },
+            pages() {
+                var pages = [];
+                for (var i = 1; i <= this.paginate.lastPage; i++) {
+                    if (this.showPageButton(i)) {
+                        const lastItem = pages[pages.length - 1];
+                        if (lastItem < (i - 1) && lastItem != '...') {
+                            pages.push('...');
+                        }
+                        pages.push(i);
+                    }
+                }
 
+                return pages;
+            },
+        },
+
+        watch: {
+            page () {
+                this.fetch();
+            },
         },
 
         methods: {
             create() {
                 var component = this;
-                component.game_id = component.filter.game_id;
                 axios.post(component.uri, component.form)
                     .then(function (response) {
                         Vue.success('Erweiterung wird im Hintergrund importiert.');
                     })
                     .catch( function (error) {
                         component.errors = error.response.data.errors;
-                        Vue.error(component.$t('app.errors.created'));
+                        Vue.error('Erweiterung nicht auf Cardmarket vorhanden.');
                 });
             },
             fetch() {
@@ -144,6 +178,21 @@
                         Vue.error('Erweiterungen konnten nicht geladen werden!');
                         console.log(error);
                     });
+            },
+            search() {
+                this.filter.page = 1;
+                this.fetch();
+            },
+            showPageButton(page) {
+                if (page == 1 || page == this.paginate.lastPage) {
+                    return true;
+                }
+
+                if (page <= this.filter.page + 2 && page >= this.filter.page - 2) {
+                    return true;
+                }
+
+                return false;
             },
         },
     };
