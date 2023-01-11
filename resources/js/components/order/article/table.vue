@@ -9,7 +9,7 @@
             </center>
         </div>
         <div class="table-responsive mt-3" v-else-if="items.length">
-            <table class="table table-hover table-striped bg-white">
+            <table class="table table-sm table-hover table-striped bg-white">
                 <thead>
                     <tr>
                         <th class="d-none d-sm-table-cell" width="75"></th>

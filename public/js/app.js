@@ -12707,7 +12707,7 @@ var render = function render() {
       role: "group"
     }
   }, [_c("button", {
-    staticClass: "btn btn-secondary",
+    staticClass: "btn btn-sm btn-secondary",
     attrs: {
       type: "button",
       title: _vm.$t("app.actions.delete")
@@ -12761,7 +12761,7 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-spinner fa-spin"
   }), _c("br")]), _vm._v("\n            " + _vm._s(_vm.$t("app.loading")) + "\n        ")])], 1) : _vm.items.length ? _c("table", {
-    staticClass: "table table-hover table-striped bg-white"
+    staticClass: "table table-sm table-hover table-striped bg-white"
   }, [_c("thead", [_c("tr", [_c("th", {
     attrs: {
       width: "100%"
@@ -13695,7 +13695,7 @@ var render = function render() {
       "for": "state_comment_boilerplate"
     }
   }, [_vm._v(_vm._s(_vm.$t("order.article.show.problems.label")))]), _vm._v(" "), _c("select", {
-    staticClass: "form-control",
+    staticClass: "form-control form-control-sm",
     attrs: {
       id: "state_comment_boilerplate",
       placeholder: _vm.$t("order.article.show.problems.placeholder")
@@ -13718,7 +13718,7 @@ var render = function render() {
       value: _vm.form.state_comments,
       expression: "form.state_comments"
     }],
-    staticClass: "form-control",
+    staticClass: "form-control form-control-sm",
     attrs: {
       type: "text",
       id: "state_comments",
@@ -13743,7 +13743,7 @@ var render = function render() {
   }), _vm._v(" " + _vm._s(_vm.item.state_comments) + "\n            ")]), _vm._v(" "), _c("div", {
     staticClass: "d-flex justify-content-between"
   }, [_c("button", {
-    staticClass: "btn btn-danger text-overflow-ellipsis",
+    staticClass: "btn btn-sm btn-danger text-overflow-ellipsis",
     attrs: {
       title: "Nächste Karte (Status Problem)"
     },
@@ -13753,14 +13753,14 @@ var render = function render() {
       }
     }
   }, [_vm._v(_vm._s(_vm.$t("order.article.show.actions.next_problem")))]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-light",
+    staticClass: "btn btn-sm btn-light",
     on: {
       click: function click($event) {
         return _vm.next(false);
       }
     }
   }, [_vm._v(_vm._s(_vm.$t("order.article.show.actions.next")))]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-primary text-overflow-ellipsis",
+    staticClass: "btn btn-sm btn-primary text-overflow-ellipsis",
     attrs: {
       title: "Nächste Karte (Status OK)"
     },
@@ -13804,7 +13804,7 @@ var render = function render() {
   }), _c("br")]), _vm._v("\n            Lade Daten..\n        ")])], 1) : _vm.items.length ? _c("div", {
     staticClass: "table-responsive mt-3"
   }, [_c("table", {
-    staticClass: "table table-hover table-striped bg-white"
+    staticClass: "table table-sm table-hover table-striped bg-white"
   }, [_c("thead", [_c("tr", [_c("th", {
     staticClass: "d-none d-sm-table-cell",
     attrs: {

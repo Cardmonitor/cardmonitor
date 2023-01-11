@@ -19,7 +19,7 @@
                 <div class="col-12 col-sm mb-3">
                     <div class="form-group">
                         <label for="state_comment_boilerplate">{{ $t('order.article.show.problems.label') }}</label>
-                        <select class="form-control" id="state_comment_boilerplate" :placeholder="$t('order.article.show.problems.placeholder')" @change="form.state_comments += $event.target.value">
+                        <select class="form-control form-control-sm" id="state_comment_boilerplate" :placeholder="$t('order.article.show.problems.placeholder')" @change="form.state_comments += $event.target.value">
                             <option>{{ $t('order.article.show.problems.label') }}</option>
                             <option>{{ $t('order.article.show.problems.not_available') }}</option>
                             <option>{{ $t('order.article.show.problems.wrong_condition') }}</option>
@@ -28,16 +28,16 @@
                     </div>
                     <div class="form-group">
                         <label for="state_comments">{{ $t('order.article.show.state_comments.label') }}</label>
-                        <input type="text" class="form-control" id="state_comments" v-model="form.state_comments" :placeholder="$t('order.article.show.state_comments.placeholder')">
+                        <input type="text" class="form-control form-control-sm" id="state_comments" v-model="form.state_comments" :placeholder="$t('order.article.show.state_comments.placeholder')">
                     </div>
                 </div>
                 <div>
                     <i class="fas fa-fw mb-3" :class="item.state_icon" :title="item.state_comments"></i> {{ item.state_comments }}
                 </div>
                 <div class="d-flex justify-content-between">
-                    <button class="btn btn-danger text-overflow-ellipsis" title="Nächste Karte (Status Problem)" @click="next(true, 1)">{{ $t('order.article.show.actions.next_problem') }}</button>
-                    <button class="btn btn-light" @click="next(false)">{{ $t('order.article.show.actions.next') }}</button>
-                    <button class="btn btn-primary text-overflow-ellipsis" title="Nächste Karte (Status OK)" @click="next(true, 0)">{{ $t('order.article.show.actions.next_ok') }}</button>
+                    <button class="btn btn-sm btn-danger text-overflow-ellipsis" title="Nächste Karte (Status Problem)" @click="next(true, 1)">{{ $t('order.article.show.actions.next_problem') }}</button>
+                    <button class="btn btn-sm btn-light" @click="next(false)">{{ $t('order.article.show.actions.next') }}</button>
+                    <button class="btn btn-sm btn-primary text-overflow-ellipsis" title="Nächste Karte (Status OK)" @click="next(true, 0)">{{ $t('order.article.show.actions.next_ok') }}</button>
                 </div>
             </div>
         </div>
