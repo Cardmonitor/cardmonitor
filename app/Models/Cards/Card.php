@@ -5,12 +5,14 @@ namespace App\Models\Cards;
 use Carbon\Carbon;
 use App\Models\Games\Game;
 use Illuminate\Support\Arr;
+use App\Models\Articles\Article;
 use App\Traits\HasLocalizations;
 use Illuminate\Support\Facades\App;
 use App\Models\Expansions\Expansion;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Card extends Model
@@ -375,6 +377,11 @@ class Card extends Model
             Game::ID_FLESH_AND_BLOOD => 'A11433',
             default => '',
         };
+    }
+
+    public function articles(): HasMany
+    {
+        return $this->hasMany(Article::class);
     }
 
     public function expansion() : BelongsTo

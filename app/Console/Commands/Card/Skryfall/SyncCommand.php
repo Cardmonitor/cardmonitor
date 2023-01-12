@@ -14,7 +14,8 @@ class SyncCommand extends Command
      */
     protected $signature = 'card:skryfall:sync
         {--all : Syncs all cards from Skryfall.}
-        {--take= : Syncs only the given amount of cards from Skryfall.}';
+        {--take= : Syncs only the given amount of cards from Skryfall.}
+        {--user= : Syncs only the cards of the given user from Skryfall.}';
 
     /**
      * The console command description.
@@ -71,6 +72,13 @@ class SyncCommand extends Command
 
         if ($this->option('take')) {
             $query->take($this->option('take'));
+        }
+
+        if ($this->option('user')) {
+            $query->whereHas('articles', function ($query) {
+                return $query->where('user_id', $this->option('user'))
+                    ->sold(0);
+            });
         }
 
         return $query->cursor();
