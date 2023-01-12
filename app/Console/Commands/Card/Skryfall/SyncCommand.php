@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Card\Skryfall;
 
+use App\Models\Cards\Card;
 use Illuminate\Console\Command;
 
 class SyncCommand extends Command
@@ -11,14 +12,16 @@ class SyncCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'card:skryfall:sync';
+    protected $signature = 'card:skryfall:sync
+        {--all : Syncs all cards from Skryfall.}
+        {--take= : Syncs only the given amount of cards from Skryfall.}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Syncs all cards from Skryfall.';
 
     /**
      * Create a new command instance.
@@ -37,6 +40,39 @@ class SyncCommand extends Command
      */
     public function handle()
     {
-        dump('test');
+        $cards = $this->getCards();
+        foreach ($cards as $card) {
+            $this->output->write('Syncing' . "\t" . $card->cardmarket_product_id . "\t" . $card->expansion->abbreviation . "\t" . $card->name . "\t");
+            $card->updateFromSkryfallByCardmarketId($card->cardmarket_product_id);
+            $this->output->writeln($card->skryfall_card_id ? '✓' : '✗');
+
+            usleep(100000); // 0.1 seconds
+        }
+
+        return self::SUCCESS;
+    }
+
+    private function getCards()
+    {
+        $query = Card::with([
+            'expansion',
+        ])
+        ->whereHas('expansion')
+        ->orderBy('expansion_id', 'ASC')
+        ->orderBy('number', 'ASC')
+        ->orderBy('name', 'ASC');
+
+        if (! $this->option('all')) {
+            $query->where(function ($query) {
+                return $query->whereNull('skryfall_card_id')
+                    ->orWhereNull('cmc');
+            });
+        }
+
+        if ($this->option('take')) {
+            $query->take($this->option('take'));
+        }
+
+        return $query->get();
     }
 }
