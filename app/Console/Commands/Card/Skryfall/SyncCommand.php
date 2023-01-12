@@ -73,6 +73,6 @@ class SyncCommand extends Command
             $query->take($this->option('take'));
         }
 
-        return $query->get();
+        return $query->cursor();
     }
 }
