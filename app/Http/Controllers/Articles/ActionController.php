@@ -140,10 +140,10 @@ class ActionController extends Controller
         });
 
         Artisan::queue('article:exports:dropbox', [
-            'user_id' => $user->id,
+            'user' => $user->id,
         ]);
 
-        $this->message = $articles->count() . ' Artikel Eingelagert.';
+        $this->message = $articles->count() . ' Artikel eingelagert.';
         $this->model = $storing_history;
     }
 }
