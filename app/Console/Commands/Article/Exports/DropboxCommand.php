@@ -46,18 +46,18 @@ class DropboxCommand extends Command
      */
     public function handle()
     {
-        $user_id = $this->argument('user');
-        $user = User::with(['dropbox'])->find($this->argument('user'));
+        $user = User::with(['dropbox'])
+            ->whereHas('dropbox')
+            ->find($this->argument('user'));
 
-        if (is_null($user->dropbox)) {
-            $access_token = config('services.dropbox.accesstoken');
-        }
-        else {
-            $user->dropbox->refresh();
-            $access_token = $user->dropbox->token;
+        if (is_null($user)) {
+            $this->error('User not found.');
+            return self::FAILURE;
         }
 
-        $articles = Article::where('user_id', $user_id)
+        $this->line('User: ' . $user->name);
+
+        $articles = Article::where('user_id', $user->id)
             ->sold(0)
             ->with([
                 'card.expansion',
@@ -65,9 +65,9 @@ class DropboxCommand extends Command
             ->orderBy('articles.number', 'ASC')
             ->cursor();
 
-        $this->base_path = $this->makeFilesystem($access_token);
+        $this->base_path = $this->makeFilesystem($user->dropbox->token);
         $filename = 'articles-' . now() . '.csv';
-        $path = $this->makeDirectory('export/' . $user_id . '/articles') . '/' . $filename;
+        $path = $this->makeDirectory('export/' . $user->id . '/articles') . '/' . $filename;
 
         CsvExporter::all($articles, $path);
 

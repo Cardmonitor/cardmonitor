@@ -28,7 +28,6 @@ class Kernel extends ConsoleKernel
         // $schedule->command('user:balance:import')->daily();
         // $schedule->command('card:price:sync')->dailyAt('03:17');
         $schedule->command('order:images:delete:old')->daily();
-        $schedule->command('article:exports:dropbox', ['user_id' => 11])->dailyAt('22:05');
     }
 
     /**

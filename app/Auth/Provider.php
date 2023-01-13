@@ -2,6 +2,7 @@
 
 namespace App\Auth;
 
+use App\APIs\Dropbox\Dropbox;
 use Illuminate\Database\Eloquent\Model;
 
 class Provider extends Model
@@ -34,6 +35,11 @@ class Provider extends Model
         }
     }
 
+    public function isExpired(): bool
+    {
+        return $this->expires_at->isPast();
+    }
+
     protected function refreshDropboxToken() : bool
     {
         $token = $this->getDropboxRefreshToken($this->refresh_token);
@@ -48,28 +54,8 @@ class Provider extends Model
 
     protected function getDropboxRefreshToken(string $refresh_token) : array
     {
-        $curl = curl_init();
+        $dropbox_api = new Dropbox();
 
-        curl_setopt_array($curl, [
-            CURLOPT_URL => 'https://api.dropboxapi.com/oauth2/token',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => 'grant_type=refresh_token&refresh_token=' . $refresh_token,
-            CURLOPT_USERPWD => config('services.dropbox.client_id') . ":" . config('services.dropbox.client_secret'),
-            CURLOPT_HTTPHEADER => [
-                'Content-Type: application/x-www-form-urlencoded'
-            ],
-        ]);
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        return json_decode($response, true);
+        return $dropbox_api->refresh($refresh_token);
     }
 }

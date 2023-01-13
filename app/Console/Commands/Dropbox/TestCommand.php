@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Dropbox;
 
+use App\APIs\Dropbox\Dropbox;
 use App\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -42,17 +43,22 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        $userId = $this->argument('user');
-        $user = User::with(['dropbox'])->find($this->argument('user'));
-        if (is_null($user->dropbox)) {
-            $access_token = config('services.dropbox.accesstoken');
-        }
-        else {
-            $user->dropbox->refresh();
-            $access_token = $user->dropbox->token;
+        $user = User::with(['dropbox'])
+            ->whereHas('dropbox')
+            ->find($this->argument('user'));
+
+        if (is_null($user)) {
+            $this->error('User not found.');
+            return self::FAILURE;
         }
 
-        $this->makeFilesystem($access_token);
+        $this->line('USer: ' . $user->name);
+
+        if ($user->dropbox->isExpired()) {
+            $user->dropbox->refresh();
+        }
+
+        $this->makeFilesystem($user->dropbox->token);
         $paths = Storage::disk('dropbox')->allFiles('');
         foreach ($paths as $path) {
             $this->line($path);
