@@ -34,6 +34,8 @@ class ProviderController extends Controller
             'provider_type' => $provider,
             'provider_id' => $provider_id,
         ], [
+            'email' => $provider_user->email,
+            'name' => $provider_user->name,
             'token' => $provider_user->token,
             'token_secret' => null, // only available on OAuth1: $provider_user->tokenSecret,
             'refresh_token' => $provider_user->refreshToken, // only available on OAuth2

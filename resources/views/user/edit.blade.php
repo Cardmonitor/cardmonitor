@@ -108,32 +108,37 @@
                 <div class="card mb-5">
                     <div class="card-header">Verbindungen</div>
                     <div class="card-body">
-                        <a class="btn btn-sm btn-secondary mb-3" href="{{ route('login.provider.redirect', ['provider' => 'dropbox']) }}">Mit Dropbox verknüpfen</a>
                         @if ($model->providers->count())
-                            <table class="table table-sm table-fixed table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th width="100%">Provider</th>
-                                        <th width="50"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($model->providers as $provider)
-                                        <tr>
-                                            <td>{{ $provider->provider_type }}</td>
-                                            <td>
-                                                <div class="btn-group btn-group-sm" role="group">
-                                                    <button type="button" class="btn btn-sm btn-secondary" title="Provider löschen" onclick="event.preventDefault(); document.getElementById('provider_{{ $provider->id }}_destroy').submit();"><i class="fas fa-trash"></i></button>
-                                                </div>
-                                                <form action="{{ route('login.provider.destroy', ['provider' => $provider->id]) }}" method="POST" id="provider_{{ $provider->id }}_destroy">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        <table class="table table-sm table-fixed table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="20%">Provider</th>
+                                    <th width="40%">E-Mail</th>
+                                    <th width="40%">Name</th>
+                                    <th width="50"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($model->providers as $provider)
+                                <tr>
+                                    <td>{{ $provider->provider_type }}</td>
+                                    <td>{{ $provider->email }}</td>
+                                    <td>{{ $provider->name }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <button type="button" class="btn btn-sm btn-secondary" title="Provider löschen" onclick="event.preventDefault(); document.getElementById('provider_{{ $provider->id }}_destroy').submit();"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                        <form action="{{ route('login.provider.destroy', ['provider' => $provider->id]) }}" method="POST" id="provider_{{ $provider->id }}_destroy">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        @else
+                            <a class="btn btn-sm btn-secondary mb-3" href="{{ route('login.provider.redirect', ['provider' => 'dropbox']) }}">Mit Dropbox verknüpfen</a>
                         @endif
                     </div>
                 </div>

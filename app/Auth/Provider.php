@@ -15,6 +15,8 @@ class Provider extends Model
         'user_id',
         'provider_type',
         'provider_id',
+        'email',
+        'name',
         'token',
         'token_secret',
         'refresh_token',
