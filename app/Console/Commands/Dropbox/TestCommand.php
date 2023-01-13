@@ -52,11 +52,9 @@ class TestCommand extends Command
             return self::FAILURE;
         }
 
-        $this->line('Listing all files for user ' . $user->name);
+        $user->dropbox->ensureValidToken();
 
-        if ($user->dropbox->isExpired()) {
-            $user->dropbox->refresh();
-        }
+        $this->line('Listing all files for user ' . $user->name);
 
         $this->makeFilesystem($user->dropbox->token);
         $paths = Storage::disk('dropbox')->allFiles('');

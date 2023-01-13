@@ -55,6 +55,8 @@ class DropboxCommand extends Command
             return self::FAILURE;
         }
 
+        $user->dropbox->ensureValidToken();
+
         $this->line('Starting export for user ' . $user->name);
 
         $articles = Article::where('user_id', $user->id)

@@ -35,6 +35,13 @@ class Provider extends Model
         }
     }
 
+    public function ensureValidToken(): void
+    {
+        if ($this->isExpired()) {
+            $this->refresh();
+        }
+    }
+
     public function isExpired(): bool
     {
         return $this->expires_at->isPast();
@@ -42,7 +49,7 @@ class Provider extends Model
 
     protected function refreshDropboxToken() : bool
     {
-        $token = $this->getDropboxRefreshToken($this->refresh_token);
+        $token = (new Dropbox())->refresh($this->refresh_token);
         $this->update([
             'token' => $token['access_token'],
             'expires_in' => $token['expires_in'],
@@ -50,12 +57,5 @@ class Provider extends Model
         ]);
 
         return true;
-    }
-
-    protected function getDropboxRefreshToken(string $refresh_token) : array
-    {
-        $dropbox_api = new Dropbox();
-
-        return $dropbox_api->refresh($refresh_token);
     }
 }
