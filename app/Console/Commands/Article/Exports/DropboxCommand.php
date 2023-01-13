@@ -55,7 +55,7 @@ class DropboxCommand extends Command
             return self::FAILURE;
         }
 
-        $this->line('User: ' . $user->name);
+        $this->line('Starting export for user ' . $user->name);
 
         $articles = Article::where('user_id', $user->id)
             ->sold(0)
@@ -72,6 +72,11 @@ class DropboxCommand extends Command
         CsvExporter::all($articles, $path);
 
         Storage::disk('dropbox')->putFileAs($this->base_path, Storage::disk('public')->path($path), $filename);
+
+        $this->info($articles->count() . ' articles exported to Dropbox.');
+        $this->line('Export finished (' . $filename . ').');
+
+        return self::SUCCESS;
     }
 
     protected function makeFilesystem(string $access_token) : string

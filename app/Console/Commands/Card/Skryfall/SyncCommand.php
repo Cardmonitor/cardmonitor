@@ -4,6 +4,7 @@ namespace App\Console\Commands\Card\Skryfall;
 
 use App\Models\Cards\Card;
 use Illuminate\Console\Command;
+use Illuminate\Support\LazyCollection;
 
 class SyncCommand extends Command
 {
@@ -53,7 +54,7 @@ class SyncCommand extends Command
         return self::SUCCESS;
     }
 
-    private function getCards()
+    private function getCards(): LazyCollection
     {
         $query = Card::with([
             'expansion',

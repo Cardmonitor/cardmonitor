@@ -52,7 +52,7 @@ class TestCommand extends Command
             return self::FAILURE;
         }
 
-        $this->line('USer: ' . $user->name);
+        $this->line('Listing all files for user ' . $user->name);
 
         if ($user->dropbox->isExpired()) {
             $user->dropbox->refresh();
@@ -60,11 +60,16 @@ class TestCommand extends Command
 
         $this->makeFilesystem($user->dropbox->token);
         $paths = Storage::disk('dropbox')->allFiles('');
+        if (empty($paths)) {
+            $this->error('No files found.');
+            return self::FAILURE;
+        }
+
         foreach ($paths as $path) {
             $this->line($path);
         }
 
-        return 0;
+        return self::SUCCESS;
     }
 
     protected function makeFilesystem(string $access_token)
