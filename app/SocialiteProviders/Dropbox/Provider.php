@@ -15,8 +15,8 @@ class Provider extends \SocialiteProviders\Dropbox\Provider
      * {@inheritdoc}
      */
     protected $scopes = [
-        'account_info.read',
-        'files.content.read',
-        'files.content.write',
+        // 'account_info.read',
+        // 'files.content.read',
+        // 'files.content.write',
     ];
 }
