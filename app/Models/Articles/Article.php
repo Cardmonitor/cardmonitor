@@ -469,12 +469,12 @@ class Article extends Model
      */
     public static function incrementNumber(string $max_number = ''): string
     {
-        $storage_code = 'A000';
+        $storage_code = 'A001';
         $number = 1;
 
         if ($max_number) {
             [$storage_code, $number] = explode('.', $max_number);
-            if ($number == 250) {
+            if ($number == 850) {
                 $number = 0;
                 $storage_code++;
             }

@@ -930,12 +930,12 @@ class ArticleTest extends TestCase
      */
     public function it_can_genereate_the_next_number()
     {
-        $this->assertEquals('A000.001', Article::incrementNumber());
+        $this->assertEquals('A001.001', Article::incrementNumber());
         $this->assertEquals('A000.002', Article::incrementNumber('A000.001'));
-        $this->assertEquals('A001.001', Article::incrementNumber('A000.250'));
-        $this->assertEquals('B000.001', Article::incrementNumber('A999.250'));
-        $this->assertEquals('B001.001', Article::incrementNumber('B000.250'));
-        $this->assertEquals('AA000.001', Article::incrementNumber('Z999.250'));
+        $this->assertEquals('A001.001', Article::incrementNumber('A000.850'));
+        $this->assertEquals('B000.001', Article::incrementNumber('A999.850'));
+        $this->assertEquals('B001.001', Article::incrementNumber('B000.850'));
+        $this->assertEquals('AA000.001', Article::incrementNumber('Z999.850'));
         $this->assertEquals('AA000.002', Article::incrementNumber('AA000.001'));
     }
 
