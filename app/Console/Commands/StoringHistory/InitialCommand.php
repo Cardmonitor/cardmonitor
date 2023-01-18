@@ -19,7 +19,9 @@ class InitialCommand extends Command
      */
     protected $signature = 'storing-history:init
         {user}
-        {--skryfall : Syncs all cards from Skryfall.}';
+        {--skryfall : Syncs all cards from Skryfall.}
+        {--reset-storing-histories : Resets all storing histories.}
+        {--reset-numbers : Resets all numbers.}';
 
     /**
      * The console command description.
@@ -52,6 +54,9 @@ class InitialCommand extends Command
                 '--user' => $user->id,
             ]);
         }
+
+        $this->resetNumbers($user);
+        $this->resetStoringHistories($user);
 
         $number = Article::maxNumber($user->id);
         $storing_history_id = null;
@@ -96,5 +101,31 @@ class InitialCommand extends Command
             ->orderBy('cards.name', 'ASC');
 
         return $query->cursor();
+    }
+
+    private function resetNumbers(User $user)
+    {
+        if (! $this->option('reset-numbers')) {
+            return;
+        }
+
+        $user->articles()
+            ->update([
+                'number' => null,
+        ]);
+    }
+
+    private function resetStoringHistories(User $user)
+    {
+        if (! $this->option('reset-storing-histories')) {
+            return;
+        }
+
+        $user->articles()
+            ->update([
+                'storing_history_id' => null,
+        ]);
+
+        $user->storingHistories()->delete();
     }
 }
