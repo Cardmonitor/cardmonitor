@@ -60,7 +60,7 @@ class InitialCommand extends Command
 
         $number = Article::maxNumber($user->id);
         $storing_history_id = null;
-        $last_card_color_order_by = null;
+        $last_card_color_order_by = '';
         $articles = $this->getArticles($user);
         foreach ($articles as $article) {
 
