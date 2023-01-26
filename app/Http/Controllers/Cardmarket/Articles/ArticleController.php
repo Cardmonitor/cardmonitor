@@ -56,7 +56,7 @@ class ArticleController extends Controller
         ]);
     }
 
-    protected function sync(Article $article) : Article
+    protected function sync(Article $article): void
     {
         dump('syncing one..');
     }
