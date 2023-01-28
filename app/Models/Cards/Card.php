@@ -340,6 +340,11 @@ class Card extends Model
         return Storage::url('public/items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg');
     }
 
+    public function getImageStoragePathAttribute(): string
+    {
+        return Storage::disk('public')->path('items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg');
+    }
+
     public function getHasSkryfallDataAttribute(): bool
     {
         return (! is_null($this->cmc) && !is_null($this->number));

@@ -2,13 +2,30 @@
 
 namespace App\APIs\Dropbox;
 
+use Spatie\Dropbox\Client;
+use League\Flysystem\Filesystem;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Spatie\FlysystemDropbox\DropboxAdapter;
 
 class Dropbox
 {
     private $url;
     private $client_id;
     private $client_secret;
+
+    public static function makeFilesystem(string $access_token, string $path) : string
+    {
+        Storage::extend('dropbox', function ($app, $config) use ($access_token) {
+            $client = new Client($access_token);
+
+            return new Filesystem(new DropboxAdapter($client));
+        });
+
+        Storage::disk('dropbox')->makeDirectory($path);
+
+        return $path;
+    }
 
     public function __construct()
     {

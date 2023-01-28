@@ -63,7 +63,7 @@
                     @foreach ($articles as $article)
                         <tr>
                             <td class="align-middle">
-                                <img src="{{ $article->card->image_path }}" alt="{{ $article->card->name }}" width="75">
+                                <img src="{{ $use_image_storage_path ? $article->card->image_storage_path : $article->card->image_path }}" alt="{{ $article->card->name }}" width="75">
                             </td>
                             <td class="align-middle">
                                 <div>{{ $article->local_name }}</div>

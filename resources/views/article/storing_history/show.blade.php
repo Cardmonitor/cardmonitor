@@ -11,7 +11,7 @@
                 <form action="{{ route('article.storing_history.pdf.store', ['storing_history' => $model->id]) }}" class="ml-1" method="POST">
                     @csrf
 
-                    <button type="submit" class="btn btn-sm btn-secondary" title="Zip Archiv">Zip</button>
+                    <button type="submit" class="btn btn-sm btn-secondary" title="PDFs zu Dropbox exportieren"><i class="fab fa-dropbox pointer"></i></button>
                 </form>
                 <a href="{{ route('article.storing_history.index') }}" class="btn btn-sm btn-secondary ml-1">{{ __('app.overview') }}</a>
             </div>
