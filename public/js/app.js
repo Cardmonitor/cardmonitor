@@ -3248,7 +3248,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         product_type: 1,
         rule_id: 0,
         searchtext: '',
-        show: false,
+        show: true,
         sold: 0,
         is_numbered: -1,
         is_stored: -1,
@@ -9461,14 +9461,14 @@ var render = function render() {
       _c = _vm._self._c;
 
   return _c("tr", [_c("td", {
-    staticClass: "align-middle",
+    staticClass: "align-middle pointer",
     on: {
       click: function click($event) {
         return _vm.show();
       }
     }
   }, [_vm._v(_vm._s(_vm.item.created_at_formatted))]), _vm._v(" "), _c("td", {
-    staticClass: "align-middle text-right",
+    staticClass: "align-middle text-right pointer",
     on: {
       click: function click($event) {
         return _vm.show();
@@ -10305,7 +10305,7 @@ var render = function render() {
       value: 0
     }
   }, [_vm._v(_vm._s(_vm.$t("filter.sync.success")))])])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
+    staticClass: "col-auto d-none"
   }, [_c("div", {
     staticClass: "form-group"
   }, [_c("label", {
@@ -10385,7 +10385,7 @@ var render = function render() {
       expression: "filter.expansion_id"
     }
   })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
+    staticClass: "col-auto d-none"
   }, [_c("filter-rarity", {
     attrs: {
       options: _vm.rarities
@@ -10401,7 +10401,7 @@ var render = function render() {
       expression: "filter.rarity"
     }
   })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
+    staticClass: "col-auto d-none"
   }, [_c("filter-language", {
     attrs: {
       options: _vm.languages
@@ -10433,7 +10433,7 @@ var render = function render() {
       expression: "filter.storage_id"
     }
   })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
+    staticClass: "col-auto d-none"
   }, [_vm.rules != null ? _c("filter-rule", {
     attrs: {
       options: _vm.rules
@@ -10449,7 +10449,7 @@ var render = function render() {
       expression: "filter.rule_id"
     }
   }) : _vm._e()], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
+    staticClass: "col-auto d-none"
   }, [_c("div", {
     staticClass: "form-group"
   }, [_c("label", {
@@ -10479,7 +10479,7 @@ var render = function render() {
       }, _vm.search]
     }
   })])]), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
+    staticClass: "col-auto d-none"
   }, [_c("div", {
     staticClass: "form-group"
   }, [_c("label", {
@@ -10509,7 +10509,7 @@ var render = function render() {
       }, _vm.search]
     }
   })])]), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
+    staticClass: "col-auto d-none"
   }, [_c("div", {
     staticClass: "form-group"
   }, [_c("label", {
@@ -10539,7 +10539,7 @@ var render = function render() {
       }, _vm.search]
     }
   })])]), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
+    staticClass: "col-auto d-none"
   }, [_c("div", {
     staticClass: "form-group"
   }, [_c("label", {
@@ -10655,7 +10655,7 @@ var render = function render() {
       value: 1
     }
   }, [_vm._v("Eingelagert")])])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
+    staticClass: "col-auto d-none"
   }, [_c("div", {
     staticClass: "form-group"
   }, [_c("label", {
@@ -12385,7 +12385,7 @@ var render = function render() {
     on: {
       click: _vm.download
     }
-  })]), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm._m(3)]), _vm._v(" "), _c("div", {
+  })]), _vm._v(" "), false ? undefined : _vm._e(), _vm._v(" "), _vm._m(3)]), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_vm.isLoading ? _c("div", {
     staticClass: "mt-3 p-5"
@@ -12482,16 +12482,14 @@ var staticRenderFns = [function () {
   var _vm = this,
       _c = _vm._self._c;
 
-  return _c("div", {
-    staticClass: "ml-3"
-  }, [_c("a", {
+  return _c("a", {
     staticClass: "text-body",
     attrs: {
       href: "/order/export/dropbox"
     }
   }, [_c("i", {
     staticClass: "fab fa-dropbox pointer"
-  })])]);
+  })]);
 }, function () {
   var _vm = this,
       _c = _vm._self._c;
