@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class PdfController extends Controller
 {
-    const MAX_ARTICLES_PER_FILE = 100;
+    const MAX_ARTICLES_PER_FILE = 50;
 
     public function show(StoringHistory $storing_history)
     {
@@ -26,14 +26,14 @@ class PdfController extends Controller
             ->orderBy('articles.number', 'ASC')
             ->get();
 
-        return $this->getPDF($articles)->stream('einlagerung ' . $storing_history->created_at . '.pdf');
+        return $this->getPDF($articles)->stream('einlagerung-' . $storing_history->id . '.pdf');
     }
 
     public function store(StoringHistory $storing_history)
     {
         $path = $this->makePath();
 
-        $zip_path = $path . 'einlagerung ' . $storing_history->created_at . '.zip';
+        $zip_path = $path . 'einlagerung-' . $storing_history->id . '.zip';
         $zip_archive = new \ZipArchive();
         $zip_archive->open($zip_path, \ZipArchive::CREATE);
 
