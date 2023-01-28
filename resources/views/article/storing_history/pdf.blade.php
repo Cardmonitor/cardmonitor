@@ -45,7 +45,7 @@
 <body style="position: relative;">
 
     <div style="margin: 0 10mm;">
-        <h1>Picklist</h1>
+        <h1>Einlagerung</h1>
 
         @empty($articles)
             <p>Keine Artikel vorhanden.</p>
