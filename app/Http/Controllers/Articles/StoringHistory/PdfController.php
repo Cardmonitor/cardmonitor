@@ -26,14 +26,14 @@ class PdfController extends Controller
             ->orderBy('articles.number', 'ASC')
             ->get();
 
-        return $this->getPDF($articles)->stream('einlagerung ' . $storing_history->created_at_formatted . '.pdf');
+        return $this->getPDF($articles)->stream('einlagerung ' . $storing_history->created_at . '.pdf');
     }
 
     public function store(StoringHistory $storing_history)
     {
         $path = $this->makePath();
 
-        $zip_path = $path . 'einlagerung ' . $storing_history->created_at_formatted . '.zip';
+        $zip_path = $path . 'einlagerung ' . $storing_history->created_at . '.zip';
         $zip_archive = new \ZipArchive();
         $zip_archive->open($zip_path, \ZipArchive::CREATE);
 
