@@ -60,11 +60,11 @@ class InitialCommand extends Command
 
         $number = Article::maxNumber($user->id);
         $storing_history_id = null;
-        $last_card_color_order_by = '';
+        $last_card_color_order_by = null;
         $articles = $this->getArticles($user);
         foreach ($articles as $article) {
 
-            if ($last_card_color_order_by != $article->card->color_order_by) {
+            if ($last_card_color_order_by != $article->card->color_order_by || is_null($storing_history_id)) {
                 $storing_history_id = StoringHistory::create([
                     'user_id' => $user->id,
                 ])->id;
@@ -77,6 +77,7 @@ class InitialCommand extends Command
                 'storing_history_id' => $storing_history_id,
             ]);
             $this->line($article->card->color_order_by . "\t" . $article->card->cmc . "\t" . $number . "\t" . $storing_history_id  . "\t" . $article->card->expansion->abbriviation. "\t" . $article->card->name);
+
         }
 
         return self::SUCCESS;
