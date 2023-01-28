@@ -9461,13 +9461,20 @@ var render = function render() {
       _c = _vm._self._c;
 
   return _c("tr", [_c("td", {
-    staticClass: "align-middle pointer",
+    staticClass: "align-middle",
     on: {
       click: function click($event) {
         return _vm.show();
       }
     }
-  }, [_vm._v(_vm._s(_vm.item.created_at_formatted))])]);
+  }, [_vm._v(_vm._s(_vm.item.created_at_formatted))]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle text-right",
+    on: {
+      click: function click($event) {
+        return _vm.show();
+      }
+    }
+  }, [_vm._v(_vm._s(_vm.item.articles_count))])]);
 };
 
 var staticRenderFns = [];
@@ -10179,7 +10186,9 @@ var staticRenderFns = [function () {
   var _vm = this,
       _c = _vm._self._c;
 
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Datum")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Datum")]), _vm._v(" "), _c("th", {
+    staticClass: "text-right"
+  }, [_vm._v("Artikel")])])]);
 }];
 render._withStripped = true;
 

@@ -13,6 +13,7 @@
                 <thead>
                     <tr>
                         <th>Datum</th>
+                        <th class="text-right">Artikel</th>
                     </tr>
                 </thead>
                 <tbody>

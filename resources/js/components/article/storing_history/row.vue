@@ -1,6 +1,7 @@
 <template>
     <tr>
-        <td class="align-middle pointer" @click="show()">{{ item.created_at_formatted }}</td>
+        <td class="align-middle" @click="show()">{{ item.created_at_formatted }}</td>
+        <td class="align-middle text-right" @click="show()">{{ item.articles_count }}</td>
     </tr>
 </template>
 
