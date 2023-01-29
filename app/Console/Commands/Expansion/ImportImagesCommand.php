@@ -60,11 +60,13 @@ class ImportImagesCommand extends Command
             $this->line($expansion->id . ' ' . $expansion->name . ' (' . $expansion->abbreviation . '): ' . $images_count . '/' . $expansion->cards_count . ' images');
 
             if ($this->option('import')) {
-                Artisan::queue('expansion:import', [
+                Artisan::call('expansion:import', [
                     'expansion' => $expansion->id,
                 ]);
             }
         }
+
+        return self::SUCCESS;
     }
 
     private function getExpansions(): LazyCollection
