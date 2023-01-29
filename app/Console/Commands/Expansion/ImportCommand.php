@@ -7,10 +7,16 @@ use App\Models\Expansions\Expansion;
 use App\Models\Games\Game;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class ImportCommand extends Command
 {
+    /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout = 600;
+
     /**
      * The name and signature of the console command.
      *
