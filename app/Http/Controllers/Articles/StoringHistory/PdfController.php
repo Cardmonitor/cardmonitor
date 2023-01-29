@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Articles\StoringHistory;
 use App\Http\Controllers\Controller;
 use App\Models\Articles\StoringHistory;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Database\Eloquent\Collection;
 
 class PdfController extends Controller
 {
@@ -21,22 +20,7 @@ class PdfController extends Controller
             ->orderBy('articles.number', 'ASC')
             ->get();
 
-        return $this->getPDF($articles)->stream('einlagerung-' . $storing_history->id . '.pdf');
-    }
-
-    private function getPDF(Collection $articles)
-    {
-        return \PDF::loadView('article.storing_history.pdf', [
-            'articles' => $articles,
-            'use_image_storage_path' => false,
-        ], [], [
-            'margin_top' => 10,
-            'margin_left' => 0,
-            'margin_right' => 0,
-            'margin_bottom' => 10,
-            'margin_header' => 0,
-            'margin_footer' => 0,
-        ]);
+        return StoringHistory::getPDF($articles, false)->stream('einlagerung-' . $storing_history->id . '.pdf');
     }
 
     public function store(StoringHistory $storing_history)

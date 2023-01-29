@@ -76,7 +76,8 @@ class DropboxCommand extends Command
                 $file_name = $storing_history->id . '-'. $file_counter .'.pdf';
                 $file_path = $path . $file_name;
 
-                $this->getPDF($articles)->save($file_path);
+                StoringHistory::getPDF($articles, true)->save($file_path);
+
                 Storage::disk('dropbox')->putFileAs($dropbox_path, $file_path, $file_name);
                 $this->line('Exported file ' . $file_name . ' to Dropbox');
                 unlink($file_path);
@@ -96,22 +97,5 @@ class DropboxCommand extends Command
         }
 
         return $path;
-    }
-
-    private function getPDF(Collection $articles)
-    {
-        $pdf = \PDF::loadView('article.storing_history.pdf', [
-            'articles' => $articles,
-            'use_image_storage_path' => true,
-        ], [], [
-            'margin_top' => 10,
-            'margin_left' => 0,
-            'margin_right' => 0,
-            'margin_bottom' => 10,
-            'margin_header' => 0,
-            'margin_footer' => 0,
-        ]);
-
-        return $pdf;
     }
 }
