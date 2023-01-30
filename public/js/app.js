@@ -9539,6 +9539,8 @@ var render = function render() {
   }), _vm._v(" " + _vm._s(_vm.item.localName) + " (" + _vm._s(_vm.item.card.number) + ")\n        "), _vm.item.language_id != 1 ? _c("div", {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.item.card.name))]) : _vm._e()]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle text-right"
+  }, [_vm._v("#" + _vm._s(_vm.item.card.number))]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell text-center"
   }, [_vm.item.card.expansion ? _c("expansion-icon", {
     attrs: {
@@ -9955,6 +9957,8 @@ var render = function render() {
       width: "100%"
     }
   }, [_vm._v(_vm._s(_vm.$t("app.name")))]), _vm._v(" "), _c("th", {
+    staticClass: "text-right w-formatted-number"
+  }, [_vm._v("Nummer")]), _vm._v(" "), _c("th", {
     staticClass: "d-none d-xl-table-cell w-icon"
   }), _vm._v(" "), _c("th", {
     staticClass: "text-center d-none d-xl-table-cell w-icon"
@@ -9967,7 +9971,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("th", {
     staticClass: "text-right w-formatted-number"
-  }, [_vm._v("Nummer")])])]), _vm._v(" "), _c("tbody", [_vm._l(_vm.items, function (item, index) {
+  }, [_vm._v("Lagernummer")])])]), _vm._v(" "), _c("tbody", [_vm._l(_vm.items, function (item, index) {
     return [_c("row", {
       key: item.id,
       attrs: {

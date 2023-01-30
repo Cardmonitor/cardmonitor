@@ -54,9 +54,11 @@
                 <thead>
                     <th>Bild</th>
                     <th>Name</th>
+                    <th class="text-right">Nummer</th>
                     <th>Zustand</th>
                     <th>Sprache</th>
                     <th class="text-center">Seltenheit</th>
+                    <th class="text-center">Foil</th>
                     <th class="text-right">Lagernummer</th>
                 </thead>
                 <tbody>
@@ -71,9 +73,11 @@
                                 <div class="text-muted">{{ $article->card->name }}</div>
                                 @endif
                             </td>
+                            <td class="align-middle text-right">#{{ $article->card->number }}</td>
                             <td class="align-middle">{{ $article->condition }}</td>
                             <td class="align-middle">{{ $article->language->name }}</td>
                             <td class="align-middle text-center">{{ $article->card->rarity }}</td>
+                            <td class="align-middle text-center">{{ $article->is_foil ? 'Foil' : '' }}</td>
                             <td class="align-middle text-right">{{ $article->number }}</td>
                         </tr>
                     @endforeach

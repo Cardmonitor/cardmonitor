@@ -7,7 +7,9 @@
         <td class="align-middle d-none d-xl-table-cell pointer"><i class="fas fa-image" @mouseover="show($event)" @mouseout="$emit('hide')"></i></td>
         <td class="align-middle pointer" @click="link()">
             <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.localName }} ({{ item.card.number }})
-            <div class="text-muted" v-if="item.language_id != 1">{{ item.card.name }}</div></td>
+            <div class="text-muted" v-if="item.language_id != 1">{{ item.card.name }}</div>
+        </td>
+        <td class="align-middle text-right">#{{ item.card.number }}</td>
         <td class="align-middle d-none d-xl-table-cell text-center"><expansion-icon :expansion="item.card.expansion" :show-name="false" v-if="item.card.expansion"></expansion-icon></td>
         <td class="align-middle d-none d-xl-table-cell text-center"><rarity :value="item.card.rarity" v-if="item.card.rarity"></rarity></td>
         <td class="align-middle d-none d-lg-table-cell text-center"><condition :value="item.condition"></condition></td>

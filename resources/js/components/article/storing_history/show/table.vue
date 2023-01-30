@@ -99,11 +99,12 @@
                         <th class="text-center d-none d-lg-table-cell w-icon">{{ $t('article.sync') }}</th>
                         <th class="text-right d-none d-xl-table-cell w-icon"></th>
                         <th class="" width="100%">{{ $t('app.name') }}</th>
+                        <th class="text-right w-formatted-number">Nummer</th>
                         <th class="d-none d-xl-table-cell w-icon"></th>
                         <th class="text-center d-none d-xl-table-cell w-icon"></th>
                         <th class="text-center d-none d-lg-table-cell w-formatted-number">{{ $t('app.condition') }}</th>
                         <th class="d-none d-xl-table-cell" style="width: 100px;"></th>
-                        <th class="text-right w-formatted-number">Nummer</th>
+                        <th class="text-right w-formatted-number">Lagernummer</th>
                     </tr>
                 </thead>
                 <tbody>
