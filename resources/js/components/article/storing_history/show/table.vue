@@ -27,58 +27,15 @@
                 </div>
 
                 <div class="col-auto">
-                    <div class="form-group">
-                        <label for="filter-sold">{{ $t('filter.sold.label') }}</label>
-                        <select class="form-control form-control-sm" id="filter-sold" v-model="filter.sold" @change="search">
-                            <option :value="-1">{{ $t('filter.all') }}</option>
-                            <option :value="0">{{ $t('filter.sold.not_sold') }}</option>
-                            <option :value="1">{{ $t('filter.sold.sold') }}</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-auto">
                     <filter-game :initial-value="filter.game_id" :options="games" :game-id="filter.game_id" :show-label="true" v-model="filter.game_id" @input="fetch()"></filter-game>
                 </div>
 
                 <div class="col-auto">
                     <filter-expansion :options="expansions" v-model="filter.expansion_id" @input="search"></filter-expansion>
                 </div>
-                <div class="col-auto">
-                    <filter-rarity :options="rarities" v-model="filter.rarity" @input="search"></filter-rarity>
-                </div>
-                <div class="col-auto">
-                    <filter-language :options="languages" v-model="filter.language_id" @input="search"></filter-language>
-                </div>
+
                 <div class="col-auto">
                     <filter-storage :options="storages" v-model="filter.storage_id" @input="search"></filter-storage>
-                </div>
-                <div class="col-auto">
-                    <filter-rule :options="rules" v-model="filter.rule_id" @input="search" v-if="rules != null"></filter-rule>
-                </div>
-                <div class="col-auto">
-                    <div class="form-group">
-                        <label for="filter-unit_price_min">{{ $t('filter.price.min') }}</label>
-                        <input class="form-control form-control-sm" id="filter-unit_price_min" type="text" v-model="filter.unit_price_min" @input="search">
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <div class="form-group">
-                        <label for="filter-unit_price_max">{{ $t('filter.price.max') }}</label>
-                        <input class="form-control form-control-sm" id="filter-unit_price_max" type="text" v-model="filter.unit_price_max" @input="search">
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <div class="form-group">
-                        <label for="filter-unit_cost_min">{{ $t('filter.price_buying.min') }}</label>
-                        <input class="form-control form-control-sm" id="filter-unit_cost_min" type="text" v-model="filter.unit_cost_min" @input="search">
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <div class="form-group">
-                        <label for="filter-unit_cost_max">{{ $t('filter.price_buying.max') }}</label>
-                        <input class="form-control form-control-sm" id="filter-unit_cost_max" type="text" v-model="filter.unit_cost_max" @input="search">
-                    </div>
                 </div>
 
             </div>

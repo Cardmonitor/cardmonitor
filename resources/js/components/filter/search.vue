@@ -39,7 +39,7 @@
                 }
                 component.timeout = setTimeout(function () {
                     component.$emit('input', component.$refs.search.value);
-                }, 300);
+                }, 750);
             },
         },
 

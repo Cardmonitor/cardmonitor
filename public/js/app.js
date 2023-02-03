@@ -3964,7 +3964,7 @@ __webpack_require__.r(__webpack_exports__);
 
       component.timeout = setTimeout(function () {
         component.$emit('input', component.$refs.search.value);
-      }, 300);
+      }, 750);
     }
   }
 });
@@ -9674,49 +9674,6 @@ var render = function render() {
     }
   }, [_vm._v(_vm._s(_vm.$t("filter.sync.success")))])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-auto"
-  }, [_c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "filter-sold"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("filter.sold.label")))]), _vm._v(" "), _c("select", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.filter.sold,
-      expression: "filter.sold"
-    }],
-    staticClass: "form-control form-control-sm",
-    attrs: {
-      id: "filter-sold"
-    },
-    on: {
-      change: [function ($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-          return o.selected;
-        }).map(function (o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val;
-        });
-
-        _vm.$set(_vm.filter, "sold", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
-      }, _vm.search]
-    }
-  }, [_c("option", {
-    domProps: {
-      value: -1
-    }
-  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _c("option", {
-    domProps: {
-      value: 0
-    }
-  }, [_vm._v(_vm._s(_vm.$t("filter.sold.not_sold")))]), _vm._v(" "), _c("option", {
-    domProps: {
-      value: 1
-    }
-  }, [_vm._v(_vm._s(_vm.$t("filter.sold.sold")))])])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
   }, [_c("filter-game", {
     attrs: {
       "initial-value": _vm.filter.game_id,
@@ -9754,38 +9711,6 @@ var render = function render() {
     }
   })], 1), _vm._v(" "), _c("div", {
     staticClass: "col-auto"
-  }, [_c("filter-rarity", {
-    attrs: {
-      options: _vm.rarities
-    },
-    on: {
-      input: _vm.search
-    },
-    model: {
-      value: _vm.filter.rarity,
-      callback: function callback($$v) {
-        _vm.$set(_vm.filter, "rarity", $$v);
-      },
-      expression: "filter.rarity"
-    }
-  })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
-  }, [_c("filter-language", {
-    attrs: {
-      options: _vm.languages
-    },
-    on: {
-      input: _vm.search
-    },
-    model: {
-      value: _vm.filter.language_id,
-      callback: function callback($$v) {
-        _vm.$set(_vm.filter, "language_id", $$v);
-      },
-      expression: "filter.language_id"
-    }
-  })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
   }, [_c("filter-storage", {
     attrs: {
       options: _vm.storages
@@ -9800,143 +9725,7 @@ var render = function render() {
       },
       expression: "filter.storage_id"
     }
-  })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
-  }, [_vm.rules != null ? _c("filter-rule", {
-    attrs: {
-      options: _vm.rules
-    },
-    on: {
-      input: _vm.search
-    },
-    model: {
-      value: _vm.filter.rule_id,
-      callback: function callback($$v) {
-        _vm.$set(_vm.filter, "rule_id", $$v);
-      },
-      expression: "filter.rule_id"
-    }
-  }) : _vm._e()], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
-  }, [_c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "filter-unit_price_min"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("filter.price.min")))]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.filter.unit_price_min,
-      expression: "filter.unit_price_min"
-    }],
-    staticClass: "form-control form-control-sm",
-    attrs: {
-      id: "filter-unit_price_min",
-      type: "text"
-    },
-    domProps: {
-      value: _vm.filter.unit_price_min
-    },
-    on: {
-      input: [function ($event) {
-        if ($event.target.composing) return;
-
-        _vm.$set(_vm.filter, "unit_price_min", $event.target.value);
-      }, _vm.search]
-    }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
-  }, [_c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "filter-unit_price_max"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("filter.price.max")))]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.filter.unit_price_max,
-      expression: "filter.unit_price_max"
-    }],
-    staticClass: "form-control form-control-sm",
-    attrs: {
-      id: "filter-unit_price_max",
-      type: "text"
-    },
-    domProps: {
-      value: _vm.filter.unit_price_max
-    },
-    on: {
-      input: [function ($event) {
-        if ($event.target.composing) return;
-
-        _vm.$set(_vm.filter, "unit_price_max", $event.target.value);
-      }, _vm.search]
-    }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
-  }, [_c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "filter-unit_cost_min"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("filter.price_buying.min")))]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.filter.unit_cost_min,
-      expression: "filter.unit_cost_min"
-    }],
-    staticClass: "form-control form-control-sm",
-    attrs: {
-      id: "filter-unit_cost_min",
-      type: "text"
-    },
-    domProps: {
-      value: _vm.filter.unit_cost_min
-    },
-    on: {
-      input: [function ($event) {
-        if ($event.target.composing) return;
-
-        _vm.$set(_vm.filter, "unit_cost_min", $event.target.value);
-      }, _vm.search]
-    }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
-  }, [_c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "filter-unit_cost_max"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("filter.price_buying.max")))]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.filter.unit_cost_max,
-      expression: "filter.unit_cost_max"
-    }],
-    staticClass: "form-control form-control-sm",
-    attrs: {
-      id: "filter-unit_cost_max",
-      type: "text"
-    },
-    domProps: {
-      value: _vm.filter.unit_cost_max
-    },
-    on: {
-      input: [function ($event) {
-        if ($event.target.composing) return;
-
-        _vm.$set(_vm.filter, "unit_cost_max", $event.target.value);
-      }, _vm.search]
-    }
-  })])])])]) : _vm._e(), _vm._v(" "), _vm.isLoading ? _c("div", {
+  })], 1)])]) : _vm._e(), _vm._v(" "), _vm.isLoading ? _c("div", {
     staticClass: "mt-3 p-5"
   }, [_c("center", [_c("span", {
     staticStyle: {
