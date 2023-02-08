@@ -63,10 +63,7 @@ class ArticleController extends Controller
             ->with('is_applying_rules', $user->is_applying_rules)
             ->with('is_syncing_articles', $user->is_syncing_articles)
             ->with('rules', $user->rules)
-            ->with('storages', $user->storages()
-                ->withDepth()
-                ->defaultOrder()
-                ->get());
+            ->with('storages', $user->storagesForFilter());
     }
 
     /**

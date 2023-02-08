@@ -4055,11 +4055,11 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     sortedOptions: function sortedOptions() {
       function compare(a, b) {
-        if (a.name < b.name) {
+        if (a.sort < b.sort) {
           return -1;
         }
 
-        if (a.name > b.name) {
+        if (a.sort > b.sort) {
           return 1;
         }
 
@@ -6798,7 +6798,7 @@ __webpack_require__.r(__webpack_exports__);
       isLoading: true,
       filter: {
         page: 1,
-        status: 'any',
+        status: 'on-hold',
         show: false
       },
       paginate: {
@@ -10047,7 +10047,15 @@ var render = function render() {
     "class": {
       "fa-spin": _vm.syncing.status == 1
     }
-  })]), _vm._v(" "), false ? undefined : _vm._e()])]), _vm._v(" "), _vm.filter.show ? _c("form", {
+  })]), _vm._v(" "), false ? undefined : _vm._e(), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-sm btn-secondary ml-1",
+    attrs: {
+      type: "button",
+      disabled: _vm.syncing.status == 1,
+      "data-toggle": "modal",
+      "data-target": "#tcg-powertools-import"
+    }
+  }, [_vm._v("\n                TCG PowerTools Import\n            ")])])]), _vm._v(" "), _vm.filter.show ? _c("form", {
     staticClass: "mt-1",
     attrs: {
       id: "filter"
@@ -11820,9 +11828,10 @@ var render = function render() {
   }, [_vm._v(_vm._s(_vm.$t("storages.no_storage")))]), _vm._v(" "), _vm._l(_vm.sortedOptions, function (option, key) {
     return _c("option", {
       domProps: {
-        value: option.id
+        value: option.id,
+        innerHTML: _vm._s(option.indentedName)
       }
-    }, [_vm._v(_vm._s(option.name))]);
+    });
   })], 2)]);
 };
 

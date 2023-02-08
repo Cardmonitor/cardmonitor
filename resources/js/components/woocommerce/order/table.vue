@@ -84,7 +84,7 @@
                 isLoading: true,
                 filter: {
                     page: 1,
-                    status: 'any',
+                    status: 'on-hold',
                     show: false,
                 },
                 paginate: {

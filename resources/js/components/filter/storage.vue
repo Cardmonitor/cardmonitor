@@ -4,7 +4,7 @@
         <select class="form-control form-control-sm" id="filter-rule" v-model="value" @change="$emit('input', value)">
             <option :value="0">{{ $t('filter.all') }}</option>
             <option :value="-1">{{ $t('storages.no_storage') }}</option>
-            <option v-for="(option, key) in sortedOptions" :value="option.id">{{ option.name }}</option>
+            <option v-for="(option, key) in sortedOptions" :value="option.id" v-html="option.indentedName"></option>
         </select>
     </div>
 </template>
@@ -19,11 +19,11 @@
         computed: {
             sortedOptions: function() {
                 function compare(a, b) {
-                    if (a.name < b.name) {
+                    if (a.sort < b.sort) {
                         return -1;
                     }
 
-                    if (a.name > b.name) {
+                    if (a.sort > b.sort) {
                         return 1;
                     }
 

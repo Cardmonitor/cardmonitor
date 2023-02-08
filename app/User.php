@@ -10,13 +10,11 @@ use App\Models\Orders\Order;
 use App\Models\Users\Balance;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
-use Illuminate\Support\Facades\App;
+use Kalnoy\Nestedset\Collection;
 use App\Support\Users\CardmarketApi;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Articles\StoringHistory;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -203,5 +201,14 @@ class User extends Authenticatable
     public function storages() : HasMany
     {
         return $this->hasMany(Storage::class);
+    }
+
+    public function storagesForFilter(): Collection
+    {
+        return $this->storages()->withDepth()
+            ->defaultOrder()
+            ->get()->each(function ($storage, $key) {
+                $storage->sort = $key;
+            });
     }
 }

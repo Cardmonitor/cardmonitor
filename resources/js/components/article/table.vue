@@ -13,6 +13,9 @@
                 <button type="button" class="btn btn-sm btn-primary text-overflow-ellipsis ml-1" :title="$t('rule.apply')" data-toggle="modal" data-target="#confirm-rule-apply" :disabled="applying.status == 1" v-if="false">
                     <i class="fas fa-spinner fa-spin mr-1" v-show="applying.status == 1"></i>{{ $t('rule.apply') }}
                 </button>
+                <button type="button" class="btn btn-sm btn-secondary ml-1" :disabled="syncing.status == 1" data-toggle="modal" data-target="#tcg-powertools-import">
+                    TCG PowerTools Import
+                </button>
             </div>
         </div>
 

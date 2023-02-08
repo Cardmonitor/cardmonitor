@@ -5,7 +5,6 @@
     <div class="d-flex">
         <h2 class="col pl-0">{{ __('app.nav.article') }}</h2>
         <div>
-            <a class="btn btn-sm btn-secondary" href="/article/stock">Bestände</a>
             <a class="btn btn-sm btn-secondary" href="{{ route('article.storing_history.index') }}">Einlagerungen</a>
         </div>
     </div>
@@ -20,5 +19,7 @@
         :rules="{{ json_encode($rules) }}"
         :storages="{{ json_encode($storages) }}"
     ></article-table>
+
+    @include('article.tcg-powertools-import.create')
 
 @endsection
