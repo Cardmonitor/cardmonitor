@@ -3,7 +3,7 @@
         <td class="align-middle text-left"><expansion-icon :expansion="item.storagable"></expansion-icon></td>
         <td class="align-middle text-right">
             <div class="btn-group btn-group-sm" role="group">
-                <button type="button" class="btn btn-secondary" :title="$t('app.actions.delete')" @click="destroy"><i class="fas fa-trash"></i></button>
+                <button type="button" class="btn btn-sm btn-secondary" :title="$t('app.actions.delete')" @click="destroy"><i class="fas fa-trash"></i></button>
             </div>
         </td>
     </tr>

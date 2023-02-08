@@ -4,18 +4,18 @@
             <div class="col d-flex align-items-start mb-1 mb-sm-0">
                 <div class="form-group mb-0 mr-1">
                     <div>
-                        <input type="text" class="form-control" :class="'name' in errors ? 'is-invalid' : ''" v-model="form.name" placeholder="Name" @keydown.enter="create">
+                        <input type="text" class="form-control form-control-sm" :class="'name' in errors ? 'is-invalid' : ''" v-model="form.name" placeholder="Name" @keydown.enter="create">
                         <div class="invalid-feedback" v-text="'name' in errors ? errors.name[0] : ''"></div>
                     </div>
                 </div>
-                <button class="btn btn-primary" @click="create"><i class="fas fa-plus-square"></i></button>
+                <button class="btn btn-sm btn-primary" @click="create"><i class="fas fa-plus-square"></i></button>
             </div>
             <div class="col-auto d-flex align-items-start">
                 <div class="form-group mb-0">
                     <filter-search v-model="filter.searchtext" @input="fetch()"></filter-search>
                 </div>
-                <button class="btn btn-secondary ml-1" @click="filter.show = !filter.show"><i class="fas fa-filter"></i></button>
-                <button class="btn btn-secondary text-overflow-ellipsis ml-1" :disabled="isAssigning" title="Lagerplätze neu zuweisen" @click="assign">{{ $t('storages.actions.assign') }}</button>
+                <button class="btn btn-sm btn-secondary ml-1" @click="filter.show = !filter.show"><i class="fas fa-filter"></i></button>
+                <button class="btn btn-sm btn-secondary text-overflow-ellipsis ml-1" :disabled="isAssigning" title="Lagerplätze neu zuweisen" @click="assign">{{ $t('storages.actions.assign') }}</button>
             </div>
         </div>
 
@@ -28,7 +28,7 @@
             </center>
         </div>
         <div class="table-responsive mt-3" v-else-if="items.length">
-            <table class="table table-hover table-striped bg-white">
+            <table class="table table-sm table-hover table-striped bg-white">
                 <thead>
                     <tr>
                         <th width="5%">

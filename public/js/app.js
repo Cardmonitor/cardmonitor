@@ -16059,7 +16059,7 @@ var render = function render() {
       role: "group"
     }
   }, [_c("button", {
-    staticClass: "btn btn-secondary",
+    staticClass: "btn btn-sm btn-secondary",
     attrs: {
       type: "button",
       title: _vm.$t("app.actions.delete")
@@ -16157,7 +16157,7 @@ var render = function render() {
   }), _c("br")]), _vm._v("\n            " + _vm._s(_vm.$t("app.loading")) + "s\n        ")])], 1) : _vm.items.length ? _c("div", {
     staticClass: "table-responsive mt-3"
   }, [_c("table", {
-    staticClass: "table table-hover table-striped bg-white"
+    staticClass: "table table-sm table-hover table-striped bg-white"
   }, [_c("thead", [_c("tr", [_c("th", {
     staticClass: "align-middle",
     attrs: {
@@ -16261,7 +16261,7 @@ var render = function render() {
       role: "group"
     }
   }, [_c("a", {
-    staticClass: "btn btn-secondary",
+    staticClass: "btn btn-sm btn-secondary",
     attrs: {
       href: _vm.item.editPath,
       title: _vm.$t("app.actions.edit")
@@ -16269,7 +16269,7 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-edit"
   })]), _vm._v(" "), _vm.item.isDeletable ? _c("button", {
-    staticClass: "btn btn-secondary",
+    staticClass: "btn btn-sm btn-secondary",
     attrs: {
       type: "button",
       title: _vm.$t("app.actions.delete")
@@ -16316,7 +16316,7 @@ var render = function render() {
       value: _vm.form.name,
       expression: "form.name"
     }],
-    staticClass: "form-control",
+    staticClass: "form-control form-control-sm",
     "class": "name" in _vm.errors ? "is-invalid" : "",
     attrs: {
       type: "text",
@@ -16342,7 +16342,7 @@ var render = function render() {
       textContent: _vm._s("name" in _vm.errors ? _vm.errors.name[0] : "")
     }
   })])]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-primary",
+    staticClass: "btn btn-sm btn-primary",
     on: {
       click: _vm.create
     }
@@ -16366,7 +16366,7 @@ var render = function render() {
       expression: "filter.searchtext"
     }
   })], 1), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-secondary ml-1",
+    staticClass: "btn btn-sm btn-secondary ml-1",
     on: {
       click: function click($event) {
         _vm.filter.show = !_vm.filter.show;
@@ -16375,7 +16375,7 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-filter"
   })]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-secondary text-overflow-ellipsis ml-1",
+    staticClass: "btn btn-sm btn-secondary text-overflow-ellipsis ml-1",
     attrs: {
       disabled: _vm.isAssigning,
       title: "Lagerplätze neu zuweisen"
@@ -16394,7 +16394,7 @@ var render = function render() {
   }), _c("br")]), _vm._v("\n            " + _vm._s(_vm.$t("app.loading")) + "\n        ")])], 1) : _vm.items.length ? _c("div", {
     staticClass: "table-responsive mt-3"
   }, [_c("table", {
-    staticClass: "table table-hover table-striped bg-white"
+    staticClass: "table table-sm table-hover table-striped bg-white"
   }, [_c("thead", [_c("tr", [_c("th", {
     attrs: {
       width: "5%"

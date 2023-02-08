@@ -14,7 +14,7 @@ class AddSourceSortToArticles extends Migration
     public function up()
     {
         Schema::table('articles', function (Blueprint $table) {
-            $table->unsignedSmallInteger('source_sort')->nullable()->after('source_id');
+            $table->unsignedInteger('source_sort')->nullable()->after('source_id');
         });
     }
 
