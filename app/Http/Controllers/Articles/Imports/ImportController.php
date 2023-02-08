@@ -35,7 +35,7 @@ class ImportController extends Controller
 
         return back()->with('status', [
             'type' => 'success',
-            'text' => 'Arkitel wurden importiert.',
+            'text' => 'Artikel wurden importiert.',
         ]);
     }
 }

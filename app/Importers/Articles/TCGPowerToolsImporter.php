@@ -69,9 +69,9 @@ class TCGPowerToolsImporter
             $this->importArticle($row_index, $row);
         }
 
-        $this->articles->each(function($article) {
+        $this->articles->sortBy('local_name')->each(function($article, $key) {
             $article->update([
-                'source_sort' => $article->local_name,
+                'source_sort' => $key,
             ]);
         });
 
