@@ -1,12 +1,12 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="tcg-powertools-import">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <form action="{{ route('article.import.store') }}" enctype="multipart/form-data" method="POST">
             @csrf
 
             <input type="hidden" name="type" value="tcg-powertools">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Artikelbestand con TCG Power Tools importieren</h5>
+                    <h5 class="modal-title">Artikel von TCG Power Tools importieren</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -31,8 +31,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Importieren</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Importieren</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Abbrechen</button>
                 </div>
             </div>
         </form>
