@@ -37,8 +37,13 @@ class ArticleController extends Controller
                 ->select('articles.*')
                 ->join('cards', 'cards.id', 'articles.card_id')
                 ->filter($request->all())
+                ->with('card', function ($query) {
+                    $query->with([
+                        'expansion',
+                        'localizations',
+                    ]);
+                })
                 ->with([
-                    'card.expansion',
                     'language',
                     'rule',
                     'orders',

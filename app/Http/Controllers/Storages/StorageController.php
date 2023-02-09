@@ -34,6 +34,7 @@ class StorageController extends Controller
 
             foreach ($storages as $key => $storage) {
                 $storage->articleStats = $storage->articleStats;
+                $storage->append('isDeletable');
             }
 
             return $storages;

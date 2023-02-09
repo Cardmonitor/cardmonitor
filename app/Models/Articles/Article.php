@@ -862,6 +862,13 @@ class Article extends Model
 
     public function getLocalNameAttribute() : string
     {
+        if ($this->card->relationLoaded('localizations')) {
+            $localization = $this->card->localizations->where('language_id', $this->language_id)->first();
+            if (! is_null($localization)) {
+                return $localization->name;
+            }
+        }
+
         $localization = $this->card->localizations()->where('language_id', $this->language_id)->first();
 
         if (is_null($localization)) {
@@ -985,17 +992,17 @@ class Article extends Model
 
     public function getUnitCostFormattedAttribute()
     {
-        return number_format($this->unit_cost, 2, ',', '');
+        return number_format($this->unit_cost ?? 0, 2, ',', '');
     }
 
     public function getUnitPriceFormattedAttribute()
     {
-        return number_format($this->unit_price, 2, ',', '');
+        return number_format($this->unit_price ?? 0, 2, ',', '');
     }
 
     public function getPriceRuleFormattedAttribute()
     {
-        return number_format($this->price_rule, 2, ',', '');
+        return number_format($this->price_rule ?? 0, 2, ',', '');
     }
 
     public function card() : BelongsTo

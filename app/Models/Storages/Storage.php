@@ -18,7 +18,6 @@ class Storage extends Model
 
     protected $appends = [
         'editPath',
-        'isDeletable',
         'path',
         'indentedName',
     ];
