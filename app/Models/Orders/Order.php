@@ -439,7 +439,6 @@ class Order extends Model
                 ->where('articles.cardmarket_article_id', $cardmarketArticle['idArticle'])
                 ->where('articles.language_id', $cardmarketArticle['language']['idLanguage'])
                 ->where('articles.condition', Arr::get($cardmarketArticle, 'condition', ''))
-                ->where('articles.unit_price', $cardmarketArticle['price'])
                 ->where('is_foil', $cardmarketArticle['isFoil'] ?? false)
                 ->where('is_signed', $cardmarketArticle['isSigned'] ?? false)
                 ->where('is_altered', $cardmarketArticle['isAltered'] ?? false)
@@ -450,6 +449,7 @@ class Order extends Model
                 $this->articles()->syncWithoutDetaching([$article->id]);
                 $article->update([
                     'sold_at' => $this->paid_at ?? $this->bought_at,
+                    'unit_price' => $cardmarketArticle['price'],
                 ]);
                 $article_ids[] = $article->id;
             }
@@ -467,7 +467,6 @@ class Order extends Model
             ->where('cards.cardmarket_product_id', $cardmarketArticle['idProduct'])
             ->where('articles.language_id', $cardmarketArticle['language']['idLanguage'])
             ->where('articles.condition', Arr::get($cardmarketArticle, 'condition', ''))
-            ->where('articles.unit_price', $cardmarketArticle['price'])
             ->where('is_foil', $cardmarketArticle['isFoil'] ?? false)
             ->where('is_signed', $cardmarketArticle['isSigned'] ?? false)
             ->where('is_altered', $cardmarketArticle['isAltered'] ?? false)
@@ -479,6 +478,7 @@ class Order extends Model
             $article->update([
                 'sold_at' => $this->paid_at ?? $this->bought_at,
                 'cardmarket_article_id' => $cardmarketArticle['idArticle'],
+                'unit_price' => $cardmarketArticle['price'],
             ]);
             $article_ids[] = $article->id;
         }
