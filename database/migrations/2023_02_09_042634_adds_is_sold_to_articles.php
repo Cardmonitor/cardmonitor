@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddsIndexSoldAtToArticles extends Migration
+class AddsIsSoldToArticles extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddsIndexSoldAtToArticles extends Migration
     public function up()
     {
         Schema::table('articles', function (Blueprint $table) {
-            $table->index('sold_at');
+            $table->boolean('is_sold')->default(false)->after('sold_at')->index();
         });
     }
 
@@ -26,7 +26,7 @@ class AddsIndexSoldAtToArticles extends Migration
     public function down()
     {
         Schema::table('articles', function (Blueprint $table) {
-            $table->dropIndex(['sold_at']);
+            $table->dropColumn('is_sold');
         });
     }
 }

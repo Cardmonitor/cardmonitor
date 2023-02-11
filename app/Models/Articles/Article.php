@@ -816,7 +816,14 @@ class Article extends Model
     public function setSoldAtFormattedAttribute($value)
     {
         $this->attributes['sold_at'] = Carbon::createFromFormat('d.m.Y H:i', $value);
+        $this->attributes['is_sold'] = true;
         Arr::forget($this->attributes, 'sold_at_formatted');
+    }
+
+    public function setSoldAtAttribute($value)
+    {
+        $this->attributes['sold_at'] = $this->fromDateTime($value);
+        $this->attributes['is_sold'] = !is_null($this->attributes['sold_at']);
     }
 
     public function setUnitCostFormattedAttribute($value)
@@ -1149,6 +1156,7 @@ class Article extends Model
         }
 
         return $query->condition(Arr::get($filter, 'condition_sort'), Arr::get($filter, 'condition_operator'))
+            ->sold(Arr::get($filter, 'sold'))
             ->expansion(Arr::get($filter, 'expansion_id'))
             ->game(Arr::get($filter, 'game_id'))
             ->rule(Arr::get($filter, 'rule_id'))
@@ -1161,7 +1169,6 @@ class Article extends Model
             ->unitPrice(Arr::get($filter, 'unit_price_min'), Arr::get($filter, 'unit_price_max'))
             ->unitCost(Arr::get($filter, 'unit_cost_min'), Arr::get($filter, 'unit_cost_max'))
             ->search(Arr::get($filter, 'searchtext'))
-            ->sold(Arr::get($filter, 'sold'))
             ->storage(Arr::get($filter, 'storage_id'))
             ->sync(Arr::get($filter, 'sync'));
     }
@@ -1226,10 +1233,10 @@ class Article extends Model
         }
 
         if ($value == 1) {
-            $query->whereNotNull('sold_at');
+            $query->where('is_sold', true);
         }
         elseif ($value == 0) {
-            $query->whereNull('sold_at');
+            $query->where('is_sold', false);
         }
 
         return $query;

@@ -1032,4 +1032,30 @@ class ArticleTest extends TestCase
         $this->assertCount(1, $articles_without_expansion);
         $this->assertEquals($article_without_expansion->id, $articles_without_expansion->first()->id);
     }
+
+    /**
+     * @test
+     */
+    public function it_sets_the_is_sold_attribute_when_sold_at_is_set() {
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'sold_at' => null,
+        ]);
+
+        $now = now();
+
+        $this->assertFalse($article->is_sold);
+
+        $article->sold_at = $now;
+        $article->save();
+
+        $this->assertTrue($article->is_sold);
+        $this->assertEquals($now->format('Y-m-d H:i:s'), $article->sold_at->format('Y-m-d H:i:s'));
+
+        $article->sold_at = null;
+        $article->save();
+
+        $this->assertNull($article->sold_at);
+        $this->assertFalse($article->is_sold);
+    }
 }
