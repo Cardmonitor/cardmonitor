@@ -123,12 +123,12 @@ class TCGPowerToolsImporter
                 'cardmarket_comments' => $row[self::COLUMN_COMMENT],
                 'has_sync_error' => false,
                 'sync_error' => null,
-                'storage_id' => $this->storage->id,
             ];
             $attributes = [
                 'source_slug' => self::SOURCE_SLUG,
                 'source_id' => $row_index,
                 'index' => $index,
+                'storage_id' => $this->storage->id,
             ];
 
             $this->articles->push(Article::updateOrCreate($attributes, $values));
