@@ -17,6 +17,7 @@ class PicklistController extends Controller
 
         $articles = Article::getForPicklist($user->id);
         $order_ids = $articles->pluck('order_id')->unique()->toArray();
+        sort($order_ids); // reset keys
         $orders = Order::where('user_id', $user->id)->whereIn('id', $order_ids)->get()->keyBy('id');
 
         foreach ($articles as $article) {
@@ -24,7 +25,7 @@ class PicklistController extends Controller
             $article->card->download();
 
             $article->order = $orders[$article->order_id];
-            $article->order->number = array_search($article->order_id, $order_ids) + 1;
+            $article->order->number = (array_search($article->order_id, $order_ids) + 1);
 
         }
 
