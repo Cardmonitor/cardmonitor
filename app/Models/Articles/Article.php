@@ -517,7 +517,7 @@ class Article extends Model
             'idLanguage' => $this->language_id,
             'comments' => $this->cardmarket_comments,
             'count' => 1,
-            'price' => number_format($this->unit_price, 2),
+            'price' => number_format($this->unit_price, 2, '.', ''),
             'condition' => $this->condition,
             'isFoil' => $this->is_foil ? 'true' : 'false',
             'isSigned' => $this->is_signed ? 'true' : 'false',
