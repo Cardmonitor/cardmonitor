@@ -20,6 +20,7 @@ class TCGPowerToolsImporter
     const COLUMN_IS_FOIL = 8;
     const COLUMN_PRICE = 11;
     const COLUMN_COMMENT = 12;
+    const COLUMN_LISTED_AT = 18;
 
     public Collection $articles;
     private array $languages = [];
@@ -68,13 +69,6 @@ class TCGPowerToolsImporter
             }
             $this->importArticle($row_index, $row);
         }
-
-        $this->articles->sortBy('local_name')->each(function($article, $key) {
-            $article->update([
-                'source_sort' => $key,
-            ]);
-        });
-
     }
 
     private function setLanguages(): void
@@ -104,6 +98,7 @@ class TCGPowerToolsImporter
     public function importArticle(int $row_index, array $row): void
     {
         $card = Card::firstOrImport((int)$row[self::COLUMN_CARDMARKET_PRODUCT_ID]);
+        $source_sort = strtotime($row[self::COLUMN_LISTED_AT]);
 
         for ($index=1; $index <= $row[self::COLUMN_QUANTITY]; $index++) {
             $values = [
@@ -123,6 +118,7 @@ class TCGPowerToolsImporter
                 'cardmarket_comments' => $row[self::COLUMN_COMMENT],
                 'has_sync_error' => false,
                 'sync_error' => null,
+                'source_sort' => $source_sort,
             ];
             $attributes = [
                 'source_slug' => self::SOURCE_SLUG,
