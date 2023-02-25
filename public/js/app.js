@@ -3593,7 +3593,24 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     expansionIcon: _expansion_icon_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['item', 'uri', 'index'],
+  props: {
+    item: {
+      type: Object,
+      required: true
+    },
+    uri: {
+      type: String,
+      required: true
+    },
+    index: {
+      type: Number,
+      required: true
+    },
+    is_importing_expansion: {
+      type: Boolean,
+      required: true
+    }
+  },
   data: function data() {
     return {
       id: this.item.id,
@@ -3605,6 +3622,7 @@ __webpack_require__.r(__webpack_exports__);
       var component = this;
       axios.put('/expansions/' + component.id).then(function (response) {
         Vue.success('Erweiterung wird im Hintergrund importiert.');
+        component.$emit('update-background-tasks', response.data.background_tasks);
       })["catch"](function (error) {
         component.errors = error.response.data.errors;
         Vue.error(component.$t('app.errors.created'));
@@ -3627,6 +3645,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _row_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./row.vue */ "./resources/js/components/expansion/row.vue");
 /* harmony import */ var _filter_game_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../filter/game.vue */ "./resources/js/components/filter/game.vue");
 /* harmony import */ var _filter_search_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../filter/search.vue */ "./resources/js/components/filter/search.vue");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -3640,18 +3670,25 @@ __webpack_require__.r(__webpack_exports__);
     games: {
       type: Object,
       required: true
+    },
+    initialBackgroundTasks: {
+      required: true
     }
   },
   data: function data() {
     return {
       uri: '/expansions',
+      a: 1,
+      background_tasks: this.initialBackgroundTasks || {},
+      interval: null,
       isLoading: false,
       items: [],
       filter: {
         show: false,
         page: 1,
         game_id: 1,
-        searchtext: ''
+        searchtext: '',
+        test: 1
       },
       errors: {},
       paginate: {
@@ -3669,6 +3706,31 @@ __webpack_require__.r(__webpack_exports__);
     this.fetch();
   },
   computed: {
+    is_importing_expansions: function is_importing_expansions() {
+      var is_importing_expansions = {};
+
+      for (var key in this.items) {
+        var is_importing_expansion = !!this.checkIsImportingExpansion(this.items[key].id);
+        is_importing_expansions[this.items[key].id] = is_importing_expansion;
+      }
+
+      var importing_expansions = Object.entries(is_importing_expansions).filter(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            key = _ref2[0],
+            value = _ref2[1];
+
+        return value !== false;
+      });
+
+      if (importing_expansions.length > 0 && this.interval === null) {
+        this.checkBackgroundTasks();
+      } else if (importing_expansions.length === 0 && this.interval !== null) {
+        clearInterval(this.interval);
+        this.interval = null;
+      }
+
+      return is_importing_expansions;
+    },
     page: function page() {
       return this.filter.page;
     },
@@ -3696,6 +3758,34 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    checkIsImportingExpansion: function checkIsImportingExpansion(key) {
+      if (this.background_tasks === null) {
+        return false;
+      }
+
+      if (this.background_tasks['expansion:import'] === undefined) {
+        return false;
+      }
+
+      return this.background_tasks['expansion:import'][key] || false;
+    },
+    updateBackgroundTasks: function updateBackgroundTasks(background_tasks) {
+      this.background_tasks = background_tasks;
+    },
+    fetchBackgroundTasks: function fetchBackgroundTasks() {
+      var component = this;
+      axios.get('/user/backgroundtasks').then(function (response) {
+        component.background_tasks = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    checkBackgroundTasks: function checkBackgroundTasks() {
+      var component = this;
+      component.interval = setInterval(function () {
+        component.fetchBackgroundTasks();
+      }, 3000);
+    },
     create: function create() {
       var component = this;
       axios.post(component.uri, component.form).then(function (response) {
@@ -11095,13 +11185,17 @@ var render = function render() {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
-      title: "Synchronisieren"
+      title: "Synchronisieren",
+      disabled: _vm.is_importing_expansion
     },
     on: {
       click: _vm.sync
     }
   }, [_c("i", {
-    staticClass: "fas fa-fw fa-sync"
+    staticClass: "fas fa-fw fa-sync",
+    "class": {
+      "fa-spin": _vm.is_importing_expansion
+    }
   })])])])]);
 };
 
@@ -11233,7 +11327,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-spinner fa-spin"
-  }), _c("br")]), _vm._v("\n            " + _vm._s(_vm.$t("app.loading")) + "s\n        ")])], 1) : _vm.items.length ? _c("div", {
+  }), _c("br")]), _vm._v("\n            " + _vm._s(_vm.$t("app.loading")) + "\n        ")])], 1) : _vm.items.length ? _c("div", {
     staticClass: "table-responsive mt-3"
   }, [_c("table", {
     staticClass: "table table-hover table-striped bg-white"
@@ -11268,7 +11362,13 @@ var render = function render() {
       attrs: {
         item: item,
         index: index,
+        is_importing_expansion: _vm.is_importing_expansions[item.id],
         uri: _vm.uri
+      },
+      on: {
+        "update-background-tasks": function updateBackgroundTasks($event) {
+          return _vm.updateBackgroundTasks($event);
+        }
       }
     })];
   })], 2)])]) : _c("div", {
@@ -12173,6 +12273,9 @@ var render = function render() {
     staticClass: "fas fa-sync pointer",
     "class": {
       "fa-spin": _vm.syncing.status == 1
+    },
+    attrs: {
+      disabled: _vm.syncing.status == 1
     },
     on: {
       click: _vm.sync

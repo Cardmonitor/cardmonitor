@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -159,6 +158,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/balance', 'Users\Balances\BalanceController@index');
 
     Route::get('/user/reset', 'Users\ResetController@index')->name('user.index');
+
+    Route::get('/user/backgroundtasks', [\App\Http\Controllers\Users\BackgroundTaskController::class, 'index'])->name('user.backgroundtasks.index');
+    Route::post('/user/backgroundtasks', [\App\Http\Controllers\Users\BackgroundTaskController::class, 'store'])->name('user.backgroundtasks.store');
+    Route::delete('/user/backgroundtasks/{task}', [\App\Http\Controllers\Users\BackgroundTaskController::class, 'destroy'])->name('user.backgroundtasks.destroy');
 
     Route::get('/user/settings', 'Users\UserController@edit')->name('user.edit');
     Route::put('/user/settings', 'Users\UserController@update')->name('user.update');

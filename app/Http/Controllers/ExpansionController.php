@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\Cards\Card;
 use App\Models\Games\Game;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use App\Models\Expansions\Expansion;
+use App\Support\BackgroundTasks;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Validation\ValidationException;
 
@@ -30,7 +29,8 @@ class ExpansionController extends Controller
         }
 
         return view($this->baseViewPath . '.index')
-            ->with('games', Game::keyValue());
+            ->with('games', Game::keyValue())
+            ->with('background_tasks', BackgroundTasks::make()->all());
     }
 
     /**
@@ -49,7 +49,7 @@ class ExpansionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, BackgroundTasks $BackgroundTasks)
     {
         $attributes = $request->validate([
             'abbreviation' => 'required|string|min:3',
@@ -67,13 +67,17 @@ class ExpansionController extends Controller
             throw ValidationException::withMessages(['abbreviation' => 'Not available on Cardmarket.']);
         }
 
+        $expansion_id = $cardmarket_expansions[array_key_first($cardmarket_expansions)]['idExpansion'];
+        $BackgroundTasks->put('expansion:import.' . $expansion_id, 1);
+
         Artisan::queue('expansion:import', [
-            'expansion' => $cardmarket_expansions[array_key_first($cardmarket_expansions)]['idExpansion'],
+            'expansion' => $expansion_id,
         ]);
 
         return [
-            'status' => 'Import started',
-            'expansion_id' => $cardmarket_expansions[array_key_first($cardmarket_expansions)]['idExpansion'],
+            'status' => 'Der Import der Erweiterung wurde gestartet.',
+            'expansion_id' => $expansion_id,
+            'background_tasks' => $BackgroundTasks->all(),
         ];
     }
 
@@ -84,15 +88,19 @@ class ExpansionController extends Controller
      * @param  \App\Models\Expansions\Expansion  $expansion
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Expansion $expansion)
+    public function update(Request $request, BackgroundTasks $BackgroundTasks, Expansion $expansion)
     {
+        $BackgroundTasks->put('expansion:import.' . $expansion->id, 1);
+
         Artisan::queue('expansion:import', [
             'expansion' => $expansion->id,
+            '--user' => $request->user()->id,
         ]);
 
         return [
-            'status' => 'Import started',
+            'status' => 'Das Update der Erweiterung wurde gestartet.',
             'expansion_id' => $expansion->id,
+            'background_tasks' => $BackgroundTasks->all(),
         ];
     }
 }

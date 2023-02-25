@@ -6,6 +6,6 @@
         <h2 class="col pl-0">Expansion</h2>
         <div></div>
     </div>
-    <expansion-table :games="{{ json_encode($games) }}"></expansion-table>
+    <expansion-table :initial-background-tasks="{{ json_encode($background_tasks) }}" :games="{{ json_encode($games) }}"></expansion-table>
 
 @endsection

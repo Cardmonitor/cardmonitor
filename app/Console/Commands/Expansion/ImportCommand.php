@@ -3,26 +3,33 @@
 namespace App\Console\Commands\Expansion;
 
 use App\Models\Cards\Card;
-use App\Models\Expansions\Expansion;
 use App\Models\Games\Game;
+use Cardmonitor\Cardmarket\Api;
 use Illuminate\Console\Command;
+use App\Console\Traits\HasLogger;
 use Illuminate\Support\Facades\App;
+use App\Models\Expansions\Expansion;
+use App\Support\BackgroundTasks;
+use App\User;
 
 class ImportCommand extends Command
 {
+    use HasLogger;
+
     /**
      * The number of seconds the job can run before timing out.
      *
      * @var int
      */
-    public $timeout = 600;
+    public $timeout = 1200;
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'expansion:import {expansion}';
+    protected $signature = 'expansion:import
+        {expansion : The Cardmarket ID of the expansion}';
 
     /**
      * The console command description.
@@ -45,15 +52,7 @@ class ImportCommand extends Command
      */
     protected $importableGameIds = [];
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    private Api $CardmarketApi;
 
     /**
      * Execute the console command.
@@ -62,51 +61,76 @@ class ImportCommand extends Command
      */
     public function handle()
     {
-        $this->cardmarketApi = App::make('CardmarketApi');
+        $expansion_id = $this->argument('expansion');
+        $BackgroundTasks = App::make(BackgroundTasks::class);
+        $backgroundtask_key = 'expansion:import.' . $expansion_id;
+
+        $BackgroundTasks->put($backgroundtask_key, 1);
+
+        $this->CardmarketApi = App::make('CardmarketApi');
         $this->importableGames = Game::importables()->keyBy('id');
         $this->importableGameIds = array_keys($this->importableGames->toArray());
 
-        $expansionId = $this->argument('expansion');
-        $this->import($expansionId);
+        $this->makeLogger('logs/jobs/expansion:import/' . now()->format('Y-m-d_H-i-s') . '.log');
+
+        try {
+            $result = $this->import($expansion_id);
+        }
+        finally {
+            $BackgroundTasks->forget($backgroundtask_key);
+        }
+
+        return $result;
     }
 
-    protected function import(int $expansionId)
+    protected function import(int $expansion_id)
     {
         $this->info('Start');
+
         try {
-            $singles = $this->cardmarketApi->expansion->singles($expansionId);
+            $this->info('Getting Expansion ' . $expansion_id . ' from Cardmarket...');
+            $singles = $this->CardmarketApi->expansion->singles($expansion_id);
         }
-        catch (\Exception $e) {
-            $this->error('Expansion ' . $expansionId . ' not available');
+        catch (\GuzzleHttp\Exception\ClientException $e) {
+            $this->error('Expansion ' . $expansion_id . ' not available.');
+            $this->error($e->getResponse()->getBody()->getContents());
             return self::FAILURE;
         }
-        $gameId = $singles['expansion']['idGame'];
-        $expansion = Expansion::createOrUpdateFromCardmarket($singles['expansion']);
 
-        if (! $this->isImportable($gameId)) {
+        $game_id = $singles['expansion']['idGame'];
+        $this->info('Game: ' . $this->importableGames[$game_id]->name);
+        $this->info('Creating expansion: ' . $singles['expansion']['enName'] . ' (' . $singles['expansion']['abbreviation'] . ')...');
+        $expansion = Expansion::createOrUpdateFromCardmarket($singles['expansion']);
+        $this->info('Expansion created: ' . $expansion->name . ' (' . $expansion->abbreviation . ')');
+
+        if (! $this->isImportable($game_id)) {
             $this->error('Game does not exist');
             return;
         }
 
-        $this->info('Importing Expansion ' . $expansion->name);
+        $cards_count = count($singles['single']);
+        $this->info('Importing ' . $cards_count . ' cards');
 
-        $bar = $this->output->createProgressBar(count($singles['single']));
+        $bar = $this->output->createProgressBar($cards_count);
 
-        foreach ($singles['single'] as $key => $single) {
+        foreach ($singles['single'] as $single) {
+            $this->log->info('Importing card: ' . $single['enName']);
             Card::createOrUpdateFromCardmarket($single, $expansion->id);
+            $this->log->info('Card imported: ' . $single['enName']);
             $bar->advance();
         }
 
         $bar->finish();
 
         $this->info('');
+        $this->info('Cards imported');
         $this->info('Finished');
 
         return self::SUCCESS;
     }
 
-    protected function isImportable(int $gameId) : bool
+    protected function isImportable(int $game_id) : bool
     {
-        return in_array($gameId, $this->importableGameIds);
+        return in_array($game_id, $this->importableGameIds);
     }
 }

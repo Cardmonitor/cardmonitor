@@ -47,6 +47,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('SkryfallApi', function ($app, array $parameters) {
             return new \Cardmonitor\Skryfall\Api();
         });
+
+        $this->app->singleton(\App\Support\BackgroundTasks::class, function ($app, array $parameters) {
+            return \App\Support\BackgroundTasks::make();
+        });
     }
 
     /**

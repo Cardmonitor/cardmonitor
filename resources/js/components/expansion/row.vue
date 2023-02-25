@@ -6,7 +6,7 @@
         <td class="align-middle text-left">{{ item.released_at_formatted }}</td>
         <td class="align-middle text-right">
             <div class="btn-group btn-group-sm" role="group">
-                <button type="button" class="btn btn-secondary" title="Synchronisieren" @click="sync"><i class="fas fa-fw fa-sync"></i></button>
+                <button type="button" class="btn btn-secondary" title="Synchronisieren" @click="sync" :disabled="is_importing_expansion"><i class="fas fa-fw fa-sync" :class="{'fa-spin': is_importing_expansion}"></i></button>
             </div>
         </td>
     </tr>
@@ -21,7 +21,24 @@
             expansionIcon,
         },
 
-        props: ['item', 'uri', 'index'],
+        props: {
+            item: {
+                type: Object,
+                required: true,
+            },
+            uri: {
+                type: String,
+                required: true,
+            },
+            index: {
+                type: Number,
+                required: true,
+            },
+            is_importing_expansion: {
+                type: Boolean,
+                required: true,
+            },
+        },
 
         data () {
             return {
@@ -36,6 +53,7 @@
                 axios.put('/expansions/' + component.id)
                 .then(function (response) {
                         Vue.success('Erweiterung wird im Hintergrund importiert.');
+                        component.$emit('update-background-tasks', response.data.background_tasks);
                 })
                 .catch( function (error) {
                     component.errors = error.response.data.errors;

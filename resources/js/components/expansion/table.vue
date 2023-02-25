@@ -34,7 +34,7 @@
                 <span style="font-size: 48px;">
                     <i class="fas fa-spinner fa-spin"></i><br />
                 </span>
-                {{ $t('app.loading') }}s
+                {{ $t('app.loading') }}
             </center>
         </div>
         <div class="table-responsive mt-3" v-else-if="items.length">
@@ -45,17 +45,17 @@
                         <th class="align-middle" width="35%">Name</th>
                         <th class="align-middle" width="15%">Abkürzung</th>
                         <th class="align-middle" width="20%">Veröffentlicht</th>
-                        <th class="align-middle text-right" width="20%">{{ $t('app.actions.action') }}</th>
+                        <th class="align-middle text-right" width="20%">{{ $t('app.actions.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <template v-for="(item, index) in items">
-                        <row :item="item" :index="index" :key="item.id" :uri="uri"></row>
+                        <row :item="item" :index="index" :is_importing_expansion="is_importing_expansions[item.id]" :key="item.id" :uri="uri" @update-background-tasks="updateBackgroundTasks($event)"></row>
                     </template>
                 </tbody>
             </table>
         </div>
-        <div class="alert alert-dark mt-3" v-else><center>{{ $t('expansion.alerts.no_data') }}</center></div>
+        <div class="alert alert-dark mt-3" v-else><center>{{ $t('expansion.alerts.no_data') }}</center></div>
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center" v-show="paginate.lastPage > 1">
                 <li class="page-item" v-show="paginate.prevPageUrl">
@@ -90,11 +90,17 @@
                 type: Object,
                 required: true,
             },
+            initialBackgroundTasks: {
+                required: true,
+            },
         },
 
-        data () {
+        data() {
             return {
                 uri: '/expansions',
+                a: 1,
+                background_tasks: this.initialBackgroundTasks || {},
+                interval: null,
                 isLoading: false,
                 items: [],
                 filter: {
@@ -102,6 +108,7 @@
                     page: 1,
                     game_id: 1,
                     searchtext: '',
+                    test: 1,
                 },
                 errors: {},
                 paginate: {
@@ -123,12 +130,34 @@
         },
 
         computed: {
+            is_importing_expansions() {
+                let is_importing_expansions = {};
+
+                for (let key in this.items) {
+                    const is_importing_expansion = !!this.checkIsImportingExpansion(this.items[key].id);
+                    is_importing_expansions[this.items[key].id] = is_importing_expansion;
+                }
+
+                const importing_expansions = Object.entries(is_importing_expansions).filter(function ([key, value]) {
+                    return value !== false;
+                });
+
+                if (importing_expansions.length > 0 && this.interval === null) {
+                    this.checkBackgroundTasks();
+                }
+                else if (importing_expansions.length === 0 && this.interval !== null) {
+                    clearInterval(this.interval);
+                    this.interval = null;
+                }
+
+                return is_importing_expansions;
+            },
             page() {
                 return this.filter.page;
             },
             pages() {
-                var pages = [];
-                for (var i = 1; i <= this.paginate.lastPage; i++) {
+                let pages = [];
+                for (let i = 1; i <= this.paginate.lastPage; i++) {
                     if (this.showPageButton(i)) {
                         const lastItem = pages[pages.length - 1];
                         if (lastItem < (i - 1) && lastItem != '...') {
@@ -149,8 +178,38 @@
         },
 
         methods: {
+            checkIsImportingExpansion(key) {
+                if (this.background_tasks === null) {
+                    return false;
+                }
+
+                if (this.background_tasks['expansion:import'] === undefined) {
+                    return false;
+                }
+
+                return this.background_tasks['expansion:import'][key] || false;
+            },
+            updateBackgroundTasks(background_tasks) {
+                this.background_tasks = background_tasks;
+            },
+            fetchBackgroundTasks() {
+                const component = this;
+                axios.get('/user/backgroundtasks')
+                    .then(function (response) {
+                        component.background_tasks = response.data;
+                    })
+                    .catch( function (error) {
+                        console.log(error);
+                });
+            },
+            checkBackgroundTasks() {
+                const component = this;
+                component.interval = setInterval( function () {
+                    component.fetchBackgroundTasks()
+                }, 3000);
+            },
             create() {
-                var component = this;
+                const component = this;
                 axios.post(component.uri, component.form)
                     .then(function (response) {
                         Vue.success('Erweiterung wird im Hintergrund importiert.');
@@ -161,7 +220,7 @@
                 });
             },
             fetch() {
-                var component = this;
+                const component = this;
                 component.isLoading = true;
                 axios.get(component.uri, {
                     params: component.filter
