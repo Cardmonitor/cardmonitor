@@ -94,7 +94,6 @@ class ExpansionController extends Controller
 
         Artisan::queue('expansion:import', [
             'expansion' => $expansion->id,
-            '--user' => $request->user()->id,
         ]);
 
         return [
