@@ -10,18 +10,10 @@ use App\Console\Traits\HasLogger;
 use Illuminate\Support\Facades\App;
 use App\Models\Expansions\Expansion;
 use App\Support\BackgroundTasks;
-use App\User;
 
 class ImportCommand extends Command
 {
     use HasLogger;
-
-    /**
-     * The number of seconds the job can run before timing out.
-     *
-     * @var int
-     */
-    public $timeout = 1200;
 
     /**
      * The name and signature of the console command.
@@ -59,10 +51,9 @@ class ImportCommand extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(BackgroundTasks $BackgroundTasks)
     {
         $expansion_id = $this->argument('expansion');
-        $BackgroundTasks = App::make(BackgroundTasks::class);
         $backgroundtask_key = 'expansion:import.' . $expansion_id;
 
         $BackgroundTasks->put($backgroundtask_key, 1);
