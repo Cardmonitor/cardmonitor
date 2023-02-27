@@ -4289,6 +4289,17 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     highcharts: highcharts_vue__WEBPACK_IMPORTED_MODULE_0__["Chart"]
   },
+  computed: {
+    years: function years() {
+      var years = [];
+
+      for (var i = 2018; i <= new Date().getFullYear(); i++) {
+        years.push(i);
+      }
+
+      return years;
+    }
+  },
   data: function data() {
     var date = new Date();
     return {
@@ -4526,6 +4537,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     highcharts: highcharts_vue__WEBPACK_IMPORTED_MODULE_0__["Chart"]
+  },
+  computed: {
+    years: function years() {
+      var years = [];
+
+      for (var i = 2018; i <= new Date().getFullYear(); i++) {
+        years.push(i);
+      }
+
+      return years;
+    }
   },
   data: function data() {
     return {
@@ -12132,19 +12154,13 @@ var render = function render() {
         _vm.$set(_vm.form, "year", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
       }, _vm.fetch]
     }
-  }, [_c("option", {
-    attrs: {
-      value: "2018"
-    }
-  }, [_vm._v("2018")]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "2019"
-    }
-  }, [_vm._v("2019")]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "2020"
-    }
-  }, [_vm._v("2020")])])])]), _vm._v(" "), _c("div", {
+  }, _vm._l(_vm.years, function (year) {
+    return _c("option", {
+      domProps: {
+        value: year
+      }
+    }, [_vm._v(_vm._s(year))]);
+  }), 0)])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
   }, [_vm.isLoading ? _c("div", {
     staticClass: "mt-3 p-5"
@@ -12464,19 +12480,13 @@ var render = function render() {
     attrs: {
       value: "0"
     }
-  }, [_vm._v(_vm._s(_vm.$t("order.home.year.latest")))]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "2020"
-    }
-  }, [_vm._v("2020")]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "2019"
-    }
-  }, [_vm._v("2019")]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "2018"
-    }
-  }, [_vm._v("2018")])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("order.home.year.latest")))]), _vm._v(" "), _vm._l(_vm.years, function (year) {
+    return _c("option", {
+      domProps: {
+        value: year
+      }
+    }, [_vm._v(_vm._s(year))]);
+  })], 2)])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
   }, [_vm.isLoading ? _c("div", {
     staticClass: "mt-3 p-5"

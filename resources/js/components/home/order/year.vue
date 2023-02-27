@@ -5,9 +5,7 @@
             <div class="form-group mb-0">
                 <select class="form-control" v-model.number="form.year" @change="fetch">
                     <option value="0">{{ $t('order.home.year.latest') }}</option>
-                    <option value="2020">2020</option>
-                    <option value="2019">2019</option>
-                    <option value="2018">2018</option>
+                    <option :value="year" v-for="(year) in years">{{ year }}</option>
                 </select>
             </div>
         </div>
@@ -89,6 +87,17 @@
 
         components: {
             highcharts: Chart
+        },
+
+        computed: {
+            years() {
+                let years = [];
+                for (let i = 2018; i <= new Date().getFullYear(); i++) {
+                    years.push(i);
+                }
+
+                return years;
+            },
         },
 
         data() {
