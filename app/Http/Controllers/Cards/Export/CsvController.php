@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Cards\Export;
 
 use App\APIs\Skryfall\Expansion as SkryfallExpansion;
 use App\Http\Controllers\Controller;
-use App\Models\Cards\Card;
 use App\Models\Expansions\Expansion;
 use App\Models\Localizations\Language;
 use App\Support\Csv\Csv;
-use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
@@ -25,6 +23,8 @@ class CsvController extends Controller
         'rarity',
         'website',
         'reprints_count',
+        'image_path',
+        'full_image_path',
     ];
 
     const EXPANSION_ATTRIBUTES = [
