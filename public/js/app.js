@@ -3505,7 +3505,7 @@ __webpack_require__.r(__webpack_exports__);
       errors: {},
       files: [],
       form: {
-        language_id: 1,
+        language_id: 3,
         expansion_id: 0,
         skryfall_expansion_code: 0,
         game_id: 1
@@ -11029,7 +11029,7 @@ var render = function render() {
       value: _vm.form.language_id,
       expression: "form.language_id"
     }],
-    staticClass: "form-control",
+    staticClass: "form-control form-control-sm",
     on: {
       change: function change($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
@@ -11087,7 +11087,7 @@ var render = function render() {
   }), 0)], 1), _vm._v(" "), _c("div", {
     staticClass: "card-footer"
   }, [_c("button", {
-    staticClass: "btn btn-primary",
+    staticClass: "btn btn-sm btn-primary",
     attrs: {
       disabled: _vm.isLoading
     },

@@ -340,6 +340,11 @@ class Card extends Model
         return Storage::url('public/items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg');
     }
 
+    public function getFullImagePathAttribute()
+    {
+        return \Illuminate\Support\Facades\URL::to($this->image_path);
+    }
+
     public function getImageStoragePathAttribute(): string
     {
         return Storage::disk('public')->path('items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg');

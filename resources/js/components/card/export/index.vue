@@ -11,7 +11,7 @@
 
                     <div class="form-group">
                         <label for="language">Sprache</label>
-                        <select class="form-control" v-model="form.language_id">
+                        <select class="form-control form-control-sm" v-model="form.language_id">
                             <option :value="id" v-for="(name, id) in languages">{{ name }}</option>
                         </select>
                         <div class="invalid-feedback" v-text="'language_id' in errors ? errors.language_id[0] : ''"></div>
@@ -34,7 +34,7 @@
 
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-primary" @click="store" :disabled="isLoading">Exportieren</button>
+                    <button class="btn btn-sm btn-primary" @click="store" :disabled="isLoading">Exportieren</button>
                 </div>
             </div>
         </div>
@@ -72,7 +72,7 @@
                 errors: {},
                 files: [],
                 form: {
-                    language_id: 1,
+                    language_id: 3,
                     expansion_id: 0,
                     skryfall_expansion_code: 0,
                     game_id: 1,
