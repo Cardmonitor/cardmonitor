@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'LandingController@index');
-
 Route::view('/impressum', 'impressum');
 
 Route::post('/contact', 'ContactController@store')->middleware(['honey']);
@@ -24,7 +22,9 @@ Route::get('order/{order}/images', 'Images\ImageableController@index')->name('or
 
 Route::post('deploy', 'DeploymentController@store');
 
-Auth::routes();
+Auth::routes([
+    'register' => false,
+]);
 
 Route::middleware(['auth'])->group(function () {
 
@@ -42,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::put('/cardmarket/product/{card}', 'Cardmarket\Products\PriceController@update')->name('cardmarket.product.price.update');
 
+    Route::get('/', 'HomeController@index');
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/home/article', 'Home\Articles\ArticleController@index');
     Route::get('/home/order/month/{year}/{month}', 'Home\Orders\MonthController@index')->name('home.order.month');
