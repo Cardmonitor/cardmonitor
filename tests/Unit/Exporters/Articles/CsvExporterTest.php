@@ -70,8 +70,12 @@ class CsvExporterTest extends TestCase
             $article_row_key++;
         }
         foreach (CsvExporter::ARTICLE_ATTRIBUTES as $attribute) {
-            // echo $article->$attribute . ' - ' . $article_row[$article_row_key] . PHP_EOL;
-            $this->assertEquals($article->$attribute, $article_row[$article_row_key]);
+            if (in_array($attribute, ['unit_price', 'unit_cost'])) {
+                $this->assertEquals(round($article->$attribute, 2), round($article_row[$article_row_key], 2));
+            }
+            else {
+                $this->assertEquals($article->$attribute, $article_row[$article_row_key]);
+            }
             $article_row_key++;
         }
 

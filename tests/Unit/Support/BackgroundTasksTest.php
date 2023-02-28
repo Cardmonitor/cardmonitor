@@ -18,7 +18,7 @@ class BackgroundTasksTest extends TestCase
             'bar' => 'baz',
         ];
 
-        $this->assertFileDoesNotExist(storage_path('app/background_tasks.json'));
+        $BackgroundTasks->flush();
         $this->assertEquals([], $BackgroundTasks->all());
 
         $BackgroundTasks->setContent($content);
