@@ -4413,10 +4413,16 @@ __webpack_require__.r(__webpack_exports__);
         timeout: null
       },
       filter: {
+        page: 1,
         state: 'paid',
         presale: 0
       },
-      items: []
+      items: [],
+      paginate: {
+        nextPageUrl: null,
+        prevPageUrl: null,
+        lastPage: 0
+      }
     };
   },
   computed: {
@@ -4429,6 +4435,26 @@ __webpack_require__.r(__webpack_exports__);
       return this.items.reduce(function (a, b) {
         return a + Number(b.articles_count);
       }, 0);
+    },
+    page: function page() {
+      return this.filter.page;
+    },
+    pages: function pages() {
+      var pages = [];
+
+      for (var i = 1; i <= this.paginate.lastPage; i++) {
+        if (this.showPageButton(i)) {
+          var lastItem = pages[pages.length - 1];
+
+          if (lastItem < i - 1 && lastItem != '...') {
+            pages.push('...');
+          }
+
+          pages.push(i);
+        }
+      }
+
+      return pages;
     }
   },
   mounted: function mounted() {
@@ -4436,6 +4462,11 @@ __webpack_require__.r(__webpack_exports__);
       this.checkIsSyncingOrders();
     } else {
       // this.sync();
+      this.fetch();
+    }
+  },
+  watch: {
+    page: function page() {
       this.fetch();
     }
   },
@@ -4461,6 +4492,10 @@ __webpack_require__.r(__webpack_exports__);
         params: component.filter
       }).then(function (response) {
         component.items = response.data.data;
+        component.filter.page = response.data.current_page;
+        component.paginate.nextPageUrl = response.data.next_page_url;
+        component.paginate.prevPageUrl = response.data.prev_page_url;
+        component.paginate.lastPage = response.data.last_page;
         component.isLoading = false; // setTimeout( function () {
         //     component.sync();
         // }, 1000 * 60 * 60);
@@ -4516,6 +4551,17 @@ __webpack_require__.r(__webpack_exports__);
         Vue.error(component.$t('order.errors.synced'));
         console.log(error);
       })["finally"](function () {});
+    },
+    showPageButton: function showPageButton(page) {
+      if (page == 1 || page == this.paginate.lastPage) {
+        return true;
+      }
+
+      if (page <= this.filter.page + 2 && page >= this.filter.page - 2) {
+        return true;
+      }
+
+      return false;
     }
   }
 });
@@ -12374,7 +12420,75 @@ var render = function render() {
         return _vm.send(_vm.item);
       }
     }
-  }, [_vm._v(_vm._s(_vm.$t("app.actions.send")))])])])])])])])]) : _vm._e();
+  }, [_vm._v(_vm._s(_vm.$t("app.actions.send")))])])])])]), _vm._v(" "), _c("nav", {
+    attrs: {
+      "aria-label": "Page navigation example"
+    }
+  }, [_c("ul", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.paginate.lastPage > 1,
+      expression: "paginate.lastPage > 1"
+    }],
+    staticClass: "pagination justify-content-center"
+  }, [_c("li", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.paginate.prevPageUrl,
+      expression: "paginate.prevPageUrl"
+    }],
+    staticClass: "page-item"
+  }, [_c("a", {
+    staticClass: "page-link",
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        _vm.filter.page--;
+      }
+    }
+  }, [_vm._v(_vm._s(_vm.$t("app.paginate.previous")))])]), _vm._v(" "), _vm._l(_vm.pages, function (n, i) {
+    return _c("li", {
+      staticClass: "page-item",
+      "class": {
+        active: n == _vm.filter.page
+      }
+    }, [_c("a", {
+      staticClass: "page-link",
+      attrs: {
+        href: "#"
+      },
+      on: {
+        click: function click($event) {
+          $event.preventDefault();
+          _vm.filter.page = n;
+        }
+      }
+    }, [_vm._v(_vm._s(n))])]);
+  }), _vm._v(" "), _c("li", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.paginate.nextPageUrl,
+      expression: "paginate.nextPageUrl"
+    }],
+    staticClass: "page-item"
+  }, [_c("a", {
+    staticClass: "page-link",
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        _vm.filter.page++;
+      }
+    }
+  }, [_vm._v(_vm._s(_vm.$t("app.paginate.next")))])])], 2)])])])]) : _vm._e();
 };
 
 var staticRenderFns = [function () {

@@ -64,6 +64,19 @@
                         </tr>
                     </tfoot>
                 </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center" v-show="paginate.lastPage > 1">
+                        <li class="page-item" v-show="paginate.prevPageUrl">
+                            <a class="page-link" href="#" @click.prevent="filter.page--">{{ $t('app.paginate.previous') }}</a>
+                        </li>
+
+                        <li class="page-item" v-for="(n, i) in pages" v-bind:class="{ active: (n == filter.page) }"><a class="page-link" href="#" @click.prevent="filter.page = n">{{ n }}</a></li>
+
+                        <li class="page-item" v-show="paginate.nextPageUrl">
+                            <a class="page-link" href="#" @click.prevent="filter.page++">{{ $t('app.paginate.next') }}</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
@@ -89,10 +102,16 @@
                     timeout: null,
                 },
                 filter: {
+                    page: 1,
                     state: 'paid',
                     presale: 0,
                 },
                 items: [],
+                paginate: {
+                    nextPageUrl: null,
+                    prevPageUrl: null,
+                    lastPage: 0,
+                },
             };
         },
 
@@ -102,6 +121,23 @@
             },
             articles_count: function () {
                 return this.items.reduce((a, b) => a + Number(b.articles_count), 0);
+            },
+            page() {
+                return this.filter.page;
+            },
+            pages() {
+                var pages = [];
+                for (var i = 1; i <= this.paginate.lastPage; i++) {
+                    if (this.showPageButton(i)) {
+                        const lastItem = pages[pages.length - 1];
+                        if (lastItem < (i - 1) && lastItem != '...') {
+                            pages.push('...');
+                        }
+                        pages.push(i);
+                    }
+                }
+
+                return pages;
             },
         },
 
@@ -113,6 +149,12 @@
                 // this.sync();
                 this.fetch();
             }
+        },
+
+        watch: {
+            page () {
+                this.fetch();
+            },
         },
 
         methods: {
@@ -141,6 +183,10 @@
                 })
                     .then(function (response) {
                         component.items = response.data.data;
+                        component.filter.page = response.data.current_page;
+                        component.paginate.nextPageUrl = response.data.next_page_url;
+                        component.paginate.prevPageUrl = response.data.prev_page_url;
+                        component.paginate.lastPage = response.data.last_page;
                         component.isLoading = false;
                         // setTimeout( function () {
                         //     component.sync();
@@ -210,6 +256,17 @@
                     .finally ( function () {
 
                     });
+            },
+            showPageButton(page) {
+                if (page == 1 || page == this.paginate.lastPage) {
+                    return true;
+                }
+
+                if (page <= this.filter.page + 2 && page >= this.filter.page - 2) {
+                    return true;
+                }
+
+                return false;
             },
         },
 
