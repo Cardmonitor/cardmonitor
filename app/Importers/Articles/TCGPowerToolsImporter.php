@@ -2,12 +2,13 @@
 
 namespace App\Importers\Articles;
 
+use Generator;
+use Carbon\Carbon;
 use App\Models\Cards\Card;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
-use App\Models\Localizations\Language;
-use Generator;
 use Illuminate\Support\Collection;
+use App\Models\Localizations\Language;
 
 class TCGPowerToolsImporter
 {
@@ -98,7 +99,7 @@ class TCGPowerToolsImporter
     public function importArticle(int $row_index, array $row): void
     {
         $card = Card::firstOrImport((int)$row[self::COLUMN_CARDMARKET_PRODUCT_ID]);
-        $source_sort = strtotime($row[self::COLUMN_LISTED_AT]);
+        $source_sort = Carbon::createFromFormat('d-m-Y H:i:s', $row[self::COLUMN_LISTED_AT])->timestamp;
 
         for ($index=1; $index <= $row[self::COLUMN_QUANTITY]; $index++) {
             $values = [
