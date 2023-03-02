@@ -11,22 +11,37 @@ use App\Importers\Orders\ArticlesInOrdersCsvImporter;
 
 class PicklistController extends Controller
 {
-    public function index()
+    public function index(string $view = null)
     {
         $user = auth()->user();
 
         $articles = Article::getForPicklist($user->id);
-        $order_ids = $articles->pluck('order_id')->unique()->toArray();
-        sort($order_ids); // reset keys
-        $orders = Order::where('user_id', $user->id)->whereIn('id', $order_ids)->get()->keyBy('id');
+        $orders = Order::getForPicklist($articles, $user->id);
+        $sorted_order_ids = $orders->pluck('id')->toArray();
 
         foreach ($articles as $article) {
 
-            $article->card->download();
+            // Bilder nur für view laden
+            if (is_null($view)) {
+                $article->card->download();
+            }
 
             $article->order = $orders[$article->order_id];
-            $article->order->number = (array_search($article->order_id, $order_ids) + 1);
+            $article->order->number = (array_search($article->order_id, $sorted_order_ids) + 1);
 
+        }
+
+        if ($view === 'pdf') {
+            return \PDF::loadView('order.picklists.pdf', [
+                'articles' => $articles,
+            ], [], [
+                'margin_top' => 10,
+                'margin_left' => 0,
+                'margin_right' => 0,
+                'margin_bottom' => 10,
+                'margin_header' => 0,
+                'margin_footer' => 0,
+            ])->stream('picklist.pdf');
         }
 
         return view('order.picklists.index')

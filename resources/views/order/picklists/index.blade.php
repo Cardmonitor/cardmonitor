@@ -6,7 +6,7 @@
         <h2 class="col pl-0">Pickliste</h2>
         <div>
             @if (count($articles))
-                <a href="{{ route('order.picklist.pdf.index') }}" target="_blank" class="btn btn-sm btn-secondary">PDF</a>
+                <a href="{{ route('order.picklist.index', ['view' => 'pdf']) }}" target="_blank" class="btn btn-sm btn-secondary">PDF</a>
             @endif
         </div>
     </div>
@@ -35,7 +35,7 @@
                         <td class="align-middle text-right">{{ $article->number }}</td>
                         <td class="align-middle text-right">
                             <div>{{ $article->order->number }}</div>
-                            <div class="text-muted">{{ $article->order->id }}</div>
+                            <div class="text-muted"><a href="{{ $article->order->path }}" target="_blank">{{ $article->order->id }}</a></div>
                             <div class="text-muted">{{ $article->order->shipping_name }}</div>
                         </td>
                         <td class="align-middle">
