@@ -1,11 +1,10 @@
 <?php
 
-namespace Tests\Unit\Exporters\Orders;
+namespace Tests\Unit\Importers\Orders;
 
 use Tests\TestCase;
 use App\Models\Cards\Card;
 use App\Models\Orders\Order;
-use App\Models\Articles\Article;
 use App\Models\Localizations\Language;
 use Illuminate\Support\Facades\Storage;
 use App\Importers\Orders\ArticlesInOrdersCsvImporter;

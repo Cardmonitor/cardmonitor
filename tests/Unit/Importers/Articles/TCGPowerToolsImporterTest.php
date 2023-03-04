@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Exporters\Orders;
+namespace Tests\Unit\Importers\Orders;
 
 use Tests\TestCase;
 use App\Models\Articles\Article;

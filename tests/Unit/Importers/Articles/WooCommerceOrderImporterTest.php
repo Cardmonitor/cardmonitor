@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Exporters\Orders;
+namespace Tests\Unit\Importers\Orders;
 
 use Tests\TestCase;
 use App\Models\Cards\Card;
@@ -53,8 +53,8 @@ class WooCommerceOrderImporterTest extends TestCase
             $this->assertEquals($line_item['id'], $article->source_id);
             $this->assertEquals($source_sort, $article->source_sort);
             $this->assertEquals(trim($line_item['sku'], '-'), $article->card_id);
-            $this->assertEquals($line_item['total'] * (1 + 0.15), $article->unit_cost);
-            $this->assertEquals($line_item['total'] * (1 + 0.15) * 3, $article->unit_price);
+            $this->assertEquals(round($line_item['total'] * (1 + 0.15), 6), $article->unit_cost);
+            $this->assertEquals(round($line_item['total'] * (1 + 0.15) * 3, 6), $article->unit_price);
             $this->assertEquals('NM', $article->condition);
             $this->assertEquals(false, $article->is_foil);
             $this->assertEquals(\App\Models\Localizations\Language::DEFAULT_ID, $article->language_id);
