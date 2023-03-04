@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Cardmarket\Articles;
 
-use App\Http\Controllers\Controller;
-use App\Models\Articles\Article;
 use App\User;
 use Illuminate\Http\Request;
+use App\Models\Articles\Article;
+use App\Http\Controllers\Controller;
+use App\Support\Users\CardmarketApi;
 
 class ArticleController extends Controller
 {
-    protected $CardmarketApi;
+    protected CardmarketApi $CardmarketApi;
 
     /**
      * Display a listing of the resource.
