@@ -3,8 +3,6 @@
 namespace Tests\Unit\Exporters\Orders;
 
 use Tests\TestCase;
-use App\Models\Cards\Card;
-use App\Models\Games\Game;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
 use App\Importers\Articles\TCGPowerToolsImporter;
@@ -16,6 +14,8 @@ class TCGPowerToolsImporterTest extends TestCase
      */
     public function it_can_import_articles_from_tcg_powertools()
     {
+        $this->markTestSkipped('no cardmarket connection.');
+
         $filepath = 'tests/snapshots/tcg-powertools/articles/export.csv';
         $handle = fopen($filepath, "r");
         $article_rows = [];
