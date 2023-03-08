@@ -2,22 +2,21 @@
 
 namespace Tests\Feature\Commands\Order;
 
+use App\Console\Commands\Order\SyncCommand;
 use App\Models\Apis\Api;
-use App\Models\Articles\Article;
 use App\Models\Cards\Card;
 use App\Models\Expansions\Expansion;
 use App\Models\Items\Item;
 use App\Models\Orders\Order;
 use App\Models\Users\CardmarketUser;
-use Carbon\Carbon;
-use Cardmonitor\Cardmarket\Api as CardmarketApi;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\App;
 use Tests\TestCase;
 
 class SyncCommandTest extends TestCase
 {
+    private Api $api;
+    private Expansion $expansion;
+    private Item $item;
+
     protected function setUp() : void
     {
         parent::setUp();
@@ -68,6 +67,12 @@ class SyncCommandTest extends TestCase
      */
     public function it_syncs_orders_seller_received()
     {
+        SyncCommand::dispatch([
+            'user' => $this->user->id,
+            '--state' => Order::STATE_CANCELLED,
+        ]);
+        exit;
+
         $this->markTestSkipped();
 
         $this->artisan('order:sync', [

@@ -263,7 +263,7 @@
             },
             sync() {
                 var component = this;
-                axios.put(component.uri + '/sync')
+                axios.put(component.uri + '/sync', component.filter)
                     .then(function (response) {
                         component.syncing.status = 1;
                         component.checkIsSyncingOrders();
@@ -278,7 +278,7 @@
                     });
             },
             showPageButton(page) {
-                if (page == 1 || page == this.paginate.lastPage) {
+                if (page == 1 || page == this.paginate.lastPage) {
                     return true;
                 }
 

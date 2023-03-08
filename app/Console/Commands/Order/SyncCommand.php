@@ -2,15 +2,9 @@
 
 namespace App\Console\Commands\Order;
 
-use App\Models\Apis\Api;
-use App\Models\Articles\Article;
-use App\Models\Cards\Card;
 use App\Models\Orders\Order;
 use App\User;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
 
 class SyncCommand extends Command
 {
@@ -27,6 +21,8 @@ class SyncCommand extends Command
      * @var string
      */
     protected $description = 'Add/Update orders from cardmarket API';
+
+    protected User $user;
 
     /**
      * Create a new command instance.
@@ -49,11 +45,7 @@ class SyncCommand extends Command
         $order_id = $this->option('order');
 
         if (isset($order_id)) {
-            $cardmarketOrder = $this->user->cardmarketApi->order->get($order_id);
-            dump($cardmarketOrder['order']);
-
-            Order::updateOrCreateFromCardmarket($this->user->id, $cardmarketOrder['order'], Order::FORCE_UPDATE_OR_CREATE);
-
+            $this->syncOrder($order_id, Order::FORCE_UPDATE_OR_CREATE);
             return self::SUCCESS;
         }
 
@@ -61,14 +53,13 @@ class SyncCommand extends Command
             $this->processing();
 
             $orders = Order::where('user_id', $this->user->id)->state($this->option('state'))->get();
-            $orderIds = $orders->pluck('id');
+            $order_ids = $orders->pluck('id');
 
-            $syncedOrders = $this->user->cardmarketApi->syncOrders($this->option('actor'), $this->option('state'));
+            $synced_orders = $this->user->cardmarketApi->syncOrders($this->option('actor'), $this->option('state'));
 
-            $notSyncedOrders = $orderIds->diff($syncedOrders);
-            foreach ($notSyncedOrders as $key => $orderId) {
-                $cardmarketOrder = $this->user->cardmarketApi->order->get($orderId);
-                Order::updateOrCreateFromCardmarket($this->user->id, $cardmarketOrder['order']);
+            $not_synced_orders = $order_ids->diff($synced_orders);
+            foreach ($not_synced_orders as $order_id) {
+                $this->syncOrder($order_id);
             }
         }
         finally {
@@ -78,14 +69,20 @@ class SyncCommand extends Command
         return self::SUCCESS;
     }
 
-    public function processing()
+    private function syncOrder(int $order_id, bool $force = false): void
+    {
+        $cardmarket_order = $this->user->cardmarketApi->order->get($order_id);
+        Order::updateOrCreateFromCardmarket($this->user->id, $cardmarket_order['order'], $force);
+    }
+
+    private function processing()
     {
         $this->user->update([
             'is_syncing_orders' => true,
         ]);
     }
 
-    public function processed()
+    private function processed()
     {
         $this->user->update([
             'is_syncing_orders' => false,

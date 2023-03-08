@@ -98,9 +98,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('order/{order}/images', 'Images\ImageableController@store')->name('order.images.store');
 
-    Route::get('order/sync', 'Cardmarket\Orders\OrderController@index');
-    Route::put('order/sync', 'Cardmarket\Orders\OrderController@update')->name('order.sync.update');
-    Route::get('order/{order}/cardmarket', 'Cardmarket\Orders\OrderController@show')->name('order.cardmarket.show');
+    Route::get('order/sync', [\App\Http\Controllers\Cardmarket\Orders\OrderController::class, 'index'])->name('order.sync.index');
+    Route::put('order/sync', [\App\Http\Controllers\Cardmarket\Orders\OrderController::class, 'update'])->name('order.sync.update');
+    Route::get('order/{order}/cardmarket', [\App\Http\Controllers\Cardmarket\Orders\OrderController::class, 'show'])->name('order.cardmarket.show');
 
     Route::resource('order', 'Orders\OrderController')->except([
         'create',

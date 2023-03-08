@@ -22,6 +22,8 @@ class GetCommand extends Command
      */
     protected $description = 'Command description';
 
+    protected User $user;
+
     /**
      * Create a new command instance.
      *

@@ -39,16 +39,16 @@ class Order extends Model
         'Grossbrief International' => 0.5,
     ];
 
+    const STATE_BOUGHT = 'bought';
     const STATE_CANCELLED = 'cancelled';
-    const STATE_PAID = 'paid';
-    const STATE_SENT = 'sent';
-    const STATE_RECEIVED = 'received';
     const STATE_EVALUATED = 'evaluated';
     const STATE_LOST = 'lost';
-    const STATE_BOUGHT = 'bought';
+    const STATE_PAID = 'paid';
+    const STATE_RECEIVED = 'received';
+    const STATE_SENT = 'sent';
 
     const STATES = [
-        // self::STATE_BOUGHT => 'Unbezahlt',
+        self::STATE_BOUGHT => 'Unbezahlt',
         self::STATE_PAID => 'Bezahlt',
         self::STATE_SENT => 'Versandt',
         self::STATE_RECEIVED => 'Angekommen',

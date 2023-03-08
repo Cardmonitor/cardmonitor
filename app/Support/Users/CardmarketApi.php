@@ -2,6 +2,7 @@
 
 namespace App\Support\Users;
 
+use App\Console\Commands\Order\SyncCommand;
 use App\Models\Apis\Api;
 use App\Models\Articles\Article;
 use App\Models\Expansions\Expansion;
@@ -77,7 +78,7 @@ class CardmarketApi
             return;
         }
 
-        $cardmarket_article_ids = Article::syncFromStockFile($user_id, $game_id, storage_path('app/' . $filename));
+        Article::syncFromStockFile($user_id, $game_id, storage_path('app/' . $filename));
 
         Storage::disk('local')->delete($filename);
     }
@@ -85,7 +86,7 @@ class CardmarketApi
     public function syncAllSellerOrders()
     {
         $states = [
-            // 'bought',
+            'bought',
             'paid',
             'sent',
             'received',
@@ -102,19 +103,18 @@ class CardmarketApi
     public function syncOrders(string $actor, string $state) : Collection
     {
         $user_id = $this->api->user_id;
-        $cardmarketOrders_count = 0;
-        $orderIds = new Collection();
+        $cardmarket_orders_count = 0;
+        $order_ids = new Collection();
         $start = 1;
         do {
             $data = $this->cardmarketApi->order->find($actor, $state, $start);
             if (is_array($data)) {
                 $data_count = count($data['order']);
-                $cardmarketOrders_count += $data_count;
-                foreach ($data['order'] as $cardmarketOrder) {
-                    $order = Order::updateOrCreateFromCardmarket($user_id, $cardmarketOrder);
-                    if ($state == 'paid') {
-                        $orderIds->push($order->id);
-                    }
+                $cardmarket_orders_count += $data_count;
+                foreach ($data['order'] as $cardmarket_order) {
+                    $order = Order::updateOrCreateFromCardmarket($user_id, $cardmarket_order);
+                    $order_ids->push($order->id);
+
                     Artisan::queue('order:sync', [
                         'user' => $order->user_id,
                         '--order' => $order->id,
@@ -129,14 +129,14 @@ class CardmarketApi
         }
         while (! is_null($data));
 
-        return $orderIds;
+        return $order_ids;
     }
 
     public function refresh()
     {
         try {
             $access = $this->cardmarketApi->access->token($this->api->accessdata['request_token']);
-            $this->api->setAccessToken($request_token, $access['oauth_token'], $access['oauth_token_secret']);
+            $this->api->setAccessToken($access['request_token'], $access['oauth_token'], $access['oauth_token_secret']);
             $this->setCardmarketApi($this->api);
         }
         catch (\Exception $exc) {

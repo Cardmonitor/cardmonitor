@@ -28,6 +28,8 @@ class WithoutArticlesCommand extends Command
      */
     protected $description = 'Update orders from cardmarket API where articles count is zero';
 
+    protected User $user;
+
     /**
      * Create a new command instance.
      *

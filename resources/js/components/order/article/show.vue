@@ -15,8 +15,9 @@
                     <div><condition :value="item.condition"></condition> ({{ item.condition }})</div>
                     <div><i class="fas fa-star text-warning" v-if="item.is_foil"></i></div>
                     <div class="mt-2" v-if="item.storage_id" title="Lagerplatz"><i class="fas fa-boxes"></i> {{ item.storage.full_name }}</div>
+                    <div class="mt-2" v-if="item.number" title="Lagernummer"><i class="fas fa-boxes"></i> {{ item.number }}</div>
                 </div>
-                <div class="col-12 col-sm mb-3">
+                <div class="col-12 col-sm px-0 mb-3">
                     <div class="form-group">
                         <label for="state_comment_boilerplate">{{ $t('order.article.show.problems.label') }}</label>
                         <select class="form-control form-control-sm" id="state_comment_boilerplate" :placeholder="$t('order.article.show.problems.placeholder')" @change="form.state_comments += $event.target.value">

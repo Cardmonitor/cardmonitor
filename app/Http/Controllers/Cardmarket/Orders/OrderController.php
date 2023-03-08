@@ -34,6 +34,10 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order = null)
     {
+        $request->validate([
+            'state' => 'sometimes|nullable|in:' . implode(',', array_keys(Order::STATES)),
+        ]);
+
         $user = auth()->user();
         $this->CardmarketApi = $user->cardmarketApi;
 
@@ -43,16 +47,21 @@ class OrderController extends Controller
 
         if (is_null($order)) {
             $this->processing($user);
-            if ($request->has('state')) {
-                $this->syncStateOrders($user, $request->input('state'));
+            if ($request->has('state') && in_array($request->input('state'), array_keys(Order::STATES))) {
+                $state = $request->input('state');
+                $this->syncStateOrders($user, $state);
+                if ($state == Order::STATE_PAID) {
+                    // $this->syncStateOrders($user, Order::STATE_BOUGHT);
+                }
             }
             else {
                 $this->syncAllOrders($user);
             }
+
+            return;
         }
-        else {
-            $this->syncOrder($order);
-        }
+
+        $this->syncOrder($order);
 
         if ($request->wantsJson()) {
             return;
@@ -78,7 +87,7 @@ class OrderController extends Controller
         ]);
     }
 
-    protected function syncStateOrders(User $user, string $state)
+    protected function syncStateOrders(User $user, string $state, $force = false)
     {
         Artisan::queue('order:sync', [
             'user' => $user->id,

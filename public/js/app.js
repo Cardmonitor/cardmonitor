@@ -5722,7 +5722,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     sync: function sync() {
       var component = this;
-      axios.put(component.uri + '/sync').then(function (response) {
+      axios.put(component.uri + '/sync', component.filter).then(function (response) {
         component.syncing.status = 1;
         component.checkIsSyncingOrders();
         Vue.success(component.$t('order.successes.syncing_background'));
@@ -13494,8 +13494,15 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-boxes"
-  }), _vm._v(" " + _vm._s(_vm.item.storage.full_name))]) : _vm._e()]), _vm._v(" "), _c("div", {
-    staticClass: "col-12 col-sm mb-3"
+  }), _vm._v(" " + _vm._s(_vm.item.storage.full_name))]) : _vm._e(), _vm._v(" "), _vm.item.number ? _c("div", {
+    staticClass: "mt-2",
+    attrs: {
+      title: "Lagernummer"
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-boxes"
+  }), _vm._v(" " + _vm._s(_vm.item.number))]) : _vm._e()]), _vm._v(" "), _c("div", {
+    staticClass: "col-12 col-sm px-0 mb-3"
   }, [_c("div", {
     staticClass: "form-group"
   }, [_c("label", {
