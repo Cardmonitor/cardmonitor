@@ -99,7 +99,7 @@ class TCGPowerToolsImporter
     public function importArticle(int $row_index, array $row): void
     {
         $card = Card::firstOrImport((int)$row[self::COLUMN_CARDMARKET_PRODUCT_ID]);
-        $source_sort = Carbon::createFromFormat('d-m-Y H:i:s', $row[self::COLUMN_LISTED_AT])->timestamp;
+        $source_sort = Carbon::createFromFormat('d-m-Y H:i:s', $row[self::COLUMN_LISTED_AT] ?? '01-01-1970 01:00:00')->timestamp;
 
         for ($index=1; $index <= $row[self::COLUMN_QUANTITY]; $index++) {
             $values = [
