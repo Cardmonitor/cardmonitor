@@ -3795,11 +3795,6 @@ __webpack_require__.r(__webpack_exports__);
       "default": 1
     }
   },
-  watch: {
-    initialValue: function initialValue(newValue) {
-      this.value = newValue;
-    }
-  },
   computed: {
     sortedOptions: function sortedOptions() {
       function compare(a, b) {
@@ -3826,6 +3821,12 @@ __webpack_require__.r(__webpack_exports__);
     return {
       value: this.initialValue || 0
     };
+  },
+  methods: {
+    input: function input(id) {
+      this.value = id;
+      this.$emit('input', id);
+    }
   }
 });
 
@@ -4057,7 +4058,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-select */ "./node_modules/vue-select/dist/vue-select.js");
+/* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_select__WEBPACK_IMPORTED_MODULE_0__);
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    vSelect: vue_select__WEBPACK_IMPORTED_MODULE_0___default.a
+  },
   props: ['initialValue', 'options'],
   computed: {
     sortedOptions: function sortedOptions() {
@@ -4070,6 +4077,13 @@ __webpack_require__.r(__webpack_exports__);
         }
         return 0;
       }
+      var sortedOptions = this.options.sort(compare);
+      sortedOptions.unshift({
+        id: 0,
+        full_name: this.$t('filter.all'),
+        indentedName: this.$t('filter.all'),
+        sort: 0
+      });
       return this.options.sort(compare);
     }
   },
@@ -4077,6 +4091,12 @@ __webpack_require__.r(__webpack_exports__);
     return {
       value: this.initialValue || 0
     };
+  },
+  methods: {
+    input: function input(id) {
+      this.value = id;
+      this.$emit('input', id);
+    }
   }
 });
 
@@ -11293,7 +11313,7 @@ var render = function render() {
     },
     on: {
       input: function input($event) {
-        return _vm.$emit("input", $event);
+        return _vm.input($event);
       }
     },
     scopedSlots: _vm._u([{
@@ -11678,51 +11698,51 @@ var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "form-group"
+    staticClass: "form-group",
+    staticStyle: {
+      "min-width": "300px"
+    }
   }, [_c("label", {
     attrs: {
-      "for": "filter-rule"
+      "for": "filter-storage"
     }
-  }, [_vm._v(_vm._s(_vm.$t("storages.storage")))]), _vm._v(" "), _c("select", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.value,
-      expression: "value"
-    }],
-    staticClass: "form-control form-control-sm",
+  }, [_vm._v(_vm._s(_vm.$t("storages.storage")))]), _vm._v(" "), _c("v-select", {
+    staticClass: "d-flex align-items-center",
     attrs: {
-      id: "filter-rule"
+      name: "filter-storage",
+      clearable: false,
+      options: _vm.sortedOptions,
+      label: "indentedName",
+      reduce: function reduce(option) {
+        return option.id;
+      },
+      value: _vm.value
     },
     on: {
-      change: [function ($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-          return o.selected;
-        }).map(function (o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val;
-        });
-        _vm.value = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-      }, function ($event) {
-        return _vm.$emit("input", _vm.value);
-      }]
-    }
-  }, [_c("option", {
-    domProps: {
-      value: 0
-    }
-  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _c("option", {
-    domProps: {
-      value: -1
-    }
-  }, [_vm._v(_vm._s(_vm.$t("storages.no_storage")))]), _vm._v(" "), _vm._l(_vm.sortedOptions, function (option, key) {
-    return _c("option", {
-      domProps: {
-        value: option.id,
-        innerHTML: _vm._s(option.indentedName)
+      input: function input($event) {
+        return _vm.input($event);
       }
-    });
-  })], 2)]);
+    },
+    scopedSlots: _vm._u([{
+      key: "option",
+      fn: function fn(option) {
+        return [_c("span", {
+          domProps: {
+            innerHTML: _vm._s(option.indentedName)
+          }
+        })];
+      }
+    }, {
+      key: "selected-option",
+      fn: function fn(option) {
+        return [_c("span", {
+          domProps: {
+            innerHTML: _vm._s(option.full_name)
+          }
+        })];
+      }
+    }])
+  })], 1);
 };
 var staticRenderFns = [];
 render._withStripped = true;

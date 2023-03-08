@@ -1,22 +1,32 @@
 <template>
-    <div class="form-group">
-        <label for="filter-rule">{{ $t('storages.storage') }}</label>
-        <select class="form-control form-control-sm" id="filter-rule" v-model="value" @change="$emit('input', value)">
-            <option :value="0">{{ $t('filter.all') }}</option>
-            <option :value="-1">{{ $t('storages.no_storage') }}</option>
-            <option v-for="(option, key) in sortedOptions" :value="option.id" v-html="option.indentedName"></option>
-        </select>
+    <div class="form-group" style="min-width: 300px;">
+        <label for="filter-storage">{{ $t('storages.storage') }}</label>
+        <v-select class="d-flex align-items-center" name="filter-storage" :clearable="false" :options="sortedOptions" label="indentedName" :reduce="option => option.id" :value="value" @input="input($event)">
+            <template v-slot:option="option">
+                <span v-html="option.indentedName"></span>
+            </template>
+            <template v-slot:selected-option="option">
+                <span v-html="option.full_name"></span>
+            </template>
+        </v-select>
     </div>
 </template>
 
 <script>
+    import vSelect from 'vue-select';
+
     export default {
+
+        components: {
+            vSelect,
+        },
+
         props: [
             'initialValue',
             'options',
         ],
 
-        computed: {
+        computed: {
             sortedOptions: function() {
                 function compare(a, b) {
                     if (a.sort < b.sort) {
@@ -30,6 +40,15 @@
                     return 0;
                 }
 
+                let sortedOptions = this.options.sort(compare);
+
+                sortedOptions.unshift({
+                    id: 0,
+                    full_name: this.$t('filter.all'),
+                    indentedName: this.$t('filter.all'),
+                    sort: 0,
+                });
+
                 return this.options.sort(compare);
             },
         },
@@ -38,6 +57,13 @@
             return {
                 value: this.initialValue || 0,
             };
+        },
+
+        methods: {
+            input: function(id) {
+                this.value = id;
+                this.$emit('input', id);
+            },
         },
     };
 </script>

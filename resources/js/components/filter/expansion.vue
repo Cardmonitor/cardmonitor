@@ -1,7 +1,7 @@
 <template>
     <div class="form-group" style="min-width: 200px;">
         <label for="filter-expansion" v-if="showLabel">{{ $t('app.expansion') }}</label>
-        <v-select class="d-flex align-items-center" name="expansion_id" :clearable="false" :options="sortedOptions" label="name" :reduce="option => option.id" placeholder="Alle" :value="value" @input="$emit('input', $event)">
+        <v-select class="d-flex align-items-center" name="expansion_id" :clearable="false" :options="sortedOptions" label="name" :reduce="option => option.id" placeholder="Alle" :value="value" @input="input($event)">
             <template v-slot:option="option">
                 <expansion-icon :expansion="option" :name-ellipsis="true" v-if="option.id > 0"></expansion-icon>
                 <span v-else>{{ option.name }}</span>
@@ -39,12 +39,6 @@
             },
         },
 
-        watch: {
-            initialValue(newValue) {
-                this.value = newValue;
-            },
-        },
-
         computed: {
             sortedOptions: function() {
                 function compare(a, b) {
@@ -78,6 +72,13 @@
             return {
                 value: this.initialValue || 0,
             };
+        },
+
+        methods: {
+            input: function(id) {
+                this.value = id;
+                this.$emit('input', id);
+            },
         },
     };
 </script>
