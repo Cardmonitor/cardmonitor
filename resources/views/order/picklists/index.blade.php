@@ -44,7 +44,12 @@
                                 <div class="text-muted">{{ $article->card->name }}</div>
                             @endif
                         </td>
-                        <td class="align-middle">{{ $article->condition }}</td>
+                        <td class="align-middle">
+                            {{ $article->condition }}
+                            @if ($article->is_foil)
+                                <div class="text-muted">Foil</div>
+                            @endif
+                        </td>
                         <td class="align-middle">{{ $article->language->name }}</td>
                         <td class="align-middle text-center">{{ $article->card->rarity }}</td>
                         <td class="align-middle text-right">{{ $article->card->number }}</td>
