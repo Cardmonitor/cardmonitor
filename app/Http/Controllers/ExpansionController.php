@@ -90,7 +90,8 @@ class ExpansionController extends Controller
      */
     public function update(Request $request, BackgroundTasks $BackgroundTasks, Expansion $expansion)
     {
-        $BackgroundTasks->put('expansion:import.' . $expansion->id, 1);
+        $backgroundtask_key = 'expansion.import.' . $expansion->id;
+        $BackgroundTasks->put($backgroundtask_key, 1);
 
         Artisan::queue('expansion:import', [
             'expansion' => $expansion->id,
@@ -100,6 +101,7 @@ class ExpansionController extends Controller
             'status' => 'Das Update der Erweiterung wurde gestartet.',
             'expansion_id' => $expansion->id,
             'background_tasks' => $BackgroundTasks->all(),
+            'backgroundtask_key' => $backgroundtask_key,
         ];
     }
 }

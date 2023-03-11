@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Users;
 use Illuminate\Http\Request;
 use App\Support\BackgroundTasks;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class BackgroundTaskController extends Controller
 {
@@ -35,6 +36,47 @@ class BackgroundTaskController extends Controller
         }
 
         return $BackgroundTasks->all();
+    }
+
+    public function show(Request $request, BackgroundTasks $BackgroundTasks, string $task)
+    {
+        $path = $this->getLatestFileForTask($task);
+        $storage_path = storage_path($path);
+
+        if (! file_exists($storage_path) || ! is_file($storage_path)) {
+            $content = '';
+        }
+        else {
+            $content = file_get_contents($storage_path);
+        }
+
+        if ($request->wantsJson()) {
+            return [
+                'task' => $task,
+                'path' => $path,
+                'content' => $content,
+                'is_running' => !empty($BackgroundTasks->get($task)),
+            ];
+        }
+
+        return view('user.backgroundtask.show', [
+            'task' => $task,
+            'path' => $path,
+            'content' => $content,
+        ]);
+    }
+
+    private function getLatestFileForTask(string $task): string
+    {
+        $path = BackgroundTasks::path($task);
+        $files = glob($path . '/*.log');
+        if (empty($files)) {
+            return '';
+        }
+        $files = array_combine($files, array_map("filemtime", $files));
+        arsort($files);
+        $files = array_keys($files);
+        return str_replace(storage_path(). '/', '', $files[0]);
     }
 
     /**

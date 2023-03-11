@@ -3,6 +3,8 @@
 namespace App\Support;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class BackgroundTasks
 {
@@ -10,6 +12,19 @@ class BackgroundTasks
 
     public static function make(): self {
         return new self();
+    }
+
+    public static function path(string $task): string
+    {
+        return Storage::disk('backgroundtasks')->path(str_replace('.', '/', $task));
+    }
+
+    public static function makeLogger(string $task, string $filename): \Psr\Log\LoggerInterface
+    {
+        return Log::build([
+            'driver' => 'single',
+            'path' => self::path($task) . '/' . $filename,
+        ]);
     }
 
     private function __construct()

@@ -157,6 +157,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/user/backgroundtasks', [\App\Http\Controllers\Users\BackgroundTaskController::class, 'index'])->name('user.backgroundtasks.index');
     Route::post('/user/backgroundtasks', [\App\Http\Controllers\Users\BackgroundTaskController::class, 'store'])->name('user.backgroundtasks.store');
+    Route::get('/user/backgroundtasks/{task}', [\App\Http\Controllers\Users\BackgroundTaskController::class, 'show'])->name('user.backgroundtasks.show');
     Route::delete('/user/backgroundtasks/{task}', [\App\Http\Controllers\Users\BackgroundTaskController::class, 'destroy'])->name('user.backgroundtasks.destroy');
 
     Route::get('/user/settings', 'Users\UserController@edit')->name('user.edit');

@@ -69,6 +69,18 @@
                 </li>
             </ul>
         </nav>
+        <div class="modal fade" tabindex="-1" role="dialog" id="user-backgroundtask-show" ref="user-backgroundtask-show">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Log</h5>
+                    </div>
+                    <div class="model-body">
+                        <user-backgroundtask-show :task="show_backgroundtask"></user-backgroundtask-show>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -100,6 +112,7 @@
                 uri: '/expansions',
                 a: 1,
                 background_tasks: this.initialBackgroundTasks || {},
+                show_backgroundtask: '',
                 interval: null,
                 isLoading: false,
                 items: [],
@@ -126,6 +139,11 @@
         mounted() {
 
             this.fetch();
+
+            const component = this;
+            $(this.$refs['user-backgroundtask-show']).on("hidden.bs.modal", function() {
+                component.show_backgroundtask = '';
+            });
 
         },
 
@@ -183,14 +201,19 @@
                     return false;
                 }
 
-                if (this.background_tasks['expansion:import'] === undefined) {
+                if (this.background_tasks['expansion'] === undefined) {
                     return false;
                 }
 
-                return this.background_tasks['expansion:import'][key] || false;
+                if (this.background_tasks['expansion']['import'] === undefined) {
+                    return false;
+                }
+
+                return this.background_tasks['expansion']['import'][key] || false;
             },
-            updateBackgroundTasks(background_tasks) {
+            updateBackgroundTasks({background_tasks, backgroundtask_key}) {
                 this.background_tasks = background_tasks;
+                this.showModal(backgroundtask_key);
             },
             fetchBackgroundTasks() {
                 const component = this;
@@ -252,6 +275,13 @@
                 }
 
                 return false;
+            },
+            showModal(task) {
+                const component = this;
+                component.$nextTick(() => {
+                    component.show_backgroundtask = task;
+                    $('#user-backgroundtask-show').modal('show');
+                });
             },
         },
     };

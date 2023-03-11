@@ -54,15 +54,15 @@ class ImportCommand extends Command
     public function handle(BackgroundTasks $BackgroundTasks)
     {
         $expansion_id = $this->argument('expansion');
-        $backgroundtask_key = 'expansion:import.' . $expansion_id;
-
-        $BackgroundTasks->put($backgroundtask_key, 1);
+        $backgroundtask_key = 'expansion.import.' . $expansion_id;
 
         $this->CardmarketApi = App::make('CardmarketApi');
         $this->importableGames = Game::importables()->keyBy('id');
         $this->importableGameIds = array_keys($this->importableGames->toArray());
 
-        $this->makeLogger('logs/jobs/expansion:import/' . now()->format('Y-m-d_H-i-s') . '.log');
+        $this->makeLogger($backgroundtask_key, now()->format('Y-m-d_H-i-s') . '.log');
+
+        $BackgroundTasks->put($backgroundtask_key, 1);
 
         try {
             $result = $this->import($expansion_id);
@@ -85,6 +85,10 @@ class ImportCommand extends Command
         catch (\GuzzleHttp\Exception\ClientException $e) {
             $this->error('Expansion ' . $expansion_id . ' not available.');
             $this->error($e->getResponse()->getBody()->getContents());
+            return self::FAILURE;
+        }
+        catch (\GuzzleHttp\Exception\RequestException $e) {
+            $this->error($e->getMessage());
             return self::FAILURE;
         }
 

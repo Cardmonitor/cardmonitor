@@ -2,18 +2,15 @@
 
 namespace App\Console\Traits;
 
-use Illuminate\Support\Facades\Log;
+use App\Support\BackgroundTasks;
 
 trait HasLogger
 {
     private \Psr\Log\LoggerInterface $log;
 
-    private function makeLogger(string $path)
+    private function makeLogger(string $task, string $filename)
     {
-        $this->log = Log::build([
-            'driver' => 'single',
-            'path' => storage_path($path),
-        ]);
+        $this->log = BackgroundTasks::makeLogger($task, $filename);
     }
 
     /**
@@ -28,6 +25,10 @@ trait HasLogger
     {
         parent::line($string, $style, $verbosity);
 
-        $this->log->info($string);
+        switch ($style) {
+            case 'error': $this->log->error($string); break;
+            default: $this->log->info($string); break;
+        }
+
     }
 }
