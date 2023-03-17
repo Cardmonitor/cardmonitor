@@ -6,13 +6,6 @@
         <h2 class="col mb-0"><a class="text-body" href="/order">{{ __('app.nav.order') }}</a><span class="d-none d-md-inline"> > {{ $model->cardmarket_order_id }}<span class="d-none d-lg-inline"> - {{ $model->stateFormatted }}</span></span></h2>
         <div class="d-flex align-items-center">
             <button class="btn btn-sm btn-secondary ml-1" data-toggle="modal" data-target="#message-create" data-model-id="{{ $model->id }}"><i class="fas fa-envelope"></i></button>
-            @if ($model->state == 'paid')
-                <form action="{{ $model->path . '/send' }}" class="ml-1" method="POST">
-                    @csrf
-
-                    <button type="submit" class="btn btn-sm btn-primary" title="{{ __('app.actions.send') }}">{{ __('app.actions.send') }}</button>
-                </form>
-            @endif
             <form action="{{ $model->path . '/sync' }}" class="ml-1" method="POST">
                 @csrf
                 @method('PUT')
@@ -122,20 +115,6 @@
                 </div>
             </div>
 
-            @if($model->canHaveImages())
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <div class="d-flex">
-                            <div class="col pl-0">{{ __('app.images') }}</div>
-                            <div><a class="text-body" href="{{ $model->path . '/images' }}" title="{{ __('app.images') }}"><i class="fas fa-fw fa-images"></i></a></div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <imageable-table :model="{{ json_encode($model) }}" token="{{ csrf_token() }}"></imageable-table>
-                    </div>
-                </div>
-            @endif
-
         </div>
 
         <div class="col-md-6">
@@ -157,72 +136,8 @@
                 </div>
             </div>
 
-            <div class="card mb-3">
-                <div class="card-header">{{ __('order.calculation') }}</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-label"><b>{{ __('app.revenue') }}</b></div>
-                        <div class="col-value"><b>{{ number_format($model->revenue, 2, ',', '.') }} €</b></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label">{{ __('app.cards') }}</div>
-                        <div class="col-value">{{ number_format($model->articles_revenue, 2, ',', '.') }} €</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label">{{ __('app.shipping') }}</div>
-                        <div class="col-value">{{ number_format($model->shipment_revenue, 2, ',', '.') }} €</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label">&nbsp;</div>
-                        <div class="col-value"></div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-label"><b>{{ __('app.costs') }}</b></div>
-                        <div class="col-value"><b>{{ number_format($model->cost, 2, ',', '.') }} €</b></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label">{{ __('app.cards') }}</div>
-                        <div class="col-value">{{ number_format($model->articles_cost, 2, ',', '.') }} €</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label">{{ __('app.provision') }}</div>
-                        <div class="col-value">{{ number_format($model->provision, 2, ',', '.') }} €</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label">{{ __('app.shipping') }}</div>
-                        <div class="col-value">{{ number_format($model->shipment_cost, 2, ',', '.') }} €</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label">{{ __('app.other') }}</div>
-                        <div class="col-value">{{ number_format($model->items_cost, 2, ',', '.') }} €</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label">&nbsp;</div>
-                        <div class="col-value"></div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-label"><b>{{ __('app.profit') }}</b></div>
-                        <div class="col-value"><b>{{ number_format($model->profit, 2, ',', '.') }} €</b></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label">{{ __('app.cards') }}</div>
-                        <div class="col-value">{{ number_format($model->articles_profit, 2, ',', '.') }} €</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-label">{{ __('app.shipping') }}</div>
-                        <div class="col-value">{{ number_format($model->shipment_profit, 2, ',', '.') }} €</div>
-                    </div>
-
-                </div>
-            </div>
-
-
         </div>
     </div>
-
-    <order-item-table :model="{{ json_encode($model) }}" :customs="{{ json_encode($customs) }}"></order-item-table>
 
     <div class="card">
         <div class="card-header">{{ __('app.articles') }}</div>

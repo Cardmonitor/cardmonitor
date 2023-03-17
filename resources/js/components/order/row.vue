@@ -20,7 +20,7 @@
         </td>
         <td class="align-middle text-right">
             <div class="btn-group btn-group-sm" role="group">
-                <button class="btn btn-primary":title="$t('app.actions.send')" @click="send(item)" v-if="item.state == 'paid'">{{ $t('app.actions.send') }}</button>
+                <button class="btn btn-primary" :title="$t('app.actions.send')" @click="send(item)" v-if="item.state == 'paid' && false">{{ $t('app.actions.send') }}</button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.edit')" @click="link"><i class="fas fa-edit"></i></button>
             </div>
         </td>

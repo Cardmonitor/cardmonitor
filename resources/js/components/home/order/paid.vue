@@ -26,7 +26,6 @@
                             <th>Bestellung</th>
                             <th class="text-right">Umsatz</th>
                             <th class="text-right">{{ $t('app.article') }}</th>
-                            <th class="text-right"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,9 +41,6 @@
                             <td class="align-middle d-none d-sm-table-cell text-right">
                                 {{ item.articles_count }}
                             </td>
-                            <td class="align-middle text-right">
-                                <button class="btn btn-sm btn-primary" :title="$t('app.actions.send')" @click="send(item)">{{ $t('app.actions.send') }}</button>
-                            </td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -56,9 +52,6 @@
                             </td>
                             <td class="align-middle d-none d-sm-table-cell text-right">
                                 {{ articles_count }}
-                            </td>
-                            <td class="align-middle text-right">
-                                <button class="btn btn-sm btn-primary" :title="$t('app.actions.send')" @click="send(item)">{{ $t('app.actions.send') }}</button>
                             </td>
                         </tr>
                     </tfoot>

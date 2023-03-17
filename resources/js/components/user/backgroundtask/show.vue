@@ -1,7 +1,7 @@
 <template>
     <div class="card">
         <div class="card-body">
-            <div v-if="content == ''" class="mt-3 p-5">
+            <div v-show="content == ''" class="mt-3 p-5">
                 <center>
                     <span style="font-size: 48px;">
                         <i class="fas fa-spinner fa-spin"></i><br />
@@ -9,7 +9,7 @@
                     {{ $t('app.loading') }}
                 </center>
             </div>
-            <pre v-else>{{ content }}</pre>
+            <pre v-show="content" ref="content">{{ content }}</pre>
         </div>
     </div>
 </template>
@@ -58,6 +58,9 @@
                 .then(function (response) {
                     component.content = response.data.content;
                     component.path = response.data.path;
+
+                    // const content_container = component.$refs['content'];
+                    // content_container.scrollTop = content_container.scrollHeight;
                 })
                 .catch( function (error) {
                     component.errors = error.response.data.errors;
