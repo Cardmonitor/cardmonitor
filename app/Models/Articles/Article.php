@@ -862,6 +862,23 @@ class Article extends Model
         return self::similarTo($this)->count();
     }
 
+    public function getExplodedNumberAttribute(): array
+    {
+        if (empty($this->number)) {
+            return [
+                'section' => '',
+                'number' => '',
+            ];
+        }
+
+        $exploded = explode('.', $this->number);
+
+        return [
+            'section' => Arr::get($exploded, 0, ''),
+            'number' => Arr::get($exploded, 1, ''),
+        ];
+    }
+
     public function getPositionTypeAttribute() : string
     {
         return 'Artikel';

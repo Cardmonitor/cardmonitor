@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\Orders\Picklists;
 
 use App\Models\Orders\Order;
-use Illuminate\Http\Request;
 use App\Models\Articles\Article;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Cache;
-use App\Importers\Orders\ArticlesInOrdersCsvImporter;
 
 class PicklistController extends Controller
 {
@@ -34,6 +31,7 @@ class PicklistController extends Controller
         if ($view === 'pdf') {
             return \PDF::loadView('order.picklists.pdf', [
                 'articles' => $articles,
+                'last_section' => '',
             ], [], [
                 'margin_top' => 10,
                 'margin_left' => 0,

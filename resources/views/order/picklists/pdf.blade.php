@@ -63,11 +63,21 @@
                 </thead>
                 <tbody>
                     @foreach ($articles as $article)
+                        @if ($last_section != $article->explodedNumber['section'])
+                            <tr>
+                                <td align="center" colspan="8" class="text-center" style="border-bottom: 1px solid black;border-top: 1px solid black;">
+                                    <h2>{{ $article->explodedNumber['section'] }}</h2>
+                                </td>
+                            </tr>
+                            @php
+                                $last_section = $article->explodedNumber['section'];
+                            @endphp
+                        @endif
                         <tr>
                             <td class="align-middle">
                                 <img src="{{ $article->card->image_path }}" alt="{{ $article->card->name }}" width="75">
                             </td>
-                            <td class="align-middle text-right">{{ $article->number }}</td>
+                            <td class="align-middle text-right">{{ $article->explodedNumber['number'] }}</td>
                             <td class="align-middle text-right">
                                 <div>{{ $article->order->number }}</div>
                                 <div class="text-muted">{{ $article->order->id }}</div>
