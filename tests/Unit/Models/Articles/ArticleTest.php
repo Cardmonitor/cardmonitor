@@ -1058,4 +1058,41 @@ class ArticleTest extends TestCase
         $this->assertNull($article->sold_at);
         $this->assertFalse($article->is_sold);
     }
+
+    /**
+     * @test
+     */
+    public function it_knows_its_order_export_name()
+    {
+        $card = factory(Card::class)->create([
+            'name' => 'Test Card',
+        ]);
+
+        $card->localizations()->create([
+            'language_id' => 3,
+            'name' => 'Test Karte',
+        ]);
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'card_id' => $card->id,
+            'condition' => 'EX',
+            'is_foil' => false,
+            'language_id' => 1,
+        ]);
+
+        $this->assertEquals('Test Card - EX - English', $article->order_export_name);
+
+        $article->update([
+            'language_id' => 3,
+        ]);
+
+        $this->assertEquals('Test Karte - EX - German', $article->fresh()->order_export_name);
+
+        $article->update([
+            'is_foil' => true,
+        ]);
+
+        $this->assertEquals('Test Karte - EX - German - Foil', $article->fresh()->order_export_name);
+    }
 }

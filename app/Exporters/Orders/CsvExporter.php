@@ -43,6 +43,7 @@ class CsvExporter
         'sku',
         'cardmarket_article_id',
         'local_name',
+        'order_export_name',
         'unit_price',
         'amount',
         'position_type',

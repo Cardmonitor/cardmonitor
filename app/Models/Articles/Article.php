@@ -68,6 +68,10 @@ class Article extends Model
         'PO' => 'Poor',
     ];
 
+    const STATE_OK = 0;
+    const STATE_PROBLEM = 1;
+    const STATE_ON_HOLD = 2;
+
     protected $appends = [
         'localName',
         'path',
@@ -902,6 +906,11 @@ class Article extends Model
         return $localization->name;
     }
 
+    public function getOrderExportNameAttribute() : string
+    {
+        return $this->local_name . ' - ' . $this->condition . ' - ' . $this->language_name . ($this->is_foil ? ' - Foil' : '');
+    }
+
     public function getLanguageNameAttribute() : string
     {
         return $this->language->name;
@@ -987,12 +996,9 @@ class Article extends Model
         }
 
         switch ($this->state) {
-            case 0:
-                return 'fa-check text-success';
-                break;
-            case 1:
-                return 'fa-exclamation text-danger';
-                break;
+            case self::STATE_OK: return 'fa-check text-success'; break;
+            case self::STATE_PROBLEM: return 'fa-exclamation text-danger'; break;
+            case self::STATE_ON_HOLD: return 'fa-pause text-warning'; break;
         }
     }
 
