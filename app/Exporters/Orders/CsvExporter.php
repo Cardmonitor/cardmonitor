@@ -100,6 +100,7 @@ class CsvExporter
         $shippingValuesArticle['unit_price'] = $order->shipment_revenue;
         $shippingValuesArticle['position_type'] = 'Versandposition';
         $shippingValuesArticle['local_name'] = $order->shippingmethod;
+        $shippingValuesArticle['order_export_name'] = $order->shippingmethod;
         $shippingValuesArticle['card_id'] = '';
         $shippingValuesArticle['sku'] = '';
         $shippingValuesArticle['cardmarket_article_id'] = '';
