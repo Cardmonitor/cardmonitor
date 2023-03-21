@@ -77,7 +77,7 @@
                             <td class="align-middle">
                                 <img src="{{ $article->card->image_path }}" alt="{{ $article->card->name }}" width="75">
                             </td>
-                            <td class="align-middle text-right">{{ $article->explodedNumber['number'] }}</td>
+                            <td class="align-middle text-right"><h3>{{ $article->explodedNumber['number'] }}</h3></td>
                             <td class="align-middle text-right">
                                 <div>{{ $article->order->number }}</div>
                                 <div class="text-muted">{{ $article->order->id }}</div>
