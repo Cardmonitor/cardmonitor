@@ -51,7 +51,7 @@ class OrderController extends Controller
                 $state = $request->input('state');
                 $this->syncStateOrders($user, $state);
                 if ($state == Order::STATE_PAID) {
-                    // $this->syncStateOrders($user, Order::STATE_BOUGHT);
+                    $this->syncStateOrders($user, Order::STATE_BOUGHT);
                 }
             }
             else {

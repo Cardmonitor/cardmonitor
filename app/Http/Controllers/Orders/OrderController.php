@@ -26,6 +26,7 @@ class OrderController extends Controller
         if ($request->wantsJson()) {
             return auth()->user()
                 ->orders()
+                ->select('orders.*')
                 ->search($request->input('searchtext'))
                 ->state($request->input('state'))
                 ->presale($request->input('presale'))
