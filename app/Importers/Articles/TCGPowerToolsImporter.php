@@ -139,6 +139,11 @@ class TCGPowerToolsImporter
             return 0;
         }
 
+        $date = Arr::get($row, self::COLUMN_LISTED_AT, '01-01-1970 02:00:00');
+        if (empty($date)) {
+            return 0;
+        }
+
         return Carbon::createFromFormat('d-m-Y H:i:s', Arr::get($row, self::COLUMN_LISTED_AT, '01-01-1970 02:00:00'))->timestamp;
     }
 }

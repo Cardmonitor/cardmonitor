@@ -3,6 +3,7 @@
 namespace Tests\Unit\Importers\Orders;
 
 use Tests\TestCase;
+use App\Models\Cards\Card;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
 use App\Importers\Articles\TCGPowerToolsImporter;
@@ -32,14 +33,27 @@ class TCGPowerToolsImporterTest extends TestCase
             'parent_id' => $parent_storage->id,
         ]);
 
+        $row_counter = 0;
         while (($raw_string = trim(fgets($handle))) !== false) {
             if (empty($raw_string)) {
                 break;
             }
 
+            if ($row_counter === 0) {
+                $row_counter++;
+                continue;
+            }
+
             $article_row = str_getcsv($raw_string, ',');
+
             $quantity += (int)$article_row[TCGPowerToolsImporter::COLUMN_QUANTITY];
             $article_rows[] = $article_row;
+
+            factory(Card::class)->create([
+                'cardmarket_product_id' => $article_row[TCGPowerToolsImporter::COLUMN_CARDMARKET_PRODUCT_ID],
+            ]);
+
+            $row_counter++;
         }
         fclose($handle);
 
@@ -54,5 +68,11 @@ class TCGPowerToolsImporterTest extends TestCase
         $articles = Article::all();
         $this->assertCount($quantity, $articles);
         $this->assertCount($quantity, $storage_file->articles);
+
+        $sorted_articles = Article::orderBy('source_sort', 'ASC')->get();
+
+        $this->assertEquals(0, $sorted_articles[0]->source_sort);
+        $this->assertEquals(0, $sorted_articles[1]->source_sort);
+        $this->assertGreaterThan(0, $sorted_articles[2]->source_sort);
     }
 }
