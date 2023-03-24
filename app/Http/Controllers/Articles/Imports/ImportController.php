@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Articles\Imports;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Importers\Articles\TCGPowerToolsImporter;
@@ -24,7 +25,11 @@ class ImportController extends Controller
         try {
             TCGPowerToolsImporter::import($user->id, Storage::path($filename));
         } catch (\Throwable $th) {
-            throw $th;
+            Log::error($th, [
+                'file' => $th->getFile(),
+                'line' => $th->getLine(),
+                'trace' => $th->getTraceAsString(),
+            ]);
             return back()->with('status', [
                 'type' => 'danger',
                 'text' => 'Datei konnte nicht importiert werden.',
