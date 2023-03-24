@@ -33,6 +33,7 @@ class TCGPowerToolsImporterTest extends TestCase
             'parent_id' => $parent_storage->id,
         ]);
 
+        $header = [];
         $row_counter = 0;
         while (($raw_string = trim(fgets($handle))) !== false) {
             if (empty($raw_string)) {
@@ -40,17 +41,27 @@ class TCGPowerToolsImporterTest extends TestCase
             }
 
             if ($row_counter === 0) {
+                $header = TCGPowerToolsImporter::parseHeader(str_getcsv($raw_string, ','));
                 $row_counter++;
                 continue;
             }
 
+            $this->assertArrayHasKey('cardmarketid', $header);
+            $this->assertArrayHasKey('comment', $header);
+            $this->assertArrayHasKey('condition', $header);
+            $this->assertArrayHasKey('isfoil', $header);
+            $this->assertArrayHasKey('language', $header);
+            $this->assertArrayHasKey('listedat', $header);
+            $this->assertArrayHasKey('price', $header);
+            $this->assertArrayHasKey('quantity', $header);
+
             $article_row = str_getcsv($raw_string, ',');
 
-            $quantity += (int)$article_row[TCGPowerToolsImporter::COLUMN_QUANTITY];
+            $quantity += (int)$article_row[$header['quantity']];
             $article_rows[] = $article_row;
 
             factory(Card::class)->create([
-                'cardmarket_product_id' => $article_row[TCGPowerToolsImporter::COLUMN_CARDMARKET_PRODUCT_ID],
+                'cardmarket_product_id' => $article_row[$header['cardmarketid']],
             ]);
 
             $row_counter++;

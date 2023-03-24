@@ -6,6 +6,7 @@ use Generator;
 use Carbon\Carbon;
 use App\Models\Cards\Card;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
 use Illuminate\Support\Collection;
@@ -31,11 +32,11 @@ class TCGPowerToolsImporter
         return $importer;
     }
 
-    private static function parseHeader(array $row): array
+    public static function parseHeader(array $row): array
     {
         $header = [];
         foreach ($row as $column_index => $column) {
-            $header[$column] = $column_index;
+            $header[Str::slug($column)] = $column_index;
         }
 
         return $header;
@@ -102,7 +103,7 @@ class TCGPowerToolsImporter
 
     public function importArticle(int $row_index, array $header, array $row): void
     {
-        $card = Card::firstOrImport((int)$row[$header['cardmarketId']]);
+        $card = Card::firstOrImport((int)$row[$header['cardmarketid']]);
         $source_sort = $this->getSourceSort($header, $row);
 
         for ($index=1; $index <= $row[$header['quantity']]; $index++) {
@@ -116,7 +117,7 @@ class TCGPowerToolsImporter
                 'unit_cost' => 0,
                 'sold_at' => null,
                 'is_in_shoppingcard' => false,
-                'is_foil' => ($row[$header['isFoil']] == 'true'),
+                'is_foil' => ($row[$header['isfoil']] == 'true'),
                 'is_signed' => false,
                 'is_altered' => false,
                 'is_playset' => false,
@@ -138,15 +139,15 @@ class TCGPowerToolsImporter
 
     private function getSourceSort(array $header, array $row): int
     {
-        if (! Arr::has($row, $header['cardmarketId'])) {
+        if (! Arr::has($row, $header['listedat'])) {
             return 0;
         }
 
-        $date = Arr::get($row, $header['cardmarketId'], '01-01-1970 02:00:00');
+        $date = Arr::get($row, $header['listedat'], '01-01-1970 02:00:00');
         if (empty($date)) {
             return 0;
         }
 
-        return Carbon::createFromFormat('d-m-Y H:i:s', Arr::get($row, $header['listedAt'], '01-01-1970 02:00:00'))->timestamp;
+        return Carbon::createFromFormat('d-m-Y H:i:s', Arr::get($row, $header['listedat'], '01-01-1970 02:00:00'))->timestamp;
     }
 }
