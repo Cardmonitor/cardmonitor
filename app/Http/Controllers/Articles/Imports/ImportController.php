@@ -24,6 +24,7 @@ class ImportController extends Controller
         try {
             TCGPowerToolsImporter::import($user->id, Storage::path($filename));
         } catch (\Throwable $th) {
+            throw $th;
             return back()->with('status', [
                 'type' => 'danger',
                 'text' => 'Datei konnte nicht importiert werden.',
