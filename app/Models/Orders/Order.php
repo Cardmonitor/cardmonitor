@@ -701,17 +701,17 @@ class Order extends Model
         return (is_null($this->paid_at) ? '' : $this->paid_at->format('d.m.Y H:i'));
     }
 
-    public function getShippingAddressTextAttribute() : string
+    public function getShippingAddressTextAttribute(): string
     {
         return $this->shipping_name . "\n" . ($this->shipping_extra ? $this->shipping_extra . "\n" : '') . $this->shipping_street . "\n" . $this->shipping_zip . ' ' . $this->shipping_city . "\n" . $this->shipping_country;
     }
 
-    public function getStateFormattedAttribute() : string
+    public function getStateFormattedAttribute(): string
     {
         return Arr::get(self::STATES, $this->state, '');
     }
 
-    public function articles() : BelongsToMany
+    public function articles(): BelongsToMany
     {
         return $this->belongsToMany(Article::class)->with([
             'card.localizations',
@@ -720,17 +720,27 @@ class Order extends Model
         ->withTimestamps();
     }
 
-    public function buyer() : BelongsTo
+    public function articlesOnHold(): BelongsToMany
+    {
+        return $this->belongsToMany(Article::class)->with([
+            'card.localizations',
+            'card.expansion',
+        ])
+        ->withTimestamps()
+        ->where('state', Article::STATE_ON_HOLD);
+    }
+
+    public function buyer(): BelongsTo
     {
         return $this->belongsTo(CardmarketUser::class, 'buyer_id');
     }
 
-    public function evaluation() : HasOne
+    public function evaluation(): HasOne
     {
         return $this->hasOne(Evaluation::class);
     }
 
-    public function images() : MorphMany
+    public function images(): MorphMany
     {
         return $this->morphMany(Image::class, 'imageable');
     }

@@ -12,10 +12,28 @@
 
                 <button type="submit" class="btn btn-sm btn-secondary" title="Aktualisieren"><i class="fas fa-fw fa-sync"></i></button>
             </form>
+            <form action="{{ $model->path . '/articles/state' }}" class="ml-1" method="POST">
+                @csrf
+                @method('PUT')
+
+                @if ($model->articles_on_hold_count === 0)
+                    <input type="hidden" name="state" value="{{ \App\Models\Articles\Article::STATE_ON_HOLD }}">
+                    <button type="submit" class="btn btn-sm btn-secondary" title="Zurückstellen"><i class="fas fa-fw fa-pause"></i></button>
+                @else
+                    <input type="hidden" name="state" value="">
+                    <button type="submit" class="btn btn-sm btn-secondary" title="Picken"><i class="fas fa-fw fa-play"></i></button>
+                @endif
+            </form>
             <a href="{{ url('/order') }}" class="btn btn-sm btn-secondary ml-1">{{ __('app.overview') }}</a>
             <a href="{{ route('order.cardmarket.show', ['order' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1">Cardmarket Data</a>
         </div>
     </div>
+
+    @if ($model->articles_on_hold_count > 0)
+        <div class="alert alert-warning">
+            <i class="fas fa-fw fa-pause"></i> {{ $model->articles_on_hold_count }}/{{ $model->articles_count }} Artikel sind zurückgestellt.
+        </div>
+    @endif
 
     <div class="row align-items-stretch mb-3">
 

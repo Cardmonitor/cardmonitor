@@ -40,6 +40,10 @@
                     <button class="btn btn-sm btn-light" @click="next(false)">{{ $t('order.article.show.actions.next') }}</button>
                     <button class="btn btn-sm btn-primary text-overflow-ellipsis" title="Nächste Karte (Status OK)" @click="next(true, 0)">{{ $t('order.article.show.actions.next_ok') }}</button>
                 </div>
+                <div class="d-flex justify-content-around mt-3">
+                    <button class="btn btn-sm btn-light" @click="next(true, 2)" v-if="item.state != 2">Für Pickliste zurückstellen</button>
+                    <button class="btn btn-sm btn-light" @click="next(true, null)" v-if="item.state !== null">Status zurücksetzen</button>
+                </div>
             </div>
         </div>
     </div>

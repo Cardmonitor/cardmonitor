@@ -117,6 +117,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('order/{order}/transactions/{transaction}', 'Orders\TransactionController@update');
     Route::delete('order/{order}/transactions/{transaction}', 'Orders\TransactionController@destroy');
 
+    Route::put('order/{order}/articles/state', [\App\Http\Controllers\Orders\Articles\StateController::class, 'update'])->name('order.articles.state.update');
+
     Route::get('priceguide/{game}', 'PriceguideController@show');
 
     Route::get('rule/apply', 'Rules\ApplyController@index');

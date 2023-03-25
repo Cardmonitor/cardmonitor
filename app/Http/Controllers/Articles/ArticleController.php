@@ -205,7 +205,7 @@ class ArticleController extends Controller
             'unit_price_formatted' => 'sometimes|required|formated_number',
             'unit_cost_formatted' => 'sometimes|required|formated_number',
             'provision_formatted' => 'sometimes|required|formated_number',
-            'state' => 'sometimes|required|integer',
+            'state' => 'sometimes|nullable|integer',
             'state_comments' => 'sometimes|nullable|string',
         ]));
 

@@ -29,7 +29,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, key) in items">
+                        <tr v-for="(item, key) in items" :class="{'table-warning': item.articles_on_hold_count > 0}">
                             <td class="align-middle d-none d-md-table-cell">{{ item.paid_at_formatted }}</td>
                             <td class="align-middle">
                                 <a :href="item.path">{{ item.cardmarket_order_id }}</a>
@@ -40,6 +40,7 @@
                             </td>
                             <td class="align-middle d-none d-sm-table-cell text-right">
                                 {{ item.articles_count }}
+                                <div class="text-muted" v-if="item.articles_on_hold_count"><i class="fas fa-fw fa-pause"></i> {{ item.articles_on_hold_count }}/{{ item.articles_count }}</div>
                             </td>
                         </tr>
                     </tbody>

@@ -34,6 +34,9 @@ class OrderController extends Controller
                     'buyer',
                     'evaluation'
                 ])
+                ->withCount([
+                    'articlesOnHold'
+                ])
                 ->orderBy('paid_at', 'DESC')
                 ->paginate();
         }
@@ -72,6 +75,8 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
+        $order->loadCount('articlesOnHold');
+
         return view($this->baseViewPath . '.show')
             ->with('customs', Custom::where('user_id', $order->user_id)->get())
             ->with('model', $order->load([

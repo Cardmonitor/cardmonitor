@@ -460,6 +460,10 @@ class Article extends Model
                 'language',
             ])
             ->where('articles.user_id', $user_id)
+            ->where(function ($query) {
+                $query->whereNull('articles.state')
+                    ->orWhere('articles.state', '!=', Article::STATE_ON_HOLD);
+            })
             ->where('orders.state', 'paid')
             ->orderBy('articles.number', 'ASC')
             ->get();

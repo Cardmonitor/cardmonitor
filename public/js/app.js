@@ -12217,7 +12217,11 @@ var render = function render() {
   }, [_vm._v("Umsatz")]), _vm._v(" "), _c("th", {
     staticClass: "text-right"
   }, [_vm._v(_vm._s(_vm.$t("app.article")))])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.items, function (item, key) {
-    return _c("tr", [_c("td", {
+    return _c("tr", {
+      "class": {
+        "table-warning": item.articles_on_hold_count > 0
+      }
+    }, [_c("td", {
       staticClass: "align-middle d-none d-md-table-cell"
     }, [_vm._v(_vm._s(item.paid_at_formatted))]), _vm._v(" "), _c("td", {
       staticClass: "align-middle"
@@ -12231,7 +12235,11 @@ var render = function render() {
       staticClass: "align-middle d-none d-sm-table-cell text-right"
     }, [_vm._v("\n                            " + _vm._s(item.revenue_formatted) + " €\n                        ")]), _vm._v(" "), _c("td", {
       staticClass: "align-middle d-none d-sm-table-cell text-right"
-    }, [_vm._v("\n                            " + _vm._s(item.articles_count) + "\n                        ")])]);
+    }, [_vm._v("\n                            " + _vm._s(item.articles_count) + "\n                            "), item.articles_on_hold_count ? _c("div", {
+      staticClass: "text-muted"
+    }, [_c("i", {
+      staticClass: "fas fa-fw fa-pause"
+    }), _vm._v(" " + _vm._s(item.articles_on_hold_count) + "/" + _vm._s(item.articles_count))]) : _vm._e()])]);
   }), 0), _vm._v(" "), _c("tfoot", [_c("tr", {
     staticClass: "font-weight-bold"
   }, [_c("td", {
@@ -13693,7 +13701,23 @@ var render = function render() {
         return _vm.next(true, 0);
       }
     }
-  }, [_vm._v(_vm._s(_vm.$t("order.article.show.actions.next_ok")))])])])])]) : _vm._e();
+  }, [_vm._v(_vm._s(_vm.$t("order.article.show.actions.next_ok")))])]), _vm._v(" "), _c("div", {
+    staticClass: "d-flex justify-content-around mt-3"
+  }, [_vm.item.state != 2 ? _c("button", {
+    staticClass: "btn btn-sm btn-light",
+    on: {
+      click: function click($event) {
+        return _vm.next(true, 2);
+      }
+    }
+  }, [_vm._v("Für Pickliste zurückstellen")]) : _vm._e(), _vm._v(" "), _vm.item.state !== null ? _c("button", {
+    staticClass: "btn btn-sm btn-light",
+    on: {
+      click: function click($event) {
+        return _vm.next(true, null);
+      }
+    }
+  }, [_vm._v("Status zurücksetzen")]) : _vm._e()])])])]) : _vm._e();
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -14206,7 +14230,11 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("tr", [_c("td", {
+  return _c("tr", {
+    "class": {
+      "table-warning": _vm.item.articles_on_hold_count > 0
+    }
+  }, [_c("td", {
     staticClass: "align-middle d-none d-sm-table-cell pointer",
     on: {
       click: _vm.link
@@ -14223,7 +14251,11 @@ var render = function render() {
     on: {
       click: _vm.link
     }
-  }, [_vm._v(_vm._s(_vm.item.articles_count))]), _vm._v(" "), _c("td", {
+  }, [_vm._v("\n        " + _vm._s(_vm.item.articles_count) + "\n        "), _vm.item.articles_on_hold_count ? _c("div", {
+    staticClass: "text-muted"
+  }, [_c("i", {
+    staticClass: "fas fa-fw fa-pause"
+  }), _vm._v(" " + _vm._s(_vm.item.articles_on_hold_count) + "/" + _vm._s(_vm.item.articles_count))]) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-md-table-cell text-right pointer",
     on: {
       click: _vm.link
