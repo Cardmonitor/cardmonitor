@@ -363,10 +363,10 @@ class Order extends Model
         ];
     }
 
-    public static function getForPicklist(Collection $articles, int $user_id): Collection
+    public static function getForPicklist(int $user_id): Collection
     {
         return self::where('user_id', $user_id)
-            ->whereIn('id', $articles->pluck('order_id')->unique()->toArray())
+            ->where('orders.state', ORDER::STATE_PAID)
             ->orderBy('paid_at', 'ASC')
             ->get()
             ->keyBy('id');

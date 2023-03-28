@@ -441,7 +441,7 @@ class Article extends Model
                 'language',
             ])
             ->where('articles.user_id', $user_id)
-            ->where('orders.state', 'paid')
+            ->where('orders.state', ORDER::STATE_PAID)
             ->orderBy('cards.color_order_by', 'ASC')
             ->orderBy('cards.cmc', 'ASC')
             ->groupBy('articles.card_id')

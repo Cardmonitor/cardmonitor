@@ -13,7 +13,7 @@ class PicklistController extends Controller
         $user = auth()->user();
 
         $articles = Article::getForPicklist($user->id);
-        $orders = Order::getForPicklist($articles, $user->id);
+        $orders = Order::getForPicklist($user->id);
         $sorted_order_ids = $orders->pluck('id')->toArray();
 
         foreach ($articles as $article) {
