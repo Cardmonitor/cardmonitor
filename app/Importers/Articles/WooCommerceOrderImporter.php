@@ -93,7 +93,7 @@ class WooCommerceOrderImporter
         $card = Card::firstOrImport($cardmarket_product_id);
 
         $language = Arr::first($line_item['meta_data'], function ($meta) {
-            return $meta['key'] == 'sprache';
+            return str_starts_with($meta['key'], 'sprache');
         });
 
         $condition = Arr::first($line_item['meta_data'], function ($meta) {
