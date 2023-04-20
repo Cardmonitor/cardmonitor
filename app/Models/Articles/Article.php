@@ -92,6 +92,7 @@ class Article extends Model
     ];
 
     protected $fillable = [
+        'id',
         'bought_at_formatted',
         'bought_at',
         'card_id',
