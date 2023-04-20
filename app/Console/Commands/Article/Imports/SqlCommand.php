@@ -44,6 +44,10 @@ class SqlCommand extends Command
     public function handle()
     {
         $header = [];
+        $states_count = [
+            'CREATED' => 0,
+            'EXISTED' => 0,
+        ];
         $filepath = storage_path('app/' . $this->argument('path'));
 
         foreach (self::parseCsv($filepath) as $row_index => $row) {
@@ -78,8 +82,13 @@ class SqlCommand extends Command
                 'id' => $attributes['id'],
             ], $attributes);
 
+            $states_count[$model_state]++;
+
             echo now()->format('Y-m-d H:i:s') . "\t" . $row_index . "\t" . $article->id . "\t" . $model_state . PHP_EOL;
         }
+
+        $this->line('CREATED: ' . $states_count['CREATED']);
+        $this->line('EXISTED: ' . $states_count['EXISTED']);
 
         return self::SUCCESS;
     }
