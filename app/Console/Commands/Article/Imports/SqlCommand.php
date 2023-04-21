@@ -98,7 +98,7 @@ class SqlCommand extends Command
 
             $states_count[$model_state]++;
 
-            echo now()->format('Y-m-d H:i:s') . "\t" . $row_index . "\t" . $article->id . "\t" . $model_state . PHP_EOL;
+            $this->line(now()->format('Y-m-d H:i:s') . "\t" . $row_index . "\t" . $attributes['id'] . "\t" . $model_state);
         }
 
         foreach ($states_count as $action => $count) {
