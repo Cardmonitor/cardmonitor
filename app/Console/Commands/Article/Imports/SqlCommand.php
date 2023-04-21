@@ -17,7 +17,8 @@ class SqlCommand extends Command
      */
     protected $signature = 'article:imports:sql
         {path}
-        {--create : Create new articles}';
+        {--create : Create new articles}
+        {--update : Update existing articles}';
 
     /**
      * The console command description.
@@ -47,6 +48,8 @@ class SqlCommand extends Command
         $states_count = [
             'CREATED' => 0,
             'EXISTED' => 0,
+            'NOT_FOUND' => 0,
+            'UPDATED' => 0,
         ];
         $filepath = storage_path('app/' . $this->argument('path'));
 
@@ -72,23 +75,35 @@ class SqlCommand extends Command
                 ], $attributes);
                 $model_state = ($article->wasRecentlyCreated ? 'CREATED' : 'EXISTED');
             }
+            elseif ($this->option('update')) {
+                $affected_rows = Article::where('id', $attributes['id'])->update([
+                    'cardmarket_article_id' => $attributes['cardmarket_article_id'],
+                    'condition_sort' => $attributes['condition_sort'],
+                    'condition' => $attributes['condition'],
+                    'index' => $attributes['index'],
+                    'is_altered' => $attributes['is_altered'],
+                    'is_foil' => $attributes['is_foil'],
+                    'is_playset' => $attributes['is_playset'],
+                    'is_signed' => $attributes['is_signed'],
+                    'language_id' => $attributes['language_id'],
+                ]);
+                $model_state = $affected_rows ? 'UPDATED' : 'NOT_FOUND';
+            }
             else {
                 $article = Article::firstOrNew([
                     'id' => $attributes['id'],
                 ], $attributes);
                 $model_state = (!$article->exists ? 'CREATED' : 'EXISTED');
             }
-            $article = Article::firstOrNew([
-                'id' => $attributes['id'],
-            ], $attributes);
 
             $states_count[$model_state]++;
 
             echo now()->format('Y-m-d H:i:s') . "\t" . $row_index . "\t" . $article->id . "\t" . $model_state . PHP_EOL;
         }
 
-        $this->line('CREATED: ' . $states_count['CREATED']);
-        $this->line('EXISTED: ' . $states_count['EXISTED']);
+        foreach ($states_count as $action => $count) {
+            $this->line($action . ': ' . $count);
+        }
 
         return self::SUCCESS;
     }
