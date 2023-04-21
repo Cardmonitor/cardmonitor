@@ -9,7 +9,7 @@
                     <filter-search v-model="filter.searchtext" @input="search()"></filter-search>
                 </div>
                 <button class="btn btn-sm btn-secondary ml-1" @click="filter.show = !filter.show"><i class="fas fa-filter"></i></button>
-                <button class="btn btn-sm btn-secondary ml-1" @click="sync" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i></button>
+                <button class="btn btn-sm btn-secondary ml-1" @click="sync" :disabled="syncing.status == 1" v-if="false"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i></button>
                 <button type="button" class="btn btn-sm btn-primary text-overflow-ellipsis ml-1" :title="$t('rule.apply')" data-toggle="modal" data-target="#confirm-rule-apply" :disabled="applying.status == 1" v-if="false">
                     <i class="fas fa-spinner fa-spin mr-1" v-show="applying.status == 1"></i>{{ $t('rule.apply') }}
                 </button>

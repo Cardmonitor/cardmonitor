@@ -10062,20 +10062,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-filter"
-  })]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-sm btn-secondary ml-1",
-    attrs: {
-      disabled: _vm.syncing.status == 1
-    },
-    on: {
-      click: _vm.sync
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-sync",
-    "class": {
-      "fa-spin": _vm.syncing.status == 1
-    }
-  })]), _vm._v(" "), false ? undefined : _vm._e(), _vm._v(" "), _c("button", {
+  })]), _vm._v(" "), false ? undefined : _vm._e(), _vm._v(" "), false ? undefined : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-sm btn-secondary ml-1",
     attrs: {
       type: "button",
