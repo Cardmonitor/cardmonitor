@@ -68,7 +68,7 @@ class UpdateCommand extends Command
                 $article_count = $this->user->articles()->where('cardmarket_article_id', $cardmarket_article_id)->count();
             }
 
-            $states_key = $article_count === $amount ? 'FOUND' : 'NOT_FOUND';
+            $states_key = $article_count == $amount ? 'FOUND' : 'NOT_FOUND';
             $states_count[$states_key]++;
 
             $this->line(now()->format('Y-m-d H:i:s') . "\t" . $cardmarket_article_id . "\t" . $unit_price . '€' . "\t" . $article_count . '/' . $amount . "\t" . $states_key);
