@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('CardmarketApi', function ($app, array $parameters) {
 
             $access = [
-                'url' => (($this->app->environment() == 'production') ? Api::URL_API : Api::URL_SANDBOX),
+                'url' => Api::URL_API,
             ];
 
             if (Arr::has($parameters, 'api')) {
