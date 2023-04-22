@@ -107,6 +107,13 @@
                                 <div class="invalid-feedback" v-text="'unit_price_formatted' in errors ? errors.unit_price_formatted[0] : ''"></div>
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label col-form-label-sm" for="cardmarket_comments">Kommentar</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control form-control-sm" id="cardmarket_comments" v-model="form.cardmarket_comments">
+                                <div class="invalid-feedback" v-text="'cardmarket_comments' in errors ? errors.cardmarket_comments[0] : ''"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

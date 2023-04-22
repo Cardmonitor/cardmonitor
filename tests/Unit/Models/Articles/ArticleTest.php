@@ -1095,4 +1095,73 @@ class ArticleTest extends TestCase
 
         $this->assertEquals('Test Karte - EX - German - Foil', $article->fresh()->order_export_name);
     }
+
+    /**
+     * @test
+     */
+    public function it_gets_the_number_from_its_cardmarket_comments()
+    {
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'cardmarket_comments' => null,
+        ]);
+
+        $this->assertEquals('', Article::numberFromCardmarketComments($article->cardmarket_comments));
+        $this->assertEquals('', $article->numberFromCardmarketComments);
+
+        $article->update([
+            'cardmarket_comments' => 'Test',
+        ]);
+
+        $this->assertEquals('', Article::numberFromCardmarketComments($article->cardmarket_comments));
+        $this->assertEquals('', $article->numberFromCardmarketComments);
+
+        $article->update([
+            'cardmarket_comments' => 'Test ##A000.001##',
+        ]);
+
+        $this->assertEquals('A000.001', Article::numberFromCardmarketComments($article->cardmarket_comments));
+        $this->assertEquals('A000.001', $article->numberFromCardmarketComments);
+
+        $article->update([
+            'cardmarket_comments' => 'Test ##A000.001## Test',
+        ]);
+
+        $this->assertEquals('A000.001', Article::numberFromCardmarketComments($article->cardmarket_comments));
+        $this->assertEquals('A000.001', $article->numberFromCardmarketComments);
+    }
+
+    /**
+     * @test
+     */
+    public function it_sets_its_number_in_cardmarket_comments()
+    {
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'cardmarket_comments' => null,
+        ]);
+
+        $article->number = 'A000.001';
+        $this->assertEquals('##A000.001##', $article->cardmarket_comments);
+
+        $article->number = null;
+        $this->assertSame(null, $article->cardmarket_comments);
+
+        $article->cardmarket_comments = 'Test';
+        $article->number = 'A000.001';
+        $this->assertEquals('Test ##A000.001##', $article->cardmarket_comments);
+
+        $article->number = 'A000.002';
+        $this->assertEquals('Test ##A000.002##', $article->cardmarket_comments);
+
+        $article->number = null;
+        $this->assertEquals('Test', $article->cardmarket_comments);
+
+        $article->cardmarket_comments = 'Test ##A000.001## Test';
+        $article->number = 'A000.002';
+        $this->assertEquals('Test ##A000.002## Test', $article->cardmarket_comments);
+
+        $article->number = null;
+        $this->assertEquals('Test Test', $article->cardmarket_comments);
+    }
 }

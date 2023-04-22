@@ -504,6 +504,22 @@ class Article extends Model
         return '';
     }
 
+    public static function numberFromCardmarketComments(?string $cardmarket_comments): string
+    {
+        if (! $cardmarket_comments) {
+            return '';
+        }
+
+        // Text ##A001.001## finden
+        preg_match('/##(.*?)##/', $cardmarket_comments, $matches);
+
+        if (isset($matches[1])) {
+            return $matches[1];
+        }
+
+        return '';
+    }
+
     /**
      * Create a new Eloquent Collection instance.
      *
@@ -822,6 +838,23 @@ class Article extends Model
         $this->attributes['condition_sort'] = (int) array_search($value, array_keys(array_reverse(self::CONDITIONS)));
     }
 
+    public function setNumberAttribute($value): void
+    {
+        $this->attributes['number'] = $value;
+        $number_from_cardmarket_comments = $this->number_from_cardmarket_comments;
+
+        if (empty($value)) {
+            $this->attributes['cardmarket_comments'] = trim(str_replace('  ' , ' ', preg_replace('/##.*##/', '', $this->cardmarket_comments))) ?: null;
+        }
+        elseif (empty($number_from_cardmarket_comments)) {
+            $this->attributes['cardmarket_comments'] = trim($this->cardmarket_comments . ' ##' . $value . '##');
+        }
+        else {
+            $this->attributes['cardmarket_comments'] = str_replace($number_from_cardmarket_comments, $value, $this->cardmarket_comments);
+        }
+
+    }
+
     public function setSoldAtFormattedAttribute($value)
     {
         $this->attributes['sold_at'] = Carbon::createFromFormat('d.m.Y H:i', $value);
@@ -909,6 +942,11 @@ class Article extends Model
         }
 
         return $localization->name;
+    }
+
+    public function getNumberFromCardmarketCommentsAttribute(): string
+    {
+        return self::numberFromCardmarketComments($this->cardmarket_comments);
     }
 
     public function getOrderExportNameAttribute() : string

@@ -125,6 +125,14 @@
                         <div class="col-label"><b>Verkaufspreis</b></div>
                         <div class="col-value">{{ $model->unit_price_formatted }} €</div>
                     </div>
+                    <div class="row">
+                        <div class="col-label"><b>Kommentar</b></div>
+                        <div class="col-value">{{ $model->cardmarket_comments }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>Nummer aus Kommentar</b></div>
+                        <div class="col-value">{{ $model->number_from_cardmarket_comments }}</div>
+                    </div>
                 </div>
             </div>
 

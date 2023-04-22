@@ -8351,6 +8351,41 @@ var render = function render() {
     domProps: {
       textContent: _vm._s("unit_price_formatted" in _vm.errors ? _vm.errors.unit_price_formatted[0] : "")
     }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "form-group row"
+  }, [_c("label", {
+    staticClass: "col-sm-4 col-form-label col-form-label-sm",
+    attrs: {
+      "for": "cardmarket_comments"
+    }
+  }, [_vm._v("Kommentar")]), _vm._v(" "), _c("div", {
+    staticClass: "col-sm-8"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.cardmarket_comments,
+      expression: "form.cardmarket_comments"
+    }],
+    staticClass: "form-control form-control-sm",
+    attrs: {
+      type: "text",
+      id: "cardmarket_comments"
+    },
+    domProps: {
+      value: _vm.form.cardmarket_comments
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form, "cardmarket_comments", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("div", {
+    staticClass: "invalid-feedback",
+    domProps: {
+      textContent: _vm._s("cardmarket_comments" in _vm.errors ? _vm.errors.cardmarket_comments[0] : "")
+    }
   })])])])])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c("div", {
     staticClass: "fixed-bottom bg-white p-3 text-right"
   }, [_c("button", {
