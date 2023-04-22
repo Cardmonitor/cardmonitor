@@ -249,7 +249,8 @@ class Article extends Model
 
             // Alle vorhandenen Artikel synchronisieren
             foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
-                $articles = $articles_for_card->where('cardmarket_article_id', $cardmarket_article['cardmarket_article_id'])
+                $articles = $articles_for_card
+                    ->where('cardmarket_article_id', $cardmarket_article['cardmarket_article_id'])
                     ->take($cardmarket_article['amount']);
                 foreach ($articles as $article) {
                     $article->update([
@@ -257,9 +258,9 @@ class Article extends Model
                         'language_id' => $cardmarket_article['language_id'],
                         'condition' => Arr::get($cardmarket_article, 'condition', ''),
                         'is_foil' => Arr::get($cardmarket_article, 'is_foil', false),
-                        'is_signed' => Arr::get($cardmarket_article, 'isSigned', false),
-                        'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
-                        'is_playset' => Arr::get($cardmarket_article, 'isPlayset', false),
+                        'is_signed' => Arr::get($cardmarket_article, 'is_signed', false),
+                        'is_altered' => Arr::get($cardmarket_article, 'is_altered', false),
+                        'is_playset' => Arr::get($cardmarket_article, 'is_playset', false),
                         'unit_price' => $cardmarket_article['unit_price'],
                     ]);
                     $updated_article_ids[] = $article->id;
@@ -276,12 +277,13 @@ class Article extends Model
 
             // Gleiche Artikel anpassen
             foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
-                $articles = $articles_for_card->where('articles.language_id', $cardmarket_article['language_id'])
+                $articles = $articles_for_card
+                    ->where('language_id', $cardmarket_article['language_id'])
                     ->where('condition', Arr::get($cardmarket_article, 'condition', ''))
                     ->where('is_foil', Arr::get($cardmarket_article, 'is_foil', false))
-                    ->where('is_signed', Arr::get($cardmarket_article, 'isSigned', false))
-                    ->where('is_altered', Arr::get($cardmarket_article, 'isAltered', false))
-                    ->where('is_playset', Arr::get($cardmarket_article, 'isPlayset', false))
+                    ->where('is_signed', Arr::get($cardmarket_article, 'is_signed', false))
+                    ->where('is_altered', Arr::get($cardmarket_article, 'is_altered', false))
+                    ->where('is_playset', Arr::get($cardmarket_article, 'is_playset', false))
                     ->take($cardmarket_article['amount']);
                 foreach ($articles as $article) {
                     $article->update([
@@ -290,9 +292,9 @@ class Article extends Model
                         'language_id' => $cardmarket_article['language_id'],
                         'condition' => Arr::get($cardmarket_article, 'condition', ''),
                         'is_foil' => Arr::get($cardmarket_article, 'is_foil', false),
-                        'is_signed' => Arr::get($cardmarket_article, 'isSigned', false),
-                        'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
-                        'is_playset' => Arr::get($cardmarket_article, 'isPlayset', false),
+                        'is_signed' => Arr::get($cardmarket_article, 'is_signed', false),
+                        'is_altered' => Arr::get($cardmarket_article, 'is_altered', false),
+                        'is_playset' => Arr::get($cardmarket_article, 'is_playset', false),
                         'unit_price' => $cardmarket_article['unit_price'],
                     ]);
                     $updated_article_ids[] = $article->id;
@@ -320,9 +322,9 @@ class Article extends Model
                         'language_id' => $cardmarket_article['language_id'],
                         'condition' => Arr::get($cardmarket_article, 'condition', ''),
                         'is_foil' => Arr::get($cardmarket_article, 'is_foil', false),
-                        'is_signed' => Arr::get($cardmarket_article, 'isSigned', false),
-                        'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
-                        'is_playset' => Arr::get($cardmarket_article, 'isPlayset', false),
+                        'is_signed' => Arr::get($cardmarket_article, 'is_signed', false),
+                        'is_altered' => Arr::get($cardmarket_article, 'is_altered', false),
+                        'is_playset' => Arr::get($cardmarket_article, 'is_playset', false),
                         'unit_price' => $cardmarket_article['unit_price'],
                     ]);
                     $updated_article_ids[] = $article->id;
@@ -351,9 +353,9 @@ class Article extends Model
                         'language_id' => $cardmarket_article['language_id'],
                         'condition' => Arr::get($cardmarket_article, 'condition', ''),
                         'is_foil' => Arr::get($cardmarket_article, 'is_foil', false),
-                        'is_signed' => Arr::get($cardmarket_article, 'isSigned', false),
-                        'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
-                        'is_playset' => Arr::get($cardmarket_article, 'isPlayset', false),
+                        'is_signed' => Arr::get($cardmarket_article, 'is_signed', false),
+                        'is_altered' => Arr::get($cardmarket_article, 'is_altered', false),
+                        'is_playset' => Arr::get($cardmarket_article, 'is_playset', false),
                         'unit_price' => $cardmarket_article['unit_price'],
                         'unit_cost' => $cardmarket_article['unit_cost'],
                         'storage_id' => $cardmarket_article['storage_id'],
