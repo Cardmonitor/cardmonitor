@@ -124,7 +124,7 @@
 
         <div class="fixed-bottom bg-white p-3 text-right">
             <button class="btn btn-primary btn-sm" @click="update(false)">Speichern</button>
-            <button class="btn btn-secondary btn-sm" @click="update(true)">Speichern & Hochladen</button>
+            <button class="btn btn-secondary btn-sm" @click="update(true)" v-show="form.number">Speichern & Hochladen</button>
         </div>
     </div>
 </template>

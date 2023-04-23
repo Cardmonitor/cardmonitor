@@ -8396,6 +8396,12 @@ var render = function render() {
       }
     }
   }, [_vm._v("Speichern")]), _vm._v(" "), _c("button", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.form.number,
+      expression: "form.number"
+    }],
     staticClass: "btn btn-secondary btn-sm",
     on: {
       click: function click($event) {
@@ -8743,6 +8749,12 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-fw fa-save"
   })]), _vm._v(" "), _c("button", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.item.number,
+      expression: "item.number"
+    }],
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -8953,6 +8965,12 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-fw fa-save"
   })]), _vm._v(" "), _c("button", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.item.number,
+      expression: "item.number"
+    }],
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -10651,7 +10669,21 @@ var render = function render() {
     attrs: {
       value: "storing"
     }
-  }, [_vm._v("Einlagern")])]), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm.storages.length ? _c("optgroup", {
+  }, [_vm._v("Einlagern")])]), _vm._v(" "), _c("optgroup", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.filter.is_numbered === 1,
+      expression: "filter.is_numbered === 1"
+    }],
+    attrs: {
+      label: "Cardmarket"
+    }
+  }, [_c("option", {
+    attrs: {
+      value: "syncCardmarket"
+    }
+  }, [_vm._v("Upload zu Cardmarket")])]), _vm._v(" "), _vm.storages.length ? _c("optgroup", {
     attrs: {
       label: "Lagerplatz"
     }
@@ -10809,7 +10841,7 @@ var render = function render() {
     staticClass: "modal-header"
   }, [_c("h5", {
     staticClass: "modal-title"
-  }, [_vm._v(_vm._s(_vm.$t("rule.apply")))]), _vm._v(" "), _vm._m(3)]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("rule.apply")))]), _vm._v(" "), _vm._m(2)]), _vm._v(" "), _c("div", {
     staticClass: "modal-body"
   }, [_c("p", [_vm._v(_vm._s(_vm.$t("rule.modal_apply.body.question")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.$t("rule.modal_apply.body.comment")))]), _vm._v(" "), _c("div", {
     staticClass: "alert alert-danger",
@@ -10875,18 +10907,6 @@ var staticRenderFns = [function () {
       value: "resetNumber"
     }
   }, [_vm._v("Nummern entfernen")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("optgroup", {
-    attrs: {
-      label: "Cardmarktet"
-    }
-  }, [_c("option", {
-    attrs: {
-      value: "syncCardmarket"
-    }
-  }, [_vm._v("Upload zu Cardmarket")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

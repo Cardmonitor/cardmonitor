@@ -168,7 +168,7 @@
                                 <optgroup label="Einlagern" v-show="(filter.is_numbered == 1 && filter.is_stored == 0)">
                                     <option value="storing">Einlagern</option>
                                 </optgroup>
-                                <optgroup label="Cardmarktet">
+                                <optgroup label="Cardmarket" v-show="filter.is_numbered === 1">
                                     <option value="syncCardmarket">Upload zu Cardmarket</option>
                                 </optgroup>
                                 <optgroup label="Lagerplatz" v-if="storages.length">

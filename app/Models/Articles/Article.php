@@ -1054,7 +1054,7 @@ class Article extends Model
         }
 
         if (is_null($this->exported_at) && is_null($this->synced_at)) {
-            return 'fa-square text-danger';
+            return 'fa-cloud-upload-alt text-warning';
         }
 
         return 'fa-check text-success';
