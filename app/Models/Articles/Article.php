@@ -178,6 +178,8 @@ class Article extends Model
                 $model->condition = self::DEFAULT_CONDITION;
             }
 
+            $model->cardmarket_comments = 'Your LGS based in Lübeck |';
+
             return true;
         });
     }
