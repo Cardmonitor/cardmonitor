@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands\Article\Price;
 
-use App\Models\Games\Game;
 use App\User;
 use Generator;
+use App\Models\Games\Game;
 use Illuminate\Console\Command;
+use App\Transformers\Articles\Csvs\Transformer;
 
 class UpdateCommand extends Command
 {
@@ -50,28 +51,42 @@ class UpdateCommand extends Command
             return self::FAILURE;
         }
 
-        foreach ($this->parseCsv(storage_path('app/' . $filename)) as $row_index => $row) {
+        if ($this->option('update')) {
+            $this->user->articles()->whereNotNull('cardmarket_article_id')
+                ->sold(0)
+                ->update([
+                    'has_sync_error' => true,
+                    'sync_error' => 'Cardmarket Article ID nicht vorhanden',
+                    'should_sync' => true,
+                ]);
+        }
+
+        foreach ($this->parseCsv(storage_path('app/' . $filename)) as $row_index => $stock_row) {
             if ($row_index === 0) {
                 continue;
             }
 
-            $cardmarket_article_id = $row[0];
-            $unit_price = $row[6];
-            $amount = $row[14];
+            $cardmarket_article = Transformer::transform(Game::ID_MAGIC, $stock_row);
 
             if ($this->option('update')) {
-                $article_count = $this->user->articles()->where('cardmarket_article_id', $cardmarket_article_id)->update([
-                    'unit_price' => $unit_price,
-                ]);
+                $article_count = $this->user->articles()->where('cardmarket_article_id', $cardmarket_article['cardmarket_article_id'])
+                    ->sold(0)
+                    ->update([
+                        'unit_price' => $cardmarket_article['unit_price'],
+                        'synced_at' => now(),
+                        'has_sync_error' => false,
+                        'sync_error' => null,
+                        'should_sync' => false,
+                    ]);
             }
             else {
-                $article_count = $this->user->articles()->where('cardmarket_article_id', $cardmarket_article_id)->count();
+                $article_count = $this->user->articles()->where('cardmarket_article_id', $cardmarket_article['cardmarket_article_id'])->sold(0)->count();
             }
 
-            $states_key = $article_count == $amount ? 'FOUND' : 'NOT_FOUND';
+            $states_key = $article_count == $cardmarket_article['amount'] ? 'FOUND' : 'NOT_FOUND';
             $states_count[$states_key]++;
 
-            $this->line(now()->format('Y-m-d H:i:s') . "\t" . $cardmarket_article_id . "\t" . $unit_price . '€' . "\t" . $article_count . '/' . $amount . "\t" . $states_key);
+            $this->line(now()->format('Y-m-d H:i:s') . "\t" . $cardmarket_article['cardmarket_article_id'] . "\t" . $cardmarket_article['unit_price'] . '€' . "\t" . $article_count . '/' . $cardmarket_article['amount'] . "\t" . $states_key);
         }
 
         foreach ($states_count as $action => $count) {
