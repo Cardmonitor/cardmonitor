@@ -2,6 +2,8 @@
 
 namespace App\Transformers\Articles\Csvs;
 
+use App\Models\Articles\Article;
+
 class MtG
 {
     public static function transform(array $data) : array
@@ -22,6 +24,7 @@ class MtG
             'amount' => $data[14],
             'has_sync_error' => false,
             'sync_error' => null,
+            'number_from_cardmarket_comments' => Article::numberFromCardmarketComments($data[13]),
         ];
     }
 }
