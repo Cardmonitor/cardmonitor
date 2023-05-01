@@ -38,6 +38,9 @@ class StockfileCommand extends Command
         $this->user = User::find($this->argument('user'));
 
         $csv_path = storage_path('app/public/' . $this->user->id . '-stock-' . Game::ID_MAGIC . '-log.csv');
+        if (file_exists($csv_path)) {
+            unlink($csv_path);
+        }
         $this->csv_file_handle = fopen($csv_path, 'w');
         $header = array_keys($this->output(0, '', new Article(), []));
         fputcsv($this->csv_file_handle, $header, ';');
