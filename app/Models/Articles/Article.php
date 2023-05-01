@@ -1295,6 +1295,7 @@ class Article extends Model
             $join->where('localizations.localizationable_type', '=', Card::class);
         })
             ->where('localizations.name', 'like', '%' . $value . '%')
+            ->orWhere('articles.number', 'like', '%' . $value . '%')
             ->groupBy('articles.id');
     }
 
