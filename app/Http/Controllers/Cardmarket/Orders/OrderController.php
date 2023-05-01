@@ -52,6 +52,9 @@ class OrderController extends Controller
                 $this->syncStateOrders($user, $state);
                 if ($state == Order::STATE_PAID) {
                     $this->syncStateOrders($user, Order::STATE_BOUGHT);
+                    Artisan::queue('article:imports:cardmarket:stockfile', [
+                        'user' => $user->id,
+                    ]);
                 }
             }
             else {
