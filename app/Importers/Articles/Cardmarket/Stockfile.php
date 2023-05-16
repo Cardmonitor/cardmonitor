@@ -2,6 +2,7 @@
 
 namespace App\Importers\Articles\Cardmarket;
 
+use App\User;
 use Generator;
 use App\Models\Cards\Card;
 use Illuminate\Support\Arr;
@@ -23,6 +24,20 @@ class Stockfile
         $this->user_id = $user_id;
         $this->path = $path;
         $this->game_id = $game_id;
+    }
+
+    public function download(): string
+    {
+        $user = User::with('api')->find($this->user_id);
+
+        if (is_null($user)) {
+            return '';
+        }
+
+        $filename = $user->cardmarketApi->downloadStockFile($user->id, $this->game_id);
+        $this->path = storage_path('app/' . $filename);
+
+        return $this->path;
     }
 
     public function parse(): Generator

@@ -47,6 +47,7 @@ class StockfileCommand extends Command
 
         $path = storage_path('app/' . $this->user->id . '-stock-' . Game::ID_MAGIC . '.csv');
         $Stockfile = new \App\Importers\Articles\Cardmarket\Stockfile($this->user->id, $path, Game::ID_MAGIC);
+        $Stockfile->download();
         $cardmarket_cards = $Stockfile->setCardmarketCards();
         $stockfile_article_count = 0;
         $all_updated_article_ids = [];
@@ -256,7 +257,7 @@ class StockfileCommand extends Command
             'cardmarket_is_playset' => Arr::has($cardmarket_article, 'is_playset') ? (int) Arr::get($cardmarket_article, 'is_playset') : '-',
             'article_number' => str_pad($article->number ?? '-', 10, ' ', STR_PAD_RIGHT),
             'cardmarket_number' => str_pad(Arr::get($cardmarket_article, 'number_from_cardmarket_comments', '-'), 10, ' ', STR_PAD_RIGHT),
-            'cardmarket_comments' => Arr::get($cardmarket_article, 'comments', '-'),
+            'cardmarket_comments' => Arr::get($cardmarket_article, 'cardmarket_comments', '-'),
         ];
     }
 
