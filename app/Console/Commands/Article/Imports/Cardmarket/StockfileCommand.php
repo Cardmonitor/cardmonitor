@@ -85,6 +85,15 @@ class StockfileCommand extends Command
                     $output = $this->output($cardmarket_product_id, $import_state, $article, $cardmarket_article);
                     $this->line(implode("\t", $output));
                     $this->addToCsvFile($output);
+
+                    $article->update([
+                        'cardmarket_article_id' => $cardmarket_article['cardmarket_article_id'],
+                        'unit_price' => $cardmarket_article['unit_price'],
+                        'has_sync_error' => false,
+                        'sync_error' => null,
+                        'should_sync' => false,
+                    ]);
+
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
                     $cardmarket_article['amount']--;
@@ -105,6 +114,15 @@ class StockfileCommand extends Command
                     $output = $this->output($cardmarket_product_id, $import_state, $article, $cardmarket_article);
                     $this->line(implode("\t", $output));
                     $this->addToCsvFile($output);
+
+                    $article->update([
+                        'cardmarket_article_id' => $cardmarket_article['cardmarket_article_id'],
+                        'unit_price' => $cardmarket_article['unit_price'],
+                        'has_sync_error' => false,
+                        'sync_error' => null,
+                        'should_sync' => false,
+                    ]);
+
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
                     $cardmarket_article['amount']--;
@@ -130,6 +148,15 @@ class StockfileCommand extends Command
                     $output = $this->output($cardmarket_product_id, $import_state, $article, $cardmarket_article);
                     $this->line(implode("\t", $output));
                     $this->addToCsvFile($output);
+
+                    $article->update([
+                        'cardmarket_article_id' => $cardmarket_article['cardmarket_article_id'],
+                        'unit_price' => $cardmarket_article['unit_price'],
+                        'has_sync_error' => false,
+                        'sync_error' => null,
+                        'should_sync' => false,
+                    ]);
+
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
                     $cardmarket_article['amount']--;
@@ -149,6 +176,21 @@ class StockfileCommand extends Command
                     $output = $this->output($cardmarket_product_id, $import_state, $article, $cardmarket_article);
                     $this->line(implode("\t", $output));
                     $this->addToCsvFile($output);
+
+                    $article->update([
+                        'cardmarket_article_id' => $cardmarket_article['cardmarket_article_id'],
+                        'unit_price' => $cardmarket_article['unit_price'],
+                        'language_id' => $cardmarket_article['language_id'],
+                        'condition' => $cardmarket_article['condition'],
+                        'is_foil' => $cardmarket_article['is_foil'],
+                        'is_signed' => $cardmarket_article['is_signed'],
+                        'is_altered' => $cardmarket_article['is_altered'],
+                        'is_playset' => $cardmarket_article['is_playset'],
+                        'has_sync_error' => false,
+                        'sync_error' => null,
+                        'should_sync' => false,
+                    ]);
+
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
                     $cardmarket_article['amount']--;
