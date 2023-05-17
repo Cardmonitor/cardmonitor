@@ -93,7 +93,6 @@ class StockfileCommand extends Command
 
                 if ($cardmarket_article['amount'] === 0) {
                     unset($cardmarket_articles[$cardmarket_article_id]);
-                    break;
                 }
             }
 
@@ -114,7 +113,6 @@ class StockfileCommand extends Command
 
                 if ($cardmarket_article['amount'] === 0) {
                     unset($cardmarket_articles[$cardmarket_article_id]);
-                    break;
                 }
             }
 
@@ -140,7 +138,6 @@ class StockfileCommand extends Command
 
                 if ($cardmarket_article['amount'] === 0) {
                     unset($cardmarket_articles[$cardmarket_article_id]);
-                    break;
                 }
             }
 
@@ -160,7 +157,6 @@ class StockfileCommand extends Command
 
                 if ($cardmarket_article['amount'] === 0) {
                     unset($cardmarket_articles[$cardmarket_article_id]);
-                    break;
                 }
             }
 
