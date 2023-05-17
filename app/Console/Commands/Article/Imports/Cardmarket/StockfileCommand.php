@@ -45,10 +45,7 @@ class StockfileCommand extends Command
         $header = array_keys($this->output(0, '', new Article(), []));
         fputcsv($this->csv_file_handle, $header, ';');
 
-        $path = storage_path('app/' . $this->user->id . '-stock-' . Game::ID_MAGIC . '.csv');
-        $Stockfile = new \App\Importers\Articles\Cardmarket\Stockfile($this->user->id, $path, Game::ID_MAGIC);
-        $Stockfile->download();
-        $cardmarket_cards = $Stockfile->setCardmarketCards();
+        $cardmarket_cards = $this->getCardmarketCards();
         $stockfile_article_count = 0;
         $all_updated_article_ids = [];
 
@@ -264,5 +261,16 @@ class StockfileCommand extends Command
     private function addToCsvFile(array $output): void
     {
         fputcsv($this->csv_file_handle, array_map(fn($item) => trim($item), $output), ';');
+    }
+
+    private function getCardmarketCards(): array
+    {
+        $path = storage_path('app/' . $this->user->id . '-stock-' . Game::ID_MAGIC . '.csv');
+        if (file_exists($path)) {
+            unlink($path);
+        }
+        $Stockfile = new \App\Importers\Articles\Cardmarket\Stockfile($this->user->id, $path, Game::ID_MAGIC);
+        $Stockfile->download();
+        return $Stockfile->setCardmarketCards();
     }
 }
