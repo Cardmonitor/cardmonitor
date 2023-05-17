@@ -243,7 +243,7 @@ class StockfileCommand extends Command
             'article_language_id' => $article->language_id ?? '-',
             'cardmarket_language_id' => Arr::get($cardmarket_article, 'language_id', '-'),
             'article_condition' => $article->condition ?? '-',
-            'cardmarket_condition' => Arr::has($cardmarket_article, 'condition') ? (int) Arr::get($cardmarket_article, 'condition') : '-',
+            'cardmarket_condition' => Arr::has($cardmarket_article, 'condition') ? Arr::get($cardmarket_article, 'condition') : '-',
             'article_is_foil' => is_null($article->is_foil) ? '-' : (int) $article->is_foil,
             'cardmarket_is_foil' => Arr::has($cardmarket_article, 'is_foil') ? (int) Arr::get($cardmarket_article, 'is_foil') : '-',
             'article_is_signed' => is_null($article->is_signed) ? '-' : (int) $article->is_signed,
