@@ -214,9 +214,9 @@ class StockfileCommand extends Command
                     $this->addToCsvFile($output);
                     $import_states[$import_state]++;
                 }
-
             }
 
+            // Nicht löschen, weil auch Artikel im Warenkorb nicht mehr in der Stockfile sind
             $import_state = 'DELETED';
             $articles = $articles_for_card;
             foreach ($articles as $article) {
@@ -231,8 +231,10 @@ class StockfileCommand extends Command
             }
         }
 
+        // Nicht löschen, weil auch Artikel im Warenkorb nicht mehr in der Stockfile sind
         $import_state = 'DELETED_REST';
-        $articles = Article::where('user_id', $this->user->id)
+        $articles = Article::select('articles.*')
+            ->where('user_id', $this->user->id)
             ->join('cards', 'cards.id', '=', 'articles.card_id')
             ->where('cards.game_id', Game::ID_MAGIC)
             ->whereNull('articles.sold_at')
