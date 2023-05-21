@@ -151,6 +151,21 @@ class OrderTest extends TestCase
             ]);
         }
 
+        $number_from_cardmarket_comments = Article::numberFromCardmarketComments($cardmarketOrder['order']['article'][2]['comments']);
+        $article_with_number = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'card_id' => $cards[2]->id,
+            'cardmarket_article_id' => $cardmarketOrder['order']['article'][2]['idArticle'],
+            'number' => $number_from_cardmarket_comments,
+            'language_id' => $cardmarketOrder['order']['article'][2]['language']['idLanguage'],
+            'condition' => $cardmarketOrder['order']['article'][2]['condition'],
+            'unit_price' => $cardmarketOrder['order']['article'][2]['price'],
+            'is_foil' => $cardmarketOrder['order']['article'][2]['isFoil'],
+            'is_signed' => $cardmarketOrder['order']['article'][2]['isSigned'],
+            'is_altered' => $cardmarketOrder['order']['article'][2]['isAltered'],
+            'is_playset' => $cardmarketOrder['order']['article'][2]['isPlayset'],
+        ]);
+
         $articlesWithCardmarketArticleId = factory(Article::class, 2)->create([
             'user_id' => $this->user->id,
             'card_id' => $cards[1]->id,

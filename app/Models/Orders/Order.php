@@ -428,20 +428,51 @@ class Order extends Model
         $articles_left_count = $cardmarketArticle['count'];
         $article_ids = [];
 
-        // Article finden, wenn nicht vorhanden
         if (! is_null($cardmarketArticle['idArticle'])) {
             $articles = $this->articles()
                 ->where('cardmarket_article_id', $cardmarketArticle['idArticle'])
                 ->where('user_id', $this->user_id)
-                ->limit($cardmarketArticle['count'])
+                ->limit($articles_left_count)
                 ->get();
-            $article_ids = $articles->pluck('id')->toArray();
+            foreach ($articles as $article) {
+                $article->update([
+                    'sold_at' => $this->paid_at ?? $this->bought_at,
+                    'unit_price' => $cardmarketArticle['price'],
+                ]);
+                $article_ids[] = $article->id;
+            }
             $articles_count = count($articles);
             $articles_left_count -= $articles_count;
             if ($articles_left_count == 0) {
                 return $article_ids;
             }
+        }
 
+        // Artikel anhand von Lagernummer aus Kommentar finden
+        $number_from_cardmarket_comments = Article::numberFromCardmarketComments($cardmarketArticle['comments']);
+        if ($number_from_cardmarket_comments) {
+            $articles = Article::where('articles.user_id', $this->user_id)
+                ->sold(0)
+                ->where('articles.number', $number_from_cardmarket_comments)
+                ->limit(1)
+                ->get();
+            foreach ($articles as $article) {
+                $this->articles()->syncWithoutDetaching([$article->id]);
+                $article->update([
+                    'sold_at' => $this->paid_at ?? $this->bought_at,
+                    'cardmarket_article_id' => $cardmarketArticle['idArticle'],
+                    'unit_price' => $cardmarketArticle['price'],
+                ]);
+                $article_ids[] = $article->id;
+            }
+            $articles_count = count($articles);
+            $articles_left_count -= $articles_count;
+            if ($articles_left_count == 0) {
+                return $article_ids;
+            }
+        }
+
+        if (! is_null($cardmarketArticle['idArticle'])) {
             // Article mit cardmarket_article_id
             $articles = Article::where('articles.user_id', $this->user_id)
                 ->whereNull('sold_at')
