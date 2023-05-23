@@ -51,7 +51,7 @@ class Stockfile
         fclose($file);
     }
 
-    public function setCardmarketCards(): array
+    public function setCardmarketCards(array $shoppingcart_articles = []): array
     {
         $expansions = Expansion::where('game_id', $this->game_id)->get()->keyBy('abbreviation');
         $no_storage = Storage::noStorage($this->user_id)->first();
@@ -98,6 +98,8 @@ class Stockfile
             $this->cardmarket_cards[$stock_row[Article::CSV_CARDMARKET_PRODUCT_ID]]['amount'] += $stock_row[Article::CSV_AMOUNT[$this->game_id]];
         }
 
+        $this->addArticlesInShoppingcart($shoppingcart_articles);
+
         if (! is_dir($directory = storage_path('app/imports/cardmarket'))) {
             mkdir($directory, 0755, true);
         }
@@ -105,5 +107,41 @@ class Stockfile
         file_put_contents(storage_path('app/imports/cardmarket/stockfile.json'), json_encode($this->cardmarket_cards));
 
         return $this->cardmarket_cards;
+    }
+
+    private function addArticlesInShoppingcart(array $shoppingcart_articles)
+    {
+        foreach ($shoppingcart_articles as $shoppingcart_article) {
+            if (! Arr::has($this->cardmarket_cards, $shoppingcart_article['idProduct'])) {
+                $this->cardmarket_cards[$shoppingcart_article['idProduct']] = [
+                    'articles' => [],
+                    'amount' => 0,
+                ];
+            }
+
+            if (Arr::has($this->cardmarket_cards[$shoppingcart_article['idProduct']]['articles'], $shoppingcart_article['idArticle'])) {
+                $this->cardmarket_cards[$shoppingcart_article['idProduct']]['articles'][$shoppingcart_article['idArticle']]['amount'] += $shoppingcart_article['count'];
+            }
+            else {
+                $this->cardmarket_cards[$shoppingcart_article['idProduct']]['articles'][$shoppingcart_article['idArticle']] = [
+                    'language_id' => $shoppingcart_article['language']['idLanguage'],
+                    'cardmarket_article_id' => $shoppingcart_article['idArticle'],
+                    'condition' => Arr::get($shoppingcart_article, 'condition', ''),
+                    'unit_price' => $shoppingcart_article['price'],
+                    'is_in_shoppingcard' => $shoppingcart_article['inShoppingCart'] ?? false,
+                    'is_foil' => $shoppingcart_article['isFoil'] ?? false,
+                    'is_signed' => $shoppingcart_article['isSigned'] ?? false,
+                    'is_altered' => $shoppingcart_article['isAltered'] ?? false,
+                    'is_playset' => $shoppingcart_article['isPlayset'] ?? false,
+                    'cardmarket_comments' => $shoppingcart_article['comments'] ?: null,
+                    'amount' => $shoppingcart_article['count'],
+                    'has_sync_error' => false,
+                    'sync_error' => null,
+                    'number_from_cardmarket_comments' => Article::numberFromCardmarketComments($shoppingcart_article['comments']),
+                ];
+            }
+
+            $this->cardmarket_cards[$shoppingcart_article['idProduct']]['amount'] += $shoppingcart_article['count'];
+        }
     }
 }

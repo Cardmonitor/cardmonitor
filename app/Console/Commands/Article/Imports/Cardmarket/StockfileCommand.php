@@ -202,7 +202,6 @@ class StockfileCommand extends Command
                 }
             }
 
-
             $import_state = 'CREATED';
             foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
                 if ($cardmarket_article['amount'] < 1) {
@@ -309,8 +308,12 @@ class StockfileCommand extends Command
         if (file_exists($path)) {
             unlink($path);
         }
+
         $Stockfile = new \App\Importers\Articles\Cardmarket\Stockfile($this->user->id, $path, Game::ID_MAGIC);
         $Stockfile->download();
-        return $Stockfile->setCardmarketCards();
+
+        $shoppingcart_articles_response = $this->user->cardmarketApi->stock->shoppingcartArticles();
+
+        return $Stockfile->setCardmarketCards($shoppingcart_articles_response['article'] ?? []);
     }
 }
