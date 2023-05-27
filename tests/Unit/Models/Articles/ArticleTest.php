@@ -1141,6 +1141,8 @@ class ArticleTest extends TestCase
             'cardmarket_comments' => null,
         ]);
 
+        $article->cardmarket_comments = null;
+
         $article->number = 'A000.001';
         $this->assertEquals('##A000.001##', $article->cardmarket_comments);
 

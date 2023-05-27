@@ -67,12 +67,6 @@ class SyncCommandTest extends TestCase
      */
     public function it_syncs_orders_seller_received()
     {
-        SyncCommand::dispatch([
-            'user' => $this->user->id,
-            '--state' => Order::STATE_CANCELLED,
-        ]);
-        exit;
-
         $this->markTestSkipped();
 
         $this->artisan('order:sync', [

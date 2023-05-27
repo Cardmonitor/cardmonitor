@@ -61,12 +61,16 @@ class CsvExporterTest extends TestCase
             $rows[] = $file->fgetcsv(';');
         }
 
+        $header = array_merge(CsvExporter::BUYER_ATTRIBUTES, CsvExporter::ORDER_ATTRIBUTES, CsvExporter::ARTICLE_ATTRIBUTES);
+        $column_sku = array_search('sku', $header);
+        $column_position_type = array_search('position_type', $header);
+
         $this->assertCount(4, $rows);
-        $this->assertEquals(array_merge(CsvExporter::BUYER_ATTRIBUTES, CsvExporter::ORDER_ATTRIBUTES, CsvExporter::ARTICLE_ATTRIBUTES), $rows[0]);
-        $this->assertEquals($article->sku, $rows[1][25]);
-        $this->assertEquals('Artikel', $rows[1][30]);
-        $this->assertEquals('', $rows[2][25]);
-        $this->assertEquals('Versandposition', $rows[2][30]);
+        $this->assertEquals($header, $rows[0]);
+        $this->assertEquals($article->sku, $rows[1][$column_sku]);
+        $this->assertEquals('Artikel', $rows[1][$column_position_type]);
+        $this->assertEquals('', $rows[2][$column_sku]);
+        $this->assertEquals('Versandposition', $rows[2][$column_position_type]);
 
         Storage::disk('public')->delete($path);
 
@@ -142,15 +146,19 @@ class CsvExporterTest extends TestCase
             $rows[] = $file->fgetcsv(';');
         }
 
+        $header = array_merge(CsvExporter::BUYER_ATTRIBUTES, CsvExporter::ORDER_ATTRIBUTES, CsvExporter::ARTICLE_ATTRIBUTES);
+        $column_amount = array_search('amount', $header);
+        $column_position_type = array_search('position_type', $header);
+
         $this->assertCount(6, $rows);
-        $this->assertEquals(array_merge(CsvExporter::BUYER_ATTRIBUTES, CsvExporter::ORDER_ATTRIBUTES, CsvExporter::ARTICLE_ATTRIBUTES), $rows[0]);
-        $this->assertEquals(1, $rows[1][29]);
-        $this->assertEquals(2, $rows[2][29]);
-        $this->assertEquals(1, $rows[3][29]);
-        $this->assertEquals('Artikel', $rows[1][30]);
-        $this->assertEquals('Artikel', $rows[2][30]);
-        $this->assertEquals('Artikel', $rows[3][30]);
-        $this->assertEquals('Versandposition', $rows[4][30]);
+        $this->assertEquals($header, $rows[0]);
+        $this->assertEquals(1, $rows[1][$column_amount]);
+        $this->assertEquals(2, $rows[2][$column_amount]);
+        $this->assertEquals(1, $rows[3][$column_amount]);
+        $this->assertEquals('Artikel', $rows[1][$column_position_type]);
+        $this->assertEquals('Artikel', $rows[2][$column_position_type]);
+        $this->assertEquals('Artikel', $rows[3][$column_position_type]);
+        $this->assertEquals('Versandposition', $rows[4][$column_position_type]);
 
         Storage::disk('public')->delete($path);
 
