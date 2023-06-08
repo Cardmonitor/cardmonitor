@@ -621,9 +621,8 @@ class Article extends Model
             elseif (is_array($response['notUpdatedArticles'])) {
                 $this->update([
                     'has_sync_error' => true,
-                    'sync_error' => $response['notUpdatedArticles']['error'],
+                    'sync_error' => Arr::get($response, 'notUpdatedArticles.error', 'Unbekannter Cardmarket-Fehler'),
                     'should_sync' => true,
-                    // 'cardmarket_article_id' => null,
                 ]);
 
                 return false;
