@@ -205,6 +205,7 @@ class OrderTest extends TestCase
 
         $this->assertCount(1, Order::all());
         $this->assertCount($cardmarketOrder['order']['articleCount'], $order->fresh()->articles);
+        $this->assertCount(2, CardmarketUser::all());
     }
 
     /**

@@ -15,61 +15,45 @@ class CardmarketUser extends Model
 
     protected $guarded = [];
 
-    public $incrementing = false;
-
-    /**
-     * The booting method of the model.
-     *
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function($model)
-        {
-            $model->id = $model->cardmarket_user_id;
-
-            return true;
-        });
-    }
-
-    public static function updateOrCreateFromCardmarket(array $cardmarketUser) : self
+    public static function updateOrCreateFromCardmarket(array $cardmarket_user) : self
     {
         $values = [
-            'cardmarket_user_id' => $cardmarketUser['idUser'],
-            'username' => $cardmarketUser['username'],
-            'registered_at' => new Carbon($cardmarketUser['registrationDate']),
+            'cardmarket_user_id' => $cardmarket_user['idUser'],
+            'username' => $cardmarket_user['username'],
+            'registered_at' => new Carbon($cardmarket_user['registrationDate']),
 
-            'is_commercial' => $cardmarketUser['isCommercial'],
-            'is_seller' => $cardmarketUser['isSeller'],
+            'is_commercial' => $cardmarket_user['isCommercial'],
+            'is_seller' => $cardmarket_user['isSeller'],
 
-            'firstname' => $cardmarketUser['name']['firstName'],
-            'name' => $cardmarketUser['address']['name'],
-            'extra' => $cardmarketUser['address']['extra'] ?? '',
-            'street' => $cardmarketUser['address']['street'],
-            'zip' => $cardmarketUser['address']['zip'],
-            'city' => $cardmarketUser['address']['city'],
-            'country' => $cardmarketUser['address']['country'] ?? '',
-            'phone' => $cardmarketUser['phone'] ?? '',
-            'email' => $cardmarketUser['email'],
+            'firstname' => $cardmarket_user['name']['firstName'],
+            'name' => $cardmarket_user['address']['name'],
+            'extra' => $cardmarket_user['address']['extra'] ?? '',
+            'street' => $cardmarket_user['address']['street'],
+            'zip' => $cardmarket_user['address']['zip'],
+            'city' => $cardmarket_user['address']['city'],
+            'country' => $cardmarket_user['address']['country'] ?? '',
+            'phone' => $cardmarket_user['phone'] ?? '',
+            'email' => $cardmarket_user['email'],
 
-            'vat' => $cardmarketUser['vat'] ?? '',
-            'legalinformation' => $cardmarketUser['legalInformation'] ?? '',
+            'vat' => $cardmarket_user['vat'] ?? '',
+            'legalinformation' => $cardmarket_user['legalInformation'] ?? '',
 
-            'risk_group' => $cardmarketUser['riskGroup'],
-            'loss_percentage' => $cardmarketUser['lossPercentage'],
+            'risk_group' => $cardmarket_user['riskGroup'],
+            'loss_percentage' => $cardmarket_user['lossPercentage'],
 
-            'unsent_shipments' => $cardmarketUser['unsentShipments'],
-            'reputation' => $cardmarketUser['reputation'],
-            'ships_fast' => $cardmarketUser['shipsFast'],
-            'sell_count' => $cardmarketUser['sellCount'],
-            'sold_items' => $cardmarketUser['soldItems'],
-            'avg_shipping_time' => $cardmarketUser['avgShippingTime'],
-            'is_on_vacation' => $cardmarketUser['onVacation'],
+            'unsent_shipments' => $cardmarket_user['unsentShipments'],
+            'reputation' => $cardmarket_user['reputation'],
+            'ships_fast' => $cardmarket_user['shipsFast'],
+            'sell_count' => $cardmarket_user['sellCount'],
+            'sold_items' => $cardmarket_user['soldItems'],
+            'avg_shipping_time' => $cardmarket_user['avgShippingTime'],
+            'is_on_vacation' => $cardmarket_user['onVacation'],
         ];
 
-        return self::updateOrCreate(['cardmarket_user_id' => $cardmarketUser['idUser']], $values);
+        return self::updateOrCreate([
+            'source_slug' => 'cardmarket',
+            'source_id' => $cardmarket_user['idUser'],
+        ], $values);
     }
 
     public function getCountryAttribute() : string
