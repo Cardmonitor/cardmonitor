@@ -35,7 +35,7 @@
                         <td class="align-middle text-right">{{ $article->number }}</td>
                         <td class="align-middle text-right">
                             <div>{{ $article->order->number }}</div>
-                            <div class="text-muted"><a href="{{ $article->order->path }}" target="_blank">{{ $article->order->id }}</a></div>
+                            <div class="text-muted"><a href="{{ $article->order->path }}" target="_blank">{{ $article->order->source_id }}</a></div>
                             <div class="text-muted">{{ $article->order->shipping_name }}</div>
                         </td>
                         <td class="align-middle">
