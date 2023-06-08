@@ -6,8 +6,13 @@ use App\Models\Users\CardmarketUser;
 use Faker\Generator as Faker;
 
 $factory->define(CardmarketUser::class, function (Faker $faker) {
+
+    $cardmarket_user_id = $faker->unique()->randomNumber();
+
     return [
-        'cardmarket_user_id' => $faker->unique()->randomNumber,
+        'source_slug' => 'cardmarket',
+        'source_id' => $cardmarket_user_id,
+        'cardmarket_user_id' => $cardmarket_user_id,
         'username' => $faker->userName,
         'registered_at' => $faker->dateTime,
         'is_commercial' => $faker->boolean,

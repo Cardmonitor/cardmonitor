@@ -74,71 +74,50 @@ class Order extends Model
 
     protected $cardDefaultPrices;
 
-    protected $guarded = [
+    protected $guarded = [];
 
-    ];
-
-    public $incrementing = false;
-
-    /**
-     * The booting method of the model.
-     *
-     * @return void
-     */
-    public static function boot()
+    public static function updateOrCreateFromCardmarket(int $user_id, array $cardmarket_order, bool $force = false) : self
     {
-        parent::boot();
-
-        static::creating(function($model)
-        {
-            $model->id = $model->cardmarket_order_id;
-
-            return true;
-        });
-
-        static::created(function($model)
-        {
-            return true;
-        });
-    }
-
-    public static function updateOrCreateFromCardmarket(int $userId, array $cardmarketOrder, bool $force = false) : self
-    {
-        $buyer = CardmarketUser::updateOrCreateFromCardmarket($cardmarketOrder['buyer']);
-        $seller = CardmarketUser::updateOrCreateFromCardmarket($cardmarketOrder['seller']);
+        $buyer = CardmarketUser::updateOrCreateFromCardmarket($cardmarket_order['buyer']);
+        $seller = CardmarketUser::updateOrCreateFromCardmarket($cardmarket_order['seller']);
 
         $values = [
-            'cardmarket_order_id' => $cardmarketOrder['idOrder'],
+            'source_slug' => 'cardmarket',
+            'source_id' => $cardmarket_order['idOrder'],
+            'cardmarket_order_id' => $cardmarket_order['idOrder'],
             'buyer_id' => $buyer->id,
             'seller_id' => $seller->id,
-            'shipping_method_id' => $cardmarketOrder['shippingMethod']['idShippingMethod'],
-            'state' => $cardmarketOrder['state']['state'],
-            'shippingmethod' => $cardmarketOrder['shippingMethod']['name'],
-            'shipping_name' => $cardmarketOrder['shippingAddress']['name'],
-            'shipping_extra' => $cardmarketOrder['shippingAddress']['extra'],
-            'shipping_street' => $cardmarketOrder['shippingAddress']['street'],
-            'shipping_zip' => $cardmarketOrder['shippingAddress']['zip'],
-            'shipping_city' => $cardmarketOrder['shippingAddress']['city'],
-            'shipping_country' => $cardmarketOrder['shippingAddress']['country'],
-            'shipment_revenue' => $cardmarketOrder['shippingMethod']['price'],
-            'articles_count' => $cardmarketOrder['articleCount'],
-            'articles_revenue' => $cardmarketOrder['articleValue'],
-            'revenue' => $cardmarketOrder['totalValue'],
-            'user_id' => $userId,
-            'bought_at' => (Arr::has($cardmarketOrder['state'], 'dateBought') ? new Carbon($cardmarketOrder['state']['dateBought']) : null),
-            'canceled_at' => (Arr::has($cardmarketOrder['state'], 'dateCanceled') ? new Carbon($cardmarketOrder['state']['dateCanceled']) : null),
-            'paid_at' => (Arr::has($cardmarketOrder['state'], 'datePaid') ? new Carbon($cardmarketOrder['state']['datePaid']) : null),
-            'received_at' => (Arr::has($cardmarketOrder['state'], 'dateReceived') ? new Carbon($cardmarketOrder['state']['dateReceived']) : null),
-            'sent_at' => (Arr::has($cardmarketOrder['state'], 'dateSent') ? new Carbon($cardmarketOrder['state']['dateSent']) : null),
+            'shipping_method_id' => $cardmarket_order['shippingMethod']['idShippingMethod'],
+            'state' => $cardmarket_order['state']['state'],
+            'shippingmethod' => $cardmarket_order['shippingMethod']['name'],
+            'shipping_name' => $cardmarket_order['shippingAddress']['name'],
+            'shipping_extra' => $cardmarket_order['shippingAddress']['extra'],
+            'shipping_street' => $cardmarket_order['shippingAddress']['street'],
+            'shipping_zip' => $cardmarket_order['shippingAddress']['zip'],
+            'shipping_city' => $cardmarket_order['shippingAddress']['city'],
+            'shipping_country' => $cardmarket_order['shippingAddress']['country'],
+            'shipment_revenue' => $cardmarket_order['shippingMethod']['price'],
+            'articles_count' => $cardmarket_order['articleCount'],
+            'articles_revenue' => $cardmarket_order['articleValue'],
+            'revenue' => $cardmarket_order['totalValue'],
+            'user_id' => $user_id,
+            'bought_at' => (Arr::has($cardmarket_order['state'], 'dateBought') ? new Carbon($cardmarket_order['state']['dateBought']) : null),
+            'canceled_at' => (Arr::has($cardmarket_order['state'], 'dateCanceled') ? new Carbon($cardmarket_order['state']['dateCanceled']) : null),
+            'paid_at' => (Arr::has($cardmarket_order['state'], 'datePaid') ? new Carbon($cardmarket_order['state']['datePaid']) : null),
+            'received_at' => (Arr::has($cardmarket_order['state'], 'dateReceived') ? new Carbon($cardmarket_order['state']['dateReceived']) : null),
+            'sent_at' => (Arr::has($cardmarket_order['state'], 'dateSent') ? new Carbon($cardmarket_order['state']['dateSent']) : null),
         ];
 
-        $order = self::updateOrCreate(['cardmarket_order_id' => $cardmarketOrder['idOrder']], $values);
-        if (Arr::has($cardmarketOrder, 'evaluation')) {
-            $evaluation = Evaluation::updateOrCreateFromCardmarket($order->id, $cardmarketOrder['evaluation']);
+        $order = self::updateOrCreate([
+            'source_slug' => 'cardmarket',
+            'source_id' => $cardmarket_order['idOrder'],
+        ], $values);
+        if (Arr::has($cardmarket_order, 'evaluation')) {
+            $evaluation = Evaluation::updateOrCreateFromCardmarket($order->id, $cardmarket_order['evaluation']);
         }
         if ($order->wasRecentlyCreated || $force) {
             $order->findItems();
-            $order->addArticlesFromCardmarket($cardmarketOrder);
+            $order->addArticlesFromCardmarket($cardmarket_order);
         }
         $order->calculateProfits()
             ->save();
@@ -408,12 +387,12 @@ class Order extends Model
         return $this->cardDefaultPrices;
     }
 
-    public function addArticlesFromCardmarket(array $cardmarketOrder)
+    public function addArticlesFromCardmarket(array $cardmarket_order)
     {
         $this->getCardDefaultPrices();
 
         $article_ids = [];
-        foreach ($cardmarketOrder['article'] as $cardmarketArticle) {
+        foreach ($cardmarket_order['article'] as $cardmarketArticle) {
             Card::import($cardmarketArticle['idProduct']);
 
             $article_ids = array_merge($article_ids, $this->addArticleFromCardmarket($cardmarketArticle));
@@ -423,21 +402,21 @@ class Order extends Model
         $this->articles()->sync($article_ids);
     }
 
-    protected function addArticleFromCardmarket(array $cardmarketArticle): array
+    protected function addArticleFromCardmarket(array $cardmarket_article): array
     {
-        $articles_left_count = $cardmarketArticle['count'];
+        $articles_left_count = $cardmarket_article['count'];
         $article_ids = [];
 
-        if (! is_null($cardmarketArticle['idArticle'])) {
+        if (! is_null($cardmarket_article['idArticle'])) {
             $articles = $this->articles()
-                ->where('cardmarket_article_id', $cardmarketArticle['idArticle'])
+                ->where('cardmarket_article_id', $cardmarket_article['idArticle'])
                 ->where('user_id', $this->user_id)
                 ->limit($articles_left_count)
                 ->get();
             foreach ($articles as $article) {
                 $article->update([
                     'sold_at' => $this->paid_at ?? $this->bought_at,
-                    'unit_price' => $cardmarketArticle['price'],
+                    'unit_price' => $cardmarket_article['price'],
                 ]);
                 $article_ids[] = $article->id;
             }
@@ -449,7 +428,7 @@ class Order extends Model
         }
 
         // Artikel anhand von Lagernummer aus Kommentar finden
-        $number_from_cardmarket_comments = Article::numberFromCardmarketComments($cardmarketArticle['comments']);
+        $number_from_cardmarket_comments = Article::numberFromCardmarketComments($cardmarket_article['comments']);
         if ($number_from_cardmarket_comments) {
             $articles = Article::where('articles.user_id', $this->user_id)
                 ->sold(0)
@@ -460,8 +439,8 @@ class Order extends Model
                 $this->articles()->syncWithoutDetaching([$article->id]);
                 $article->update([
                     'sold_at' => $this->paid_at ?? $this->bought_at,
-                    'cardmarket_article_id' => $cardmarketArticle['idArticle'],
-                    'unit_price' => $cardmarketArticle['price'],
+                    'cardmarket_article_id' => $cardmarket_article['idArticle'],
+                    'unit_price' => $cardmarket_article['price'],
                 ]);
                 $article_ids[] = $article->id;
             }
@@ -472,24 +451,24 @@ class Order extends Model
             }
         }
 
-        if (! is_null($cardmarketArticle['idArticle'])) {
+        if (! is_null($cardmarket_article['idArticle'])) {
             // Article mit cardmarket_article_id
             $articles = Article::where('articles.user_id', $this->user_id)
                 ->whereNull('sold_at')
-                ->where('articles.cardmarket_article_id', $cardmarketArticle['idArticle'])
-                ->where('articles.language_id', $cardmarketArticle['language']['idLanguage'])
-                ->where('articles.condition', Arr::get($cardmarketArticle, 'condition', ''))
-                ->where('is_foil', $cardmarketArticle['isFoil'] ?? false)
-                ->where('is_signed', $cardmarketArticle['isSigned'] ?? false)
-                ->where('is_altered', $cardmarketArticle['isAltered'] ?? false)
-                ->where('is_playset', $cardmarketArticle['isPlayset'] ?? false)
+                ->where('articles.cardmarket_article_id', $cardmarket_article['idArticle'])
+                ->where('articles.language_id', $cardmarket_article['language']['idLanguage'])
+                ->where('articles.condition', Arr::get($cardmarket_article, 'condition', ''))
+                ->where('is_foil', $cardmarket_article['isFoil'] ?? false)
+                ->where('is_signed', $cardmarket_article['isSigned'] ?? false)
+                ->where('is_altered', $cardmarket_article['isAltered'] ?? false)
+                ->where('is_playset', $cardmarket_article['isPlayset'] ?? false)
                 ->limit($articles_left_count)
                 ->get();
             foreach ($articles as $key => $article) {
                 $this->articles()->syncWithoutDetaching([$article->id]);
                 $article->update([
                     'sold_at' => $this->paid_at ?? $this->bought_at,
-                    'unit_price' => $cardmarketArticle['price'],
+                    'unit_price' => $cardmarket_article['price'],
                 ]);
                 $article_ids[] = $article->id;
             }
@@ -504,21 +483,21 @@ class Order extends Model
             ->join('cards', 'cards.id', '=', 'articles.card_id')
             ->where('articles.user_id', $this->user_id)
             ->whereNull('articles.sold_at')
-            ->where('cards.cardmarket_product_id', $cardmarketArticle['idProduct'])
-            ->where('articles.language_id', $cardmarketArticle['language']['idLanguage'])
-            ->where('articles.condition', Arr::get($cardmarketArticle, 'condition', ''))
-            ->where('is_foil', $cardmarketArticle['isFoil'] ?? false)
-            ->where('is_signed', $cardmarketArticle['isSigned'] ?? false)
-            ->where('is_altered', $cardmarketArticle['isAltered'] ?? false)
-            ->where('is_playset', $cardmarketArticle['isPlayset'] ?? false)
+            ->where('cards.cardmarket_product_id', $cardmarket_article['idProduct'])
+            ->where('articles.language_id', $cardmarket_article['language']['idLanguage'])
+            ->where('articles.condition', Arr::get($cardmarket_article, 'condition', ''))
+            ->where('is_foil', $cardmarket_article['isFoil'] ?? false)
+            ->where('is_signed', $cardmarket_article['isSigned'] ?? false)
+            ->where('is_altered', $cardmarket_article['isAltered'] ?? false)
+            ->where('is_playset', $cardmarket_article['isPlayset'] ?? false)
             ->limit($articles_left_count)
             ->get();
         foreach ($articles as $key => $article) {
             $this->articles()->syncWithoutDetaching([$article->id]);
             $article->update([
                 'sold_at' => $this->paid_at ?? $this->bought_at,
-                'cardmarket_article_id' => $cardmarketArticle['idArticle'],
-                'unit_price' => $cardmarketArticle['price'],
+                'cardmarket_article_id' => $cardmarket_article['idArticle'],
+                'unit_price' => $cardmarket_article['price'],
             ]);
             $article_ids[] = $article->id;
         }
@@ -528,24 +507,24 @@ class Order extends Model
             return $article_ids;
         }
 
-        $card = Card::firstOrImport($cardmarketArticle['idProduct']);
+        $card = Card::firstOrImport($cardmarket_article['idProduct']);
 
         $attributes = [
             'user_id' => $this->user_id,
             'card_id' => $card->id,
-            'language_id' => $cardmarketArticle['language']['idLanguage'],
-            'cardmarket_article_id' => $cardmarketArticle['idArticle'],
+            'language_id' => $cardmarket_article['language']['idLanguage'],
+            'cardmarket_article_id' => $cardmarket_article['idArticle'],
             'storage_id' => (is_null($card->expansion_id) ? null : Content::defaultStorage($this->user_id, $card->expansion_id)),
-            'condition' => Arr::get($cardmarketArticle, 'condition', ''),
-            'unit_price' => $cardmarketArticle['price'],
-            'unit_cost' => Arr::get($this->cardDefaultPrices, ($cardmarketArticle['product']['rarity'] ?? ''), 0.02),
+            'condition' => Arr::get($cardmarket_article, 'condition', ''),
+            'unit_price' => $cardmarket_article['price'],
+            'unit_cost' => Arr::get($this->cardDefaultPrices, ($cardmarket_article['product']['rarity'] ?? ''), 0.02),
             'sold_at' => $this->paid_at ?? $this->bought_at, // "2019-08-30T10:59:53+0200"
-            'is_in_shoppingcard' => $cardmarketArticle['inShoppingCart'] ?? false,
-            'is_foil' => $cardmarketArticle['isFoil'] ?? false,
-            'is_signed' => $cardmarketArticle['isSigned'] ?? false,
-            'is_altered' => $cardmarketArticle['isAltered'] ?? false,
-            'is_playset' => $cardmarketArticle['isPlayset'] ?? false,
-            'cardmarket_comments' => $cardmarketArticle['comments'] ?: null,
+            'is_in_shoppingcard' => $cardmarket_article['inShoppingCart'] ?? false,
+            'is_foil' => $cardmarket_article['isFoil'] ?? false,
+            'is_signed' => $cardmarket_article['isSigned'] ?? false,
+            'is_altered' => $cardmarket_article['isAltered'] ?? false,
+            'is_playset' => $cardmarket_article['isPlayset'] ?? false,
+            'cardmarket_comments' => $cardmarket_article['comments'] ?: null,
         ];
         foreach (range($articles_count, ($articles_left_count - 1)) as $value) {
             $article = $this->articles()->create($attributes);

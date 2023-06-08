@@ -44,6 +44,7 @@ class SentControllerTest extends TestCase
 
         $order = factory(Order::class)->create([
             'cardmarket_order_id' => $orderId,
+            'source_id' => $orderId,
             'user_id' => $this->user->id,
             'state' => 'paid',
         ]);
@@ -55,7 +56,7 @@ class SentControllerTest extends TestCase
         $this->assertNull($order->tracking_number);
 
         $this->assertFileDoesNotExist($path);
-        Storage::disk('local')->put($filename, "order_id;tracking_number\n" . $order->id . ";" . $tracking_number);
+        Storage::disk('local')->put($filename, "order_id;tracking_number\n" . $order->source_id . ";" . $tracking_number);
         $this->assertFileExists($path);
 
         $response = $this->post('/order/import/sent', [

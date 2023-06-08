@@ -55,8 +55,8 @@ class WithoutArticlesCommand extends Command
             $this->processing();
 
             foreach ($orders as $key => $order) {
-                $this->line('Order ID: ' . $order->id);
-                $cardmarketOrder = $this->user->cardmarketApi->order->get($order->id);
+                $this->line('Order ID: ' . $order->cardmarket_order_id);
+                $cardmarketOrder = $this->user->cardmarketApi->order->get($order->cardmarket_order_id);
                 Order::updateOrCreateFromCardmarket($this->user->id, $cardmarketOrder['order'], Order::FORCE_UPDATE_OR_CREATE);
             }
         }
