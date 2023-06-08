@@ -815,6 +815,21 @@ class Article extends Model
         ];
     }
 
+    public function setNumberInCardmarketComments(): void
+    {
+        $number_from_cardmarket_comments = $this->number_from_cardmarket_comments;
+
+        if (empty($this->number)) {
+            $this->attributes['cardmarket_comments'] = trim(str_replace('  ' , ' ', preg_replace('/##.*##/', '', $this->cardmarket_comments))) ?: null;
+        }
+        elseif (empty($number_from_cardmarket_comments)) {
+            $this->attributes['cardmarket_comments'] = trim($this->cardmarket_comments . ' ##' . $this->number . '##');
+        }
+        else {
+            $this->attributes['cardmarket_comments'] = str_replace($number_from_cardmarket_comments, $this->number, $this->cardmarket_comments);
+        }
+    }
+
     public function setStorage(\App\Models\Storages\Storage $storage, int $slot = 0): self
     {
         $this->storage()->associate($storage);
@@ -846,18 +861,7 @@ class Article extends Model
     public function setNumberAttribute($value): void
     {
         $this->attributes['number'] = $value;
-        $number_from_cardmarket_comments = $this->number_from_cardmarket_comments;
-
-        if (empty($value)) {
-            $this->attributes['cardmarket_comments'] = trim(str_replace('  ' , ' ', preg_replace('/##.*##/', '', $this->cardmarket_comments))) ?: null;
-        }
-        elseif (empty($number_from_cardmarket_comments)) {
-            $this->attributes['cardmarket_comments'] = trim($this->cardmarket_comments . ' ##' . $value . '##');
-        }
-        else {
-            $this->attributes['cardmarket_comments'] = str_replace($number_from_cardmarket_comments, $value, $this->cardmarket_comments);
-        }
-
+        $this->setNumberInCardmarketComments();
     }
 
     public function setSoldAtFormattedAttribute($value)
