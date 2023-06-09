@@ -42,24 +42,24 @@ class SyncCommand extends Command
     public function handle()
     {
         $this->user = User::find($this->argument('user'));
-        $order_id = $this->option('order');
+        $cardmarket_order_id = $this->option('order');
 
-        if (isset($order_id)) {
-            $this->syncOrder($order_id, Order::FORCE_UPDATE_OR_CREATE);
+        if (isset($cardmarket_order_id)) {
+            $this->syncOrder($cardmarket_order_id, Order::FORCE_UPDATE_OR_CREATE);
             return self::SUCCESS;
         }
 
         try {
             $this->processing();
 
-            $orders = Order::where('user_id', $this->user->id)->state($this->option('state'))->get();
-            $order_ids = $orders->pluck('id');
+            $orders = Order::where('user_id', $this->user->id)->where('source_slug', 'cardmarket')->state($this->option('state'))->get();
+            $order_source_ids = $orders->pluck('source_id');
 
             $synced_orders = $this->user->cardmarketApi->syncOrders($this->option('actor'), $this->option('state'));
 
-            $not_synced_orders = $order_ids->diff($synced_orders);
-            foreach ($not_synced_orders as $order_id) {
-                $this->syncOrder($order_id);
+            $not_synced_orders = $order_source_ids->diff($synced_orders);
+            foreach ($not_synced_orders as $cardmarket_order_id) {
+                $this->syncOrder($cardmarket_order_id);
             }
         }
         finally {
@@ -69,9 +69,9 @@ class SyncCommand extends Command
         return self::SUCCESS;
     }
 
-    private function syncOrder(int $order_id, bool $force = false): void
+    private function syncOrder(int $cardmarket_order_id, bool $force = false): void
     {
-        $cardmarket_order = $this->user->cardmarketApi->order->get($order_id);
+        $cardmarket_order = $this->user->cardmarketApi->order->get($cardmarket_order_id);
         Order::updateOrCreateFromCardmarket($this->user->id, $cardmarket_order['order'], $force);
     }
 
