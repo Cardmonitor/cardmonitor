@@ -16,6 +16,9 @@
                 <button type="button" class="btn btn-sm btn-secondary ml-1" :disabled="syncing.status == 1" data-toggle="modal" data-target="#tcg-powertools-import">
                     TCG PowerTools Import
                 </button>
+                <button type="button" class="btn btn-sm btn-secondary ml-1" :disabled="syncing.status == 1" data-toggle="modal" data-target="#magic-sorter-import">
+                    Magic Sorter Import
+                </button>
             </div>
         </div>
 

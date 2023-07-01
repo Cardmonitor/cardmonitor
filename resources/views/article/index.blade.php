@@ -21,5 +21,6 @@
     ></article-table>
 
     @include('article.tcg-powertools-import.create')
+    @include('article.magic-sorter-import.create')
 
 @endsection
