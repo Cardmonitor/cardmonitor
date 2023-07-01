@@ -21,8 +21,8 @@
                     <div class="form-group">
                         <label for="condition">Condition</label>
                         <select class="form-control" name="condition" id="condition">
-                            @foreach (\App\Models\Articles\Article::CONDITIONS as $condition)
-                                <option value="{{ $condition }}">{{ $condition }}</option>
+                            @foreach (\App\Models\Articles\Article::CONDITIONS as $condition => $name)
+                                <option value="{{ $condition }}">{{ $name }}</option>
                             @endforeach
                         </select>
                     </div>
