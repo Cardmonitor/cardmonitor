@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use App\Importers\Articles\MagicSorterImporter;
 use App\Importers\Articles\TCGPowerToolsImporter;
 
 class ImportController extends Controller
@@ -15,7 +16,10 @@ class ImportController extends Controller
         $attributes = $request->validate([
             'file' => 'required|file',
             'game_id' => 'required|integer',
-            'type' => 'required|in:tcg-powertools',
+            'condition' => 'sometimes|string',
+            'language_id' => 'sometimes|integer',
+            'is_foil' => 'sometimes|boolean',
+            'type' => 'required|in:tcg-powertools,magic-sorter',
         ]);
 
         $user = auth()->user();
@@ -23,7 +27,10 @@ class ImportController extends Controller
         $filename = $attributes['file']->storeAs('', $attributes['file']->getClientOriginalName());
 
         try {
-            TCGPowerToolsImporter::import($user->id, Storage::path($filename));
+            match ($attributes['type']) {
+                'tcg-powertools' => TCGPowerToolsImporter::import($user->id, Storage::path($filename)),
+                'magic-sorter' => MagicSorterImporter::import($user->id, Storage::path($filename), $attributes['condition'], $attributes['language_id'], $attributes['is_foil']),
+            };
         } catch (\Throwable $th) {
             report($th);
             return back()->with('status', [

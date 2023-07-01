@@ -1,0 +1,362 @@
+set,rarity,title,collector_num,condition,foil,position,height,price,price_trend,ecommerce_id,scryfall_id
+CMR,rare,"Livio, Oathsworn Sentinel",31,NM,0,11,50,"0,02","0,13",510815,02bce846-8049-4d5c-b0ad-8abd484e5a27
+STX,rare,"Plargg, Dean of Chaos // Augusta, Dean of Order",155,NM,0,11,113,"0,02","0,20",556436,5bd9b5cf-f018-48af-a081-995ce8ecc539
+CMR,rare,Emberwilde Captain,175,NM,0,11,44,"0,05","0,54",510450,362850cd-d33c-4f61-9b3a-5de748adee7c
+STA,rare,Krosan Grip,53,NM,0,12,125,"0,10","0,43",556549,f847439f-a9b6-4a3c-abd1-76d54e0aed99
+BRR,rare,Keening Stone,26,NM,0,12,142,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+DTK,rare,Silumgar Assassin,121,NM,0,12,112,"0,02","0,21",273104,ecc4693f-59fe-4671-b8c6-66fe53a76bbe
+ZNR,rare,Kazandu Mammoth // Kazandu Valley,189,NM,0,11,81,"0,02","0,17",496645,2f632537-63bf-4490-86e6-e6067b9c1a3b
+SNC,rare,Aven Heartstabber,166,NM,0,11,126,"0,02","0,12",651707,acef329c-61e6-41c1-8d89-ff2417949839
+BNG,rare,Fate Unraveler,68,NM,0,12,87,"0,10","0,88",265610,f15cd233-e27b-4cfd-aa4e-18040d1de22f
+,,Not found,,NM,0,13,4,"0,0","0,0",0,
+BFZ,rare,Aligned Hedron Network,222,NM,0,11,133,"0,02","0,15",284736,c0ef436b-e82e-4e1f-9da0-5e35f0c37bde
+,,Not found,,NM,0,13,14,"0,0","0,0",0,
+HOU,rare,Angel of Condemnation,3,NM,0,11,97,"0,05","0,25",298672,90dad070-e41d-419b-ae27-ace82b9ab2c5
+2X2,rare,Abbot of Keral Keep,100,NM,0,11,155,"0,02","0,15",665742,cd94f624-9b35-4468-829f-106366f61c1a
+VOC,rare,Thundering Mightmare,37,NM,0,11,64,"0,02","0,22",583994,a37fbffb-4ed0-4c61-9cef-2cd55ad67f9c
+TSR,rare,Slaughter Pact,138,NM,0,11,87,"0,15","0,80",543641,81e00341-030f-433e-b22b-aca42e0a88d2
+BRR,rare,Keening Stone,26,NM,0,12,143,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+CLB,rare,"Jan Jansen, Chaos Crafter",277,NM,0,11,4,"0,02","0,17",660751,6b215a08-41db-4440-8e33-34a84a33db50
+SNC,rare,Unleash the Inferno,229,NM,0,11,18,"0,02","0,11",651714,1f892607-8672-4013-86e6-0779d0b726de
+ZNR,rare,Confounding Conundrum,53,NM,0,11,129,"0,02","0,22",494959,95e37936-913e-4b16-a5a8-8aed733d702d
+BNG,rare,Whelming Wave,57,NM,0,12,86,"0,05","0,40",265849,fcabd4c7-093f-4ef6-8b89-b08565c48e3c
+BRR,rare,Keening Stone,26,NM,0,12,155,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+BFZ,rare,Radiant Flames,151,NM,0,11,156,"0,02","0,21",284308,70f4fe69-c541-4320-9074-9c6a3bc70ea3
+ZNR,rare,Master of Winds,68,NM,0,11,107,"0,02","0,07",496615,0caaf92a-3d9d-4c52-acff-cf960ec55e47
+CMR,rare,Hans Eriksson,279,NM,0,11,76,"0,02","0,09",511190,24a0babe-8da4-4c95-9cdf-626a5c5e2e5c
+TSR,rare,Magus of the Future,75,NM,0,11,100,"0,02","0,18",543006,27ba1ea5-c861-4bb4-a681-fc0633268bd9
+BFZ,rare,Emeria Shepherd,22,NM,0,12,97,"0,05","0,40",284800,7c366f25-93c7-4088-88a4-64d3ee18a89a
+SNC,rare,Obscura Interceptor,209,NM,0,11,21,"0,02","0,12",651709,08886346-2405-47ee-997f-c0fb7776c783
+THB,rare,"Taranika, Akroan Veteran",39,NM,0,11,149,"0,02","0,16",431044,a8edd707-5ba3-4978-9a0b-efd0cda367c1
+VOW,rare,Winged Portent,89,NM,0,11,166,"0,02","0,15",582875,3494a4fc-37e5-4095-a3bb-5cd9280f4c77
+EMN,rare,Niblis of Frost,72,NM,0,11,123,"0,02","0,24",290956,da2301c8-0ca8-4b26-a232-1df90effcb42
+BNG,rare,Fated Infatuation,39,NM,0,12,84,"0,07","0,50",265722,9e5ba99d-d95d-4a3b-b6b6-a5e2589d538e
+SNC,rare,Cemetery Tampering,69,NM,0,12,101,"0,02","0,23",651702,6c6e8d37-badd-4b9a-94e5-2d50ec78182c
+CLB,rare,Descent into Avernus,169,NM,0,11,80,"0,03","1,35",660735,faadf72f-b2d5-4271-8d5c-a586acf63453
+UMA,uncommon,Shriekmaw,113,NM,0,11,88,"0,02","0,22",366966,8ce5b89f-ec60-46b5-9160-9255cbb858a9
+NEC,rare,Ruthless Technomancer,35,NM,0,11,36,"0,07","1,16",608834,dddeb5cc-b535-4484-8a0e-ce32c4c09000
+GRN,rare,Mausoleum Secrets,75,NM,0,11,40,"0,05","0,44",364044,26f7cf38-78cc-4139-9f2a-4dd0be7d9da8
+ZNR,rare,Ondu Inversion // Ondu Skyruins,321,NM,0,11,95,"0,30","0,45",496680,7b300a1d-22a6-410c-9fe4-293fefe49969
+THS,rare,"Tymaret, the Murder King",207,NM,0,11,19,"0,04","0,18",264084,4c4ce848-a57d-4e88-8093-9fb1408523bc
+BRR,rare,Defense Grid,13,NM,0,12,20,"0,38","1,94",682893,f875a0ff-7ed8-46a7-b346-e378d5e7d512
+KTK,rare,Ankle Shanker,164,NM,0,11,15,"0,02","0,13",269134,6c5bb5d2-181a-44ea-9b56-87f8d96bf634
+,,Not found,,NM,0,13,33,"0,0","0,0",0,
+KTK,rare,Sage of the Inward Eye,195,NM,0,11,35,"0,02","0,07",269204,297c336b-3f70-4518-b1f1-7b773774895d
+ZNR,rare,Nimble Trapfinder,72,NM,0,11,104,"0,02","0,08",496780,1ee1a550-b7e7-48e0-bd96-a41986dbd879
+NEO,rare,Spring-Leaf Avenger,208,NM,0,11,135,"0,02","0,12",608273,74b1ba9c-ee62-461f-8422-f791274e2f1c
+BFZ,rare,"Zada, Hedron Grinder",162,NM,0,11,163,"0,04","0,29",284444,fc0969f1-92a0-47c3-8eff-d106fbef2f7e
+XLN,rare,Tocatli Honor Guard,42,NM,0,12,98,"0,02","0,31",301199,a3fc3501-e7bd-4589-98c5-4476258842ea
+BFZ,rare,Hero of Goma Fada,31,NM,0,12,50,"0,02","0,11",284307,4ca3400c-0687-4a92-9236-f5a0d7eae337
+,,Not found,,NM,0,13,17,"0,0","0,0",0,
+BFZ,rare,Ruinous Path,123,NM,0,12,47,"0,02","0,10",284306,709ab9cf-eed8-4d73-b10d-c7f6d8750328
+VOW,rare,"Eruth, Tormented Prophet",342,NM,0,12,122,"0,10","0,22",583238,5ecbb622-f33b-4192-9b42-8872b35cc409
+C21,rare,Inferno Project,52,NM,0,12,12,"0,02","0,09",558759,ca760378-fa30-47ac-b3e0-7dc2e72b3422
+DTK,rare,Radiant Purge,31,NM,0,12,109,"0,02","0,30",273102,c34d94f4-c504-4cf1-9bc7-d318fbee54d7
+BNG,rare,Hero of Iroas,17,NM,0,12,80,"0,02","0,25",265585,7917f2ee-f093-4ffb-83ed-a181b14b5957
+ZNR,rare,Wayward Guide-Beast,176,NM,0,12,96,"0,02","0,13",496235,d00f8ab0-61cd-4721-b974-a2516da77d39
+BNG,rare,Felhide Spiritbinder,96,NM,0,12,90,"0,02","0,24",265724,bbbbe4ce-d6a6-428d-aeee-1c316f358777
+DGM,rare,Beck // Call,123,NM,0,11,20,"0,05","0,34",261219,a01d6540-9eaf-4e08-a62d-682551ee78e9
+,,Not found,,NM,0,13,35,"0,0","0,0",0,
+CMR,rare,Stumpsquall Hydra,367,NM,0,11,65,"0,04","0,28",514619,8fe8096b-332a-4832-b957-7a35bb350e4e
+,,Not found,,NM,0,13,37,"0,0","0,0",0,
+BRR,rare,Keening Stone,26,NM,0,12,150,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+DMC,uncommon,"Ramirez DePietro, Pillager",38,NM,0,12,32,"0,02","0,14",669195,91f65272-fee1-4076-b5b2-2e04001cf1ea
+DTK,rare,Assault Formation,173,NM,0,12,111,"0,10","0,73",273190,7f672dd0-cd63-464c-9581-0ec6f0e391f7
+BFZ,rare,Guardian of Tazeem,78,NM,0,12,41,"0,02","0,23",284304,5b55cf5e-4499-4e3a-9748-7b1568286b5a
+C21,rare,Muse Vortex,28,NM,0,12,11,"0,09","0,62",558754,c11b6560-51e8-42d2-a51d-fca70a5807b5
+,,Not found,,NM,0,13,26,"0,0","0,0",0,
+,,Not found,,NM,0,13,10,"0,0","0,0",0,
+C21,rare,Pia Nalaar,177,NM,0,12,3,"0,02","0,14",558521,9d2502c8-bf80-404c-9a9a-b843d355fcaa
+FUT,rare,Pact of the Titan,103,NM,0,11,77,"0,05","0,47",15095,8f332ef3-335a-494d-a90f-61a9e9834ccd
+STX,rare,Culmination of Studies,173,NM,0,11,112,"0,02","0,15",557499,2483060e-9d3f-48ae-80ea-0119bf6b4d67
+CLB,rare,Firbolg Flutist,174,NM,0,11,78,"0,02","0,19",659236,73255900-11ac-4a82-bd30-2dc24addd8e6
+VOW,rare,Lantern Flare,23,NM,0,12,52,"0,02","0,17",581864,dfd59300-7b5c-4263-a7fd-775c9fcb05ad
+MH2,rare,"Aeve, Progenitor Ooze",409,NM,0,12,127,"0,05","0,23",566312,75a03422-4106-4d06-b26a-06b1e3b0cb2a
+C21,rare,"Zetalpa, Primal Dawn",112,NM,0,12,9,"0,05","0,21",559505,6d471f97-e812-410e-9354-1d1d330010bc
+C19,rare,Divine Reckoning,62,NM,0,11,53,"0,10","0,33",392057,cbb97027-d6bc-4529-960d-6b0ab2af9c50
+THB,rare,The Akroan War,124,NM,0,11,154,"0,05","0,29",429076,28ea046b-1bbc-4430-a859-321602c9e928
+BFZ,rare,Veteran Warleader,221,NM,0,11,0,"0,02","0,09",284343,46c7f3e0-b23a-4786-b452-583d905113e2
+VOW,rare,Falkenrath Forebear,111,NM,0,11,85,"0,02","0,22",581921,451559d0-b62d-4757-8eb5-f6b0e240899c
+BRR,rare,Keening Stone,26,NM,0,12,152,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+HOU,rare,Hour of Promise,120,NM,0,11,109,"0,10","0,85",298734,c5ee374f-31dc-4b2c-beba-431d5b1126d0
+SNC,rare,Obscura Interceptor,209,NM,0,12,59,"0,02","0,12",651709,08886346-2405-47ee-997f-c0fb7776c783
+,,Not found,,NM,0,13,30,"0,0","0,0",0,
+,,Not found,,NM,0,13,32,"0,0","0,0",0,
+BRR,rare,Runechanter's Pike,48,NM,0,12,134,"0,02","0,13",682916,76252996-5b22-48ab-afa4-0cc2fe6a6878
+MH2,rare,Patriarch's Bidding,275,NM,0,11,38,"0,10","0,81",566306,317686d8-b762-4598-b74a-8b1fa6b899ba
+JOU,rare,Bearer of the Heavens,89,NM,0,12,69,"0,04","0,31",266645,061d9fa5-a8e0-4263-9804-22d648554eba
+KLD,rare,Confiscation Coup,41,NM,0,12,43,"0,02","0,13",292804,6daf453f-54be-4346-831d-a0434aa086fe
+STX,rare,Retriever Phoenix,113,NM,0,11,119,"0,02","0,09",558027,4dd6cb53-3c82-4ac3-be1e-311322729198
+BRO,rare,Queen Kayla bin-Kroog,218,NM,0,12,133,"0,02","0,10",678197,685c9767-eaa7-4e16-b245-816181e2fc36
+C21,rare,"Jor Kadeen, the Prevailer",220,NM,0,12,4,"0,05","0,10",558527,576d86b5-2541-4ebc-8992-73248af7c805
+NEO,rare,"Isshin, Two Heavens as One",224,NM,0,12,94,"0,05","0,36",607627,a062a004-984e-4b62-960c-af7288f7a3e9
+KLD,rare,Deadlock Trap,204,NM,0,11,138,"0,01","0,10",292871,f956dedc-2cf4-4039-8302-feab94b78426
+DMU,rare,Cosmic Epiphany,283,NM,0,11,161,"0,02","0,13",672400,79718dbe-d5d6-4f24-b514-5c392963f021
+MID,rare,Dire-Strain Rampage,219,NM,0,12,99,"0,02","0,23",574868,0f4a7c01-95ca-43bf-bc53-875cfb4bffa1
+ZNR,rare,"Verazol, the Split Current",239,NM,0,12,102,"0,02","0,09",496820,752a2aa9-40ed-4c64-b945-bc6fec606b7b
+BRR,rare,Keening Stone,26,NM,0,12,138,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+AKH,rare,Champion of Rhonas,159,NM,0,11,58,"0,02","0,26",296778,b185b24d-ae33-48ca-966a-511627fdac6d
+NEO,rare,Brilliant Restoration,7,NM,0,11,55,"0,02","0,41",607393,64f7a506-0aa1-4c2d-b322-e0e9179d05fb
+JOU,rare,"King Macar, the Gold-Cursed",74,NM,0,12,68,"0,02","0,48",266622,ff5987ab-570a-426c-ae4a-a270fac6b346
+BRR,rare,Keening Stone,26,NM,0,12,139,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+MID,rare,Burn Down the House,131,NM,0,11,71,"0,08","0,66",574993,20ded7af-8086-465e-a980-3099217d324c
+KLD,rare,Saheeli's Artistry,62,NM,0,12,38,"0,02","0,14",292503,42237c1d-5579-4c15-b97b-bcaaaf0b1ab2
+SNC,rare,"Jinnie Fay, Jetmir's Second",195,NM,0,11,72,"0,02","0,49",651859,c5f9326a-2a41-45b3-97c3-548f0bdc0882
+BRR,rare,Thorn of Amethyst,60,NM,0,12,23,"0,20","0,98",682642,ded2a5ad-c12a-4442-bd67-cfdc648978c9
+C21,rare,Guardian Archon,17,NM,0,12,5,"0,03","0,19",559471,6168ca14-b8d6-4149-bc61-dc1965d2f5b4
+NEO,rare,Invoke the Ancients,390,NM,0,11,67,"0,05","0,33",608341,93f89fc5-fe77-490b-ba05-34ec0b362801
+XLN,rare,Tocatli Honor Guard,42,NM,0,12,49,"0,02","0,31",301199,a3fc3501-e7bd-4589-98c5-4476258842ea
+STA,rare,Memory Lapse,16,NM,0,11,102,"0,15","0,48",556497,98c1b465-b6d9-491b-bfc2-c034cc825d27
+BNG,rare,Fated Return,69,NM,0,12,66,"0,02","0,08",265877,a55878ec-a903-4694-8709-e29fa88b2c28
+AKH,rare,Heart-Piercer Manticore,138,NM,0,11,57,"0,02","0,14",297187,dd64160a-96e0-4593-ba42-c5e8bbfa0b15
+DMU,rare,Herd Migration,165,NM,0,12,58,"0,02","0,16",671623,b0244a1f-e696-4223-9c14-22c2ca3cb738
+BNG,rare,Fated Infatuation,39,NM,0,12,83,"0,07","0,50",265722,9e5ba99d-d95d-4a3b-b6b6-a5e2589d538e
+STX,rare,Efreet Flamepainter,98,NM,0,11,114,"0,02","0,12",557186,d9f0731c-2a3d-4613-bffa-8b967e4f142e
+C21,rare,Hoard-Smelter Dragon,173,NM,0,12,2,"0,04","0,08",558520,d5eb5f59-1d0c-402a-8b06-108bf1dc8b4e
+,,Not found,,NM,0,13,9,"0,0","0,0",0,
+SLX,rare,"Sophina, Spearsage Deserter",7,NM,0,12,57,"0,02","0,18",651579,e0a64924-068e-483f-91a6-d450b67b3c75
+JOU,rare,Setessan Tactics,140,NM,0,12,75,"0,04","0,69",266608,385a1939-15e5-4f13-b01b-7cdc6835da2a
+SNC,rare,Getaway Car,237,NM,0,11,32,"0,02","0,06",651377,8a6d2fa3-3f5a-4b6f-8b7e-6a8bf65c07ad
+BRC,mythic,"Urza, Chief Artificer",40,NM,0,12,26,0,0,0,cde0dec9-cc8d-43d2-8787-3fabc8c24521
+EMN,rare,Soul Separator,199,NM,0,11,137,"0,02","0,13",290964,eb9b1158-dfc4-4fe9-b970-338be8a99662
+BFZ,rare,Shrine of the Forsaken Gods,245,NM,0,12,54,"0,05","0,30",284467,9da2af9a-28c4-4edd-95c4-cc09c2de4adc
+AFR,rare,Mind Flayer,63,NM,0,11,165,"0,02","0,21",571846,c29ac797-a186-4224-94e1-9bb9dca4b029
+C13,rare,Flickerform,12,NM,0,11,54,"0,05","0,40",264777,0113159a-f971-460a-b9fc-42530484c852
+,,Not found,,NM,0,13,29,"0,0","0,0",0,
+STX,rare,Manifestation Sage,205,NM,0,11,26,"0,02","0,15",557630,76fc5cd2-fbb0-4d13-9089-0292b356de48
+VOW,rare,"Anje, Maid of Dishonor",231,NM,0,11,143,"0,04","0,25",581380,1bfac4ab-97f1-448c-8554-42ed03eb5656
+MH1,rare,Force of Virtue,10,NM,0,11,52,"0,05","0,32",374670,9736d6f4-5ff6-4006-b45d-8e630382d160
+BRR,rare,Keening Stone,26,NM,0,12,137,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+E02,rare,Adaptive Automaton,42,NM,0,12,29,"0,30","0,97",311229,a3a74bb9-b850-4d94-81f4-ffe062e91c49
+BFZ,rare,Angelic Captain,208,NM,0,11,60,"0,02","0,12",284751,ef0baf56-816a-4e0a-beb3-73b51487ff00
+VOW,rare,Hamlet Vanguard,201,NM,0,11,90,"0,02","0,18",581926,f31e108b-8cb5-4f30-b68b-274aa7ac2a81
+TSR,rare,Magus of the Future,75,NM,0,11,101,"0,02","0,18",543006,27ba1ea5-c861-4bb4-a681-fc0633268bd9
+MIC,rare,Visions of Glory,32,NM,0,12,36,"0,02","0,19",574718,11675d8a-cd81-4055-bdbd-2e709e12ba66
+DTK,rare,Assault Formation,173,NM,0,12,113,"0,10","0,73",273190,7f672dd0-cd63-464c-9581-0ec6f0e391f7
+SNC,rare,Maestros Ascendancy,198,NM,0,11,24,"0,02","0,13",651653,469a0f03-7874-453d-b9e4-275c13244f4a
+BRR,rare,Keening Stone,26,NM,0,12,136,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+HOU,rare,Wildfire Eternal,109,NM,0,11,69,"0,02","0,23",298459,fd845479-619a-4262-b445-d93975c183b4
+BFZ,rare,Scatter to the Winds,85,NM,0,12,105,"0,02","0,21",284787,d73ad49f-fe15-4fe5-9731-fd71d31c1e7f
+BNG,rare,Hero of Iroas,17,NM,0,12,79,"0,02","0,25",265585,7917f2ee-f093-4ffb-83ed-a181b14b5957
+STX,rare,Elemental Expressionist,181,NM,0,11,116,"0,02","0,09",557607,7473db42-905b-4fda-af8c-fd24d906b642
+C19,rare,Hour of Reckoning,65,NM,0,11,51,"0,05","0,18",392032,d12768a5-8ee6-407b-87cf-703e69a0c32a
+ZNR,rare,Archpriest of Iona,5,NM,0,11,96,"0,02","0,10",495029,f7dc61e4-46e3-473b-90f8-27e71e1088e8
+,,Not found,,NM,0,13,28,"0,0","0,0",0,
+BNG,rare,Fated Retribution,11,NM,0,12,76,"0,04","0,28",265584,8158b330-2868-4147-907e-4d86e44cfaad
+JOU,rare,Harness by Force,100,NM,0,12,70,"0,02","0,28",266654,9bde89c1-aafa-43d9-adbf-671fa2b52d4f
+BRR,rare,Keening Stone,26,NM,0,12,147,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+TSR,rare,Muraganda Petroglyphs,220,NM,0,11,84,"0,02","0,15",546726,b103cb22-93b2-4206-9f80-5f966155e07e
+BRR,rare,Keening Stone,26,NM,0,12,153,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+,,Not found,,NM,0,13,25,"0,0","0,0",0,
+BNG,rare,Hero of Iroas,17,NM,0,12,78,"0,02","0,25",265585,7917f2ee-f093-4ffb-83ed-a181b14b5957
+ZNR,rare,Kazandu Mammoth // Kazandu Valley,189,NM,0,11,82,"0,02","0,17",496645,2f632537-63bf-4490-86e6-e6067b9c1a3b
+,,Not found,,NM,0,13,2,"0,0","0,0",0,
+MH2,rare,Chitterspitter,153,NM,0,12,18,"0,02","0,18",566768,7ee33ff3-d3d6-4519-9d9f-72e342d8b215
+NCC,rare,Spiteful Repossession,90,NM,0,12,55,"0,05","0,33",652138,354790c1-ce19-4ed5-9cef-f2e2ee621578
+C21,rare,Scholarship Sponsor,22,NM,0,12,6,"0,07","0,22",559474,ed238d90-72b5-44c4-bea7-20f71788088f
+BRO,uncommon,Demolition Field,260,NM,0,12,31,"0,02","0,53",682627,d9c88546-13c9-4d7e-a618-cb2ccd1dbc0f
+TSR,rare,Life and Limb,215,NM,0,12,124,"0,05","0,17",546896,2721724d-92ae-4c0c-88dd-628888c468bf
+SNC,rare,Fight Rigging,145,NM,0,12,44,"0,05","0,53",651643,86fd3454-efe7-4feb-a6ad-069ae2fdbd18
+BRR,rare,Keening Stone,26,NM,0,12,141,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+BRO,rare,"Hajar, Loyal Bodyguard",211,NM,0,12,129,"0,04","0,47",682069,5a0a2f82-57d3-45d8-b1c8-357883c62728
+STX,rare,Oriq Loremage,80,NM,0,11,110,"0,02","0,41",558084,25214a91-2f64-46ee-9834-7fbf684800f7
+DGM,rare,Blood Scrivener,22,NM,0,12,60,"0,04","0,25",261333,9ea8179a-d3c9-4cdc-a5b5-68cc73279050
+TSR,rare,Fungus Sliver,203,NM,0,11,93,"0,05","0,26",546766,864a67e4-5deb-45d5-bd42-3078716e142b
+,,Not found,,NM,0,13,36,"0,0","0,0",0,
+TSR,rare,Glittering Wish,253,NM,0,12,121,"0,02","0,17",546851,0c89645b-5e53-48c0-b4bb-9f22332c7658
+BRO,rare,Kayla's Command,9,NM,0,12,132,"0,02","0,16",682325,0737dbec-1646-41a0-adbf-706c9bd4fc7a
+CLB,rare,Raised by Giants,250,NM,0,11,8,"0,02","0,14",658482,11c93414-935e-462b-ad89-27ca21d01bf9
+ZNR,rare,Tajuru Paragon,209,NM,0,11,92,"0,02","0,09",494684,a045dd0f-953a-4022-8f29-0758f2b6ccaa
+TSR,rare,"Radha, Heir to Keld",259,NM,0,12,116,"0,05","0,22",547771,7924e5a5-9614-4fd0-a621-80fa3103cc22
+STX,rare,Teachings of the Archaics,57,NM,0,11,61,"0,02","0,10",557502,967148b1-2bb6-4bc0-95e6-c45fcf99afd2
+THB,rare,Enigmatic Incarnation,215,NM,0,12,95,"0,02","0,22",431299,dd116c0b-0404-42ba-978f-7044b1a03d90
+AER,rare,Kari Zev's Expertise,88,NM,0,11,70,"0,05","0,71",294842,ab5c7400-6307-4c51-88b8-9c0232110714
+,,Not found,,NM,0,13,16,"0,0","0,0",0,
+STX,rare,"Codie, Vociferous Codex",253,NM,0,11,111,"0,02","0,14",557219,ea476ee1-67d9-4dd8-a5ac-f68a155eb18b
+,,Not found,,NM,0,13,24,"0,0","0,0",0,
+DTK,rare,Mirror Mockery,62,NM,0,12,106,"0,09","0,35",273184,f837b050-70a6-46f0-963d-4badb37a42a1
+,,Not found,,NM,0,13,5,"0,0","0,0",0,
+BRO,rare,Over the Top,146,NM,0,12,128,"0,02","0,12",683327,01eb9702-55c5-41b2-8bef-63d33dafa599
+RTR,rare,Azor's Elocutors,210,NM,0,11,63,"0,03","0,33",258528,61e82934-546b-4734-a715-b22ace4c5a9b
+BNG,rare,Arbiter of the Ideal,31,NM,0,12,82,"0,04","0,21",265587,32e58ba3-4202-4f91-b27f-7528d27c1d5c
+DMU,rare,Golden Argosy,230,NM,0,11,142,"0,02","0,28",671633,f8611a53-e54e-4625-8e28-03511f1550e8
+SNC,rare,Maestros Diabolist,200,NM,0,11,25,"0,02","0,08",651654,7206db10-e248-420d-bf92-4d57bc72da56
+CLB,rare,"Raphael, Fiendish Savior",292,NM,0,11,1,"0,02","0,17",658501,cc6902a4-2db0-47fe-ace8-0c890675bf19
+DMU,rare,Golden Argosy,230,NM,0,11,62,"0,02","0,28",671633,f8611a53-e54e-4625-8e28-03511f1550e8
+CMR,rare,"Gnostro, Voice of the Crags",276,NM,0,12,120,"0,02","0,09",512040,c171f179-9ccf-4819-915c-7f2cd3a91ad8
+BRR,rare,Keening Stone,26,NM,0,12,145,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+BRO,rare,"Mishra, Tamer of Mak Fawa",217,NM,0,12,19,"0,02","0,25",681775,585a753d-a692-474a-bc28-48dd93b73ace
+ZNR,rare,Swarm Shambler,207,NM,0,11,91,"0,02","0,13",495334,7a7e4f99-ece4-473e-b712-40e4c53558e8
+XLN,rare,Daring Saboteur,49,NM,0,12,53,"0,02","0,09",298492,57cb012c-947c-4281-8619-1384acf6df54
+M14,rare,Xathrid Necromancer,123,NM,0,12,62,"0,04","0,31",262851,26494f96-1d97-4435-a116-3ade1becaab4
+STX,rare,"Shaile, Dean of Radiance // Embrose, Dean of Shadow",158,NM,0,11,86,"0,02","0,33",556448,938cee8f-ac2c-49a5-9ff7-1367d0edfabe
+,,Not found,,NM,0,13,12,"0,0","0,0",0,
+ZNR,rare,Coralhelm Chronicler,54,NM,0,11,105,"0,01","0,07",495384,50b54524-8345-4b47-913f-d883a1cbe3a1
+NEC,mythic,"Kaima, the Fractured Calm",3,NM,0,11,14,"0,02","0,13",608625,467033f7-8d59-4b80-8c2e-c36f3ad93438
+C21,rare,Erratic Cyclops,166,NM,0,12,15,"0,02","0,19",558786,48dae537-ff11-438f-8367-46121a88f60f
+AFR,rare,Ochre Jelly,196,NM,0,11,66,"0,05","0,24",571252,9f23cfb7-c6b6-4f04-abba-5b2a6117ea12
+C19,rare,Ghired's Belligerence,25,NM,0,11,43,"0,03","0,31",390237,b8348ef6-f2ae-4277-ae04-7849c508f0e4
+NEO,rare,March of Wretched Sorrow,111,NM,0,11,42,"0,02","0,24",607533,050a604e-6146-4e2e-88a5-863ecb3dfa1f
+NEO,rare,Biting-Palm Ninja,88,NM,0,11,134,"0,02","0,26",607017,3017df51-67ae-4c3d-8210-086f83bc2040
+BFZ,rare,Painful Truths,120,NM,0,12,100,"0,02","0,27",284738,46a3afdb-aeb2-4699-91f9-5c42284b3a4a
+DTK,rare,Ire Shaman,141,NM,0,12,108,"0,02","0,11",273216,18f8ac7a-a68a-4adf-995f-1cd96ee3d295
+,,Not found,,NM,0,13,0,"0,0","0,0",0,
+BNG,rare,Whims of the Fates,115,NM,0,12,92,"0,01","0,27",265889,a7ef2fc3-0072-450b-acab-7d19c4903128
+BNG,rare,Mindreaver,44,NM,0,12,85,"0,03","0,10",265607,87912ae7-3edc-4ea2-9b4b-caf2bc149ad1
+MID,rare,Patrician Geist,69,NM,0,11,160,"0,03","0,34",574879,de2b0c63-c929-42ec-aada-dddb2a26550c
+,,Not found,,NM,0,13,8,"0,0","0,0",0,
+BRO,rare,Perennial Behemoth,202,NM,0,12,21,"0,02","0,30",683335,6cb74e91-f7e5-49dd-8aa8-83a679f88a21
+AKH,rare,Drake Haven,51,NM,0,11,128,"0,05","0,28",296719,4318da9d-dadf-444b-a0d4-fd270b216f5b
+SNC,rare,Devilish Valet,105,NM,0,11,45,"0,04","0,50",651259,45d3fc69-6c5e-4ede-9f8d-c1cee096a78a
+TSR,rare,Glittering Wish,253,NM,0,12,119,"0,02","0,17",546851,0c89645b-5e53-48c0-b4bb-9f22332c7658
+BFZ,rare,Nissa's Renewal,180,NM,0,11,158,"0,02","0,23",284339,91aa2ff1-12ea-4896-a955-a9cd76c3b49d
+AKH,rare,Sweltering Suns,149,NM,0,11,145,"0,03","0,15",297127,f11cd406-c6ae-4018-ae45-4e5577aa82ae
+BFZ,rare,Bring to Light,209,NM,0,11,6,"0,04","0,39",284438,d25b13a4-6282-4426-8b01-9550f7d52d16
+,,Not found,,NM,0,13,23,"0,0","0,0",0,
+JOU,rare,Pheres-Band Warchief,135,NM,0,12,72,"0,04","0,19",266626,8456730a-607c-44c0-b18e-0df8f35b0634
+TSR,rare,Kaervek the Merciless,257,NM,0,12,118,"0,04","0,21",548211,4e9a163e-7896-47bf-9b9b-dcf011402ce7
+KLD,rare,Captured by the Consulate,8,NM,0,11,147,"0,02","0,12",292778,e0c20018-4446-4c2b-bdc5-53fcf1fbc3bf
+C21,rare,Hellkite Igniter,171,NM,0,12,1,"0,04","0,07",558518,c0c94fc4-17d7-4752-9667-c20c19e65f01
+,,Not found,,NM,0,13,20,"0,0","0,0",0,
+VOW,rare,Concealing Curtains // Revealing Eye,101,NM,0,12,48,"0,05","0,20",581910,612b2e6e-fe8d-49ad-b845-6fa7fa59ffd1
+C21,mythic,Epic Experiment,216,NM,0,12,16,"0,09","0,33",558797,b672f90f-c03a-4eab-b52a-5bbca3c4294c
+KLD,rare,Dynavolt Tower,208,NM,0,11,139,"0,02","0,17",292621,c45fd2ae-0f91-47ca-99bd-22ddf946df9f
+BBD,rare,Evil Twin,222,NM,0,11,10,"0,09","0,43",359037,7b1969ce-3bf1-4beb-bbf8-22edfda8e3f8
+CLB,rare,Elturel Survivors,172,NM,0,11,79,"0,02","0,16",659860,e376b59a-5702-4706-b713-01cab4e253cc
+BFZ,rare,Bring to Light,209,NM,0,11,7,"0,04","0,39",284438,d25b13a4-6282-4426-8b01-9550f7d52d16
+AKH,rare,Pyramid of the Pantheon,235,NM,0,11,140,"0,02","0,24",296794,cef335b2-8086-4b29-b8e3-47de6faa1334
+C21,rare,Aether Gale,113,NM,0,12,13,"0,10","0,27",558766,9f04015b-0286-4230-a72f-36c511d89f45
+ELD,rare,Lochmere Serpent,195,NM,0,11,27,"0,02","0,16",400059,3287beea-747c-4cb6-aea5-051e85c5de8d
+MH1,rare,Scrapyard Recombiner,227,NM,0,11,33,"0,05","0,51",374619,8945f5e0-c143-47ca-910e-32ad9ac34487
+DTK,rare,Silumgar's Command,232,NM,0,12,110,"0,05","0,10",273138,ba26dbbc-d4a2-44a1-8e6b-affe61f43a34
+BBD,rare,Play of the Game,29,NM,0,11,152,"0,10","0,28",358399,85b09595-0d81-4cc0-872f-9a6fb539298b
+BRC,rare,The Archimandrite,26,NM,0,12,25,0,0,0,54fb3f4c-44fb-4afe-9fab-204ef98995c3
+BFZ,rare,Guardian of Tazeem,78,NM,0,12,40,"0,02","0,23",284304,5b55cf5e-4499-4e3a-9748-7b1568286b5a
+STX,rare,Silverquill Command,232,NM,0,11,118,"0,02","0,16",540496,5c55f533-9d31-4ad1-b336-927aba6e74d6
+ZNR,rare,Nimble Trapfinder,72,NM,0,11,106,"0,02","0,08",496780,1ee1a550-b7e7-48e0-bd96-a41986dbd879
+MH2,rare,Magus of the Bridge,344,NM,0,12,17,"0,02","0,15",566800,fec0c309-5e11-40b2-a38f-66503b357f5d
+,,Not found,,NM,0,13,21,"0,0","0,0",0,
+,,Not found,,NM,0,13,11,"0,0","0,0",0,
+C21,rare,Dazzling Sphinx,25,NM,0,12,10,"0,09","0,29",558752,47287f15-c480-4c93-8f04-10f57a089c2e
+,,Not found,,NM,0,13,18,"0,0","0,0",0,
+TSR,rare,Thelon of Havenwood,238,NM,0,12,123,"0,03","0,14",547621,783f1b9f-9866-4ead-96cf-88babf459ce2
+STX,rare,Fervent Mastery,101,NM,0,11,115,"0,02","0,16",557633,1f824caf-b32c-442a-8631-887831a57360
+,,Not found,,NM,0,13,3,"0,0","0,0",0,
+BRR,rare,Keening Stone,26,NM,0,12,149,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+EMN,rare,Emrakul's Evangel,156,NM,0,12,56,"0,02","0,26",290980,51c21822-972f-4c20-ac3b-80ba9af101c5
+DMU,rare,Drag to the Bottom,91,NM,0,12,46,"0,02","0,16",672316,9d243099-94b1-4571-96af-4c5a34241911
+,,Not found,,NM,0,13,7,"0,0","0,0",0,
+BNG,rare,Nessian Wilds Ravager,129,NM,0,12,93,"0,02","0,15",265592,65368cf0-7d92-4248-b930-633fd023065b
+BNG,rare,Silent Sentinel,26,NM,0,12,81,"0,02","0,15",265586,177ece7c-b979-4a31-ba5f-6a8a382f2862
+MH2,rare,Karmic Guide,263,NM,0,11,98,"0,02","0,20",566655,915b4638-b1ec-4045-80e6-f05fb1e2a87c
+DMU,rare,Chaotic Transformation,117,NM,0,11,153,"0,02","0,15",671911,bdfb44f1-e366-437a-bde3-59bfdb362864
+BFZ,rare,Exert Influence,77,NM,0,12,104,"0,01","0,10",284731,c35e9d13-ee4b-42f1-a154-18ab32947ad3
+SNC,rare,Hostile Takeover,191,NM,0,12,45,"0,02","0,15",651652,bd7df727-50ea-4ea8-bdb9-d7ef16199d8a
+BFZ,rare,Nissa's Renewal,180,NM,0,11,59,"0,02","0,23",284339,91aa2ff1-12ea-4896-a955-a9cd76c3b49d
+,,Not found,,NM,0,13,31,"0,0","0,0",0,
+BFZ,rare,Lantern Scout,37,NM,0,12,51,"0,02","0,12",284370,fea3b271-226d-4223-8be8-51b5b2b7cae8
+,,Not found,,NM,0,13,1,"0,0","0,0",0,
+BFZ,rare,Aligned Hedron Network,222,NM,0,11,146,"0,02","0,15",284736,c0ef436b-e82e-4e1f-9da0-5e35f0c37bde
+CLB,rare,"Myrkul, Lord of Bones",287,NM,0,11,3,"0,02","0,20",658746,82824d05-5215-459a-aa73-3c5a6be3d464
+BRO,rare,The Stasis Coffin,245,NM,0,11,28,"0,02","0,22",682344,45537ac3-fc61-4253-a782-7f3e436b2aa6
+,,Not found,,NM,0,13,22,"0,0","0,0",0,
+NCC,rare,"Vazi, Keen Negotiator",92,NM,0,11,17,"0,02","0,18",652140,551a6ff5-0f6e-4925-98c7-4d426358e959
+BNG,rare,Fated Retribution,11,NM,0,12,77,"0,04","0,28",265584,8158b330-2868-4147-907e-4d86e44cfaad
+WAR,rare,Massacre Girl,99,NM,0,11,41,"0,02","0,29",371974,be8ec9e1-2c8e-496d-9111-4d453b75b578
+KTK,rare,Mardu Ascendancy,185,NM,0,11,23,"0,02","0,27",269144,02bc2415-b1d1-467a-9578-3948dda166cf
+SNC,rare,Incandescent Aria,192,NM,0,11,74,"0,02","0,13",651858,77e2ed9e-ee1d-440a-94b4-d4b17d30b800
+ZNR,rare,Ondu Inversion // Ondu Skyruins,30,NM,0,11,94,"0,04","0,53",496500,b6e6be8c-41c3-4348-a8dd-b40ceb24e9b4
+RTR,rare,Desecration Demon,63,NM,0,12,65,"0,04","0,47",258348,8242fade-754c-4404-b3fb-f3cccf84b3b6
+MID,rare,Sludge Monster,76,NM,0,11,159,"0,02","0,15",574797,57fa9aa8-86d2-4f1e-ac65-ace7e73a853c
+TSR,rare,Thelon of Havenwood,238,NM,0,11,89,"0,03","0,14",547621,783f1b9f-9866-4ead-96cf-88babf459ce2
+SNC,rare,Devilish Valet,105,NM,0,11,47,"0,04","0,50",651259,45d3fc69-6c5e-4ede-9f8d-c1cee096a78a
+2X2,rare,"Intet, the Dreamer",229,NM,0,11,73,"0,05","0,21",665780,35517572-b5d4-4dbf-b090-4e4c4b040a0d
+C21,rare,Stalking Leonin,105,NM,0,12,8,"0,05","0,31",559499,0f32a8ba-43ce-485b-b96d-e1d17e6f3174
+KLD,rare,Paradoxical Outcome,60,NM,0,12,103,"0,07","0,64",292540,17e50157-bf49-4c5f-9b8a-bf73484e63a5
+VOW,rare,Dollhouse of Horrors,255,NM,0,11,132,"0,03","0,17",582233,396abc9e-a738-430d-85cc-448ace2548f9
+ISD,rare,Gutter Grime,186,NM,0,11,150,"0,02","0,33",250751,a9d007a2-163d-4e09-a70b-280a6fa3203b
+BFZ,rare,Shambling Vent,244,NM,0,11,124,"0,05","0,44",284478,30a73816-1f33-4798-a9d6-5f0410d19625
+BRR,rare,Keening Stone,26,NM,0,12,144,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+KLD,rare,Fleetwheel Cruiser,214,NM,0,11,141,"0,02","0,22",292479,5fdaca1e-5741-456e-ae98-e2c45fd1731b
+BFZ,rare,Planar Outburst,42,NM,0,11,49,"0,02","0,11",284442,5f34f930-a7c6-400d-b6e8-b9908e0f0404
+,,Not found,,NM,0,13,19,"0,0","0,0",0,
+C13,rare,Augury Adept,227,NM,0,11,16,"0,08","0,31",264908,a9cf106f-f547-4323-b8bf-0340c6308007
+M14,rare,Xathrid Necromancer,123,NM,0,12,61,"0,04","0,31",262851,26494f96-1d97-4435-a116-3ade1becaab4
+DTK,rare,Profound Journey,30,NM,0,12,115,"0,02","0,20",273076,fd2dcfe8-ced4-44f2-8268-68035a4d4d58
+BRR,rare,Keening Stone,26,NM,0,12,135,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+SNC,rare,Devilish Valet,105,NM,0,11,46,"0,04","0,50",651259,45d3fc69-6c5e-4ede-9f8d-c1cee096a78a
+ZNR,mythic,"Tazri, Beacon of Unity",44,NM,0,11,12,"0,02","0,15",494604,d4b79138-5728-4541-9ea5-dce1a5ae7e6a
+,,Not found,,NM,0,13,34,"0,0","0,0",0,
+THS,rare,Agent of the Fates,76,NM,0,12,63,"0,02","0,21",264160,ecd59977-8788-417d-ba50-e21b8a636bd3
+,,Not found,,NM,0,13,15,"0,0","0,0",0,
+BRR,rare,Keening Stone,26,NM,0,12,146,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+SNC,rare,Mysterious Limousine,22,NM,0,11,127,"0,02","0,13",651364,a58cb742-0ba7-4795-9772-25d4db0bc4ce
+DTK,rare,Foul Renewal,101,NM,0,12,114,"0,02","0,14",273341,e319b7ca-d0a4-43ff-8e87-2af6ead089f5
+BFZ,rare,Bring to Light,209,NM,0,11,5,"0,04","0,39",284438,d25b13a4-6282-4426-8b01-9550f7d52d16
+BRR,rare,Keening Stone,26,NM,0,12,154,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+DMU,rare,Ratadrabik of Urborg,213,NM,0,12,35,"0,02","0,29",671934,9315812d-03e8-4eb4-a693-e7adf281f7fb
+MH2,rare,Calibrated Blast,118,NM,0,12,22,"0,02","0,10",566369,37962700-e4d9-419e-8972-d3fd955ff40e
+BNG,rare,Satyr Firedancer,108,NM,0,12,91,"0,05","0,66",265888,7fc6a735-cbf5-4af2-b15c-7ced82f0d9da
+BRO,rare,"Hajar, Loyal Bodyguard",211,NM,0,12,28,"0,04","0,47",682069,5a0a2f82-57d3-45d8-b1c8-357883c62728
+DST,rare,Wand of the Elements,158,NM,0,11,34,"0,02","0,14",374,1131c187-8fc3-4cee-9422-355ef6622de7
+STX,rare,Accomplished Alchemist,119,NM,0,11,120,"0,02","0,32",557638,0d7b7830-b65e-4c53-98e8-152026764e4b
+STX,rare,Tempted by the Oriq,58,NM,0,11,121,"0,02","0,18",558074,c23e64f9-531e-4735-9960-b0a76b32c340
+SNC,rare,Obscura Ascendancy,207,NM,0,11,22,"0,02","0,14",651731,98a11e5e-d2a9-4490-90f3-a643fc7ed7c3
+DMU,rare,Vodalian Mindsinger,76,NM,0,12,42,"0,02","0,11",671938,211a9db2-8b5f-419d-8032-ac2a571dbb53
+SNC,rare,Getaway Car,237,NM,0,11,144,"0,02","0,06",651377,8a6d2fa3-3f5a-4b6f-8b7e-6a8bf65c07ad
+ELD,rare,Doom Foretold,187,NM,0,11,11,"0,02","0,23",400129,e76c0c83-3e87-474d-bc72-1677eed32cfa
+SNC,rare,Reservoir Kraken,56,NM,0,11,130,"0,02","0,12",651835,53cf9152-da16-4289-9a2d-331e7b9cb839
+AKH,rare,Heart-Piercer Manticore,138,NM,0,11,157,"0,02","0,14",297187,dd64160a-96e0-4593-ba42-c5e8bbfa0b15
+BRR,rare,Keening Stone,26,NM,0,12,140,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+BNG,rare,Felhide Spiritbinder,96,NM,0,12,88,"0,02","0,24",265724,bbbbe4ce-d6a6-428d-aeee-1c316f358777
+,,Not found,,NM,0,13,27,"0,0","0,0",0,
+CLB,rare,Duke Ulder Ravengard,272,NM,0,11,2,"0,02","0,17",659232,082a8ffc-a052-498f-b457-8d70ea18a943
+JOU,rare,"King Macar, the Gold-Cursed",74,NM,0,12,67,"0,02","0,48",266622,ff5987ab-570a-426c-ae4a-a270fac6b346
+BNG,rare,Herald of Torment,75,NM,0,12,64,"0,02","0,17",265723,6bb7e5ab-57d7-4a86-b7c2-262932ac3344
+DMU,rare,Academy Loremaster,40,NM,0,11,162,"0,02","0,13",672648,9fca4c4f-a77b-483e-9da4-574ba2e3d179
+MID,rare,"Katilda, Dawnhart Prime",230,NM,0,12,37,"0,09","0,79",575084,673cd775-d417-4652-a91d-825ad5c89e8a
+BRO,rare,Kayla's Reconstruction,10,NM,0,12,131,"0,02","0,38",682326,2bb84e72-0231-461a-a230-d8afa6e54289
+EMA,rare,Goblin Trenches,203,NM,0,11,9,"0,02","0,23",290228,06625dee-d2e6-4efa-a385-5113d0fe78ac
+MBS,rare,Red Sun's Zenith,74,NM,0,11,29,"0,05","0,30",245326,373eb109-0e30-41c1-b2df-6bc78d968890
+THB,rare,Arasta of the Endless Web,165,NM,0,12,34,"0,02","0,32",430504,7c38833a-96c5-48b5-8dd8-23f10e798537
+,,Not found,,NM,0,13,6,"0,0","0,0",0,
+C21,rare,Rout,101,NM,0,12,0,"0,09","0,14",558506,15ce585a-67fc-4e7a-92ff-a27292179dfa
+NEC,mythic,"Kotori, Pilot Prodigy",2,NM,0,11,13,"0,05","0,32",608624,fea6c1c8-eff9-4b66-b96d-e23016f0bb62
+BNG,rare,Felhide Spiritbinder,96,NM,0,12,89,"0,02","0,24",265724,bbbbe4ce-d6a6-428d-aeee-1c316f358777
+BRO,rare,Terisian Mindbreaker,83,NM,0,12,130,"0,02","0,21",682343,6bd86daf-7cee-454c-8d4d-97f59fe36958
+C21,rare,Hunted Lammasu,94,NM,0,12,7,"0,03","0,13",559491,ea6daa57-1520-40a9-90c7-fa7283f4a687
+BBD,rare,Mangara of Corondor,98,NM,0,11,131,"0,10","0,27",358656,9ec68ca8-a7d3-47d5-91cf-6806f3709e7a
+ROE,rare,Rage Nimbus,160,NM,0,11,30,"0,03","0,29",22648,7c213b45-d86b-4ced-9ab9-44cd84ad94a4
+JOU,rare,Heroes' Bane,126,NM,0,12,71,"0,05","0,35",266584,380e82f6-30ee-49c5-b5a2-85c5cf3e9bb1
+JOU,rare,Pheres-Band Warchief,135,NM,0,12,74,"0,04","0,19",266626,8456730a-607c-44c0-b18e-0df8f35b0634
+STX,rare,Devastating Mastery,14,NM,0,11,122,"0,02","0,11",558009,3b6be019-29b9-4c81-9899-aefeaf9cc977
+AFR,rare,"Nadaar, Selfless Paladin",303,NM,0,11,103,"0,20","0,71",570642,c9dbd2a5-1d12-4900-8487-92912d66c059
+TSR,rare,Kaervek the Merciless,257,NM,0,12,117,"0,04","0,21",548211,4e9a163e-7896-47bf-9b9b-dcf011402ce7
+WAR,rare,Awakening of Vitu-Ghazi,152,NM,0,11,31,"0,02","0,14",372138,b42b2fb4-8016-462c-8764-2639adec931f
+STX,rare,Dream Strix,42,NM,0,11,99,"0,02","0,11",558014,31d82f7a-64f1-463f-bb6b-936c3e49bf2b
+TSR,rare,Muraganda Petroglyphs,220,NM,0,11,83,"0,02","0,15",546726,b103cb22-93b2-4206-9f80-5f966155e07e
+JOU,rare,Pheres-Band Warchief,135,NM,0,12,73,"0,04","0,19",266626,8456730a-607c-44c0-b18e-0df8f35b0634
+M13,rare,Planar Cleansing,26,NM,0,11,48,"0,04","0,18",257018,b5047b71-2359-4d9a-a168-a8eec43c5f1b
+STA,rare,Weather the Storm,58,NM,0,12,126,"0,05","0,59",556914,02f960f2-1324-4d48-bab7-c46b836a8907
+DTK,rare,Gleam of Authority,19,NM,0,12,107,"0,05","0,22",273287,96847438-eb09-4e3f-8ebf-f064b88f70c9
+KLD,rare,Saheeli's Artistry,62,NM,0,12,39,"0,02","0,14",292503,42237c1d-5579-4c15-b97b-bcaaaf0b1ab2
+NCC,rare,Boxing Ring,91,NM,0,11,68,"0,02","0,34",652139,ade9e358-0379-4ad3-a580-4ed0fe770ed2
+STX,rare,"Uvilda, Dean of Perfection // Nassari, Dean of Expression",160,NM,0,11,117,"0,02","0,11",556444,8cfd0887-0c83-4b33-a85e-8b8ec5bf758d
+MH2,rare,Bloodbraid Marauder,116,NM,0,12,24,"0,02","0,18",566770,6286fd93-bb97-4721-8a40-1c5a884c2edb
+SNC,rare,"Evelyn, the Covetous",184,NM,0,11,125,"0,02","0,10",651649,c0dad61f-36cd-46af-82b7-a02e04efd676
+,,Not found,,NM,0,13,13,"0,0","0,0",0,
+RTR,rare,Hypersonic Dragon,170,NM,0,11,75,"0,02","0,25",258212,f024b19a-923a-4313-be06-e743d3fbab46
+C19,rare,Overseer of the Damned,125,NM,0,11,39,"0,10","0,42",392687,052908a3-9159-40df-8e06-1827da62ee11
+C17,rare,Rout,71,NM,0,11,56,"0,09","0,38",300391,3eb01bba-798f-418c-8e45-387b96c9e732
+BRO,uncommon,Lay Down Arms,11,NM,0,12,30,"0,02","0,26",682535,5649ee5a-4485-40a2-96d1-2e061905a71e
+KLD,rare,"Oviya Pashiri, Sage Lifecrafter",165,NM,0,11,136,"0,02","0,14",292748,27eb9d40-958b-41b8-b04b-7f45adc0a862
+C21,rare,Swarm Intelligence,130,NM,0,12,14,"0,08","0,23",558777,2c573d12-4c69-4a54-b1b9-236c003ba98a
+ZNR,rare,Inscription of Insight,61,NM,0,11,108,"0,02","0,21",496470,281cdb1c-21ae-4430-8e0f-c993f52ba891
+BRR,rare,Keening Stone,26,NM,0,12,151,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+BRR,rare,Howling Mine,20,NM,0,12,27,"0,09","0,62",678649,feab8356-58dc-4e01-8c5f-4699e6feef52
+DMC,uncommon,General Marhault Elsdragon,31,NM,0,12,33,"0,02","0,17",671942,bf2931bd-bedc-45e8-b3f0-e2a220dbac1b
+NEO,rare,March of Wretched Sorrow,111,NM,0,11,151,"0,02","0,24",607533,050a604e-6146-4e2e-88a5-863ecb3dfa1f
+AKH,rare,Harsh Mentor,135,NM,0,11,164,"0,02","0,34",296824,8936bf9d-c973-4bce-b5c2-2a01b7953638
+BRR,rare,Keening Stone,26,NM,0,12,148,"0,02","0,15",682902,839349f4-a347-4b1f-91dc-6e9a0a5de24e
+OGW,rare,Oath of Gideon,30,NM,0,11,148,"0,03","0,30",287242,97976ade-c6ec-4068-be6b-953255b86a79
+CMR,rare,Plague Reaver,143,NM,0,11,37,"0,02","0,26",511185,230b9bc8-29c8-49cb-b4f5-1aceeda8bf45

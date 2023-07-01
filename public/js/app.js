@@ -10123,7 +10123,15 @@ var render = function render() {
       "data-toggle": "modal",
       "data-target": "#tcg-powertools-import"
     }
-  }, [_vm._v("\n                TCG PowerTools Import\n            ")])])]), _vm._v(" "), _vm.filter.show ? _c("form", {
+  }, [_vm._v("\n                TCG PowerTools Import\n            ")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-sm btn-secondary ml-1",
+    attrs: {
+      type: "button",
+      disabled: _vm.syncing.status == 1,
+      "data-toggle": "modal",
+      "data-target": "#magic-sorter-import"
+    }
+  }, [_vm._v("\n                Magic Sorter Import\n            ")])])]), _vm._v(" "), _vm.filter.show ? _c("form", {
     staticClass: "mt-1",
     attrs: {
       id: "filter"
