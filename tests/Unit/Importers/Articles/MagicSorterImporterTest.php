@@ -16,7 +16,7 @@ class MagicSorterImporterTest extends TestCase
      */
     public function it_can_import_articles_from_magic_sorter_csv()
     {
-        // $this->markTestSkipped('no cardmarket connection.');
+        $this->markTestSkipped('no cardmarket connection.');
 
         $filepath = 'tests/snapshots/magic-sorter/results_details_20230629-1406.csv';
         $handle = fopen($filepath, "r");
