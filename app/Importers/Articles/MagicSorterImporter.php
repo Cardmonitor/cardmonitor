@@ -164,11 +164,13 @@ class MagicSorterImporter
 
     private function reverseSortArticles(array $articles): void
     {
+        $source_sort = 0;
         $articles = collect($articles)->sortByDesc('source_sort');
-        foreach ($articles as $index => $article) {
+        foreach ($articles as $article) {
             $article->update([
-                'source_sort' => $index,
+                'source_sort' => $source_sort,
             ]);
+            $source_sort++;
         }
     }
 }

@@ -70,6 +70,7 @@ class MagicSorterImporterTest extends TestCase
             if (!Arr::has($cards, $article_row[$header['ecommerce-id']])) {
                 $cards[$article_row[$header['ecommerce-id']]] = factory(Card::class)->create([
                     'cardmarket_product_id' => $article_row[$header['ecommerce-id']],
+                    'name' => $article_row[$header['title']],
                 ]);
             }
 
