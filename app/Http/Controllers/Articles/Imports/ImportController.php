@@ -16,9 +16,9 @@ class ImportController extends Controller
         $attributes = $request->validate([
             'file' => 'required|file',
             'game_id' => 'required|integer',
-            'condition' => 'sometimes|string',
-            'language_id' => 'sometimes|integer',
-            'is_foil' => 'sometimes|boolean',
+            'condition' => 'required_if:type,magic-sorter|string',
+            'language_id' => 'required_if:type,magic-sorter|integer',
+            'is_foil' => 'required_if:type,magic-sorter|boolean',
             'type' => 'required|in:tcg-powertools,magic-sorter',
         ]);
 
