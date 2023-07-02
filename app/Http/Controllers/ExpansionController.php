@@ -58,7 +58,7 @@ class ExpansionController extends Controller
 
         $cardmarketApi = App::make('CardmarketApi');
 
-        $response = $cardmarketApi->expansion->find(Game::ID_MAGIC);
+        $response = $cardmarketApi->expansion->find($attributes['game_id']);
         $cardmarket_expansions = array_filter($response['expansion'], function ($cardmarket_expansion) use ($attributes) {
             return $cardmarket_expansion['abbreviation'] == strtoupper($attributes['abbreviation']);
         });
