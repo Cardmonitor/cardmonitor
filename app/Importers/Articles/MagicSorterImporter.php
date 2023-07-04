@@ -12,6 +12,7 @@ use Illuminate\Support\Arr;
 class MagicSorterImporter
 {
     const SOURCE_SLUG = 'magic-sorter';
+    const PRICE_MULTIPLIER = 10;
 
     public array $articles_by_position = [];
     private int $user_id;
@@ -135,7 +136,7 @@ class MagicSorterImporter
 
     private function getPrice(string $price): float
     {
-        return max(0.5, str_replace(',', '.', $price) * 5);
+        return max(0.5, str_replace(',', '.', $price) * self::PRICE_MULTIPLIER);
     }
 
     private function getStorage(int $position): Storage
