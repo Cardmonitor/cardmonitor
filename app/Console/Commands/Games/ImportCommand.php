@@ -5,9 +5,10 @@ namespace App\Console\Commands\Games;
 use App\Models\Cards\Card;
 use App\Models\Expansions\Expansion;
 use App\Models\Games\Game;
+use Cardmonitor\Cardmarket\Api;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class ImportCommand extends Command
 {
@@ -16,7 +17,9 @@ class ImportCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'games:import {game}';
+    protected $signature = 'games:import
+        {game : ID of the game}
+        {--without-singles : Just update or create the expansions}';
 
     /**
      * The console command description.
@@ -25,29 +28,7 @@ class ImportCommand extends Command
      */
     protected $description = 'Imports expansions and cards from a game';
 
-    /**
-     * The importable Games keyed by its Id.
-     *
-     * @var array
-     */
-    protected $importableGames = [];
-
-    /**
-     * The importable Game IDs.
-     *
-     * @var array
-     */
-    protected $importableGameIds = [];
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    private Api $cardmarket_api;
 
     /**
      * Execute the console command.
@@ -56,47 +37,47 @@ class ImportCommand extends Command
      */
     public function handle()
     {
-        $this->cardmarketApi = App::make('CardmarketApi');
-        $this->importableGames = Game::importables()->keyBy('id');
-        $this->importableGameIds = array_keys($this->importableGames->toArray());
+        $this->cardmarket_api = App::make('CardmarketApi');
 
-        $gameId = $this->argument('game');
+        $importable_games = $this->getGames();
 
-        if ($gameId) {
-            $this->import($gameId);
-            return;
+        if ($importable_games->isEmpty()) {
+            $this->error('No importable games found');
+            return self::FAILURE;
         }
 
-        foreach ($this->importableGameIds as $gameId) {
-            $this->import($gameId);
+        foreach ($importable_games as $game) {
+            $this->import($game);
         }
+
+        return self::SUCCESS;
     }
 
-    protected function import(int $gameId) : void
+    protected function import(Game $game): void
     {
-        $this->info('Importing ' . $this->importableGames[$gameId]->name);
+        $this->info('Importing ' . $game->name);
 
-        if (! $this->isImportable($gameId)) {
-            $this->error('Game does not exist');
-            return;
-        }
+        $cardmarket_expansions = $this->cardmarket_api->expansion->find($game->id);
 
-        $cardmarketExpansions = $this->cardmarketApi->expansion->find($gameId);
+        $bar = $this->output->createProgressBar(count($cardmarket_expansions['expansion']));
 
-        $bar = $this->output->createProgressBar(count($cardmarketExpansions['expansion']));
-
-        foreach ($cardmarketExpansions['expansion'] as $key => $cardmarketExpansion) {
+        foreach ($cardmarket_expansions['expansion'] as $key => $cardmarketExpansion) {
             $expansion = Expansion::createOrUpdateFromCardmarket($cardmarketExpansion);
 
+            if ($this->option('without-singles')) {
+                $bar->advance();
+                continue;
+            }
+
             try {
-                $singles = $this->cardmarketApi->expansion->singles($expansion->id);
+                $singles = $this->cardmarket_api->expansion->singles($expansion->id);
             }
             catch (\Exception $e) {
                 // $this->error('Expansion ' . $cardmarketExpansion['idExpansion'] . ' not available');
                 continue;
             }
 
-            foreach ($singles['single'] as $key => $single) {
+            foreach ($singles['single'] as $single) {
                 Card::createOrUpdateFromCardmarket($single, $expansion->id);
             }
 
@@ -105,24 +86,17 @@ class ImportCommand extends Command
         }
 
         $bar->finish();
-
-        $this->updatePrices($gameId);
+        $this->line('');
 
         $this->info('Finished');
     }
 
-    protected function updatePrices(int $gameId)
+    private function getGames(): Collection
     {
-        $this->info('');
-        $this->info('Syncing prices');
+        if ($this->argument('game')) {
+            return Game::where('id', $this->argument('game'))->where('is_importable', true)->get();
+        }
 
-        $this->call('card:price:sync', [
-            '--game' => $gameId,
-        ]);
-    }
-
-    protected function isImportable(int $gameId) : bool
-    {
-        return in_array($gameId, $this->importableGameIds);
+        return Game::importables();
     }
 }

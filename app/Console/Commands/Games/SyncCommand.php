@@ -3,10 +3,8 @@
 namespace App\Console\Commands\Games;
 
 use App\Models\Games\Game;
-use Illuminate\Support\Arr;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
-use App\Models\Expansions\Expansion;
 
 class SyncCommand extends Command
 {
@@ -41,8 +39,7 @@ class SyncCommand extends Command
      */
     public function handle()
     {
-        $cardmarketApi = App::make('CardmarketApi');
-        $cardmarket_games = $cardmarketApi->games->get();
+        $cardmarket_games = App::make('CardmarketApi')->games->get();
         foreach ($cardmarket_games['game'] as $key => $cardmarket_game) {
             $game = Game::updateOrCreate(['id' => $cardmarket_game['idGame']], [
                 'name' => $cardmarket_game['name'],

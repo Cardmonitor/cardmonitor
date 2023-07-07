@@ -106,6 +106,8 @@ class Article extends Model
         'index',
         'is_altered',
         'is_foil',
+        'is_reverse_holo',
+        'is_first_edition',
         'is_in_shoppingcard',
         'is_playset',
         'is_signed',
@@ -730,6 +732,8 @@ class Article extends Model
             'condition',
             'is_altered',
             'is_foil',
+            'is_reverse_holo',
+            'is_first_edition',
             'is_playset',
             'is_signed',
             'language_id',
@@ -1367,6 +1371,8 @@ class Article extends Model
             ->where('language_id', $article->language_id)
             ->where('condition', $article->condition)
             ->where('is_foil', $article->is_foil)
+            ->where('is_reverse_holo', $article->is_reverse_holo)
+            ->where('is_first_edition', $article->is_first_edition)
             ->where('is_altered', $article->is_altered)
             ->where('is_signed', $article->is_signed)
             ->where('is_playset', $article->is_playset)

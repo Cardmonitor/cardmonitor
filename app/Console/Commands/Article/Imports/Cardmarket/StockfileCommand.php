@@ -27,17 +27,21 @@ class StockfileCommand extends Command
     protected User $user;
 
     private $csv_file_handle;
+    private array $import_states = [];
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
     public function handle()
     {
         $this->user = User::find($this->argument('user'));
+        $importable_games = Game::importables();
 
-        $csv_path = storage_path('app/public/' . $this->user->id . '-stock-' . Game::ID_MAGIC . '-log.csv');
+        foreach ($importable_games as $game) {
+            $this->importGame($game);
+        }
+    }
+
+    public function importGame(Game $game)
+    {
+        $csv_path = storage_path('app/public/' . $this->user->id . '-stock-' . $game->id . '-log.csv');
         if (file_exists($csv_path)) {
             unlink($csv_path);
         }
@@ -45,7 +49,8 @@ class StockfileCommand extends Command
         $header = array_keys($this->output(0, '', new Article(), []));
         fputcsv($this->csv_file_handle, $header, ';');
 
-        $cardmarket_cards = $this->getCardmarketCards();
+        $cardmarket_cards = $this->getCardmarketCards($game);
+
         $stockfile_article_count = 0;
         $all_updated_article_ids = [];
 
@@ -63,9 +68,12 @@ class StockfileCommand extends Command
 
             $stockfile_article_count += $cardmarket_card['amount'];
 
-            $articles_for_card = Article::where('user_id', $this->user->id)
-                ->where('card_id', $cardmarket_product_id)
-                ->whereNull('sold_at')
+            $articles_for_card = Article::select('articles.*')
+                ->join('cards', 'cards.id', '=', 'articles.card_id')
+                ->where('articles.user_id', $this->user->id)
+                ->where('cards.game_id', $game->id)
+                ->where('articles.card_id', $cardmarket_product_id)
+                ->whereNull('articles.sold_at')
                 ->get()
                 ->keyBy('id');
 
@@ -140,6 +148,8 @@ class StockfileCommand extends Command
                     ->where('language_id', $cardmarket_article['language_id'])
                     ->where('condition', Arr::get($cardmarket_article, 'condition', ''))
                     ->where('is_foil', Arr::get($cardmarket_article, 'is_foil', false))
+                    ->where('is_reverse_holo', Arr::get($cardmarket_article, 'is_reverse_holo', false))
+                    ->where('is_first_edition', Arr::get($cardmarket_article, 'is_first_edition', false))
                     ->where('is_signed', Arr::get($cardmarket_article, 'is_signed', false))
                     ->where('is_altered', Arr::get($cardmarket_article, 'is_altered', false))
                     ->where('is_playset', Arr::get($cardmarket_article, 'is_playset', false))
@@ -183,6 +193,8 @@ class StockfileCommand extends Command
                         'language_id' => $cardmarket_article['language_id'],
                         'condition' => $cardmarket_article['condition'],
                         'is_foil' => $cardmarket_article['is_foil'],
+                        'is_reverse_holo' => $cardmarket_article['is_reverse_holo'],
+                        'is_first_edition' => $cardmarket_article['is_first_edition'],
                         'is_signed' => $cardmarket_article['is_signed'],
                         'is_altered' => $cardmarket_article['is_altered'],
                         'is_playset' => $cardmarket_article['is_playset'],
@@ -215,7 +227,6 @@ class StockfileCommand extends Command
                 }
             }
 
-            // Nicht löschen, weil auch Artikel im Warenkorb nicht mehr in der Stockfile sind
             $import_state = 'DELETED';
             $articles = $articles_for_card;
             foreach ($articles as $article) {
@@ -230,12 +241,11 @@ class StockfileCommand extends Command
             }
         }
 
-        // Nicht löschen, weil auch Artikel im Warenkorb nicht mehr in der Stockfile sind
         $import_state = 'DELETED_REST';
         $articles = Article::select('articles.*')
             ->where('user_id', $this->user->id)
             ->join('cards', 'cards.id', '=', 'articles.card_id')
-            ->where('cards.game_id', Game::ID_MAGIC)
+            ->where('cards.game_id', $game->id)
             ->whereNull('articles.sold_at')
             ->whereNotNull('articles.cardmarket_article_id')
             ->whereNotIn('articles.id', $all_updated_article_ids)
@@ -254,8 +264,14 @@ class StockfileCommand extends Command
             $this->line($import_state . ': ' . $count);
         }
 
-        $article_count = Article::where('user_id', $this->user->id)->whereNull('sold_at')->whereNotNull('cardmarket_article_id')->count();
-        $article_count_without_cardmarket_article_id = Article::where('user_id', $this->user->id)->whereNull('sold_at')->whereNull('cardmarket_article_id')->count();
+        $article_count_query = Article::select('articles.*')
+            ->where('user_id', $this->user->id)
+            ->join('cards', 'cards.id', '=', 'articles.card_id')
+            ->where('cards.game_id', $game->id)
+            ->whereNull('articles.sold_at');
+
+        $article_count = $article_count_query->whereNotNull('cardmarket_article_id')->count();
+        $article_count_without_cardmarket_article_id = $article_count_query->whereNull('cardmarket_article_id')->count();
         $article_count_calculated = $article_count - $article_count_without_cardmarket_article_id - $import_states['DELETED'] - $import_states['DELETED_REST'] + $import_states['CREATED'];
 
         $this->line('Stockfile Article Count: ' . $stockfile_article_count);
@@ -270,6 +286,10 @@ class StockfileCommand extends Command
         fputcsv($this->csv_file_handle, ['Database Article Count without Cardmarket Article ID', $article_count_without_cardmarket_article_id], ';');
         fputcsv($this->csv_file_handle, ['Database Article Count calculated', $article_count_calculated], ';');
         fputcsv($this->csv_file_handle, ['Difference', ($stockfile_article_count - $article_count_calculated)], ';');
+
+        fclose($this->csv_file_handle);
+
+        $this->import_states[$game->id] = $import_states;
     }
 
     private function output(int $cardmarket_product_id, $import_state, Article $article, array $cardmarket_article = []): array
@@ -302,14 +322,14 @@ class StockfileCommand extends Command
         fputcsv($this->csv_file_handle, array_map(fn($item) => trim($item), $output), ';');
     }
 
-    private function getCardmarketCards(): array
+    private function getCardmarketCards(Game $game): array
     {
-        $path = storage_path('app/' . $this->user->id . '-stock-' . Game::ID_MAGIC . '.csv');
+        $path = storage_path('app/' . $this->user->id . '-stock-' . $game->id . '.csv');
         if (file_exists($path)) {
             unlink($path);
         }
 
-        $Stockfile = new \App\Importers\Articles\Cardmarket\Stockfile($this->user->id, $path, Game::ID_MAGIC);
+        $Stockfile = new \App\Importers\Articles\Cardmarket\Stockfile($this->user->id, $path, $game->id);
         $Stockfile->download();
 
         $shoppingcart_articles_response = $this->user->cardmarketApi->stock->shoppingcartArticles();
