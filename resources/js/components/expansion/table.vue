@@ -9,6 +9,7 @@
                         <div class="invalid-feedback" v-text="'abbreviation' in errors ? errors.abbreviation[0] : ''"></div>
                     </div>
                 </div>
+                <filter-game class="mb-0 mr-1" :initial-value="form.game_id" :options="games" :game-id="form.game_id" :show-label="false" v-model="form.game_id"></filter-game>
                 <button class="btn btn-sm btn-primary" @click="create"><i class="fas fa-plus-square"></i></button>
             </div>
             <div class="col-auto d-flex align-items-start">

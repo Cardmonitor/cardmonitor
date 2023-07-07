@@ -95,13 +95,14 @@ class ImportCommand extends Command
         $game_id = $singles['expansion']['idGame'];
         $this->info('Game: ' . $this->importableGames[$game_id]->name);
         $this->info('Creating expansion: ' . $singles['expansion']['enName'] . ' (' . $singles['expansion']['abbreviation'] . ')...');
-        $expansion = Expansion::createOrUpdateFromCardmarket($singles['expansion']);
-        $this->info('Expansion created: ' . $expansion->name . ' (' . $expansion->abbreviation . ')');
 
         if (! $this->isImportable($game_id)) {
             $this->error('Game does not exist');
             return;
         }
+
+        $expansion = Expansion::createOrUpdateFromCardmarket($singles['expansion']);
+        $this->info('Expansion created: ' . $expansion->name . ' (' . $expansion->abbreviation . ')');
 
         $cards_count = count($singles['single']);
         $this->info('Importing ' . $cards_count . ' cards');

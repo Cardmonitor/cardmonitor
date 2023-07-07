@@ -83,6 +83,8 @@ class SqlCommand extends Command
                     'index' => $attributes['index'],
                     'is_altered' => $attributes['is_altered'],
                     'is_foil' => $attributes['is_foil'],
+                    'is_reverse_holo' => $attributes['is_reverse_holo'],
+                    'is_first_edition' => $attributes['is_first_edition'],
                     'is_playset' => $attributes['is_playset'],
                     'is_signed' => $attributes['is_signed'],
                     'language_id' => $attributes['language_id'],

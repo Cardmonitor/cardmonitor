@@ -10,6 +10,7 @@ use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
 use App\Models\Expansions\Expansion;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Database\Eloquent\Collection;
 use App\Transformers\Articles\Csvs\Transformer;
 
 class Stockfile
@@ -18,6 +19,7 @@ class Stockfile
     private int $user_id;
     private int $game_id;
     private array $cardmarket_cards = [];
+    private Collection $expansions;
 
     public function __construct(int $user_id, string $path, int $game_id)
     {
@@ -53,7 +55,7 @@ class Stockfile
 
     public function setCardmarketCards(array $shoppingcart_articles = []): array
     {
-        $expansions = Expansion::where('game_id', $this->game_id)->get()->keyBy('abbreviation');
+        $this->setExpansions();
         $no_storage = Storage::noStorage($this->user_id)->first();
         $no_storage_id = $no_storage->id ?? null;
 
@@ -64,23 +66,11 @@ class Stockfile
                 continue;
             }
 
-            // Expansion not found, import it
-            if (! Arr::has($expansions, $stock_row[4])) {
-                $card = Card::import($stock_row[Article::CSV_CARDMARKET_PRODUCT_ID]);
-                $expansions = Expansion::where('game_id', $this->game_id)->get()->keyBy('abbreviation');
-
-                Artisan::queue('expansion:import', ['expansion' => $card->expansion_id]);
-            }
-
-            $stock_row['expansion_id'] = $expansions[$stock_row[4]]->id;
-            $stock_row_id = $stock_row[Article::CSV_CARDMARKET_ARTICLE_ID];
-            $stock_row_ids[] = $stock_row_id;
+            $this->ensureExpansionExists($stock_row);
 
             Card::firstOrImport($stock_row[Article::CSV_CARDMARKET_PRODUCT_ID]);
 
             $cardmarket_article = Transformer::transform($this->game_id, $stock_row);
-
-            $cardmarket_article['expansion_id'] = $stock_row['expansion_id'];
 
             $cardmarket_article['user_id'] = $this->user_id;
             $cardmarket_article['storage_id'] = $no_storage_id;
@@ -100,18 +90,39 @@ class Stockfile
 
         $this->addArticlesInShoppingcart($shoppingcart_articles);
 
-        if (! is_dir($directory = storage_path('app/imports/cardmarket'))) {
-            mkdir($directory, 0755, true);
-        }
-
-        file_put_contents(storage_path('app/imports/cardmarket/stockfile.json'), json_encode($this->cardmarket_cards));
+        $this->saveInFile();
 
         return $this->cardmarket_cards;
+    }
+
+    private function ensureExpansionExists(array $stock_row): void
+    {
+        if (Arr::has($this->expansions, $stock_row[4])) {
+            return;
+        }
+
+        $card = Card::import($stock_row[Article::CSV_CARDMARKET_PRODUCT_ID]);
+
+        Artisan::queue('expansion:import', [
+            'expansion' => $card->expansion_id
+        ]);
+
+        $this->setExpansions();
+    }
+
+    private function setExpansions(): void
+    {
+        $this->expansions = Expansion::where('game_id', $this->game_id)->get()->keyBy('abbreviation');
     }
 
     private function addArticlesInShoppingcart(array $shoppingcart_articles)
     {
         foreach ($shoppingcart_articles as $shoppingcart_article) {
+
+            if ($shoppingcart_article['product']['idGame'] !== $this->game_id) {
+                continue;
+            }
+
             if (! Arr::has($this->cardmarket_cards, $shoppingcart_article['idProduct'])) {
                 $this->cardmarket_cards[$shoppingcart_article['idProduct']] = [
                     'articles' => [],
@@ -128,11 +139,13 @@ class Stockfile
                     'cardmarket_article_id' => $shoppingcart_article['idArticle'],
                     'condition' => Arr::get($shoppingcart_article, 'condition', ''),
                     'unit_price' => $shoppingcart_article['price'],
-                    'is_in_shoppingcard' => $shoppingcart_article['inShoppingCart'] ?? false,
-                    'is_foil' => $shoppingcart_article['isFoil'] ?? false,
-                    'is_signed' => $shoppingcart_article['isSigned'] ?? false,
-                    'is_altered' => $shoppingcart_article['isAltered'] ?? false,
-                    'is_playset' => $shoppingcart_article['isPlayset'] ?? false,
+                    'is_in_shoppingcard' => Arr::get($shoppingcart_article, 'inShoppingCart', false),
+                    'is_foil' => Arr::get($shoppingcart_article, 'isFoil', false),
+                    'is_reverse_holo' => Arr::get($shoppingcart_article, 'isReverseHolo', false),
+                    'is_first_edition' => Arr::get($shoppingcart_article, 'isFirstEd', false),
+                    'is_signed' => Arr::get($shoppingcart_article, 'isSigned', false),
+                    'is_altered' => Arr::get($shoppingcart_article, 'isAltered', false),
+                    'is_playset' => Arr::get($shoppingcart_article, 'isPlayset', false),
                     'cardmarket_comments' => $shoppingcart_article['comments'] ?: null,
                     'amount' => $shoppingcart_article['count'],
                     'has_sync_error' => false,
@@ -143,5 +156,14 @@ class Stockfile
 
             $this->cardmarket_cards[$shoppingcart_article['idProduct']]['amount'] += $shoppingcart_article['count'];
         }
+    }
+
+    private function saveInFile(): void
+    {
+        if (! is_dir($directory = storage_path('app/imports/cardmarket'))) {
+            mkdir($directory, 0755, true);
+        }
+
+        file_put_contents(storage_path('app/imports/cardmarket/' . $this->user_id . '-stockfile-' . $this->game_id . '.json'), json_encode($this->cardmarket_cards));
     }
 }

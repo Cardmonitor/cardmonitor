@@ -458,10 +458,12 @@ class Order extends Model
                 ->where('articles.cardmarket_article_id', $cardmarket_article['idArticle'])
                 ->where('articles.language_id', $cardmarket_article['language']['idLanguage'])
                 ->where('articles.condition', Arr::get($cardmarket_article, 'condition', ''))
-                ->where('is_foil', $cardmarket_article['isFoil'] ?? false)
-                ->where('is_signed', $cardmarket_article['isSigned'] ?? false)
-                ->where('is_altered', $cardmarket_article['isAltered'] ?? false)
-                ->where('is_playset', $cardmarket_article['isPlayset'] ?? false)
+                ->where('is_foil', Arr::get($cardmarket_article, 'isFoil', false))
+                ->where('is_reverse_holo', Arr::get($cardmarket_article, 'isReverseHolo', false))
+                ->where('is_first_edition', Arr::get($cardmarket_article, 'isFirstEd', false))
+                ->where('is_signed', Arr::get($cardmarket_article, 'isSigned', false))
+                ->where('is_altered', Arr::get($cardmarket_article, 'isAltered', false))
+                ->where('is_playset', Arr::get($cardmarket_article, 'isPlayset', false))
                 ->limit($articles_left_count)
                 ->get();
             foreach ($articles as $key => $article) {
@@ -486,10 +488,12 @@ class Order extends Model
             ->where('cards.cardmarket_product_id', $cardmarket_article['idProduct'])
             ->where('articles.language_id', $cardmarket_article['language']['idLanguage'])
             ->where('articles.condition', Arr::get($cardmarket_article, 'condition', ''))
-            ->where('is_foil', $cardmarket_article['isFoil'] ?? false)
-            ->where('is_signed', $cardmarket_article['isSigned'] ?? false)
-            ->where('is_altered', $cardmarket_article['isAltered'] ?? false)
-            ->where('is_playset', $cardmarket_article['isPlayset'] ?? false)
+            ->where('is_foil', Arr::get($cardmarket_article, 'isFoil', false))
+            ->where('is_reverse_holo', Arr::get($cardmarket_article, 'isReverseHolo', false))
+            ->where('is_first_edition', Arr::get($cardmarket_article, 'isFirstEd', false))
+            ->where('is_signed', Arr::get($cardmarket_article, 'isSigned', false))
+            ->where('is_altered', Arr::get($cardmarket_article, 'isAltered', false))
+            ->where('is_playset', Arr::get($cardmarket_article, 'isPlayset', false))
             ->limit($articles_left_count)
             ->get();
         foreach ($articles as $key => $article) {
@@ -519,11 +523,13 @@ class Order extends Model
             'unit_price' => $cardmarket_article['price'],
             'unit_cost' => Arr::get($this->cardDefaultPrices, ($cardmarket_article['product']['rarity'] ?? ''), 0.02),
             'sold_at' => $this->paid_at ?? $this->bought_at, // "2019-08-30T10:59:53+0200"
-            'is_in_shoppingcard' => $cardmarket_article['inShoppingCart'] ?? false,
-            'is_foil' => $cardmarket_article['isFoil'] ?? false,
-            'is_signed' => $cardmarket_article['isSigned'] ?? false,
-            'is_altered' => $cardmarket_article['isAltered'] ?? false,
-            'is_playset' => $cardmarket_article['isPlayset'] ?? false,
+            'is_in_shoppingcard' => Arr::get($cardmarket_article, 'inShoppingCart', false),
+            'is_foil' => Arr::get($cardmarket_article, 'isFoil', false),
+            'is_reverse_holo' => Arr::get($cardmarket_article, 'isReverseHolo', false),
+            'is_first_edition' => Arr::get($cardmarket_article, 'isFirstEd', false),
+            'is_signed' => Arr::get($cardmarket_article, 'isSigned', false),
+            'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
+            'is_playset' => Arr::get($cardmarket_article, 'isPlayset', false),
             'cardmarket_comments' => $cardmarket_article['comments'] ?: null,
         ];
         foreach (range($articles_count, ($articles_left_count - 1)) as $value) {

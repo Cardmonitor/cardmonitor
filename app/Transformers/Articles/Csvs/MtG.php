@@ -17,6 +17,8 @@ class MtG
             'sold_at' => null,
             'is_in_shoppingcard' => false,
             'is_foil' => ($data[9] == 'X' ? true : false),
+            'is_reverse_holo' => false,
+            'is_first_edition' => false,
             'is_signed' => ($data[10] == 'X' ? true : false),
             'is_altered' => ($data[11] == 'X' ? true : false),
             'is_playset' => ($data[12] == 'X' ? true : false),

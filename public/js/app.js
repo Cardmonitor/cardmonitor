@@ -11221,14 +11221,29 @@ var render = function render() {
     domProps: {
       textContent: _vm._s("abbreviation" in _vm.errors ? _vm.errors.abbreviation[0] : "")
     }
-  })])]), _vm._v(" "), _c("button", {
+  })])]), _vm._v(" "), _c("filter-game", {
+    staticClass: "mb-0 mr-1",
+    attrs: {
+      "initial-value": _vm.form.game_id,
+      options: _vm.games,
+      "game-id": _vm.form.game_id,
+      "show-label": false
+    },
+    model: {
+      value: _vm.form.game_id,
+      callback: function callback($$v) {
+        _vm.$set(_vm.form, "game_id", $$v);
+      },
+      expression: "form.game_id"
+    }
+  }), _vm._v(" "), _c("button", {
     staticClass: "btn btn-sm btn-primary",
     on: {
       click: _vm.create
     }
   }, [_c("i", {
     staticClass: "fas fa-plus-square"
-  })])]), _vm._v(" "), _c("div", {
+  })])], 1), _vm._v(" "), _c("div", {
     staticClass: "col-auto d-flex align-items-start"
   }, [_c("div", {
     staticClass: "form-group mb-0"
