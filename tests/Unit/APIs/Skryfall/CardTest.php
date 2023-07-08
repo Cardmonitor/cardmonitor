@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\APIs\Skryfall\Card;
 use Illuminate\Support\Carbon;
 use App\APIs\Skryfall\CardCollection;
+use Illuminate\Http\Response;
 
 class CardTest extends TestCase
 {
@@ -170,7 +171,12 @@ class CardTest extends TestCase
                 $set_code,
                 $card_number
             ])
-            ->andThrow(new \GuzzleHttp\Exception\ClientException('No card found with the given ID or set code', new \GuzzleHttp\Psr7\Request('GET', 'https://api.scryfall.com/cards/mmqs/99999')));
+            ->andThrow(new \GuzzleHttp\Exception\ClientException(
+                'No card found with the given ID or set code',
+                new \GuzzleHttp\Psr7\Request('GET', 'https://api.scryfall.com/cards/mmqs/99999'),
+                new \GuzzleHttp\Psr7\Response(Response::HTTP_NOT_FOUND)
+            )
+        );
 
         $model = Card::findByCodeAndNumber($set_code, $card_number);
         $this->assertNull($model);
