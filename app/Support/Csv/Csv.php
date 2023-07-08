@@ -2,6 +2,8 @@
 
 namespace App\Support\Csv;
 
+use Generator;
+use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -15,6 +17,29 @@ class Csv
     protected $source;
     protected $callback;
     protected $collection;
+
+    public static function parseCsv(string $filepath): Generator
+    {
+        $handle = fopen($filepath, "r");
+        while (($raw_string = trim(fgets($handle))) !== false) {
+            if (empty($raw_string)) {
+                break;
+            }
+
+            yield str_getcsv($raw_string, ',');
+        }
+        fclose($handle);
+    }
+
+    public static function parseHeader(array $row): array
+    {
+        $header = [];
+        foreach ($row as $column_index => $column) {
+            $header[Str::slug($column, '_')] = $column_index;
+        }
+
+        return $header;
+    }
 
     public function file(string $filename) : self
     {

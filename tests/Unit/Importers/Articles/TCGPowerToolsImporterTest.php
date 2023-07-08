@@ -3,6 +3,7 @@
 namespace Tests\Unit\Importers\Orders;
 
 use Tests\TestCase;
+use App\Support\Csv\Csv;
 use App\Models\Cards\Card;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
@@ -41,19 +42,20 @@ class TCGPowerToolsImporterTest extends TestCase
             }
 
             if ($row_counter === 0) {
-                $header = TCGPowerToolsImporter::parseHeader(str_getcsv($raw_string, ','));
+                $header = Csv::parseHeader(str_getcsv($raw_string, ','));
+
+                $this->assertArrayHasKey('cardmarketid', $header);
+                $this->assertArrayHasKey('comment', $header);
+                $this->assertArrayHasKey('condition', $header);
+                $this->assertArrayHasKey('isfoil', $header);
+                $this->assertArrayHasKey('language', $header);
+                $this->assertArrayHasKey('listedat', $header);
+                $this->assertArrayHasKey('price', $header);
+                $this->assertArrayHasKey('quantity', $header);
+
                 $row_counter++;
                 continue;
             }
-
-            $this->assertArrayHasKey('cardmarketid', $header);
-            $this->assertArrayHasKey('comment', $header);
-            $this->assertArrayHasKey('condition', $header);
-            $this->assertArrayHasKey('isfoil', $header);
-            $this->assertArrayHasKey('language', $header);
-            $this->assertArrayHasKey('listedat', $header);
-            $this->assertArrayHasKey('price', $header);
-            $this->assertArrayHasKey('quantity', $header);
 
             $article_row = str_getcsv($raw_string, ',');
 

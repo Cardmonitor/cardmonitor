@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
 use App\Importers\Articles\MagicSorterImporter;
+use App\Support\Csv\Csv;
 
 class MagicSorterImporterTest extends TestCase
 {
@@ -47,19 +48,21 @@ class MagicSorterImporterTest extends TestCase
             }
 
             if ($row_counter === 0) {
-                $header = MagicSorterImporter::parseHeader(str_getcsv($raw_string, ','));
+                $header = Csv::parseHeader(str_getcsv($raw_string, ','));
+
+                $this->assertArrayHasKey('ecommerce_id', $header);
+                $this->assertArrayHasKey('price', $header);
+                $this->assertArrayHasKey('height', $header);
+                $this->assertArrayHasKey('position', $header);
+
                 $row_counter++;
                 continue;
             }
 
-            $this->assertArrayHasKey('ecommerce-id', $header);
-            $this->assertArrayHasKey('price', $header);
-            $this->assertArrayHasKey('height', $header);
-            $this->assertArrayHasKey('position', $header);
 
             $article_row = str_getcsv($raw_string, ',');
 
-            if (empty($article_row[$header['ecommerce-id']])) {
+            if (empty($article_row[$header['ecommerce_id']])) {
                 continue;
             }
 
@@ -67,9 +70,9 @@ class MagicSorterImporterTest extends TestCase
             $quantity++;
             $quantity_by_position[$article_row[$header['position']]] = ($quantity_by_position[$article_row[$header['position']]] ?? 0) + 1;
 
-            if (!Arr::has($cards, $article_row[$header['ecommerce-id']])) {
-                $cards[$article_row[$header['ecommerce-id']]] = factory(Card::class)->create([
-                    'cardmarket_product_id' => $article_row[$header['ecommerce-id']],
+            if (!Arr::has($cards, $article_row[$header['ecommerce_id']])) {
+                $cards[$article_row[$header['ecommerce_id']]] = factory(Card::class)->create([
+                    'cardmarket_product_id' => $article_row[$header['ecommerce_id']],
                     'name' => $article_row[$header['title']],
                 ]);
             }

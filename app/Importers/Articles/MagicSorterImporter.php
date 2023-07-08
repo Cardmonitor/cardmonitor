@@ -7,6 +7,7 @@ use App\Models\Cards\Card;
 use Illuminate\Support\Str;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
+use App\Support\Csv\Csv;
 use Illuminate\Support\Arr;
 
 class MagicSorterImporter
@@ -34,29 +35,6 @@ class MagicSorterImporter
         return $importer;
     }
 
-    public static function parseHeader(array $row): array
-    {
-        $header = [];
-        foreach ($row as $column_index => $column) {
-            $header[Str::slug($column)] = $column_index;
-        }
-
-        return $header;
-    }
-
-    public static function parseCsv(string $filepath): Generator
-    {
-        $handle = fopen($filepath, "r");
-        while (($raw_string = trim(fgets($handle))) !== false) {
-            if (empty($raw_string)) {
-                break;
-            }
-
-            yield str_getcsv($raw_string, ',');
-        }
-        fclose($handle);
-    }
-
     public function __construct(int $user_id, string $filepath, string $condition, int $language_id, bool $is_foil)
     {
         $this->user_id = $user_id;
@@ -70,14 +48,14 @@ class MagicSorterImporter
     {
         $this->setParentStorage();
         $header = [];
-        foreach (self::parseCsv($this->filepath) as $row_index => $row) {
+        foreach (Csv::parseCsv($this->filepath) as $row_index => $row) {
             if ($row_index == 0) {
-                $header = self::parseHeader($row);
+                $header = Csv::parseHeader($row);
                 continue;
             }
 
             // Skip rows without ecommerce_id -> Card not found
-            if (empty($row[$header['ecommerce-id']])) {
+            if (empty($row[$header['ecommerce_id']])) {
                 continue;
             }
 
@@ -103,7 +81,7 @@ class MagicSorterImporter
 
     public function importArticle(int $row_index, array $header, array $row): void
     {
-        $card = Card::firstOrImport((int)$row[$header['ecommerce-id']]);
+        $card = Card::firstOrImport((int)$row[$header['ecommerce_id']]);
         $position = $row[$header['position']];
 
         $values = [

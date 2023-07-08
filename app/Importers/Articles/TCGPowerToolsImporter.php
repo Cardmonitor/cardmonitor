@@ -11,6 +11,7 @@ use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
 use Illuminate\Support\Collection;
 use App\Models\Localizations\Language;
+use App\Support\Csv\Csv;
 
 class TCGPowerToolsImporter
 {
@@ -32,29 +33,6 @@ class TCGPowerToolsImporter
         return $importer;
     }
 
-    public static function parseHeader(array $row): array
-    {
-        $header = [];
-        foreach ($row as $column_index => $column) {
-            $header[Str::slug($column)] = $column_index;
-        }
-
-        return $header;
-    }
-
-    public static function parseCsv(string $filepath): Generator
-    {
-        $handle = fopen($filepath, "r");
-        while (($raw_string = trim(fgets($handle))) !== false) {
-            if (empty($raw_string)) {
-                break;
-            }
-
-            yield str_getcsv($raw_string, ',');
-        }
-        fclose($handle);
-    }
-
     public function __construct(int $user_id, string $filepath)
     {
         $this->user_id = $user_id;
@@ -68,9 +46,9 @@ class TCGPowerToolsImporter
         $this->setStorage();
         $this->articles = collect();
         $header = [];
-        foreach (self::parseCsv($this->filepath) as $row_index => $row) {
+        foreach (Csv::parseCsv($this->filepath) as $row_index => $row) {
             if ($row_index == 0) {
-                $header = self::parseHeader($row);
+                $header = Csv::parseHeader($row);
                 continue;
             }
             $this->importArticle($row_index, $header, $row);
