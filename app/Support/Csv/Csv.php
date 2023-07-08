@@ -18,7 +18,7 @@ class Csv
     protected $callback;
     protected $collection;
 
-    public static function parseCsv(string $filepath): Generator
+    public static function parseCsv(string $filepath, string $separator = ','): Generator
     {
         $handle = fopen($filepath, "r");
         while (($raw_string = trim(fgets($handle))) !== false) {
@@ -26,7 +26,7 @@ class Csv
                 break;
             }
 
-            yield str_getcsv($raw_string, ',');
+            yield str_getcsv($raw_string, $separator);
         }
         fclose($handle);
     }

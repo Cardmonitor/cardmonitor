@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
 use App\Models\Expansions\Expansion;
+use App\Support\Csv\Csv;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Database\Eloquent\Collection;
 use App\Transformers\Articles\Csvs\Transformer;
@@ -59,9 +60,12 @@ class Stockfile
         $no_storage = Storage::noStorage($this->user_id)->first();
         $no_storage_id = $no_storage->id ?? null;
 
+        $transformer = new Transformer();
+
         $row_count = 0;
         foreach ($this->parse() as $stock_row) {
             if ($row_count === 0) {
+                $transformer->setHeader(Csv::parseHeader($stock_row));
                 $row_count++;
                 continue;
             }
@@ -70,7 +74,7 @@ class Stockfile
 
             Card::firstOrImport($stock_row[Article::CSV_CARDMARKET_PRODUCT_ID]);
 
-            $cardmarket_article = Transformer::transform($this->game_id, $stock_row);
+            $cardmarket_article = $transformer->unify($stock_row);
 
             $cardmarket_article['user_id'] = $this->user_id;
             $cardmarket_article['storage_id'] = $no_storage_id;
