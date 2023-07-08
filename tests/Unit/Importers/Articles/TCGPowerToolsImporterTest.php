@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Importers\Orders;
+namespace Tests\Unit\Importers\Articles;
 
 use Tests\TestCase;
 use App\Support\Csv\Csv;
