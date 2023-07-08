@@ -54,12 +54,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('article/sync', 'Cardmarket\Articles\ArticleController@index');
     Route::put('article/sync', 'Cardmarket\Articles\ArticleController@update')->name('article.sync.update');
 
-    Route::get('article/stock', 'Articles\Stock\StockController@index')->name('article.stock.index');
-    Route::put('article/stock/{article}', 'Articles\Stock\StockController@update')->name('article.stock.update');
-
-    Route::post('article/stock/import', 'Articles\Stock\ImportController@store')->name('article.stock.store');
-    Route::get('article/stock/import/dropbox', 'Articles\Stock\Import\DropboxController@index')->name('article.stock.import.dropbox.index');
-
     Route::post('article/import', 'Articles\Imports\ImportController@store')->name('article.import.store');
 
     Route::get('article/number', 'Articles\NumberController@index')->name('article.number.index');
