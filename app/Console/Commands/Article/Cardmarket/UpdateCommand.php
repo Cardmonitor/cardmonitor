@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands\Article\Cardmarket;
 
-use App\Models\Articles\Article;
 use App\User;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Collection;
 
 class UpdateCommand extends Command
 {
