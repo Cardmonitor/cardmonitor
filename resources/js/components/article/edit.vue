@@ -85,6 +85,22 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label class="col-sm-4 col-form-label col-form-label-sm" for="is_reverse_holo">Reverse Holo</label>
+                            <div class="col-sm-8">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="is_reverse_holo" v-model="form.is_reverse_holo">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label col-form-label-sm" for="is_first_edition">First Edition</label>
+                            <div class="col-sm-8">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="is_first_edition" v-model="form.is_first_edition">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label class="col-sm-4 col-form-label col-form-label-sm" for="is_signed">Signed</label>
                             <div class="col-sm-8">
                                 <div class="form-check">
@@ -167,6 +183,8 @@
                     cardmarket_comments: this.model.cardmarket_comments,
                     condition: this.model.condition,
                     is_foil: this.model.is_foil,
+                    is_reverse_holo: this.model.is_reverse_holo,
+                    is_first_edition: this.model.is_first_edition,
                     is_playset: this.model.is_playset,
                     is_signed: this.model.is_signed,
                     language_id: this.model.language_id,
@@ -204,6 +222,8 @@
                         component.form.cardmarket_comments = response.data.cardmarket_comments,
                         component.form.condition = response.data.condition,
                         component.form.is_foil = response.data.is_foil,
+                        component.form.is_reverse_holo = response.data.is_reverse_holo,
+                        component.form.is_first_edition = response.data.is_first_edition,
                         component.form.is_playset = response.data.is_playset,
                         component.form.is_signed = response.data.is_signed,
                         component.form.language_id = response.data.language_id,

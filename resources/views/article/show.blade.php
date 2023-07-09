@@ -122,6 +122,14 @@
                         <div class="col-value">{{ $model->is_foil }}</div>
                     </div>
                     <div class="row">
+                        <div class="col-label"><b>Reverse Holo</b></div>
+                        <div class="col-value">{{ $model->is_reverse_holo }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-label"><b>First Edition</b></div>
+                        <div class="col-value">{{ $model->is_first_edition }}</div>
+                    </div>
+                    <div class="row">
                         <div class="col-label"><b>Verkaufspreis</b></div>
                         <div class="col-value">{{ $model->unit_price_formatted }} €</div>
                     </div>

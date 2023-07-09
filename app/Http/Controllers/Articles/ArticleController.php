@@ -204,6 +204,8 @@ class ArticleController extends Controller
             'is_foil' => 'sometimes|required|boolean',
             'is_reverse_holo' => 'sometimes|required|boolean',
             'is_first_edition' => 'sometimes|required|boolean',
+            'is_reverse_holo' => 'sometimes|required|boolean',
+            'is_first_edition' => 'sometimes|required|boolean',
             'is_signed' => 'sometimes|required|boolean',
             'is_playset' => 'sometimes|required|boolean',
             'unit_price_formatted' => 'sometimes|required|formated_number',
