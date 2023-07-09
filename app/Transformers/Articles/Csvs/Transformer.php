@@ -5,6 +5,7 @@ namespace App\Transformers\Articles\Csvs;
 use App\Models\Games\Game;
 use Illuminate\Support\Arr;
 use App\Models\Articles\Article;
+use App\Support\Csv\Csv;
 
 class Transformer
 {
@@ -16,7 +17,7 @@ class Transformer
 
     public function unify(array $row) {
 
-        $data = array_combine(array_keys($this->header), $row);
+        $data = Csv::combineHeaderAndRow($this->header, $row);
 
         return [
             'amount' => Arr::get($data, 'amount'),

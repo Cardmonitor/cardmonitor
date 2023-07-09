@@ -41,6 +41,14 @@ class Csv
         return $header;
     }
 
+    public static function combineHeaderAndRow(array $header, array $row): array
+    {
+        // Ensure same size
+        $row = array_pad($row, count($header), null);
+
+        return array_combine(array_keys($header), $row);
+    }
+
     public function file(string $filename) : self
     {
         $this->filename = $filename;

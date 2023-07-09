@@ -2,11 +2,9 @@
 
 namespace App\Importers\Articles;
 
-use Generator;
 use Carbon\Carbon;
 use App\Models\Cards\Card;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
 use Illuminate\Support\Collection;
@@ -51,7 +49,7 @@ class TCGPowerToolsImporter
                 $header = Csv::parseHeader($row);
                 continue;
             }
-            $this->importArticle($row_index, $header, $row);
+            $this->importArticle($row_index, Csv::combineHeaderAndRow($header, $row));
         }
     }
 
@@ -79,27 +77,29 @@ class TCGPowerToolsImporter
         ]);
     }
 
-    public function importArticle(int $row_index, array $header, array $row): void
+    public function importArticle(int $row_index, array $data): void
     {
-        $card = Card::firstOrImport((int)$row[$header['cardmarketid']]);
-        $source_sort = $this->getSourceSort($header, $row);
+        $card = Card::firstOrImport((int)$data['cardmarketid']);
+        $source_sort = $this->getSourceSort($data);
 
-        for ($index=1; $index <= $row[$header['quantity']]; $index++) {
+        for ($index=1; $index <= $data['quantity']; $index++) {
             $values = [
                 'user_id' => $this->user_id,
                 'card_id' => $card->id,
-                'language_id' => $this->getLanguageId($row[$header['language']]),
+                'language_id' => $this->getLanguageId($data['language']),
                 'cardmarket_article_id' => null,
-                'condition' => $row[$header['condition']],
-                'unit_price' => $row[$header['price']],
+                'condition' => $data['condition'],
+                'unit_price' => $data['price'],
                 'unit_cost' => 0,
                 'sold_at' => null,
                 'is_in_shoppingcard' => false,
-                'is_foil' => ($row[$header['isfoil']] == 'true'),
-                'is_signed' => false,
-                'is_altered' => false,
-                'is_playset' => false,
-                'cardmarket_comments' => $row[$header['comment']],
+                'is_foil' => (Arr::get($data, 'isfoil', '') == 'true'),
+                'is_reverse_holo' => (Arr::get($data, 'isreverseholo', '') == 'true'),
+                'is_first_edition' => (Arr::get($data, 'isfirsted', '') == 'true'),
+                'is_signed' => (Arr::get($data, 'issigned', '') == 'true'),
+                'is_altered' => (Arr::get($data, 'isaltered', '') == 'true'),
+                'is_playset' => (Arr::get($data, 'isplayset', '') == 'true'),
+                'cardmarket_comments' => $data['comment'],
                 'has_sync_error' => false,
                 'sync_error' => null,
                 'source_sort' => $source_sort,
@@ -115,17 +115,17 @@ class TCGPowerToolsImporter
         }
     }
 
-    private function getSourceSort(array $header, array $row): int
+    private function getSourceSort(array $data): int
     {
-        if (! Arr::has($row, $header['listedat'])) {
+        if (! Arr::has($data, 'listedat')) {
             return 0;
         }
 
-        $date = Arr::get($row, $header['listedat'], '01-01-1970 02:00:00');
+        $date = Arr::get($data, 'listedat', '01-01-1970 02:00:00');
         if (empty($date)) {
             return 0;
         }
 
-        return Carbon::createFromFormat('d-m-Y H:i:s', Arr::get($row, $header['listedat'], '01-01-1970 02:00:00'))->timestamp;
+        return Carbon::createFromFormat('d-m-Y H:i:s', Arr::get($data, 'listedat', '01-01-1970 02:00:00'))->timestamp;
     }
 }

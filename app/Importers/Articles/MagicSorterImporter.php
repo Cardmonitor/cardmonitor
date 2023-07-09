@@ -2,9 +2,7 @@
 
 namespace App\Importers\Articles;
 
-use Generator;
 use App\Models\Cards\Card;
-use Illuminate\Support\Str;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
 use App\Support\Csv\Csv;
@@ -54,12 +52,14 @@ class MagicSorterImporter
                 continue;
             }
 
+            $data = Csv::combineHeaderAndRow($header, $row);
+
             // Skip rows without ecommerce_id -> Card not found
-            if (empty($row[$header['ecommerce_id']])) {
+            if (empty($data['ecommerce_id'])) {
                 continue;
             }
 
-            $this->importArticle($row_index, $header, $row);
+            $this->importArticle($row_index, $data);
         }
 
         $this->sortByHeightReverse();
@@ -79,10 +79,10 @@ class MagicSorterImporter
         ]);
     }
 
-    public function importArticle(int $row_index, array $header, array $row): void
+    public function importArticle(int $row_index, array $data): void
     {
-        $card = Card::firstOrImport((int)$row[$header['ecommerce_id']]);
-        $position = $row[$header['position']];
+        $card = Card::firstOrImport((int)$data['ecommerce_id']);
+        $position = $data['position'];
 
         $values = [
             'user_id' => $this->user_id,
@@ -90,7 +90,7 @@ class MagicSorterImporter
             'language_id' => $this->language_id,
             'cardmarket_article_id' => null,
             'condition' => $this->condition,
-            'unit_price' => $this->getPrice($row[$header['price']]),
+            'unit_price' => $this->getPrice($data['price']),
             'unit_cost' => 0,
             'sold_at' => null,
             'is_in_shoppingcard' => false,
@@ -101,7 +101,7 @@ class MagicSorterImporter
             'cardmarket_comments' => null,
             'has_sync_error' => false,
             'sync_error' => null,
-            'source_sort' => $row[$header['height']],
+            'source_sort' => $data['height'],
         ];
         $attributes = [
             'source_slug' => self::SOURCE_SLUG,
