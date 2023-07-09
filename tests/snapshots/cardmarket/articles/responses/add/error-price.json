@@ -1,0 +1,19 @@
+{
+    "inserted": {
+        "success": false,
+        "tried": {
+            "idLanguage": "3",
+            "comments": "Your LGS based in L\u00fcbeck | ##AB001.128##",
+            "count": "1",
+            "price": "0.01",
+            "condition": "NM",
+            "isFoil": false,
+            "isSigned": false,
+            "isPlayset": false,
+            "isHoloReverse": false,
+            "isFirstEd": false,
+            "idProduct": "280945"
+        },
+        "error": "Der eingegebene Preis war ung\u00fcltig. Der Mindestpreis f\u00fcr einen Artikel betragt 0.02 Euros. Versuche es bitte nochmal."
+    }
+}

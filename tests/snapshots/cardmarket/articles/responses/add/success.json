@@ -1,0 +1,36 @@
+{
+    "inserted": {
+        "success": true,
+        "idArticle": {
+            "idArticle": "1488004575",
+            "idProduct": "280945",
+            "language": {
+                "idLanguage": "3",
+                "languageName": "German"
+            },
+            "comments": "Your LGS based in L\u00fcbeck | ##AB001.128##",
+            "price": "123.45",
+            "idCurrency": "1",
+            "currencyCode": "EUR",
+            "count": "1",
+            "inShoppingCart": false,
+            "lastEdited": "2023-07-09T05:09:09+0200",
+            "product": {
+                "idGame": "6",
+                "image": "https:\/\/product-images.s3.cardmarket.com\/51\/PLF\/280945\/280945.jpg",
+                "enName": "Absol ",
+                "locName": "Absol ",
+                "expansion": "Plasma Freeze",
+                "nr": "67",
+                "expIcon": "319",
+                "rarity": "Holo Rare "
+            },
+            "condition": "NM",
+            "isReverseHolo": false,
+            "isSigned": false,
+            "isFirstEd": false,
+            "isPlayset": false,
+            "isAltered": false
+        }
+    }
+}
