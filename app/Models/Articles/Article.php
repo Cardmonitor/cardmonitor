@@ -554,6 +554,8 @@ class Article extends Model
             'isFoil' => $this->is_foil ? 'true' : 'false',
             'isSigned' => $this->is_signed ? 'true' : 'false',
             'isPlayset' => $this->is_playset ? 'true' : 'false',
+            'isHoloReverse' => $this->is_holo_reverse ? 'true' : 'false',
+            'isFirstEd' => $this->is_first_edition ? 'true' : 'false',
         ];
 
         if ($this->cardmarket_article_id) {
