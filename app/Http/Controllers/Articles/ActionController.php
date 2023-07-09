@@ -122,11 +122,14 @@ class ActionController extends Controller
 
     private function syncCardmarket(Collection $articles): void
     {
-        $articles->each(function ($article) {
-            $article->sync();
+        $synced_articles_count = 0;
+        $articles->each(function ($article) use (&$synced_articles_count) {
+            if ($article->sync()) {
+                $synced_articles_count++;
+            }
         });
 
-        $this->message = $articles->count() . ' zu Cardmarket hochgeladen.';
+        $this->message = $synced_articles_count . '/' . $articles->count() . ' zu Cardmarket hochgeladen.';
     }
 
     private function storing(User $user, Collection $articles): void
