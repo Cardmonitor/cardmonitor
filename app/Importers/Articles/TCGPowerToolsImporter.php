@@ -91,7 +91,6 @@ class TCGPowerToolsImporter
                 'condition' => $data['condition'],
                 'unit_price' => $data['price'],
                 'unit_cost' => 0,
-                'sold_at' => null,
                 'is_in_shoppingcard' => false,
                 'is_foil' => (Arr::get($data, 'isfoil', '') == 'true'),
                 'is_reverse_holo' => (Arr::get($data, 'isreverseholo', '') == 'true'),

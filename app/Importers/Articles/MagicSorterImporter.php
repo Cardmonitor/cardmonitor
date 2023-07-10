@@ -92,7 +92,6 @@ class MagicSorterImporter
             'condition' => $this->condition,
             'unit_price' => $this->getPrice($data['price']),
             'unit_cost' => 0,
-            'sold_at' => null,
             'is_in_shoppingcard' => false,
             'is_foil' => $this->is_foil,
             'is_signed' => false,
