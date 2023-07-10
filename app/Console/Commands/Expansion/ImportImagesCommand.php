@@ -48,7 +48,7 @@ class ImportImagesCommand extends Command
     {
         $expansions = $this->getExpansions();
 
-        foreach ($expansions as $expansion ) {
+        foreach ($expansions as $expansion) {
             $image_path = Storage::disk('public')->path('items/' . $expansion->game_id . '/' . $expansion->id);
             $files = glob($image_path . '/*.jpg');
             $images_count = count($files);

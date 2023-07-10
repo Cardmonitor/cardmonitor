@@ -9,8 +9,6 @@ use App\Models\Expansions\Expansion;
 use App\Models\Games\Game;
 use App\Models\Items\Card as ItemCard;
 use App\Models\Localizations\Language;
-use App\Models\Rules\Rule;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 

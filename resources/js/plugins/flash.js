@@ -11,6 +11,9 @@ const Flash = {
         Vue.success = function (text) {
             Vue.flash(text, 'success');
         };
+        Vue.warning = function (text) {
+            Vue.flash(text, 'warning');
+        };
         Vue.error = function (text) {
             Vue.flash(text, 'danger');
         };

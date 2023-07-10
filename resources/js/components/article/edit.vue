@@ -119,7 +119,7 @@
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label col-form-label-sm" for="unit_price_formatted">Verkaufspreis</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control form-control-sm" id="unit_price_formatted" v-model="form.unit_price_formatted">
+                                <input type="text" class="form-control form-control-sm" :class="{'is-invalid': 'unit_price_formatted' in errors}" id="unit_price_formatted" v-model="form.unit_price_formatted">
                                 <div class="invalid-feedback" v-text="'unit_price_formatted' in errors ? errors.unit_price_formatted[0] : ''"></div>
                             </div>
                         </div>
@@ -237,10 +237,15 @@
                         Vue.success((sync ? component.$t('app.successes.created_uploaded') : component.$t('app.successes.updated')));
                     })
                     .catch(function (error) {
-                        if (error.response.status === 422) {
+                        if (error.response.status === 422 && sync) {
                             component.errors = {};
                             component.$emit('updated', error.response.data);
-                            Vue.error(error.response.data.sync_error);
+                            if (error.response.data.sync_error) {
+                                Vue.error(error.response.data.sync_error);
+                            }
+                            else {
+                                Vue.warning('Die Karte wurde nicht aktualisiert und auf den Stand von Cardmarket gebracht.');
+                            }
                             return;
                         }
 

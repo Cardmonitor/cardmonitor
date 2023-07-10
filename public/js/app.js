@@ -2119,10 +2119,14 @@ __webpack_require__.r(__webpack_exports__);
         component.errors = {};
         component.form.cardmarket_article_id = response.data.cardmarket_article_id, component.form.cardmarket_comments = response.data.cardmarket_comments, component.form.condition = response.data.condition, component.form.is_foil = response.data.is_foil, component.form.is_reverse_holo = response.data.is_reverse_holo, component.form.is_first_edition = response.data.is_first_edition, component.form.is_playset = response.data.is_playset, component.form.is_signed = response.data.is_signed, component.form.language_id = response.data.language_id, component.form.number = response.data.number, component.form.provision_formatted = response.data.provision_formatted, component.form.slot = response.data.slot, component.form.storage_id = response.data.storage_id, component.form.unit_cost_formatted = response.data.unit_cost_formatted, component.form.unit_price_formatted = response.data.unit_price_formatted, Vue.success(sync ? component.$t('app.successes.created_uploaded') : component.$t('app.successes.updated'));
       })["catch"](function (error) {
-        if (error.response.status === 422) {
+        if (error.response.status === 422 && sync) {
           component.errors = {};
           component.$emit('updated', error.response.data);
-          Vue.error(error.response.data.sync_error);
+          if (error.response.data.sync_error) {
+            Vue.error(error.response.data.sync_error);
+          } else {
+            Vue.warning('Die Karte wurde nicht aktualisiert und auf den Stand von Cardmarket gebracht.');
+          }
           return;
         }
         component.errors = error.response.data.errors;
@@ -2230,10 +2234,14 @@ __webpack_require__.r(__webpack_exports__);
         component.$emit('updated', response.data);
         Vue.success(sync ? component.$t('app.successes.created_uploaded') : component.$t('app.successes.updated'));
       })["catch"](function (error) {
-        if (error.response.status === 422) {
+        if (error.response.status === 422 && sync) {
           component.errors = {};
           component.$emit('updated', error.response.data);
-          Vue.error(error.response.data.sync_error);
+          if (error.response.data.sync_error) {
+            Vue.error(error.response.data.sync_error);
+          } else {
+            Vue.warning('Die Karte wurde nicht aktualisiert und auf den Stand von Cardmarket gebracht.');
+          }
           return;
         }
         component.errors = error.response.data.errors;
@@ -8432,6 +8440,9 @@ var render = function render() {
       expression: "form.unit_price_formatted"
     }],
     staticClass: "form-control form-control-sm",
+    "class": {
+      "is-invalid": "unit_price_formatted" in _vm.errors
+    },
     attrs: {
       type: "text",
       id: "unit_price_formatted"
@@ -17540,6 +17551,9 @@ var Flash = {
     };
     Vue.success = function (text) {
       Vue.flash(text, 'success');
+    };
+    Vue.warning = function (text) {
+      Vue.flash(text, 'warning');
     };
     Vue.error = function (text) {
       Vue.flash(text, 'danger');

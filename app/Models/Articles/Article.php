@@ -610,10 +610,10 @@ class Article extends Model
         try {
             $response = $this->user->cardmarketApi->stock->update([$this->toCardmarket()]);
             if (is_array($response['updatedArticles'])) {
-                $cardmarketArticle = $response['updatedArticles'];
+                $cardmarket_article = $response['updatedArticles'];
                 $this->update([
-                    'cardmarket_article_id' => $cardmarketArticle['idArticle'],
-                    'cardmarket_last_edited' => new Carbon($cardmarketArticle['lastEdited']),
+                    'cardmarket_article_id' => $cardmarket_article['idArticle'],
+                    'cardmarket_last_edited' => new Carbon($cardmarket_article['lastEdited']),
                     'synced_at' => now(),
                     'has_sync_error' => false,
                     'sync_error' => null,
@@ -623,10 +623,22 @@ class Article extends Model
                 return true;
             }
             elseif (is_array($response['notUpdatedArticles'])) {
+                // Artikel nicht valide oder schon genau so auf Cardmarket vorhanden
+                $article_response = $this->user->cardmarketApi->stock->article($this->cardmarket_article_id);
+                $cardmarket_article = $article_response['article'];
                 $this->update([
-                    'has_sync_error' => true,
-                    'sync_error' => $response['notUpdatedArticles']['error'],
-                    'should_sync' => true,
+                    'cardmarket_article_id' => $cardmarket_article['idArticle'],
+                    'unit_price' => $cardmarket_article['price'],
+                    'language_id' => $cardmarket_article['language']['idLanguage'],
+                    'cardmarket_last_edited' => new Carbon($cardmarket_article['lastEdited']),
+                    'cardmarket_comments' => $cardmarket_article['comments'],
+                    'condition' => $cardmarket_article['condition'],
+                    'is_foil' => Arr::get($cardmarket_article, 'isFoil', false),
+                    'is_signed' => Arr::get($cardmarket_article, 'isSigned', false),
+                    'is_playset' => Arr::get($cardmarket_article, 'isPlayset', false),
+                    'is_reverse_holo' => Arr::get($cardmarket_article, 'isReverseHolo', false),
+                    'is_first_edition' => Arr::get($cardmarket_article, 'isFirstEd', false),
+                    'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
                 ]);
 
                 return false;
@@ -644,11 +656,8 @@ class Article extends Model
             }
         }
         catch (\Exception $e) {
-
-            dump('article', $this->toCardmarket());
-            dump('response', $response);
-
-            throw $e;
+            report($e);
+            return false;
         }
     }
 

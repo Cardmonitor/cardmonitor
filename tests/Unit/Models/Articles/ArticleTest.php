@@ -1166,4 +1166,58 @@ class ArticleTest extends TestCase
         $article->number = null;
         $this->assertEquals('Test Test', $article->cardmarket_comments);
     }
+
+    /**
+     * @test
+     */
+    public function it_resets_the_article_if_not_updated_on_cardmarket()
+    {
+        $cardmarket_update_response = json_decode(file_get_contents('tests/snapshots/cardmarket/articles/responses/update/failed.json'), true);
+        $cardmarket_article_id = $cardmarket_update_response['notUpdatedArticles']['tried']['idArticle'];
+
+        $stockMock = Mockery::mock('overload:' . Stock::class);
+        $stockMock->shouldReceive('update')
+            ->andReturn($cardmarket_update_response);
+
+        $cardmarket_article_response = json_decode(file_get_contents('tests/snapshots/cardmarket/articles/responses/article/pcg.json'), true);
+        $cardmarket_article = $cardmarket_article_response['article'];
+
+        $stockMock->shouldReceive('article')
+            ->with($cardmarket_article_id)
+            ->andReturn($cardmarket_article_response);
+
+        $model = factory(Article::class)->create([
+            'cardmarket_article_id' => $cardmarket_article_id,
+            'user_id' => $this->user->id,
+            'unit_price' => 1.23,
+            'condition' => 'EX',
+            'cardmarket_comments' => 'Comment',
+            'is_foil' => false,
+            'is_signed' => false,
+            'is_playset' => false,
+            'is_first_edition' => false,
+            'language_id' => Language::DEFAULT_ID,
+        ]);
+
+        $is_synced = $model->syncUpdate();
+
+        $model->refresh();
+
+        $this->assertFalse($is_synced);
+        $this->assertEquals(false, $model->has_sync_error);
+        $this->assertEquals($cardmarket_article['idArticle'], $model->cardmarket_article_id);
+        $this->assertEquals($cardmarket_article['comments'], $model->cardmarket_comments);
+        $this->assertEquals($cardmarket_article['price'], $model->unit_price);
+        $this->assertEquals($cardmarket_article['condition'], $model->condition);
+        $this->assertEquals(0, $model->is_foil);
+        $this->assertEquals(1, $model->is_reverse_holo);
+        $this->assertEquals(0, $model->is_signed);
+        $this->assertEquals(0, $model->is_first_edition);
+        $this->assertEquals(0, $model->is_playset);
+        $this->assertEquals(0, $model->is_altered);
+        $this->assertEquals($cardmarket_article['language']['idLanguage'], $model->language_id);
+        $this->assertEquals($cardmarket_article['lastEdited'], $model->cardmarket_last_edited->format('Y-m-d\TH:i:sO'));
+
+
+    }
 }

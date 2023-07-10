@@ -191,10 +191,15 @@
                         Vue.success((sync ? component.$t('app.successes.created_uploaded') : component.$t('app.successes.updated')));
                     })
                     .catch(function (error) {
-                        if (error.response.status === 422) {
+                        if (error.response.status === 422 && sync) {
                             component.errors = {};
                             component.$emit('updated', error.response.data);
-                            Vue.error(error.response.data.sync_error);
+                            if (error.response.data.sync_error) {
+                                Vue.error(error.response.data.sync_error);
+                            }
+                            else {
+                                Vue.warning('Die Karte wurde nicht aktualisiert und auf den Stand von Cardmarket gebracht.');
+                            }
                             return;
                         }
 

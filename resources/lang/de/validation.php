@@ -43,6 +43,7 @@ return [
     'exists'         => 'Der gewählte Wert für :attribute ist ungültig.',
     'file'           => ':attribute muss eine Datei sein.',
     'filled'         => ':attribute muss ausgefüllt sein.',
+    'formated_number' => ':attribute muss eine Nummer sein (1,23).',
     'gt'             => [
         'numeric' => ':attribute muss größer als :value sein.',
         'file'    => ':attribute muss größer als :value Kilobytes sein.',

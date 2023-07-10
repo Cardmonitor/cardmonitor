@@ -1,0 +1,87 @@
+{
+    "article": {
+        "idArticle": 1488422050,
+        "idProduct": 280945,
+        "language": {
+            "idLanguage": 1,
+            "languageName": "English"
+        },
+        "comments": "Your LGS based in L\u00fcbeck | ##AB001.128##",
+        "price": 123.45,
+        "idCurrency": 1,
+        "currencyCode": "EUR",
+        "count": 1,
+        "inShoppingCart": false,
+        "lastEdited": "2023-07-10T04:12:51+0200",
+        "condition": "NM",
+        "isReverseHolo": true,
+        "isSigned": false,
+        "isFirstEd": false,
+        "isPlayset": false,
+        "isAltered": false
+    },
+    "product": {
+        "idProduct": 280945,
+        "idMetaproduct": 218618,
+        "countReprints": 2,
+        "enName": "Absol ",
+        "locName": "Absol ",
+        "localization": [
+            {
+                "name": "Absol [Mind Jack | Fearsome Shadow]",
+                "idLanguage": 1,
+                "languageName": "English"
+            },
+            {
+                "name": "Absol [Mind Jack | Fearsome Shadow]",
+                "idLanguage": 2,
+                "languageName": "French"
+            },
+            {
+                "name": "Absol [Mind Jack | Fearsome Shadow]",
+                "idLanguage": 3,
+                "languageName": "German"
+            },
+            {
+                "name": "Absol [Mind Jack | Fearsome Shadow]",
+                "idLanguage": 4,
+                "languageName": "Spanish"
+            },
+            {
+                "name": "Absol [Mind Jack | Fearsome Shadow]",
+                "idLanguage": 5,
+                "languageName": "Italian"
+            }
+        ],
+        "website": "\/en\/Pokemon\/Products\/Singles\/Plasma-Freeze\/Absol-PLF67",
+        "image": "https:\/\/product-images.s3.cardmarket.com\/51\/PLF\/280945\/280945.jpg",
+        "gameName": "Pok\u00e9mon",
+        "categoryName": "Pok\u00e9mon Single",
+        "idGame": 6,
+        "number": "67",
+        "rarity": "Holo Rare ",
+        "expansion": {
+            "idExpansion": 1579,
+            "enName": "Plasma Freeze",
+            "expansionIcon": 319
+        },
+        "priceGuide": {
+            "SELL": 2.82,
+            "LOW": 0.49,
+            "LOWEX": 1.5,
+            "LOWFOIL": 0.97,
+            "AVG": 5.42,
+            "TREND": 3.12,
+            "TRENDFOIL": 5.32
+        },
+        "reprint": [
+            {
+                "idProduct": 567877,
+                "expansion": "Spiral Force",
+                "expIcon": 702
+            }
+        ],
+        "countArticles": 130,
+        "countFoils": 38
+    }
+}
