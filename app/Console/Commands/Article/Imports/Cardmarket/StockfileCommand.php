@@ -8,6 +8,7 @@ use App\Models\Games\Game;
 use Illuminate\Support\Arr;
 use Illuminate\Console\Command;
 use App\Models\Articles\Article;
+use Illuminate\Support\Facades\Storage;
 
 class StockfileCommand extends Command
 {
@@ -25,11 +26,21 @@ class StockfileCommand extends Command
      */
     protected $description = 'Import Articles from Cardmarket Stockfile';
 
-    protected User $user;
+    private User $user;
+    private ZipArchive $zip_archive;
 
     private $csv_file_handle;
-    private ZipArchive $zip_archive;
     private array $import_states = [];
+
+    public static function zipArchivePath(User $user): string
+    {
+        return Storage::disk('public')->path($user->id . '-articles.zip');
+    }
+
+    public static function zipArchiveUrl(User $user): string
+    {
+        return Storage::disk('public')->url($user->id . '-articles.zip');
+    }
 
     public function handle()
     {
@@ -349,8 +360,7 @@ class StockfileCommand extends Command
 
     private function createZipArchive()
     {
-        $zip_path = storage_path('app/public/' . $this->user->id . '-articles.zip');
-
+        $zip_path = self::zipArchivePath($this->user);
         if (file_exists($zip_path)) {
             unlink($zip_path);
         }

@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Articles;
 
-use App\Http\Controllers\Controller;
-use App\Models\Articles\Article;
+use App\User;
 use App\Models\Cards\Card;
-use App\Models\Expansions\Expansion;
 use App\Models\Games\Game;
-use App\Models\Items\Card as ItemCard;
-use App\Models\Localizations\Language;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Models\Articles\Article;
+use App\Http\Controllers\Controller;
+use App\Models\Expansions\Expansion;
+use App\Models\Items\Card as ItemCard;
+use App\Models\Localizations\Language;
+use App\Console\Commands\Article\Imports\Cardmarket\StockfileCommand;
 
 class ArticleController extends Controller
 {
@@ -57,12 +59,6 @@ class ArticleController extends Controller
             return [$item['id'] => $item['name']];
         });
 
-        $log_file_path = storage_path('app/public/' . $user->id . '-articles.zip');
-        $log_file_url = null;
-        if (file_exists($log_file_path)) {
-            $log_file_url = asset('storage/' . $user->id . '-articles.zip');
-        }
-
         return view($this->baseViewPath . '.index')
             ->with('conditions', Article::CONDITIONS)
             ->with('expansions', $expansions)
@@ -73,7 +69,16 @@ class ArticleController extends Controller
             ->with('is_syncing_articles', $user->is_syncing_articles)
             ->with('rules', $user->rules)
             ->with('storages', $user->storagesForFilter())
-            ->with('log_file_url', $log_file_url);
+            ->with('log_file_url', $this->getLogFileUrl($user));
+    }
+
+    private function getLogFileUrl(User $user): ?string
+    {
+        if (!file_exists(StockfileCommand::zipArchivePath($user))) {
+            return null;
+        }
+
+        return StockfileCommand::zipArchiveUrl($user);
     }
 
     /**
