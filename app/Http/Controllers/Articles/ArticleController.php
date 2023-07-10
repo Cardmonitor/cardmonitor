@@ -57,6 +57,12 @@ class ArticleController extends Controller
             return [$item['id'] => $item['name']];
         });
 
+        $log_file_path = storage_path('app/public/' . $user->id . '-articles.zip');
+        $log_file_url = null;
+        if (file_exists($log_file_path)) {
+            $log_file_url = asset('storage/' . $user->id . '-articles.zip');
+        }
+
         return view($this->baseViewPath . '.index')
             ->with('conditions', Article::CONDITIONS)
             ->with('expansions', $expansions)
@@ -66,7 +72,8 @@ class ArticleController extends Controller
             ->with('is_applying_rules', $user->is_applying_rules)
             ->with('is_syncing_articles', $user->is_syncing_articles)
             ->with('rules', $user->rules)
-            ->with('storages', $user->storagesForFilter());
+            ->with('storages', $user->storagesForFilter())
+            ->with('log_file_url', $log_file_url);
     }
 
     /**

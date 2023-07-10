@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Article\Imports\Cardmarket;
 
 use App\User;
+use ZipArchive;
 use App\Models\Games\Game;
 use Illuminate\Support\Arr;
 use Illuminate\Console\Command;
@@ -27,6 +28,7 @@ class StockfileCommand extends Command
     protected User $user;
 
     private $csv_file_handle;
+    private ZipArchive $zip_archive;
     private array $import_states = [];
 
     public function handle()
@@ -34,9 +36,13 @@ class StockfileCommand extends Command
         $this->user = User::find($this->argument('user'));
         $importable_games = Game::importables();
 
+        $this->createZipArchive();
+
         foreach ($importable_games as $game) {
             $this->importGame($game);
         }
+
+        $this->zip_archive->close();
     }
 
     public function importGame(Game $game)
@@ -289,6 +295,8 @@ class StockfileCommand extends Command
 
         fclose($this->csv_file_handle);
 
+        $this->zip_archive->addFile($csv_path, now()->format('Y-m-d H-i-s') . '-' . $game->abbreviation . '-log.csv');
+
         $this->import_states[$game->id] = $import_states;
     }
 
@@ -332,8 +340,22 @@ class StockfileCommand extends Command
         $Stockfile = new \App\Importers\Articles\Cardmarket\Stockfile($this->user->id, $path, $game->id);
         $Stockfile->download();
 
+        $this->zip_archive->addFile($path, now()->format('Y-m-d H-i-s') . '-' . $game->abbreviation . '-stock.csv');
+
         $shoppingcart_articles_response = $this->user->cardmarketApi->stock->shoppingcartArticles();
 
         return $Stockfile->setCardmarketCards($shoppingcart_articles_response['article'] ?? []);
+    }
+
+    private function createZipArchive()
+    {
+        $zip_path = storage_path('app/public/' . $this->user->id . '-articles.zip');
+
+        if (file_exists($zip_path)) {
+            unlink($zip_path);
+        }
+
+        $this->zip_archive = new ZipArchive();
+        $this->zip_archive->open($zip_path, ZipArchive::CREATE | ZipArchive::OVERWRITE);
     }
 }
