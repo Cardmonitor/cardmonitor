@@ -6,8 +6,8 @@
         <h2 class="col pl-0">{{ __('app.nav.article') }}</h2>
         <div>
             <a class="btn btn-sm btn-secondary" href="{{ route('article.storing_history.index') }}">Einlagerungen</a>
-            @if ($log_file_url)
-                <a class="btn btn-sm btn-secondary" href="{{ $log_file_url }}">Log-Datei</a>
+            @if ($log_file_exists)
+                <a class="btn btn-sm btn-secondary" href="{{ route('article.stock.logfile.index') }}">Log-Datei</a>
             @endif
         </div>
     </div>

@@ -65,6 +65,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('article/storing_history/{storing_history}/pdf', 'Articles\StoringHistory\PdfController@show')->name('article.storing_history.pdf.show');
     Route::post('article/storing_history/{storing_history}/pdf', 'Articles\StoringHistory\PdfController@store')->name('article.storing_history.pdf.store');
 
+    Route::get('article/stock/logfile', 'Articles\Stock\LogfileController@index')->name('article.stock.logfile.index');
+
     Route::get('article/{article}/cardmarket', 'Cardmarket\Articles\ArticleController@show')->name('article.cardmarket.show');
 
     Route::resource('article', 'Articles\ArticleController');

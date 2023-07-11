@@ -8,6 +8,7 @@ use App\Models\Games\Game;
 use Illuminate\Support\Arr;
 use Illuminate\Console\Command;
 use App\Models\Articles\Article;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 
 class StockfileCommand extends Command
@@ -29,17 +30,21 @@ class StockfileCommand extends Command
     private User $user;
     private ZipArchive $zip_archive;
 
+    private array $csv_files = [];
     private $csv_file_handle;
     private array $import_states = [];
 
     public static function zipArchivePath(User $user): string
     {
-        return Storage::disk('public')->path($user->id . '-articles.zip');
+        $filepath = storage_path('app/articles/stock/' . $user->id . '-articles.zip');
+        (new Filesystem())->ensureDirectoryExists(dirname($filepath));
+
+        return $filepath;
     }
 
-    public static function zipArchiveUrl(User $user): string
+    public static function zipArchiveExists(User $user): bool
     {
-        return Storage::disk('public')->url($user->id . '-articles.zip');
+        return file_exists(self::zipArchivePath($user));
     }
 
     public function handle()
@@ -54,14 +59,21 @@ class StockfileCommand extends Command
         }
 
         $this->zip_archive->close();
+
+        foreach ($this->csv_files as $path) {
+            unlink($path);
+        }
     }
 
     public function importGame(Game $game)
     {
-        $csv_path = storage_path('app/public/' . $this->user->id . '-stock-' . $game->id . '-log.csv');
+        $csv_path = storage_path('app/articles/stock/' . $this->user->id . '-stock-' . $game->id . '-log.csv');
         if (file_exists($csv_path)) {
             unlink($csv_path);
         }
+
+        $this->csv_files[] = $csv_path;
+
         $this->csv_file_handle = fopen($csv_path, 'w');
         $header = array_keys($this->output(0, '', new Article(), []));
         fputcsv($this->csv_file_handle, $header, ';');
@@ -349,7 +361,7 @@ class StockfileCommand extends Command
         }
 
         $Stockfile = new \App\Importers\Articles\Cardmarket\Stockfile($this->user->id, $path, $game->id);
-        $Stockfile->download();
+        $this->csv_files[] = $Stockfile->download();
 
         $this->zip_archive->addFile($path, now()->format('Y-m-d H-i-s') . '-' . $game->abbreviation . '-stock.csv');
 

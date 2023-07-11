@@ -69,7 +69,7 @@ class ArticleController extends Controller
             ->with('is_syncing_articles', $user->is_syncing_articles)
             ->with('rules', $user->rules)
             ->with('storages', $user->storagesForFilter())
-            ->with('log_file_url', $this->getLogFileUrl($user));
+            ->with('log_file_exists', StockfileCommand::zipArchiveExists($user));
     }
 
     private function getLogFileUrl(User $user): ?string
