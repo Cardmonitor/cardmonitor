@@ -4,12 +4,13 @@ namespace App\Console\Commands\Expansion;
 
 use App\Models\Cards\Card;
 use App\Models\Games\Game;
+use Illuminate\Support\Arr;
 use Cardmonitor\Cardmarket\Api;
 use Illuminate\Console\Command;
+use App\Support\BackgroundTasks;
 use App\Console\Traits\HasLogger;
 use Illuminate\Support\Facades\App;
 use App\Models\Expansions\Expansion;
-use App\Support\BackgroundTasks;
 
 class ImportCommand extends Command
 {
@@ -72,6 +73,12 @@ class ImportCommand extends Command
         catch (\GuzzleHttp\Exception\RequestException $e) {
             report($e);
             $this->error($e->getMessage());
+            return self::FAILURE;
+        }
+
+        if (!Arr::has($singles, 'expansion')) {
+            dump($expansion_id, $singles);
+            $this->error('Expansion ' . $expansion_id . ' not available.');
             return self::FAILURE;
         }
 

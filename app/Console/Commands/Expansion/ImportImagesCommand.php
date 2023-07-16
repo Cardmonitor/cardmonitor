@@ -57,7 +57,7 @@ class ImportImagesCommand extends Command
                 continue;
             }
 
-            $this->line($expansion->id . ' ' . $expansion->name . ' (' . $expansion->abbreviation . '): ' . $images_count . '/' . $expansion->cards_count . ' images');
+            $this->line($expansion->game->name . "\t" . $expansion->id . "\t" . $expansion->name . ' (' . $expansion->abbreviation . '): ' . $images_count . '/' . $expansion->cards_count . ' images');
 
             if ($this->option('import')) {
                 Artisan::call('expansion:import', [
@@ -71,7 +71,9 @@ class ImportImagesCommand extends Command
 
     private function getExpansions(): LazyCollection
     {
-        $query = Expansion::withCount('cards');
+        $query = Expansion::withCount('cards')->with([
+            'game',
+        ]);
 
         if ($this->option('user')) {
             $query->whereHas('cards.articles', function ($query) {
