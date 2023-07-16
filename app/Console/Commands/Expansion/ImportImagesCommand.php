@@ -57,11 +57,12 @@ class ImportImagesCommand extends Command
                 continue;
             }
 
-            $this->line($expansion->game->name . "\t" . str_pad($expansion->id, 10, ' ') . "\t" . $images_count . '/' . $expansion->cards_count . "\t" . $expansion->name . ' (' . $expansion->abbreviation . ')');
+            $this->line(str_pad($expansion->game->name, 25, '') . "\t" . str_pad($expansion->id, 10, ' ') . "\t" . $images_count . '/' . $expansion->cards_count . "\t" . $expansion->name . ' (' . $expansion->abbreviation . ')');
 
             if ($this->option('import')) {
                 Artisan::call('expansion:import', [
                     'expansion' => $expansion->id,
+                    '--force' => true,
                 ]);
             }
         }

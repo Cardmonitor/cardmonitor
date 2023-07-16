@@ -21,7 +21,8 @@ class ImportCommand extends Command
      */
     protected $signature = 'expansion:import
         {expansion : The Cardmarket ID of the expansion}
-        {--without-singles : Just update or create the expansions}';
+        {--without-singles : Just update or create the expansions}
+        {--force : Force the import of the expansion}';
 
     /**
      * The console command description.
@@ -91,7 +92,7 @@ class ImportCommand extends Command
 
         $this->line('Game: ' . $game->name);
 
-        if (!$game->is_importable) {
+        if (!$game->is_importable && !$this->option('force')) {
             $this->error('Game is not importable');
             return self::FAILURE;
         }

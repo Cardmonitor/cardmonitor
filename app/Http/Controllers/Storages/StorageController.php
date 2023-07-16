@@ -96,7 +96,7 @@ class StorageController extends Controller
         return view($this->baseViewPath . '.show')
             ->with('model', $storage)
             ->with('games', Game::keyValue())
-            ->with('expansions', Expansion::game(Game::ID_MAGIC)->orderBy('name', 'ASC')->get());
+            ->with('expansions', Expansion::query()->game(Game::ID_MAGIC)->orderBy('name', 'ASC')->get());
     }
 
     /**
