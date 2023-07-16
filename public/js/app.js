@@ -8606,6 +8606,8 @@ var render = function render() {
     }
   })]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell text-right"
+  }, [_c("div", {
+    staticClass: "input-group"
   }, [_c("input", {
     directives: [{
       name: "model",
@@ -8632,22 +8634,29 @@ var render = function render() {
       }
     }
   }), _vm._v(" "), _c("div", {
-    staticClass: "invalid-feedback",
-    domProps: {
-      textContent: _vm._s("number" in _vm.errors ? _vm.errors.number[0] : "")
-    }
-  }), _vm._v(" "), _c("button", {
+    staticClass: "input-group-append"
+  }, [_c("button", {
     directives: [{
       name: "show",
       rawName: "v-show",
       value: !_vm.form.number,
       expression: "!form.number"
     }],
-    staticClass: "btn btn-sm btn-link",
+    staticClass: "btn btn-sm btn-outline-secondary",
+    attrs: {
+      title: "Nächste Nummer vergeben"
+    },
     on: {
       click: _vm.getNextNumber
     }
-  }, [_vm._v("Nächste")])]), _vm._v(" "), _c("td", {
+  }, [_c("i", {
+    staticClass: "fas fa-angle-double-right"
+  })])])]), _vm._v(" "), _c("div", {
+    staticClass: "invalid-feedback",
+    domProps: {
+      textContent: _vm._s("number" in _vm.errors ? _vm.errors.number[0] : "")
+    }
+  })]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-sm-table-cell text-right"
   }, [_c("div", {
     staticClass: "btn-group btn-group-sm",

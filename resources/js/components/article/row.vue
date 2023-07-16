@@ -82,9 +82,13 @@
             <div class="invalid-feedback" v-text="'storage_id' in errors ? errors.storage_id[0] : ''"></div>
         </td>
         <td class="align-middle d-none d-xl-table-cell text-right">
-            <input class="form-control form-control-sm text-right" :class="'number' in errors ? 'is-invalid' : ''" type="text" v-model="form.number" @keydown.enter="update(false)">
+            <div class="input-group">
+                <input class="form-control form-control-sm text-right" :class="'number' in errors ? 'is-invalid' : ''" type="text" v-model="form.number" @keydown.enter="update(false)">
+                <div class="input-group-append">
+                    <button class="btn btn-sm btn-outline-secondary" title="Nächste Nummer vergeben" @click="getNextNumber" v-show="!form.number"><i class="fas fa-angle-double-right"></i></button>
+                </div>
+            </div>
             <div class="invalid-feedback" v-text="'number' in errors ? errors.number[0] : ''"></div>
-            <button class="btn btn-sm btn-link" @click="getNextNumber" v-show="!form.number">Nächste</button>
         </td>
         <td class="align-middle d-none d-sm-table-cell text-right">
             <div class="btn-group btn-group-sm" role="group">
