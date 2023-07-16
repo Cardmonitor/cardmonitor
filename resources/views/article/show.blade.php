@@ -15,7 +15,9 @@
                     <button type="submit" class="btn btn-sm btn-danger" title="{{ __('app.actions.delete') }}"><i class="fas fa-trash"></i></button>
                 </form>
             @endif
-            <a href="{{ route('article.cardmarket.show', ['article' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1">Cardmarket Data</a>
+            @if ($model->cardmarket_article_id)
+                <a href="{{ route('article.cardmarket.show', ['article' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1">Cardmarket Data</a>
+            @endif
         </div>
     </div>
 
@@ -101,9 +103,19 @@
                         <div class="col-label"><b>Produkt ID</b></div>
                         <div class="col-value">{{ $model->card->cardmarket_product_id ?: 'nicht vorhanden' }}</div>
                     </div>
-                    <div class="row">
+                    <div class="row align-items-center">
                         <div class="col-label"><b>Artikel ID</b></div>
-                        <div class="col-value">{{ $model->cardmarket_article_id ?: 'nicht vorhanden' }}</div>
+                        <div class="col-value d-flex align-items-center justify-content-between">
+                            {{ $model->cardmarket_article_id ?: 'nicht vorhanden' }}
+                            @if ($model->can_upload_to_cardmarket)
+                                <form action="{{ route('article.cardmarket.update', ['article' => $model->id]) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+
+                                    <button type="submit" class="btn btn-sm btn-secondary ml-1" title="{{ __('app.actions.update') }}"><i class="fas fa-fw fa-cloud-upload-alt"></i></button>
+                                </form>
+                            @endif
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-label"><b>Bearbeitet</b></div>

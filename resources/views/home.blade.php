@@ -29,8 +29,6 @@
             </div>
         </div>
 
-        <home-article-index class="col-12 col-lg mb-3 mb-xl-0" :is-syncing-articles="{{ $is_syncing_articles }}"></home-article-index>
-
         <div class="col-12 col-xl d-none d-xl-block">
             <div class="card h-100">
                 <div class="card-header">Letzte Bewertungen</div>

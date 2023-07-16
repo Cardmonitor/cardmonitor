@@ -51,8 +51,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('api/{api}', 'Apis\ApiController@update')->name('api.update');
     Route::delete('api/{api}', 'Apis\ApiController@destroy')->name('api.destroy');
 
-    Route::get('article/sync', 'Cardmarket\Articles\ArticleController@index');
-    Route::put('article/sync', 'Cardmarket\Articles\ArticleController@update')->name('article.sync.update');
+    Route::get('article/sync', 'Cardmarket\Articles\ArticleController@index')->name('article.sync.index');
 
     Route::post('article/import', 'Articles\Imports\ImportController@store')->name('article.import.store');
 
@@ -67,7 +66,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('article/stock/logfile', 'Articles\Stock\LogfileController@index')->name('article.stock.logfile.index');
 
-    Route::get('article/{article}/cardmarket', 'Cardmarket\Articles\ArticleController@show')->name('article.cardmarket.show');
+    Route::get('article/{article}/cardmarket', [\App\Http\Controllers\Cardmarket\Articles\ArticleController::class, 'show'])->name('article.cardmarket.show');
+    Route::put('article/{article}/cardmarket', [\App\Http\Controllers\Cardmarket\Articles\ArticleController::class, 'update'])->name('article.cardmarket.update');
 
     Route::resource('article', 'Articles\ArticleController');
 

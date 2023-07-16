@@ -73,6 +73,7 @@ class Article extends Model
     const STATE_ON_HOLD = 2;
 
     protected $appends = [
+        'can_upload_to_cardmarket',
         'localName',
         'path',
         'edit_path',
@@ -920,6 +921,11 @@ class Article extends Model
     {
         $this->attributes['provision'] = number_format(str_replace(',', '.', $value), self::DECIMALS, '.', '');
         Arr::forget($this->attributes, 'provision_formatted');
+    }
+
+    public function getCanUploadToCardmarketAttribute(): bool
+    {
+        return (bool) $this->number;
     }
 
     public function getAmountAttribute() : int

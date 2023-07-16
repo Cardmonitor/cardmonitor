@@ -51,7 +51,7 @@
             <div class="btn-group btn-group-sm" role="group">
                 <button type="button" class="btn btn-secondary" title="Abbrechen" @click="isEditing = false;"><i class="fas fa-fw fa-times"></i></button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.save')" @click="update(false)"><i class="fas fa-fw fa-save"></i></button>
-                <button type="button" class="btn btn-secondary" :title="item.number ? $t('app.actions.save_upload') : 'Der Artikel muss eine Nummer haben.'" @click="update(true)" :disabled="!item.number"><i class="fas fa-fw fa-cloud-upload-alt"></i></button>
+                <button type="button" class="btn btn-secondary" :title="item.number ? $t('app.actions.save_upload') : 'Der Artikel muss eine Nummer haben.'" @click="update(true)" :disabled="!item.can_upload_to_cardmarket"><i class="fas fa-fw fa-cloud-upload-alt"></i></button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.delete')" @click="destroy"><i class="fas fa-fw fa-trash"></i></button>
             </div>
         </td>
@@ -95,7 +95,7 @@
                 <a class="btn btn-secondary" :href="item.orders[0].path" :title="'Bestellung ' + item.orders[0].cardmarket_order_id" v-if="item.orders.length"><i class="fas fa-box"></i></a>
                 <button type="button" class="btn btn-secondary" title="Bearbeiten" @click="isEditing = true"><i class="fas fa-fw fa-edit"></i></button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.save')" @click="update(false)"><i class="fas fa-fw fa-save"></i></button>
-                <button type="button" class="btn btn-secondary" :title="item.number ? $t('app.actions.save_upload') : 'Der Artikel muss eine Nummer haben.'" @click="update(true)" :disabled="!item.number"><i class="fas fa-fw fa-cloud-upload-alt"></i></button>
+                <button type="button" class="btn btn-secondary" :title="item.number ? $t('app.actions.save_upload') : 'Der Artikel muss eine Nummer haben.'" @click="update(true)" :disabled="!item.can_upload_to_cardmarket"><i class="fas fa-fw fa-cloud-upload-alt"></i></button>
                 <button type="button" class="btn btn-secondary" :title="$t('app.actions.delete')" @click="destroy"><i class="fas fa-fw fa-trash"></i></button>
             </div>
         </td>

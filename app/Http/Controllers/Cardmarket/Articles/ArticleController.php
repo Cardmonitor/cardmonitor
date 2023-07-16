@@ -12,11 +12,6 @@ class ArticleController extends Controller
 {
     protected CardmarketApi $CardmarketApi;
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         if ($request->wantsJson()) {
@@ -24,58 +19,46 @@ class ArticleController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Article $article = null)
+    public function update(Article $article)
     {
         $user = auth()->user();
         $this->CardmarketApi = $user->cardmarketApi;
 
         if (! $user->api->isConnected()) {
-            abort(404);
+            return back()->with('status', [
+                'type' => 'danger',
+                'text' => 'Es ist kein Cardmarket Konto verbunden.',
+            ]);
         }
 
-        if (is_null($article)) {
-            $this->syncAll($user);
-        }
-        else {
-            $this->sync($article);
+        if (! $article->can_upload_to_cardmarket) {
+            return back()->with('status', [
+                'type' => 'danger',
+                'text' => 'Es ist keine Artikelnummer vorhanden.',
+            ]);
         }
 
-        if ($request->wantsJson()) {
-            return;
+        $is_synced = $article->sync();
+        if (! $is_synced) {
+            if ($article->sync_error) {
+                return back()->with('status', [
+                    'type' => 'danger',
+                    'text' => $article->sync_error,
+                ]);
+            }
+
+            return back()->with('status', [
+                'type' => 'warning',
+                'text' => 'Die Karte wurde nicht aktualisiert und auf den Stand von Cardmarket gebracht.',
+            ]);
         }
 
         return back()->with('status', [
             'type' => 'success',
-            'text' => 'Artikel aktualisiert.',
+            'text' => 'Der Artikel wurde zu Cardmarket hochgeladen.',
         ]);
     }
 
-    protected function sync(Article $article): void
-    {
-        dump('syncing one..');
-    }
-
-    protected function syncAll(User $user)
-    {
-        $user->update([
-            'is_syncing_articles' => true,
-        ]);
-        \App\Jobs\Articles\SyncAll::dispatch($user);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Articles\Article  $article
-     * @return \Illuminate\Http\Response
-     */
     public function show(Article $article)
     {
         $user = auth()->user();
