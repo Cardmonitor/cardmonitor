@@ -168,11 +168,11 @@
                                     <option value="setNumber">Nummern automatisch setzen</option>
                                     <option value="resetNumber">Nummern entfernen</option>
                                 </optgroup>
-                                <optgroup label="Einlagern" v-show="(filter.is_numbered == 1 && filter.is_stored == 0)">
-                                    <option value="storing">Einlagern</option>
+                                <optgroup label="Einlagern">
+                                    <option value="storing" :disabled="!(filter.is_numbered === 1 && filter.is_stored === 0)">Einlagern</option>
                                 </optgroup>
-                                <optgroup label="Cardmarket" v-show="filter.is_numbered === 1">
-                                    <option value="syncCardmarket">Upload zu Cardmarket</option>
+                                <optgroup label="Cardmarket">
+                                    <option value="syncCardmarket" :disabled="filter.is_numbered !== 1">Upload zu Cardmarket</option>
                                 </optgroup>
                                 <optgroup label="Lagerplatz" v-if="storages.length">
                                     <option value="setStorage">Lagerplatz setzen</option>

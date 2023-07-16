@@ -9862,32 +9862,22 @@ var render = function render() {
       }
     }
   }, [_vm._m(1), _vm._v(" "), _c("optgroup", {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: _vm.filter.is_numbered == 1 && _vm.filter.is_stored == 0,
-      expression: "(filter.is_numbered == 1 && filter.is_stored == 0)"
-    }],
     attrs: {
       label: "Einlagern"
     }
   }, [_c("option", {
     attrs: {
-      value: "storing"
+      value: "storing",
+      disabled: !(_vm.filter.is_numbered === 1 && _vm.filter.is_stored === 0)
     }
   }, [_vm._v("Einlagern")])]), _vm._v(" "), _c("optgroup", {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: _vm.filter.is_numbered === 1,
-      expression: "filter.is_numbered === 1"
-    }],
     attrs: {
       label: "Cardmarket"
     }
   }, [_c("option", {
     attrs: {
-      value: "syncCardmarket"
+      value: "syncCardmarket",
+      disabled: _vm.filter.is_numbered !== 1
     }
   }, [_vm._v("Upload zu Cardmarket")])]), _vm._v(" "), _vm.storages.length ? _c("optgroup", {
     attrs: {
