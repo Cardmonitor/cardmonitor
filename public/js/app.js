@@ -8478,16 +8478,11 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-fw fa-save"
   })]), _vm._v(" "), _c("button", {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: _vm.item.number,
-      expression: "item.number"
-    }],
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
-      title: _vm.$t("app.actions.save_upload")
+      title: _vm.item.number ? _vm.$t("app.actions.save_upload") : "Der Artikel muss eine Nummer haben.",
+      disabled: !_vm.item.number
     },
     on: {
       click: function click($event) {
@@ -8694,16 +8689,11 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-fw fa-save"
   })]), _vm._v(" "), _c("button", {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: _vm.item.number,
-      expression: "item.number"
-    }],
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
-      title: _vm.$t("app.actions.save_upload")
+      title: _vm.item.number ? _vm.$t("app.actions.save_upload") : "Der Artikel muss eine Nummer haben.",
+      disabled: !_vm.item.number
     },
     on: {
       click: function click($event) {
