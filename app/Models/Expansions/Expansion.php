@@ -4,12 +4,14 @@ namespace App\Models\Expansions;
 
 use Carbon\Carbon;
 use App\Models\Cards\Card;
+use App\Models\Games\Game;
 use App\Traits\HasLocalizations;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Expansion extends Model
 {
@@ -169,7 +171,7 @@ class Expansion extends Model
         $this->attributes['abbreviation'] = strtolower($parts[4]);
     }
 
-    public function getIconPositionAttribute() : array
+    public function getIconPositionAttribute(): array
     {
         return [
             'x' => (($this->icon % 10) * 21 * -1),
@@ -177,14 +179,19 @@ class Expansion extends Model
         ];
     }
 
-    public function getIconPositionStringAttribute() : string
+    public function getIconPositionStringAttribute(): string
     {
         return $this->icon_position['x'] . 'px ' . $this->icon_position['y'] . 'px';
     }
 
-    public function cards() : HasMany
+    public function cards(): HasMany
     {
         return $this->hasMany(Card::class, 'expansion_id');
+    }
+
+    public function game(): BelongsTo
+    {
+        return $this->belongsTo(Game::class, 'game_id');
     }
 
     public function getReleasedAtFormattedAttribute(): string
