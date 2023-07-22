@@ -10237,7 +10237,11 @@ var render = function render() {
     _c = _vm._self._c;
   return _c("tr", [_c("td", {
     staticClass: "align-middle text-left"
-  }, [_vm._v(_vm._s(_vm.item.id))]), _vm._v(" "), _c("td", {
+  }, [_c("a", {
+    attrs: {
+      href: _vm.item.path
+    }
+  }, [_vm._v(_vm._s(_vm.item.id))])]), _vm._v(" "), _c("td", {
     staticClass: "align-middle text-left"
   }, [_c("expansion-icon", {
     attrs: {

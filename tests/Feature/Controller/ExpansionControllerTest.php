@@ -91,6 +91,18 @@ class ExpansionControllerTest extends TestCase
     /**
      * @test
      */
+    public function a_user_can_see_the_show_view()
+    {
+        $model = factory($this->className)->create([
+            'game_id' => Game::ID_MAGIC,
+        ]);
+
+        $this->getShowViewResponse(['expansion' => $model->id]);
+    }
+
+    /**
+     * @test
+     */
     public function a_user_can_update_a_model()
     {
         $model = factory($this->className)->create([

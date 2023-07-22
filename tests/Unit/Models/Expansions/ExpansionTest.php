@@ -195,4 +195,28 @@ class ExpansionTest extends TestCase
         ]);
         $this->assertFalse($model->isPresale());
     }
+
+    /**
+     * @test
+     */
+    public function it_knows_its_path()
+    {
+        $model = factory(Expansion::class)->create();
+
+        $this->assertEquals(route('expansions.show', [
+            'expansion' => $model->id,
+        ]), $model->path);
+    }
+
+    /**
+     * @test
+     */
+    public function it_knows_its_cardmarket_path()
+    {
+        $model = factory(Expansion::class)->create();
+
+        $this->assertEquals(route('expansions.cardmarket.show', [
+            'expansion' => $model->id,
+        ]), $model->cardmarket_path);
+    }
 }

@@ -82,6 +82,12 @@ class ExpansionController extends Controller
         ], Response::HTTP_CREATED);
     }
 
+    public function show(Expansion $expansion)
+    {
+        return view($this->baseViewPath . '.show')
+            ->with('model', $expansion);
+    }
+
     /**
      * Update the specified resource in storage.
      *

@@ -19,6 +19,8 @@ class Expansion extends Model
 
     protected $appends = [
         'released_at_formatted',
+        'path',
+        'cardmarket_path',
     ];
 
     protected $dates = [
@@ -201,6 +203,25 @@ class Expansion extends Model
         }
 
         return $this->released_at->format('d.m.Y');
+    }
+
+    public function getPathAttribute()
+    {
+        return $this->path('show');
+    }
+
+    public function getCardmarketPathAttribute()
+    {
+        return route('expansions.cardmarket.show', [
+            'expansion' => $this->id
+        ]);
+    }
+
+    protected function path(string $action = '') : string
+    {
+        return ($this->id ? route('expansions' . '.' . $action, [
+            'expansion' => $this->id
+        ]) : '');
     }
 
     public function scopeGame(Builder $query, $value) : Builder

@@ -1,6 +1,6 @@
 <template>
     <tr>
-        <td class="align-middle text-left">{{ item.id }}</td>
+        <td class="align-middle text-left"><a :href="item.path">{{ item.id }}</a></td>
         <td class="align-middle text-left"><expansion-icon :expansion="item"></expansion-icon></td>
         <td class="align-middle text-left">{{ item.abbreviation }}</td>
         <td class="align-middle text-left">{{ item.released_at_formatted }}</td>
