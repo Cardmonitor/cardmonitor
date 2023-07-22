@@ -474,6 +474,8 @@ class ArticleTest extends TestCase
         $articles = Article::where('cardmarket_article_id', $cardmarket_article_id)->get();
 
         $this->assertCount($cardmarket_articles_count, $articles);
+
+        Mockery::close();
     }
 
     /**
@@ -502,6 +504,8 @@ class ArticleTest extends TestCase
         $articles = Article::where('cardmarket_article_id', $cardmarket_article_id)->get();
 
         $this->assertCount($cardmarket_articles_count, $articles);
+
+        Mockery::close();
     }
 
     /**
@@ -529,6 +533,8 @@ class ArticleTest extends TestCase
         $articles = Article::where('cardmarket_article_id', $cardmarket_article_id)->get();
 
         $this->assertCount($cardmarket_articles_count, $articles);
+
+        Mockery::close();
     }
 
     /**
@@ -557,6 +563,8 @@ class ArticleTest extends TestCase
         $articles = Article::where('cardmarket_article_id', $cardmarket_article_id)->get();
 
         $this->assertCount($cardmarket_articles_count, $articles);
+
+        Mockery::close();
     }
 
     /**
@@ -1218,6 +1226,6 @@ class ArticleTest extends TestCase
         $this->assertEquals($cardmarket_article['language']['idLanguage'], $model->language_id);
         $this->assertEquals($cardmarket_article['lastEdited'], $model->cardmarket_last_edited->format('Y-m-d\TH:i:sO'));
 
-
+        Mockery::close();
     }
 }

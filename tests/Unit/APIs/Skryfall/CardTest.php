@@ -32,6 +32,8 @@ class CardTest extends TestCase
 
         $model = Card::findByCodeAndNumber($set_code, $card_number);
         $this->assertInstanceOf(Card::class, $model);
+
+        Mockery::close();
     }
 
     /**
@@ -180,6 +182,8 @@ class CardTest extends TestCase
 
         $model = Card::findByCodeAndNumber($set_code, $card_number);
         $this->assertNull($model);
+
+        Mockery::close();
     }
 
     /**

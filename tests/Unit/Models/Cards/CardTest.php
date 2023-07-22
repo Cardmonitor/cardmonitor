@@ -164,6 +164,8 @@ class CardTest extends TestCase
 
     /**
      * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function it_can_be_imported()
     {
@@ -257,6 +259,8 @@ class CardTest extends TestCase
 
     /**
      * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function it_can_be_updated_from_skryfall_by_cardmarket_id()
     {

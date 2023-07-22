@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Games\Game;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Support\BackgroundTasks;
 use Illuminate\Support\Facades\App;
 use App\Models\Expansions\Expansion;
-use App\Support\BackgroundTasks;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Validation\ValidationException;
 
@@ -22,7 +23,7 @@ class ExpansionController extends Controller
     public function index(Request $request)
     {
         if ($request->wantsJson()) {
-            return Expansion::game($request->input('game_id'))
+            return Expansion::query()->game($request->input('game_id'))
                 ->search($request->input('searchtext'))
                 ->orderBy('name', 'ASC')
                 ->paginate();
@@ -74,11 +75,11 @@ class ExpansionController extends Controller
             'expansion' => $expansion_id,
         ]);
 
-        return [
+        return response()->json([
             'status' => 'Der Import der Erweiterung wurde gestartet.',
             'expansion_id' => $expansion_id,
             'background_tasks' => $BackgroundTasks->all(),
-        ];
+        ], Response::HTTP_CREATED);
     }
 
     /**
