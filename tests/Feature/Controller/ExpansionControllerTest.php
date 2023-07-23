@@ -93,8 +93,13 @@ class ExpansionControllerTest extends TestCase
      */
     public function a_user_can_see_the_show_view()
     {
+        $game = factory(Game::class)->create([
+            'id' => Game::ID_MAGIC,
+            'name' => 'Magic: The Gathering',
+        ]);
+
         $model = factory($this->className)->create([
-            'game_id' => Game::ID_MAGIC,
+            'game_id' => $game->id,
         ]);
 
         $this->getShowViewResponse(['expansion' => $model->id]);
@@ -121,7 +126,7 @@ class ExpansionControllerTest extends TestCase
         $this->signIn($this->user);
 
         $response = $this->put(route($this->baseRouteName . '.update', ['expansion' => $model->id]))
-            ->assertStatus(Response::HTTP_OK)
+            ->assertStatus(Response::HTTP_FOUND)
             ->assertSessionHasNoErrors();
     }
 }

@@ -6,9 +6,11 @@ use Carbon\Carbon;
 use App\Models\Cards\Card;
 use App\Models\Games\Game;
 use App\Traits\HasLocalizations;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -222,6 +224,16 @@ class Expansion extends Model
         return ($this->id ? route('expansions' . '.' . $action, [
             'expansion' => $this->id
         ]) : '');
+    }
+
+    public function getImagesAttribute()
+    {
+        return Storage::files('public/items/' . $this->game_id . '/' . $this->expansion_id);
+    }
+
+    public function getImagesCountAttribute(): int
+    {
+        return count($this->images);
     }
 
     public function scopeGame(Builder $query, $value) : Builder

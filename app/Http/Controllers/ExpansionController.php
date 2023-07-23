@@ -6,6 +6,7 @@ use App\Models\Games\Game;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Support\BackgroundTasks;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use App\Models\Expansions\Expansion;
 use Illuminate\Support\Facades\Artisan;
@@ -84,6 +85,18 @@ class ExpansionController extends Controller
 
     public function show(Expansion $expansion)
     {
+        $expansion->loadCount('cards');
+
+        $expansion->load([
+            'game',
+        ]);
+
+        $expansion->load([
+            'cards' => function ($query) {
+                return $query->orderBy(DB::raw('CAST(number AS SIGNED INTEGER)'), 'ASC');
+            },
+        ]);
+
         return view($this->baseViewPath . '.show')
             ->with('model', $expansion);
     }
@@ -104,11 +117,20 @@ class ExpansionController extends Controller
             'expansion' => $expansion->id,
         ]);
 
-        return [
-            'status' => 'Das Update der Erweiterung wurde gestartet.',
-            'expansion_id' => $expansion->id,
-            'background_tasks' => $BackgroundTasks->all(),
-            'backgroundtask_key' => $backgroundtask_key,
-        ];
+        if ($request->wantsJson()) {
+            return [
+                'status' => 'Das Update der Erweiterung wurde gestartet.',
+                'expansion_id' => $expansion->id,
+                'background_tasks' => $BackgroundTasks->all(),
+                'backgroundtask_key' => $backgroundtask_key,
+            ];
+        }
+
+        return redirect($expansion->path)
+            ->with('status', [
+                'type' => 'success',
+                'text' => 'Der Import der Erweiterung wurde gestartet.',
+            ]);
+
     }
 }
