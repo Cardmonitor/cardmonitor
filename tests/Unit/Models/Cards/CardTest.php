@@ -2,19 +2,18 @@
 
 namespace Tests\Unit\Models\Cards;
 
-use App\Models\Cards\Card;
-use App\Models\Expansions\Expansion;
-use App\Models\Games\Game;
-use App\Models\Localizations\Language;
-use App\Models\Localizations\Localization;
-use Cardmonitor\Cardmarket\Expansion as CardmarketExpansion;
-use Cardmonitor\Cardmarket\Product;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Mockery;
 use Tests\TestCase;
+use App\Models\Cards\Card;
+use App\Models\Games\Game;
+use Cardmonitor\Cardmarket\Product;
+use Illuminate\Support\Facades\App;
+use App\Models\Expansions\Expansion;
+use App\Models\Localizations\Language;
 use Tests\Traits\RelationshipAssertions;
+use Tests\Support\Snapshots\JsonSnapshot;
+use App\Models\Localizations\Localization;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @runTestsInSeparateProcesses
@@ -74,92 +73,34 @@ class CardTest extends TestCase
 
     /**
      * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function it_can_be_created_from_cardmarket()
     {
+        $cardmarket_product_id = 265882;
+        $cardmarket_product_response = JsonSnapshot::get('tests/snapshots/cardmarket/product/' . $cardmarket_product_id . '.json', function () use ($cardmarket_product_id) {
+            return App::make('CardmarketApi')->product->get($cardmarket_product_id);
+        });
+
+        $cardmarket_product = $cardmarket_product_response['product'];
+
         $expansion = factory(Expansion::class)->create([
-            'name' => 'Born of the Gods',
+            'id' => $cardmarket_product['expansion']['idExpansion'],
+            'cardmarket_expansion_id' => $cardmarket_product['expansion']['idExpansion'],
+            'name' => $cardmarket_product['expansion']['enName'],
         ]);
 
-        $cardmarketCard = [
-            "idProduct" => 265882,
-            "idMetaproduct" => 209344,
-            "countReprints" => 1,
-            "enName" => "Shrike Harpy",
-            "locName" => "Würgerharpyie",
-            "localization" => [
-                0 => [
-                    "name" => "Shrike Harpy",
-                    "idLanguage" => "1",
-                    "languageName" => "English",
-                ],
-                1 => [
-                    "name" => "Harpie grièche",
-                    "idLanguage" => "2",
-                    "languageName" => "French",
-                ],
-                2 => [
-                    "name" => "Würgerharpyie",
-                    "idLanguage" => "3",
-                    "languageName" => "German",
-                ],
-                3 => [
-                    "name" => "Arpía impía",
-                    "idLanguage" => "4",
-                    "languageName" => "Spanish",
-                ],
-                4 => [
-                    "name" => "Arpia Avèrla",
-                    "idLanguage" => "5",
-                    "languageName" => "Italian",
-                ],
-            ],
-            "website" => "/en/Magic/Products/Singles/Born+of+the+Gods/Shrike-Harpy",
-            "image" => "./img/items/1/BNG/265882.jpg",
-            "gameName" => "Magic the Gathering",
-            "categoryName" => "Magic Single",
-            "idGame" => "1",
-            "number" => "83",
-            "rarity" => "Uncommon",
-            "expansion" => [
-              "idExpansion" => 1469,
-              "enName" => "Born of the Gods",
-              "expansionIcon" => 246,
-            ],
-            "priceGuide" => [
-                "SELL" => 0.03,
-                "LOW" => 0.01,
-                "LOWEX" => 0.01,
-                "LOWFOIL" => 0.03,
-                "AVG" => 0.13,
-                "TREND" => 0.05,
-            ],
-            "countArticles" => 3951,
-            "countFoils" => 164,
-            "links" => [
-                0 => [
-                    "rel" => "self",
-                    "href" => "/products/265882",
-                    "method" => "GET",
-                ],
-                1 => [
-                    "rel" => "articles",
-                    "href" => "/articles/265882",
-                    "method" => "GET",
-                ],
-            ],
-        ];
-
-        $card = Card::createFromCardmarket($cardmarketCard, $expansion->id);
-        $this->assertEquals(265882, $card->cardmarket_product_id);
-        $this->assertEquals('Shrike Harpy', $card->name);
-        $this->assertEquals('./img/items/1/BNG/265882.jpg', $card->image);
-        $this->assertEquals('/en/Magic/Products/Singles/Born+of+the+Gods/Shrike-Harpy', $card->website);
-        $this->assertEquals(1, $card->reprints_count);
-        $this->assertEquals('Uncommon', $card->rarity);
-        $this->assertEquals('83', $card->number);
-        $this->assertEquals(1, $card->game_id);
-        $this->assertCount(5, $card->localizations);
+        $card = Card::createFromCardmarket($cardmarket_product, $expansion->id);
+        $this->assertEquals($cardmarket_product['idProduct'], $card->cardmarket_product_id);
+        $this->assertEquals($cardmarket_product['enName'], $card->name);
+        $this->assertEquals($cardmarket_product['image'], $card->image);
+        $this->assertEquals($cardmarket_product['website'], $card->website);
+        $this->assertEquals($cardmarket_product['countReprints'], $card->reprints_count);
+        $this->assertEquals($cardmarket_product['rarity'], $card->rarity);
+        $this->assertEquals($cardmarket_product['number'], $card->number);
+        $this->assertEquals($cardmarket_product['idGame'], $card->game_id);
+        $this->assertCount(count($cardmarket_product['localization']), $card->localizations);
     }
 
     /**
@@ -169,69 +110,81 @@ class CardTest extends TestCase
      */
     public function it_can_be_imported()
     {
-        $cardmarketProductId = 265882;
-        $cardmarketExpansionId = 1469;
+        $cardmarket_product_id = 265882;
 
-        $returnValue = json_decode(file_get_contents('tests/snapshots/cardmarket/product/get.json'), true);
-        $productMock = Mockery::mock('overload:' . Product::class);
-        $productMock->shouldReceive('get')
-            ->with($cardmarketProductId)
-            ->andReturn($returnValue);
+        $cardmarket_product_response = JsonSnapshot::get('tests/snapshots/cardmarket/product/' . $cardmarket_product_id . '.json', function () use ($cardmarket_product_id) {
+            return App::make('CardmarketApi')->product->get($cardmarket_product_id);
+        });
+        $cardmarket_product_mock = Mockery::mock('overload:' . Product::class);
+        $cardmarket_product_mock->shouldReceive('get')
+            ->with($cardmarket_product_id)
+            ->andReturn($cardmarket_product_response);
 
-        $returnValue = json_decode(file_get_contents('tests/snapshots/cardmarket/expansion/singles.json'), true);
-        $productMock = Mockery::mock('overload:' . CardmarketExpansion::class);
-        $productMock->shouldReceive('singles')
-            ->with($cardmarketExpansionId)
-            ->andReturn($returnValue);
+        $cardmarket_expansion_id = $cardmarket_product_response['product']['expansion']['idExpansion'];
+        $cardmarket_expansion_response = JsonSnapshot::get('tests/snapshots/cardmarket/expansion/singles/' . $cardmarket_expansion_id . '.json', function () use ($cardmarket_expansion_id) {
+            return App::make('CardmarketApi')->expansion->singles($cardmarket_expansion_id);
+        });
+        $cardmarket_expansion_mock = Mockery::mock('overload:' . \Cardmonitor\Cardmarket\Expansion::class);
+        $cardmarket_expansion_mock->shouldReceive('singles')
+            ->with($cardmarket_expansion_id)
+            ->andReturn($cardmarket_expansion_response);
 
         $this->assertDatabaseMissing('cards', [
-            'id' => $cardmarketProductId,
+            'id' => $cardmarket_product_id,
         ]);
 
         $this->assertDatabaseMissing('expansions', [
-            'id' => $cardmarketExpansionId,
+            'id' => $cardmarket_expansion_id,
         ]);
 
-        $model = Card::import($cardmarketProductId);
+        $model = Card::import($cardmarket_product_id);
 
         $this->assertDatabaseHas('cards', [
-            'id' => $cardmarketProductId,
+            'id' => $cardmarket_product_id,
         ]);
 
         $this->assertDatabaseHas('expansions', [
-            'id' => $cardmarketExpansionId,
+            'id' => $cardmarket_expansion_id,
         ]);
 
-        $model = Card::import($cardmarketProductId);
+        $model = Card::import($cardmarket_product_id);
 
-        $this->assertEquals(1, Card::where('id', $cardmarketProductId)->count());
-        $this->assertEquals(1, Expansion::where('id', $cardmarketExpansionId)->count());
+        $this->assertEquals(1, Card::where('id', $cardmarket_product_id)->count());
+        $this->assertEquals(1, Expansion::where('id', $cardmarket_expansion_id)->count());
 
         Mockery::close();
     }
 
     /**
      * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function a_product_without_expansion_can_be_imported()
     {
-        $this->markTestSkipped();
+        $cardmarket_product_id = 200002;
+        $cardmarket_product_response = JsonSnapshot::get('tests/snapshots/cardmarket/product/' . $cardmarket_product_id . '.json', function () use ($cardmarket_product_id) {
+            return App::make('CardmarketApi')->product->get($cardmarket_product_id);
+        });
 
-        $cardmarketProductId = 200002;
+        $cardmarket_product_mock = Mockery::mock('overload:' . \Cardmonitor\Cardmarket\Product::class);
+        $cardmarket_product_mock->shouldReceive('get')
+            ->with($cardmarket_product_id)
+            ->andReturn($cardmarket_product_response);
 
         $this->assertDatabaseMissing('cards', [
-            'id' => $cardmarketProductId,
+            'id' => $cardmarket_product_id,
         ]);
 
-        $model = Card::import($cardmarketProductId);
+        $model = Card::import($cardmarket_product_id);
 
         $this->assertDatabaseHas('cards', [
-            'id' => $cardmarketProductId,
+            'id' => $cardmarket_product_id,
         ]);
 
-        $model = Card::import($cardmarketProductId);
+        $model = Card::import($cardmarket_product_id);
 
-        $this->assertEquals(1, Card::where('id', $cardmarketProductId)->count());
+        $this->assertEquals(1, Card::where('id', $cardmarket_product_id)->count());
         $this->assertEquals(0, Expansion::count());
     }
 
@@ -276,19 +229,22 @@ class CardTest extends TestCase
             'expansion_id' => $expansion->id,
         ]);
 
-        $card_mock = Mockery::mock('overload:' . \Cardmonitor\Skryfall\Card::class);
-        $card_mock->shouldReceive('findByCardmarketId')
+        $skyfall_card_response = JsonSnapshot::get('tests/snapshots/skryfall/cards/' . $skryfall_card_id . '.json', function () use ($skryfall_card_id) {
+            return App::make('SkryfallApi')->cards->findByCardmarketId($skryfall_card_id);
+        });
+        $skryfall_card_mock = Mockery::mock('overload:' . \Cardmonitor\Skryfall\Card::class);
+        $skryfall_card_mock->shouldReceive('findByCardmarketId')
             ->with($cardmarket_id)
-            ->andReturn(json_decode(file_get_contents('tests/snapshots/skryfall/cards/' . $skryfall_card_id . '.json'), true));
+            ->andReturn($skyfall_card_response);
 
         $card->updateFromSkryfallByCardmarketId($cardmarket_id);
 
         $this->assertEquals($skryfall_card_id, $card->skryfall_card_id);
-        $this->assertEquals('Shrike Harpy', $card->name);
-        $this->assertEquals(['B'], $card->color_identity);
-        $this->assertEquals(['B'], $card->colors);
-        $this->assertEquals('Creature — Harpy', $card->type_line);
-        $this->assertEquals(83, $card->number);
+        $this->assertEquals($skyfall_card_response['name'], $card->name);
+        $this->assertEquals($skyfall_card_response['color_identity'], $card->color_identity);
+        $this->assertEquals($skyfall_card_response['colors'], $card->colors);
+        $this->assertEquals($skyfall_card_response['type_line'], $card->type_line);
+        $this->assertEquals($skyfall_card_response['collector_number'], $card->number);
 
         Mockery::close();
     }

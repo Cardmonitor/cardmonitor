@@ -1,0 +1,64 @@
+{
+    "product": {
+        "idProduct": 200002,
+        "idMetaproduct": 0,
+        "countReprints": 0,
+        "enName": "KMC Full Sized Sleeves - Super Blue (Version 1)",
+        "locName": "KMC Full Sized Sleeves - Super Blue (Version 1)",
+        "localization": [
+            {
+                "name": "KMC Full Sized Sleeves - Super Blue (Version 1)",
+                "idLanguage": 1,
+                "languageName": "English"
+            },
+            {
+                "name": "KMC Full Sized Sleeves - Super Blue (Version 1)",
+                "idLanguage": 2,
+                "languageName": "French"
+            },
+            {
+                "name": "KMC Full Sized Sleeves - Super Blue (Version 1)",
+                "idLanguage": 3,
+                "languageName": "German"
+            },
+            {
+                "name": "KMC Full Sized Sleeves - Super Blue (Version 1)",
+                "idLanguage": 4,
+                "languageName": "Spanish"
+            },
+            {
+                "name": "KMC Full Sized Sleeves - Super Blue (Version 1)",
+                "idLanguage": 5,
+                "languageName": "Italian"
+            }
+        ],
+        "website": "\/en\/Products\/Sleeves\/KMC-Full-Sized-Sleeves-Super-Blue-Version-1",
+        "image": "https:\/\/product-images.s3.cardmarket.com\/12\/200002\/200002.jpg",
+        "gameName": "",
+        "categoryName": "Sleeves",
+        "idGame": 0,
+        "priceGuide": {
+            "SELL": 0,
+            "LOW": 6.95,
+            "LOWEX": 0,
+            "LOWFOIL": 0,
+            "AVG": 0,
+            "TREND": 5.88,
+            "TRENDFOIL": 5.14
+        },
+        "countArticles": null,
+        "countFoils": null,
+        "links": [
+            {
+                "rel": "self",
+                "href": "\/products\/200002",
+                "method": "GET"
+            },
+            {
+                "rel": "articles",
+                "href": "\/articles\/200002",
+                "method": "GET"
+            }
+        ]
+    }
+}
