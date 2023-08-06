@@ -5726,6 +5726,8 @@ __webpack_require__.r(__webpack_exports__);
       this.form.state_comments = newValue ? newValue.state_comments || '' : '';
       this.form.condition = newValue ? newValue.condition : null;
       this.form.language_id = newValue ? newValue.language_id : null;
+      this.form.is_foil = newValue ? newValue.is_foil : null;
+      this.form.unit_cost_formatted = newValue ? newValue.unit_cost_formatted : null;
       this.language = newValue ? newValue.language : null;
     }
   },
@@ -5735,11 +5737,14 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       language: this.item ? this.item.language : null,
+      errors: [],
       form: {
         state: this.item ? this.item.state : null,
         state_comments: this.item ? this.item.state_comments || '' : '',
         condition: this.item ? this.item.condition : null,
-        language_id: this.item ? this.item.language_id : null
+        language_id: this.item ? this.item.language_id : null,
+        is_foil: this.item ? this.item.is_foil : null,
+        unit_cost_formatted: this.item ? this.item.unit_cost_formatted : null
       }
     };
   },
@@ -5772,6 +5777,17 @@ __webpack_require__.r(__webpack_exports__);
     setLanguageId: function setLanguageId(language) {
       this.language = language;
       this.form.language_id = language.id;
+    },
+    getIsFoilAktiveClass: function getIsFoilAktiveClass() {
+      return this.form.is_foil ? 'btn-primary' : 'btn-secondary';
+    },
+    setIsFoil: function setIsFoil() {
+      this.form.is_foil = !this.form.is_foil;
+    },
+    changePrice: function changePrice(percentage) {
+      var unit_cost = Number(this.form.unit_cost_formatted.replace(',', '.'));
+      unit_cost = (unit_cost * (1 + percentage / 100)).toFixed(2);
+      this.form.unit_cost_formatted = unit_cost.toString().replace('.', ',');
     }
   }
 });
@@ -15206,9 +15222,107 @@ var render = function render() {
         }
       }
     }, [_vm._v(_vm._s(language.name))]);
-  }), 0), _vm._v(" "), _c("div", [_vm.item.is_foil ? _c("i", {
-    staticClass: "fas fa-star text-warning"
-  }) : _vm._e()]), _vm._v(" "), _vm.item.storage_id ? _c("div", {
+  }), 0), _vm._v(" "), _c("div", {
+    staticClass: "mb-3"
+  }, [_c("button", {
+    staticClass: "btn mr-3",
+    "class": _vm.getIsFoilAktiveClass(),
+    on: {
+      click: function click($event) {
+        return _vm.setIsFoil();
+      }
+    }
+  }, [_vm._v("Foil")])]), _vm._v(" "), _c("div", {
+    staticClass: "mb-3"
+  }, [_c("div", {
+    staticClass: "d-flex justify-content-between"
+  }, [_c("button", {
+    staticClass: "btn btn-secondary",
+    on: {
+      click: function click($event) {
+        return _vm.changePrice(-10);
+      }
+    }
+  }, [_vm._v("-10%")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    on: {
+      click: function click($event) {
+        return _vm.changePrice(-15);
+      }
+    }
+  }, [_vm._v("-15%")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    on: {
+      click: function click($event) {
+        return _vm.changePrice(-20);
+      }
+    }
+  }, [_vm._v("-20%")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    on: {
+      click: function click($event) {
+        return _vm.changePrice(-25);
+      }
+    }
+  }, [_vm._v("-25%")])]), _vm._v(" "), _c("div", {
+    staticClass: "form-group my-3"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.unit_cost_formatted,
+      expression: "form.unit_cost_formatted"
+    }],
+    staticClass: "form-control",
+    "class": "unit_cost_formatted" in _vm.errors ? "is-invalid" : "",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.form.unit_cost_formatted
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form, "unit_cost_formatted", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("div", {
+    staticClass: "invalid-feedback",
+    domProps: {
+      textContent: _vm._s("unit_cost_formatted" in _vm.errors ? _vm.errors.unit_cost_formatted[0] : "")
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "d-flex justify-content-between"
+  }, [_c("button", {
+    staticClass: "btn btn-secondary",
+    on: {
+      click: function click($event) {
+        return _vm.changePrice(10);
+      }
+    }
+  }, [_vm._v("10%")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    on: {
+      click: function click($event) {
+        return _vm.changePrice(15);
+      }
+    }
+  }, [_vm._v("15%")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    on: {
+      click: function click($event) {
+        return _vm.changePrice(20);
+      }
+    }
+  }, [_vm._v("20%")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    on: {
+      click: function click($event) {
+        return _vm.changePrice(25);
+      }
+    }
+  }, [_vm._v("25%")])])]), _vm._v(" "), _vm.item.storage_id ? _c("div", {
     staticClass: "mt-2",
     attrs: {
       title: "Lagerplatz"

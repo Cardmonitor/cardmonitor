@@ -19,7 +19,27 @@
                     <div class="d-flex mb-3">
                         <button class="btn mr-3" :class="getLanguageAktiveClass(language.id)" :key="language.id" v-for="(language) in languages" @click="setLanguageId(language)">{{ language.name }}</button>
                     </div>
-                    <div><i class="fas fa-star text-warning" v-if="item.is_foil"></i></div>
+                    <div class="mb-3">
+                        <button class="btn mr-3" :class="getIsFoilAktiveClass()" @click="setIsFoil()">Foil</button>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-secondary" @click="changePrice(-10)">-10%</button>
+                            <button class="btn btn-secondary" @click="changePrice(-15)">-15%</button>
+                            <button class="btn btn-secondary" @click="changePrice(-20)">-20%</button>
+                            <button class="btn btn-secondary" @click="changePrice(-25)">-25%</button>
+                        </div>
+                        <div class="form-group my-3">
+                            <input class="form-control" :class="'unit_cost_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_cost_formatted">
+                            <div class="invalid-feedback" v-text="'unit_cost_formatted' in errors ? errors.unit_cost_formatted[0] : ''"></div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-secondary" @click="changePrice(10)">10%</button>
+                            <button class="btn btn-secondary" @click="changePrice(15)">15%</button>
+                            <button class="btn btn-secondary" @click="changePrice(20)">20%</button>
+                            <button class="btn btn-secondary" @click="changePrice(25)">25%</button>
+                        </div>
+                    </div>
                     <div class="mt-2" v-if="item.storage_id" title="Lagerplatz"><i class="fas fa-boxes"></i> {{ item.storage.full_name }}</div>
                     <div class="mt-2" v-if="item.number" title="Lagernummer"><i class="fas fa-boxes"></i> {{ item.number }}</div>
                 </div>
@@ -99,6 +119,8 @@
                 this.form.state_comments = newValue ? newValue.state_comments || '' : '';
                 this.form.condition = newValue ? newValue.condition : null;
                 this.form.language_id = newValue ? newValue.language_id : null;
+                this.form.is_foil = newValue ? newValue.is_foil : null;
+                this.form.unit_cost_formatted = newValue ? newValue.unit_cost_formatted : null;
                 this.language = newValue ? newValue.language : null;
             },
         },
@@ -110,11 +132,14 @@
         data() {
             return {
                 language: this.item ? this.item.language : null,
+                errors: [],
                 form: {
                     state: this.item ? this.item.state : null,
                     state_comments: this.item ? this.item.state_comments || '' : '',
                     condition: this.item ? this.item.condition : null,
                     language_id: this.item ? this.item.language_id : null,
+                    is_foil: this.item ? this.item.is_foil : null,
+                    unit_cost_formatted: this.item ? this.item.unit_cost_formatted : null,
                 },
             };
         },
@@ -150,6 +175,18 @@
             setLanguageId(language) {
                 this.language = language;
                 this.form.language_id = language.id;
+            },
+            getIsFoilAktiveClass() {
+                return this.form.is_foil ? 'btn-primary' : 'btn-secondary';
+            },
+            setIsFoil() {
+                this.form.is_foil = !this.form.is_foil;
+            },
+            changePrice(percentage) {
+                let unit_cost = Number(this.form.unit_cost_formatted.replace(',', '.'));
+                unit_cost = (unit_cost * (1 + percentage / 100)).toFixed(2);
+
+                this.form.unit_cost_formatted = unit_cost.toString().replace('.', ',');
             },
         },
     };
