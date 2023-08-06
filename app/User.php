@@ -180,7 +180,12 @@ class User extends Authenticatable
 
     public function orders() : HasMany
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Order::class)->where('is_purchase', false);
+    }
+
+    public function purchases() : HasMany
+    {
+        return $this->hasMany(Order::class)->where('is_purchase', true);
     }
 
     public function providers() : HasMany

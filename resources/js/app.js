@@ -81,6 +81,8 @@ Vue.component('item-table', require('./components/item/table.vue').default);
 Vue.component('order-article-index', require('./components/order/article/index.vue').default);
 Vue.component('order-item-table', require('./components/order/item/table.vue').default);
 Vue.component('order-table', require('./components/order/table.vue').default);
+Vue.component('purchase-article-index', require('./components/purchase/article/index.vue').default);
+Vue.component('purchase-table', require('./components/purchase/table.vue').default);
 Vue.component('rule-edit', require('./components/rule/edit.vue').default);
 Vue.component('rule-table', require('./components/rule/table.vue').default);
 Vue.component('storage-content-table', require('./components/storage/content/table.vue').default);
@@ -89,6 +91,7 @@ Vue.component('user-balance-table', require('./components/user/balance/table.vue
 Vue.component('user-backgroundtask-show', require('./components/user/backgroundtask/show.vue').default);
 Vue.component('card-export-index', require('./components/card/export/index.vue').default);
 Vue.component('woocommerce-order-table', require('./components/woocommerce/order/table.vue').default);
+Vue.component('woocommerce-order-show', require('./components/woocommerce/order/show.vue').default);
 
 var common = require('./common').default;
 
