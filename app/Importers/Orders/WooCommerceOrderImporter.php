@@ -83,6 +83,7 @@ class WooCommerceOrderImporter
             'paid_at' => new Carbon($woocommerce_order['date_paid_gmt']),
             'received_at' => null,
             'sent_at' => null,
+            'is_purchase' => true,
         ];
 
         $this->order = Order::updateOrCreate([

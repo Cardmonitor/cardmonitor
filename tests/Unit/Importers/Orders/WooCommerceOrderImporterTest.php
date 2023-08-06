@@ -26,9 +26,10 @@ class WooCommerceOrderImporterTest extends TestCase
 
         $quantity = 0;
         foreach ($woocommerce_order['line_items'] as $line_item) {
+            $cardmarket_product_id = substr($line_item['sku'], 0, strpos($line_item['sku'], '-'));
             factory(Card::class)->create([
                 'game_id' => Game::ID_MAGIC,
-                'cardmarket_product_id' => trim($line_item['sku'], '-'),
+                'cardmarket_product_id' => $cardmarket_product_id,
             ]);
 
             $quantity += $line_item['quantity'];
@@ -58,6 +59,7 @@ class WooCommerceOrderImporterTest extends TestCase
         $this->assertEquals($woocommerce_order['billing']['email'], $order->seller->email);
         $this->assertEquals($woocommerce_order['billing']['phone'], $order->seller->phone);
 
+        $this->assertEquals(1, $order->is_purchase);
         $this->assertEquals($this->user->id, $order->user_id);
         $this->assertEquals($woocommerce_order['id'], $order->source_id);
         $this->assertEquals(WooCommerceOrderImporter::SOURCE_SLUG, $order->source_slug);
