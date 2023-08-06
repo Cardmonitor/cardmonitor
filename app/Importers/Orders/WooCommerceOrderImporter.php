@@ -37,7 +37,6 @@ class WooCommerceOrderImporter
     public function importOrder(array $woocommerce_order): array
     {
         $this->setBonus($woocommerce_order);
-        $this->setAdditionalUnitCost($woocommerce_order);
         $this->createOrder($woocommerce_order);
 
         foreach ($woocommerce_order['line_items'] as $line_item) {
@@ -56,9 +55,16 @@ class WooCommerceOrderImporter
     {
         $seller = $this->updateOrCreateSeller($woocommerce_order);
 
-        $articles_count = array_reduce($woocommerce_order['line_items'], function ($carry, $line_item) {
-            return $carry + $line_item['quantity'];
-        }, 0);
+        $articles_count = 0;
+        $articles_cost = 0;
+        foreach ($woocommerce_order['line_items'] as $line_item) {
+            [$cardmarket_product_id] = explode('-', $line_item['sku']);
+            if (! is_numeric($cardmarket_product_id)) {
+                continue;
+            }
+            $articles_cost += $line_item['total'];
+            $articles_count += $line_item['quantity'];
+        }
 
         $values = [
             'cardmarket_order_id' => 0,
@@ -75,8 +81,8 @@ class WooCommerceOrderImporter
             'shipping_country' => $woocommerce_order['shipping']['country'],
             'shipment_revenue' => $woocommerce_order['shipping_total'],
             'articles_count' => $articles_count,
-            'articles_revenue' => $woocommerce_order['total'] - $woocommerce_order['shipping_total'],
-            'revenue' => $woocommerce_order['total'],
+            'articles_cost' => $articles_cost,
+            'cost' => $woocommerce_order['total'],
             'user_id' => $this->user_id,
             'bought_at' => new Carbon($woocommerce_order['date_completed_gmt']),
             'canceled_at' => null,
@@ -126,22 +132,6 @@ class WooCommerceOrderImporter
         ]);
     }
 
-    public function setAdditionalUnitCost(array $woocommerce_order): void
-    {
-        $article_count = 0;
-        $additional_costs = 0;
-        foreach ($woocommerce_order['line_items'] as $line_item) {
-            if (strpos($line_item['sku'], '-') === false) {
-                $additional_costs += $line_item['total'];
-            }
-            else {
-                $article_count += $line_item['quantity'];
-            }
-        }
-        $additional_costs *= 1 + $this->bonus;
-        $this->additional_unit_cost = $additional_costs / $article_count;
-    }
-
     public function setBonus(array $woocommerce_order): void
     {
         $this->bonus = ($woocommerce_order['payment_method'] == 'cod') ? 0.15 : 0;
@@ -150,6 +140,11 @@ class WooCommerceOrderImporter
     public function importLineItem(array $line_item): void
     {
         [$cardmarket_product_id, $is_foil] = explode('-', $line_item['sku']);
+        // Positionen ohne Cardmarket-Produkt-ID ignorieren, z.B. Bulk Rares
+        if (! is_numeric($cardmarket_product_id)) {
+            return;
+        }
+
         $card = Card::firstOrImport($cardmarket_product_id);
 
         $language = Arr::first($line_item['meta_data'], function ($meta) {
@@ -160,7 +155,7 @@ class WooCommerceOrderImporter
             return $meta['key'] == 'zustand';
         });
 
-        $unit_cost = $line_item['total'] / $line_item['quantity'] * (1 + $this->bonus) + $this->additional_unit_cost;
+        $unit_cost = $line_item['total'] / $line_item['quantity'] * (1 + $this->bonus);
 
         for ($index=1; $index <= $line_item['quantity']; $index++) {
             $values = [

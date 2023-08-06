@@ -27,6 +27,10 @@ class WooCommerceOrderImporterTest extends TestCase
         $quantity = 0;
         foreach ($woocommerce_order['line_items'] as $line_item) {
             $cardmarket_product_id = substr($line_item['sku'], 0, strpos($line_item['sku'], '-'));
+
+            if (! is_numeric($cardmarket_product_id)) {
+                continue;
+            }
             factory(Card::class)->create([
                 'game_id' => Game::ID_MAGIC,
                 'cardmarket_product_id' => $cardmarket_product_id,
@@ -69,15 +73,16 @@ class WooCommerceOrderImporterTest extends TestCase
         $source_sort = 1;
         foreach ($order->articles as $key => $article) {
             $line_item = $woocommerce_order['line_items'][$key];
+            [$cardmarket_product_id, $is_foil] = explode('-', $line_item['sku']);
 
             $this->assertEquals(WooCommerceOrderImporter::SOURCE_SLUG, $article->source_slug);
             $this->assertEquals($line_item['id'], $article->source_id);
             $this->assertEquals($source_sort, $article->source_sort);
-            $this->assertEquals(trim($line_item['sku'], '-'), $article->card_id);
+            $this->assertEquals($cardmarket_product_id, $article->card_id);
             $this->assertEquals(round($line_item['total'] * (1 + 0.15), 6), $article->unit_cost);
             $this->assertEquals(round($line_item['total'] * (1 + 0.15) * 3, 6), $article->unit_price);
             $this->assertEquals('NM', $article->condition);
-            $this->assertEquals(false, $article->is_foil);
+            $this->assertEquals($is_foil === 'true', $article->is_foil);
             $this->assertEquals(\App\Models\Localizations\Language::DEFAULT_ID, $article->language_id);
 
             $source_sort++;
