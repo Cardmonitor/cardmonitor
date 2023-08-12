@@ -15081,6 +15081,14 @@ var render = function render() {
       click: _vm.toShow
     }
   }, [_vm._v(_vm._s(_vm.index + 1))]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle d-none d-lg-table-cell text-center"
+  }, [_c("i", {
+    staticClass: "fas fa-fw",
+    "class": _vm.item.sync_icon,
+    attrs: {
+      title: _vm.item.sync_error || "Karte synchronisiert"
+    }
+  })]), _vm._v(" "), _c("td", {
     staticClass: "align-middle text-center pointer",
     on: {
       click: _vm.toShow
@@ -15528,6 +15536,8 @@ var render = function render() {
       width: "75"
     }
   }), _vm._v(" "), _c("th", {
+    staticClass: "text-center d-none d-lg-table-cell w-icon"
+  }, [_vm._v(_vm._s(_vm.$t("article.sync")))]), _vm._v(" "), _c("th", {
     staticClass: "text-center w-icon"
   }), _vm._v(" "), _c("th", {
     attrs: {
@@ -15594,6 +15604,8 @@ var render = function render() {
   }, [_c("td", {
     staticClass: "d-none d-sm-table-cell"
   }, [_c("b", [_vm._v(_vm._s(_vm.$t("order.article.table.open")))])]), _vm._v(" "), _c("td", {
+    staticClass: "text-center d-none d-lg-table-cell w-icon"
+  }), _vm._v(" "), _c("td", {
     staticClass: "text-center"
   }, [_c("b", [_vm._v(_vm._s(_vm.counts.open))])]), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
     staticClass: "d-none d-lg-table-cell"
@@ -15621,6 +15633,8 @@ var render = function render() {
   }, [_c("td", {
     staticClass: "d-none d-sm-table-cell"
   }, [_c("b", [_vm._v(_vm._s(_vm.$t("order.article.show.problems.plural")))])]), _vm._v(" "), _c("td", {
+    staticClass: "text-center d-none d-lg-table-cell w-icon"
+  }), _vm._v(" "), _c("td", {
     staticClass: "text-center"
   }, [_c("b", [_vm._v(_vm._s(_vm.counts.problem))])]), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
     staticClass: "d-none d-lg-table-cell"
@@ -15648,6 +15662,8 @@ var render = function render() {
   }, [_c("td", {
     staticClass: "d-none d-sm-table-cell"
   }, [_c("b", [_vm._v(_vm._s(_vm.$t("order.article.table.ok")))])]), _vm._v(" "), _c("td", {
+    staticClass: "text-center d-none d-lg-table-cell w-icon"
+  }), _vm._v(" "), _c("td", {
     staticClass: "text-center"
   }, [_c("b", [_vm._v(_vm._s(_vm.counts.ok))])]), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
     staticClass: "d-none d-lg-table-cell"
@@ -15668,6 +15684,8 @@ var render = function render() {
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-sm-table-cell"
   })]), _vm._v(" "), _c("tr", [_vm._m(0), _vm._v(" "), _c("td", {
+    staticClass: "text-center d-none d-lg-table-cell w-icon"
+  }), _vm._v(" "), _c("td", {
     staticClass: "text-center"
   }, [_c("b", [_vm._v(_vm._s(_vm.counts.all))])]), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
     staticClass: "d-none d-lg-table-cell"
@@ -15688,7 +15706,7 @@ var render = function render() {
   })]), _vm._v(" "), _c("tr", [_c("td", {
     staticClass: "align-middle",
     attrs: {
-      colspan: "11"
+      colspan: "12"
     }
   }, [_c("select", {
     directives: [{

@@ -13,6 +13,7 @@
                 <thead>
                     <tr>
                         <th class="d-none d-sm-table-cell" width="75"></th>
+                        <th class="text-center d-none d-lg-table-cell w-icon">{{ $t('article.sync') }}</th>
                         <th class="text-center w-icon"></th>
                         <th class="" width="100%">{{ $t('app.name') }}</th>
                         <th class="w-icon"></th>
@@ -34,6 +35,7 @@
                 <tfoot>
                     <tr v-show="counts.open > 0">
                         <td class="d-none d-sm-table-cell"><b>{{ $t('order.article.table.open') }}</b></td>
+                        <td class="text-center d-none d-lg-table-cell w-icon"></td>
                         <td class="text-center"><b>{{ counts.open }}</b></td>
                         <td class=""></td>
                         <td class=""></td>
@@ -48,6 +50,7 @@
                     </tr>
                     <tr v-show="counts.problem > 0">
                         <td class="d-none d-sm-table-cell"><b>{{ $t('order.article.show.problems.plural') }}</b></td>
+                        <td class="text-center d-none d-lg-table-cell w-icon"></td>
                         <td class="text-center"><b>{{ counts.problem }}</b></td>
                         <td class=""></td>
                         <td class=""></td>
@@ -62,6 +65,7 @@
                     </tr>
                     <tr v-show="counts.ok > 0">
                         <td class="d-none d-sm-table-cell"><b>{{ $t('order.article.table.ok') }}</b></td>
+                        <td class="text-center d-none d-lg-table-cell w-icon"></td>
                         <td class="text-center"><b>{{ counts.ok }}</b></td>
                         <td class=""></td>
                         <td class=""></td>
@@ -77,6 +81,7 @@
                     </tr>
                     <tr>
                         <td class="d-none d-sm-table-cell"><b></b></td>
+                        <td class="text-center d-none d-lg-table-cell w-icon"></td>
                         <td class="text-center"><b>{{ counts.all }}</b></td>
                         <td class=""></td>
                         <td class=""></td>
@@ -90,7 +95,7 @@
                         <td class="d-none d-sm-table-cell"></td>
                     </tr>
                     <tr>
-                        <td class="align-middle" colspan="11">
+                        <td class="align-middle" colspan="12">
                             <select class="form-control form-control-sm" v-model="actionForm.action">
                                 <option :value="null">{{ $t('app.actions.action') }}</option>
                                 <optgroup label="Bearbeiten">
