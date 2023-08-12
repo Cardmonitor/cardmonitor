@@ -1,13 +1,14 @@
 <template>
 
     <div>
-        <article-show :item="show.item" :index="show.index" :counts="counts" @next="next($event)"></article-show>
+        <article-show :item="show.item" :index="show.index" :counts="counts" :conditions="conditions" :languages="languages" @next="next($event)"></article-show>
         <article-table :model="model" :initial-items="items" :counts="counts" @toshow="toshow($event)"></article-table>
     </div>
 
 </template>
 
 <script>
+import { arrayMax } from 'highcharts';
     import articleShow from "./show.vue";
     import articleTable from "./table.vue";
 
@@ -21,6 +22,14 @@
             model: {
                 required: true,
                 type: Object,
+            },
+            conditions: {
+                required: true,
+                type: Object,
+            },
+            languages: {
+                required: true,
+                type: Array,
             },
         },
 

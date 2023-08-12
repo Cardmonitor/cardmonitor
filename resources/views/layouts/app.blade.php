@@ -15,6 +15,7 @@
                 <a href="/order"><li>{{ __('app.nav.order') }}</li></a>
                 <a href="/storages"><li>{{ __('app.nav.storages') }}</li></a>
                 <a href="/expansions"><li>Erweiterungen</li></a>
+                <a href="/purchases"><li>Ankäufe</li></a>
                 <a href="/woocommerce/order"><li>WooCommerce</li></a>
             </ul>
             <div class="px-3 text-white text-center"><p>Alle Daten sind von <a href="https://www.cardmarket.eu">Cardmarket</a></p></div>

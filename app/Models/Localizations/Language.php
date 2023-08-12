@@ -11,6 +11,17 @@ class Language extends Model
     const DEFAULT_ID = 1;
     const DEFAULT_NAME = 'English';
 
+    const ID_ENGLISH = 1;
+    const ID_FRENCH = 2;
+    const ID_GERMAN = 3;
+    const ID_SPANISH = 4;
+    const ID_ITALIAN = 5;
+    const ID_S_CHINESE = 6;
+    const ID_JAPANESE = 7;
+    const ID_PORTUGUESE = 8;
+    const ID_KOREAN = 9;
+    const ID_T_CHINESE = 10;
+
     const GERMAN_TO_IDS = [
         1 => 'Englisch',
         2 => 'Französisch',

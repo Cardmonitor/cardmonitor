@@ -1259,6 +1259,7 @@ class Article extends Model
             ->language(Arr::get($filter, 'language_id'))
             ->isNumbered(Arr::get($filter, 'is_numbered'))
             ->isStored(Arr::get($filter, 'is_stored'))
+            ->order(Arr::get($filter, 'order_id'))
             ->productType(Arr::get($filter, 'product_type'))
             ->rarity(Arr::get($filter, 'rarity'))
             ->unitPrice(Arr::get($filter, 'unit_price_min'), Arr::get($filter, 'unit_price_max'))
@@ -1266,6 +1267,17 @@ class Article extends Model
             ->search(Arr::get($filter, 'searchtext'))
             ->storage(Arr::get($filter, 'storage_id'))
             ->sync(Arr::get($filter, 'sync'));
+    }
+
+    public function scopeOrder(Builder $query, $value) : Builder
+    {
+        if (empty($value)) {
+            return $query;
+        }
+
+        return $query->whereHas('orders', function ($query) use ($value) {
+            $query->where('orders.id', $value);
+        });
     }
 
     public function scopeProductType(Builder $query, $value) : Builder

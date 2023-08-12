@@ -2,7 +2,7 @@
 
     <div>
         <article-show :item="show.item" :index="show.index" :counts="counts" @next="next($event)"></article-show>
-        <article-table :model="model" :initial-items="items" :counts="counts" @toshow="toshow($event)"></article-table>
+        <article-table :cards="cards" :conditions="conditions" :model="model" :initial-items="items" :counts="counts" @toshow="toshow($event)"></article-table>
     </div>
 
 </template>
@@ -18,9 +18,17 @@
         },
 
         props: {
-            model: {
-                required: true,
+            cards: {
                 type: Object,
+                required: true,
+            },
+            conditions: {
+                type: Object,
+                required: true,
+            },
+            model: {
+                type: Object,
+                required: true,
             },
         },
 
@@ -42,9 +50,9 @@
 
         data() {
             return {
-                items: this.model.articles,
+                items: this.model.line_items,
                 show: {
-                    item: this.model.articles[0],
+                    item: null, // this.model.articles[0],
                     index: 0,
                 },
             };

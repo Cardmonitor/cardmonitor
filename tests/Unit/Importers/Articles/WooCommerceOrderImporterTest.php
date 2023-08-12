@@ -7,6 +7,7 @@ use App\Models\Cards\Card;
 use App\Models\Games\Game;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
+use Tests\Support\Snapshots\JsonSnapshot;
 use App\Importers\Articles\WooCommerceOrderImporter;
 
 class WooCommerceOrderImporterTest extends TestCase
@@ -16,8 +17,11 @@ class WooCommerceOrderImporterTest extends TestCase
      */
     public function it_can_update_or_create_an_order_from_woocommerce_api()
     {
-        $path_order = 'tests/snapshots/woocommerce/orders/619687.json';
-        $woocommerce_order = json_decode(file_get_contents($path_order), true);
+        $woocommerce_order_id = 619687;
+        $woocommerce_order_response = JsonSnapshot::get('tests/snapshots/woocommerce/orders/' . $woocommerce_order_id . '.json', function () use ($woocommerce_order_id) {
+            return (new \App\APIs\WooCommerce\WooCommerce())->order($woocommerce_order_id);
+        });
+        $woocommerce_order = $woocommerce_order_response['data'];
 
         $storage_woocommerce = factory(Storage::class)->create([
             'user_id' => $this->user->id,
@@ -61,6 +65,11 @@ class WooCommerceOrderImporterTest extends TestCase
 
             $source_sort++;
         }
+
+        WooCommerceOrderImporter::import($this->user->id, $woocommerce_order);
+
+        $this->assertCount($quantity, Article::all());
+        $this->assertCount($quantity, $storage_order->articles);
     }
 
     /**

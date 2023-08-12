@@ -709,7 +709,7 @@ class Order extends Model
 
     protected function baseRoute() : string
     {
-        return 'order';
+        return $this->is_purchase ? 'purchases' : 'order';
     }
 
     public function getPaidAtFormattedAttribute() : string

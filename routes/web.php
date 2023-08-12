@@ -120,6 +120,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('priceguide/{game}', 'PriceguideController@show');
 
+    Route::get('purchases/{order}/articles', [\App\Http\Controllers\Orders\Articles\ArticleController::class, 'index'])->name('purchases.articles.index');
+
+    Route::get('purchases', [\App\Http\Controllers\Orders\PurchaseController::class, 'index'])->name('purchases.index');
+    Route::get('purchases/{order}', [\App\Http\Controllers\Orders\PurchaseController::class, 'show'])->name('purchases.show');
+    Route::get('purchases/{order}/edit', [\App\Http\Controllers\Orders\PurchaseController::class, 'edit'])->name('purchases.edit');
+
     Route::get('rule/apply', 'Rules\ApplyController@index');
     Route::post('rule/apply', 'Rules\ApplyController@store');
     Route::put('rule/sort', 'Rules\SortController@update');
@@ -168,5 +174,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/woocommerce/order', 'WooCommerce\OrderController@index')->name('woocommerce.order.index');
     Route::post('/woocommerce/order', 'WooCommerce\OrderController@store')->name('woocommerce.order.store');
+    Route::get('/woocommerce/order/{id}', [\App\Http\Controllers\WooCommerce\OrderController::class, 'show'])->name('woocommerce.order.show');
 
 });
