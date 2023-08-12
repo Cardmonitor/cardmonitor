@@ -5806,6 +5806,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _row_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./row.vue */ "./resources/js/components/purchase/article/row.vue");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -5826,6 +5832,16 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   computed: {
+    all_items_are_numbered: function all_items_are_numbered() {
+      return this.items.every(function (item) {
+        return item.number !== null;
+      });
+    },
+    all_items_are_stored: function all_items_are_stored() {
+      return this.items.every(function (item) {
+        return item.storing_history_id > 1;
+      });
+    },
     sums: function sums() {
       var profit = 0,
         unit_price = 0,
@@ -5847,11 +5863,23 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      uri: this.model.path + '/quantity',
+      uri: this.model.path + '/articles',
       isLoading: false,
       items: this.initialItems,
-      filter: {},
+      filter: {
+        order_id: this.model.id,
+        is_numbered: -1,
+        is_stored: -1,
+        product_type: 1,
+        rule_id: 0,
+        sold: 0,
+        sync: -1
+      },
       form: {},
+      actionForm: {
+        action: null,
+        storage_id: null
+      },
       imgbox: {
         src: null,
         show: true
@@ -5860,6 +5888,26 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    action: function action() {
+      var component = this;
+      axios.post('/article/action', _objectSpread({
+        filter: component.filter
+      }, component.actionForm)).then(function (response) {
+        Vue.success(response.data.message);
+        if (response.data.model) {
+          location.href = response.data.model.path;
+        } else {
+          component.actionForm.action = null;
+          component.fetch();
+        }
+      });
+    },
+    fetch: function fetch() {
+      var component = this;
+      axios.get(component.uri, component.filter).then(function (response) {
+        component.items = response.data;
+      });
+    },
     updated: function updated(index, item) {
       Vue.set(this.items, index, item);
     },
@@ -7390,6 +7438,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    "import": function _import() {},
     store: function store(item) {
       var component = this;
       if (component.is_storing) {
@@ -7399,8 +7448,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/woocommerce/order', {
         id: component.id
       }).then(function (response) {
-        component.$emit('updated', response.data);
-        Vue.success(component.$t('order.successes.synced'));
+        location.href = response.data.path;
       })["catch"](function (error) {
         Vue.error('Die Bestellung konnte nicht importiert werden.');
         console.log(error);
@@ -15105,6 +15153,11 @@ var render = function render() {
       click: _vm.toShow
     }
   }, [_vm._v(_vm._s(Number(_vm.item.unit_price - _vm.item.unit_cost - _vm.item.provision).format(2, ",", ".")) + " €")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle d-none d-sm-table-cell pointer",
+    on: {
+      click: _vm.toShow
+    }
+  }, [_vm._v(_vm._s(_vm.item.number))]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-sm-table-cell text-right"
   }, [_c("div", {
     staticClass: "btn-group btn-group-sm",
@@ -15501,6 +15554,8 @@ var render = function render() {
       title: _vm.$t("app.profit_anticipated")
     }
   }, [_vm._v(_vm._s(_vm.$t("app.revenue")))]), _vm._v(" "), _c("th", {
+    staticClass: "text-right d-none d-xl-table-cell w-formatted-number"
+  }, [_vm._v("Nummer")]), _vm._v(" "), _c("th", {
     staticClass: "text-right d-none d-sm-table-cell w-action"
   }, [_vm._v(_vm._s(_vm.$t("app.actions.action")))])])]), _vm._v(" "), _c("tbody", [_vm._l(_vm.items, function (item, index) {
     return [_c("row", {
@@ -15610,6 +15665,8 @@ var render = function render() {
     staticClass: "d-none d-xl-table-cell"
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-sm-table-cell"
+  }), _vm._v(" "), _c("td", {
+    staticClass: "d-none d-sm-table-cell"
   })]), _vm._v(" "), _c("tr", [_vm._m(0), _vm._v(" "), _c("td", {
     staticClass: "text-center"
   }, [_c("b", [_vm._v(_vm._s(_vm.counts.all))])]), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
@@ -15624,11 +15681,64 @@ var render = function render() {
     staticClass: "d-none d-xl-table-cell text-right font-weight-bold"
   }, [_vm._v(_vm._s(_vm.sums.unit_cost.toFixed(2)) + " €")]), _vm._v(" "), _c("td", {
     staticClass: "d-none d-xl-table-cell text-right font-weight-bold"
-  }, [_vm._v(_vm._s(_vm.sums.provision.toFixed(2)) + " €")]), _vm._v(" "), _c("td", {
-    staticClass: "d-none d-xl-table-cell text-right font-weight-bold"
   }, [_vm._v(_vm._s(_vm.sums.profit.toFixed(2)) + " €")]), _vm._v(" "), _c("td", {
     staticClass: "d-none d-sm-table-cell"
-  })])])])]) : _c("div", {
+  }), _vm._v(" "), _c("td", {
+    staticClass: "d-none d-sm-table-cell"
+  })]), _vm._v(" "), _c("tr", [_c("td", {
+    staticClass: "align-middle",
+    attrs: {
+      colspan: "11"
+    }
+  }, [_c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.actionForm.action,
+      expression: "actionForm.action"
+    }],
+    staticClass: "form-control form-control-sm",
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.actionForm, "action", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    domProps: {
+      value: null
+    }
+  }, [_vm._v(_vm._s(_vm.$t("app.actions.action")))]), _vm._v(" "), _vm._m(1), _vm._v(" "), _c("optgroup", {
+    attrs: {
+      label: "Einlagern"
+    }
+  }, [_c("option", {
+    attrs: {
+      value: "storing",
+      disabled: !(_vm.all_items_are_numbered === true && _vm.all_items_are_stored === false)
+    }
+  }, [_vm._v("Einlagern")])]), _vm._v(" "), _c("optgroup", {
+    attrs: {
+      label: "Cardmarket"
+    }
+  }, [_c("option", {
+    attrs: {
+      value: "syncCardmarket",
+      disabled: _vm.all_items_are_numbered === false
+    }
+  }, [_vm._v("Upload zu Cardmarket")])])])]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle text-right"
+  }, [_c("button", {
+    staticClass: "btn btn-sm btn-secondary",
+    on: {
+      click: _vm.action
+    }
+  }, [_vm._v("Ausführen")])])])])])]) : _c("div", {
     staticClass: "alert alert-dark mt-3"
   }, [_c("center", [_vm._v(_vm._s(_vm.$t("article.errors.no_data")))])], 1), _vm._v(" "), _c("div", {
     staticStyle: {
@@ -15659,6 +15769,22 @@ var staticRenderFns = [function () {
   return _c("td", {
     staticClass: "d-none d-sm-table-cell"
   }, [_c("b")]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("optgroup", {
+    attrs: {
+      label: "Bearbeiten"
+    }
+  }, [_c("option", {
+    attrs: {
+      value: "setNumber"
+    }
+  }, [_vm._v("Nummern automatisch setzen")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "resetNumber"
+    }
+  }, [_vm._v("Nummern entfernen")])]);
 }];
 render._withStripped = true;
 

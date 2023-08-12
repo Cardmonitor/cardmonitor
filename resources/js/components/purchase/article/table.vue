@@ -22,6 +22,7 @@
                         <th class="text-right d-none d-sm-table-cell w-formatted-number">{{ $t('app.price_abbr') }}</th>
                         <th class="text-right d-none d-xl-table-cell w-formatted-number">{{ $t('app.price_buying_abbr') }}</th>
                         <th class="text-right d-none d-xl-table-cell w-formatted-number" :title="$t('app.profit_anticipated')">{{ $t('app.revenue') }}</th>
+                        <th class="text-right d-none d-xl-table-cell w-formatted-number">Nummer</th>
                         <th class="text-right d-none d-sm-table-cell w-action">{{ $t('app.actions.action') }}</th>
                     </tr>
                 </thead>
@@ -72,6 +73,7 @@
                         <td class="d-none d-xl-table-cell"></td>
                         <td class="d-none d-xl-table-cell"></td>
                         <td class="d-none d-sm-table-cell"></td>
+                        <td class="d-none d-sm-table-cell"></td>
                     </tr>
                     <tr>
                         <td class="d-none d-sm-table-cell"><b></b></td>
@@ -81,11 +83,31 @@
                         <td class="d-none d-lg-table-cell"></td>
                         <td class="d-none d-xl-table-cell"></td>
                         <td class="d-none d-lg-table-cell"></td>
-                        <td class="d-none d-sm-table-cell text-right font-weight-bold">{{ sums.unit_price.toFixed(2) }} €</td>
-                        <td class="d-none d-xl-table-cell text-right font-weight-bold">{{ sums.unit_cost.toFixed(2) }} €</td>
-                        <td class="d-none d-xl-table-cell text-right font-weight-bold">{{ sums.provision.toFixed(2) }} €</td>
+                        <td class="d-none d-sm-table-cell text-right font-weight-bold">{{ sums.unit_price.toFixed(2) }} €</td>
+                        <td class="d-none d-xl-table-cell text-right font-weight-bold">{{ sums.unit_cost.toFixed(2) }} €</td>
                         <td class="d-none d-xl-table-cell text-right font-weight-bold">{{ sums.profit.toFixed(2) }} €</td>
                         <td class="d-none d-sm-table-cell"></td>
+                        <td class="d-none d-sm-table-cell"></td>
+                    </tr>
+                    <tr>
+                        <td class="align-middle" colspan="11">
+                            <select class="form-control form-control-sm" v-model="actionForm.action">
+                                <option :value="null">{{ $t('app.actions.action') }}</option>
+                                <optgroup label="Bearbeiten">
+                                    <option value="setNumber">Nummern automatisch setzen</option>
+                                    <option value="resetNumber">Nummern entfernen</option>
+                                </optgroup>
+                                <optgroup label="Einlagern">
+                                    <option value="storing" :disabled="!(all_items_are_numbered === true && all_items_are_stored === false)">Einlagern</option>
+                                </optgroup>
+                                <optgroup label="Cardmarket">
+                                    <option value="syncCardmarket" :disabled="all_items_are_numbered === false">Upload zu Cardmarket</option>
+                                </optgroup>
+                            </select>
+                        </td>
+                        <td class="align-middle text-right">
+                            <button class="btn btn-sm btn-secondary" @click="action">Ausführen</button>
+                        </td>
                     </tr>
                 </tfoot>
             </table>
@@ -122,6 +144,12 @@
         },
 
         computed: {
+            all_items_are_numbered() {
+                return this.items.every(item => item.number !== null);
+            },
+            all_items_are_stored() {
+                return this.items.every(item => item.storing_history_id > 1);
+            },
             sums() {
                 var profit = 0,
                     unit_price = 0,
@@ -145,14 +173,24 @@
 
         data () {
             return {
-                uri: this.model.path + '/quantity',
+                uri: this.model.path + '/articles',
                 isLoading: false,
                 items: this.initialItems,
                 filter: {
-
+                    order_id: this.model.id,
+                    is_numbered: -1,
+                    is_stored: -1,
+                    product_type: 1,
+                    rule_id: 0,
+                    sold: 0,
+                    sync: -1,
                 },
                 form: {
 
+                },
+                actionForm: {
+                    action: null,
+                    storage_id: null,
                 },
                 imgbox: {
                     src: null,
@@ -163,6 +201,30 @@
         },
 
         methods: {
+            action() {
+                var component = this;
+                axios.post('/article/action', {
+                    filter: component.filter,
+                    ...component.actionForm,
+                })
+                .then( function (response) {
+                    Vue.success(response.data.message);
+                    if (response.data.model) {
+                        location.href = response.data.model.path;
+                    }
+                    else {
+                        component.actionForm.action = null;
+                        component.fetch();
+                    }
+                });
+            },
+            fetch() {
+                var component = this;
+                axios.get(component.uri, component.filter)
+                .then( function (response) {
+                    component.items = response.data;
+                });
+            },
             updated(index, item) {
                 Vue.set(this.items, index, item);
             },

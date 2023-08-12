@@ -30,9 +30,8 @@ class ActionController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->validate([
-            'articles' => 'required|string',
             'action' => 'required|string',
-            'storage_id' => 'required|nullable|integer',
+            'storage_id' => 'nullable|integer',
             'filter' => 'required|array',
         ]);
 
