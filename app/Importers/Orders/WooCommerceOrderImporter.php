@@ -17,16 +17,15 @@ class WooCommerceOrderImporter
     private array $articles = [];
     private int $user_id;
 
-    private float $additional_unit_cost = 0;
     private float $bonus = 0;
     private int $source_sort = 1;
 
     private Order $order;
 
-    public static function import(int $user_id, array $woocommerce_order): void
+    public static function import(int $user_id, array $woocommerce_order): Order
     {
         $importer = new self($user_id, $woocommerce_order);
-        $importer->importOrder($woocommerce_order);
+        return $importer->importOrder($woocommerce_order);
     }
 
     public function __construct(int $user_id)
@@ -34,7 +33,7 @@ class WooCommerceOrderImporter
         $this->user_id = $user_id;
     }
 
-    public function importOrder(array $woocommerce_order): array
+    public function importOrder(array $woocommerce_order): Order
     {
         $this->setBonus($woocommerce_order);
         $this->createOrder($woocommerce_order);
@@ -48,7 +47,7 @@ class WooCommerceOrderImporter
             $this->importLineItem($line_item);
         }
 
-        return $this->articles;
+        return $this->order;
     }
 
     public function createOrder(array $woocommerce_order): void

@@ -6,7 +6,7 @@ use App\Models\Cards\Card;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Importers\Articles\WooCommerceOrderImporter;
+use App\Importers\Orders\WooCommerceOrderImporter;
 
 class OrderController extends Controller
 {
@@ -45,14 +45,18 @@ class OrderController extends Controller
         ]);
 
         $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
-        $response = $WooCommerce->order($attributes['id']);
-        $order = $response['data'];
+        $woocomerce_order_response = $WooCommerce->order($attributes['id']);
+        $woocomerce_order = $woocomerce_order_response['data'];
 
-        WooCommerceOrderImporter::import(auth()->user()->id, $order);
+        $order = WooCommerceOrderImporter::import(auth()->user()->id, $woocomerce_order);
+
+        if ($request->wantsJson()) {
+            return $order;
+        }
 
         return back()->with('status', [
             'type' => 'success',
-            'text' => 'Bestellung #' . $order['id'] . ' importiert.',
+            'text' => 'Bestellung #' . $woocomerce_order['id'] . ' importiert.',
         ]);
     }
 

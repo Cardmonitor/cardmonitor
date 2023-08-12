@@ -33,6 +33,9 @@
         },
 
         methods: {
+            import() {
+
+            },
             store(item) {
                 var component = this;
 
@@ -45,8 +48,7 @@
                     id: component.id,
                 })
                     .then(function (response) {
-                        component.$emit('updated', response.data);
-                        Vue.success(component.$t('order.successes.synced'));
+                        location.href = response.data.path;
                     })
                     .catch(function (error) {
                         Vue.error('Die Bestellung konnte nicht importiert werden.');
