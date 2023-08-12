@@ -122,6 +122,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('purchases/{order}/articles', [\App\Http\Controllers\Orders\Articles\ArticleController::class, 'index'])->name('purchases.articles.index');
 
+    Route::get('purchases/{order}/pdf', [\App\Http\Controllers\Orders\Purchases\PDFController::class, 'show'])->name('purchases.pdf.show');
+
     Route::get('purchases', [\App\Http\Controllers\Orders\PurchaseController::class, 'index'])->name('purchases.index');
     Route::get('purchases/{order}', [\App\Http\Controllers\Orders\PurchaseController::class, 'show'])->name('purchases.show');
     Route::get('purchases/{order}/edit', [\App\Http\Controllers\Orders\PurchaseController::class, 'edit'])->name('purchases.edit');

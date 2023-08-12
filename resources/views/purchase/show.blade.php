@@ -12,6 +12,7 @@
                 <input type="hidden" name="id" value="{{ $model->source_id }}">
                 <button type="submit" class="btn btn-sm btn-secondary" title="Importieren"><i class="fas fa-fw fa-sync"></i></button>
             </form>
+            <a href="{{ route('purchases.pdf.show', ['order' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1" title="PDF"><i class="fas fa-fw fa-file-pdf"></i></a>
             <a href="{{ route('purchases.index') }}" class="btn btn-sm btn-secondary ml-1">{{ __('app.overview') }}</a>
         </div>
     </div>
