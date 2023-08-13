@@ -88,6 +88,8 @@ Route::middleware(['auth'])->group(function () {
         'destroy',
     ]);
 
+    Route::get('mqtt', [\App\Http\Controllers\MqttController::class, 'index'])->name('mqtt.index');
+
     Route::post('order/export/download', 'Orders\Export\DownloadController@store');
     Route::get('order/export/dropbox', 'Orders\Export\DropboxController@index');
 
