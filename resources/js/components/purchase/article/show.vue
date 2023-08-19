@@ -49,8 +49,7 @@
                         <select class="form-control form-control-sm" id="state_comment_boilerplate" :placeholder="$t('order.article.show.problems.placeholder')" @change="form.state_comments += $event.target.value">
                             <option>{{ $t('order.article.show.problems.label') }}</option>
                             <option>{{ $t('order.article.show.problems.not_available') }}</option>
-                            <option>{{ $t('order.article.show.problems.wrong_condition') }}</option>
-                            <option>{{ $t('order.article.show.problems.wrong_language') }}</option>
+                            <option>falsche Karte</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -63,12 +62,7 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <button class="btn btn-sm btn-danger text-overflow-ellipsis" title="Nächste Karte (Status Problem)" @click="next(true, 1)">{{ $t('order.article.show.actions.next_problem') }}</button>
-                    <button class="btn btn-sm btn-light" @click="next(false)">{{ $t('order.article.show.actions.next') }}</button>
                     <button class="btn btn-sm btn-primary text-overflow-ellipsis" title="Nächste Karte (Status OK)" @click="next(true, 0)">{{ $t('order.article.show.actions.next_ok') }}</button>
-                </div>
-                <div class="d-flex justify-content-around mt-3">
-                    <button class="btn btn-sm btn-light" @click="next(true, 2)" v-if="item.state != 2">Für Pickliste zurückstellen</button>
-                    <button class="btn btn-sm btn-light" @click="next(true, null)" v-if="item.state !== null">Status zurücksetzen</button>
                 </div>
             </div>
         </div>
@@ -141,6 +135,9 @@
                     is_foil: this.item ? this.item.is_foil : null,
                     unit_cost_formatted: this.item ? this.item.unit_cost_formatted : null,
                 },
+                price_changes: {
+                    language: false,
+                }
             };
         },
 
@@ -175,6 +172,10 @@
             setLanguageId(language) {
                 this.language = language;
                 this.form.language_id = language.id;
+                if (this.price_changes.language === false && this.item.language_id === 1 && language.id !== 1) {
+                    this.changePrice(-10);
+                    this.price_changes.language = true;
+                }
             },
             getIsFoilAktiveClass() {
                 return this.form.is_foil ? 'btn-primary' : 'btn-secondary';

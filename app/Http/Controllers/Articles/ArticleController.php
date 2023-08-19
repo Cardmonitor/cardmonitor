@@ -43,10 +43,12 @@ class ArticleController extends Controller
                         'localizations',
                     ]);
                 })
+                ->with('orders', function ($query) {
+                    $query->where('is_purchase', false);
+                })
                 ->with([
                     'language',
                     'rule',
-                    'orders',
                     'storage',
                 ])
                 ->orderBy('cards.name', 'ASC')
