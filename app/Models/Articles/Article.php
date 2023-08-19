@@ -1117,7 +1117,7 @@ class Article extends Model
         return $this->belongsTo(Language::class);
     }
 
-    public function orders() : BelongsToMany
+    public function orders(): BelongsToMany
     {
         return $this->belongsToMany(Order::class);
     }
@@ -1274,6 +1274,9 @@ class Article extends Model
         if (empty($value)) {
             return $query;
         }
+
+        $query->orderBy('articles.number', 'ASC')
+            ->orderBy('articles.source_sort', 'ASC');
 
         return $query->whereHas('orders', function ($query) use ($value) {
             $query->where('orders.id', $value);
