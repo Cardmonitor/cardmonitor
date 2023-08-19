@@ -5,7 +5,7 @@
 </head>
 <body>
     <div class="wrapper" id="app">
-        <nav id="nav" style="">
+        <nav id="nav">
             <div class="navbar">
                 <a class="navbar-brand" href="#">Cardmonitor</a>
             </div>

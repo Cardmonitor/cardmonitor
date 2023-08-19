@@ -20,6 +20,12 @@
 
 <script>window.Laravel = {!! json_encode(['locale' => \App::getLocale()]) !!}</script>
 
+    <script>
+        window.user = {
+            id: {{ Auth::user()->id ?? 0}}
+        };
+    </script>
+
 <!-- Scripts -->
 <script src="{{ mix('js/app.js') }}" defer></script>
 

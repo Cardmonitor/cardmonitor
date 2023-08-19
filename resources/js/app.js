@@ -47,6 +47,8 @@ Highcharts.setOptions({
     }
 });
 
+Vue.prototype.$user = window.user || false;
+
 import Flash from './plugins/flash.js';
 Vue.use(Flash);
 
@@ -92,7 +94,6 @@ Vue.component('user-backgroundtask-show', require('./components/user/backgroundt
 Vue.component('card-export-index', require('./components/card/export/index.vue').default);
 Vue.component('woocommerce-order-table', require('./components/woocommerce/order/table.vue').default);
 Vue.component('woocommerce-order-show', require('./components/woocommerce/order/show.vue').default);
-Vue.component('mqtt', require('./components/mqtt.vue').default);
 
 var common = require('./common').default;
 

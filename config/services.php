@@ -48,15 +48,6 @@ return [
         'redirect' => '/login/dropbox/callback',
     ],
 
-    'mqtt' => [
-        'host' => env('MQTT_HOST'),
-        'port' => env('MQTT_PORT'),
-        'client_id' => env('MQTT_CLIENT_ID'),
-        'username' => env('MQTT_USERNAME'),
-        'password' => env('MQTT_PASSWORD'),
-        'cafile' => env('MQTT_CAFILE'),
-    ],
-
     'woocommerce' => [
         'url' => env('WOO_COMMERCE_URL'),
         'consumer_key' => env('WOO_COMMERCE_CONSUMER_KEY'),
