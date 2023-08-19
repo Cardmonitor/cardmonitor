@@ -5661,16 +5661,15 @@ __webpack_require__.r(__webpack_exports__);
     toShow: function toShow() {
       this.$emit('toshow');
     },
-    update: function update() {
+    destroy: function destroy() {
       var component = this;
-      axios.put('/article/' + component.id, component.form).then(function (response) {
-        component.errors = {};
-        component.isEditing = false;
-        component.$emit('updated', response.data);
-        Vue.success('Artikel gespeichert.');
-      })["catch"](function (error) {
-        component.errors = error.response.data.errors;
-        Vue.error('Artikel konnte nicht gespeichert werden.');
+      axios["delete"](component.item.path).then(function (response) {
+        if (response.data.deleted) {
+          Vue.success(component.$t('app.successes.deleted'));
+          component.$emit("deleted", component.id);
+          return;
+        }
+        Vue.error(component.$t('app.errors.deleted'));
       });
     }
   }
@@ -5750,6 +5749,9 @@ __webpack_require__.r(__webpack_exports__);
         language_id: this.item ? this.item.language_id : null,
         is_foil: this.item ? this.item.is_foil : null,
         unit_cost_formatted: this.item ? this.item.unit_cost_formatted : null
+      },
+      price_changes: {
+        language: false
       }
     };
   },
@@ -5782,6 +5784,10 @@ __webpack_require__.r(__webpack_exports__);
     setLanguageId: function setLanguageId(language) {
       this.language = language;
       this.form.language_id = language.id;
+      if (this.price_changes.language === false && this.item.language_id === 1 && language.id !== 1) {
+        this.changePrice(-10);
+        this.price_changes.language = true;
+      }
     },
     getIsFoilAktiveClass: function getIsFoilAktiveClass() {
       return this.form.is_foil ? 'btn-primary' : 'btn-secondary';
@@ -5918,7 +5924,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     },
     remove: function remove(index) {
       this.items.splice(index, 1);
-      Vue.success('Interaktion gelöscht.');
+      Vue.success('Artikel gelöscht.');
     },
     toshow: function toshow(index, item) {
       this.$emit('toshow', {
@@ -14010,7 +14016,7 @@ var render = function render() {
     attrs: {
       title: _vm.$t("app.profit_anticipated")
     }
-  }, [_vm._v(_vm._s(_vm.$t("app.revenue")))]), _vm._v(" "), _c("th", {
+  }, [_vm._v(_vm._s(_vm.$t("app.profit")))]), _vm._v(" "), _c("th", {
     staticClass: "text-right d-none d-sm-table-cell w-action"
   }, [_vm._v(_vm._s(_vm.$t("app.actions.action")))])])]), _vm._v(" "), _c("tbody", [_vm._l(_vm.items, function (item, index) {
     return [_c("row", {
@@ -15094,7 +15100,7 @@ var render = function render() {
       title: _vm.item.sync_error || "Karte synchronisiert"
     }
   })]), _vm._v(" "), _c("td", {
-    staticClass: "align-middle text-center pointer",
+    staticClass: "align-middle pointer",
     on: {
       click: _vm.toShow
     }
@@ -15116,6 +15122,11 @@ var render = function render() {
       title: _vm.item.language.name
     }
   }), _vm._v(" " + _vm._s(_vm.item.localName)), _vm.item.card.number ? _c("span", [_vm._v(" (" + _vm._s(_vm.item.card.number) + ")")]) : _vm._e()]), _vm._v(" "), _vm.item.cardmarket_comments ? _c("div", [_vm._v(_vm._s(_vm.item.cardmarket_comments))]) : _vm._e()]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle d-none d-xl-table-cell pointer",
+    on: {
+      click: _vm.toShow
+    }
+  }, [_vm._v(_vm._s(_vm.item.state_comments))]), _vm._v(" "), _c("td", {
     staticClass: "align-middle pointer",
     on: {
       click: _vm.toShow
@@ -15188,6 +15199,17 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fw fa-eye"
+  })]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      title: _vm.$t("app.actions.delete")
+    },
+    on: {
+      click: _vm.destroy
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-fw fa-trash"
   })])])])]);
 };
 var staticRenderFns = [];
@@ -15421,7 +15443,7 @@ var render = function render() {
         _vm.form.state_comments += $event.target.value;
       }
     }
-  }, [_c("option", [_vm._v(_vm._s(_vm.$t("order.article.show.problems.label")))]), _vm._v(" "), _c("option", [_vm._v(_vm._s(_vm.$t("order.article.show.problems.not_available")))]), _vm._v(" "), _c("option", [_vm._v(_vm._s(_vm.$t("order.article.show.problems.wrong_condition")))]), _vm._v(" "), _c("option", [_vm._v(_vm._s(_vm.$t("order.article.show.problems.wrong_language")))])])]), _vm._v(" "), _c("div", {
+  }, [_c("option", [_vm._v(_vm._s(_vm.$t("order.article.show.problems.label")))]), _vm._v(" "), _c("option", [_vm._v(_vm._s(_vm.$t("order.article.show.problems.not_available")))]), _vm._v(" "), _c("option", [_vm._v("falsche Karte")])])]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     attrs: {
@@ -15468,13 +15490,6 @@ var render = function render() {
       }
     }
   }, [_vm._v(_vm._s(_vm.$t("order.article.show.actions.next_problem")))]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-sm btn-light",
-    on: {
-      click: function click($event) {
-        return _vm.next(false);
-      }
-    }
-  }, [_vm._v(_vm._s(_vm.$t("order.article.show.actions.next")))]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-sm btn-primary text-overflow-ellipsis",
     attrs: {
       title: "Nächste Karte (Status OK)"
@@ -15484,23 +15499,7 @@ var render = function render() {
         return _vm.next(true, 0);
       }
     }
-  }, [_vm._v(_vm._s(_vm.$t("order.article.show.actions.next_ok")))])]), _vm._v(" "), _c("div", {
-    staticClass: "d-flex justify-content-around mt-3"
-  }, [_vm.item.state != 2 ? _c("button", {
-    staticClass: "btn btn-sm btn-light",
-    on: {
-      click: function click($event) {
-        return _vm.next(true, 2);
-      }
-    }
-  }, [_vm._v("Für Pickliste zurückstellen")]) : _vm._e(), _vm._v(" "), _vm.item.state !== null ? _c("button", {
-    staticClass: "btn btn-sm btn-light",
-    on: {
-      click: function click($event) {
-        return _vm.next(true, null);
-      }
-    }
-  }, [_vm._v("Status zurücksetzen")]) : _vm._e()])])])]) : _vm._e();
+  }, [_vm._v(_vm._s(_vm.$t("order.article.show.actions.next_ok")))])])])])]) : _vm._e();
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -15546,9 +15545,14 @@ var render = function render() {
     staticClass: "text-center w-icon"
   }), _vm._v(" "), _c("th", {
     attrs: {
-      width: "100%"
+      width: "125"
     }
   }, [_vm._v(_vm._s(_vm.$t("app.name")))]), _vm._v(" "), _c("th", {
+    staticClass: "d-none d-xl-table-cell",
+    attrs: {
+      width: "100%"
+    }
+  }, [_vm._v("Problem")]), _vm._v(" "), _c("th", {
     staticClass: "w-icon"
   }), _vm._v(" "), _c("th", {
     staticClass: "text-center d-none d-lg-table-cell w-icon"
@@ -15562,14 +15566,14 @@ var render = function render() {
   }), _vm._v(" "), _c("th", {
     staticClass: "text-right d-none d-sm-table-cell w-formatted-number"
   }, [_vm._v(_vm._s(_vm.$t("app.price_abbr")))]), _vm._v(" "), _c("th", {
-    staticClass: "text-right d-none d-xl-table-cell w-formatted-number"
+    staticClass: "text-right d-none d-sm-table-cell w-formatted-number"
   }, [_vm._v(_vm._s(_vm.$t("app.price_buying_abbr")))]), _vm._v(" "), _c("th", {
     staticClass: "text-right d-none d-xl-table-cell w-formatted-number",
     attrs: {
       title: _vm.$t("app.profit_anticipated")
     }
-  }, [_vm._v(_vm._s(_vm.$t("app.revenue")))]), _vm._v(" "), _c("th", {
-    staticClass: "text-right d-none d-xl-table-cell w-formatted-number"
+  }, [_vm._v(_vm._s(_vm.$t("app.profit")))]), _vm._v(" "), _c("th", {
+    staticClass: "text-right d-none d-sm-table-cell w-formatted-number"
   }, [_vm._v("Nummer")]), _vm._v(" "), _c("th", {
     staticClass: "text-right d-none d-sm-table-cell w-action"
   }, [_vm._v(_vm._s(_vm.$t("app.actions.action")))])])]), _vm._v(" "), _c("tbody", [_vm._l(_vm.items, function (item, index) {
@@ -15612,7 +15616,9 @@ var render = function render() {
     staticClass: "text-center d-none d-lg-table-cell w-icon"
   }), _vm._v(" "), _c("td", {
     staticClass: "text-center"
-  }, [_c("b", [_vm._v(_vm._s(_vm.counts.open))])]), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
+  }, [_c("b", [_vm._v(_vm._s(_vm.counts.open))])]), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
+    staticClass: "d-none d-xl-table-cell"
+  }), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
     staticClass: "d-none d-lg-table-cell"
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-xl-table-cell"
@@ -15621,11 +15627,11 @@ var render = function render() {
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-sm-table-cell"
   }), _vm._v(" "), _c("td", {
-    staticClass: "d-none d-xl-table-cell"
+    staticClass: "d-none d-sm-table-cell"
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-xl-table-cell"
   }), _vm._v(" "), _c("td", {
-    staticClass: "d-none d-xl-table-cell"
+    staticClass: "d-none d-sm-table-cell"
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-sm-table-cell"
   })]), _vm._v(" "), _c("tr", {
@@ -15641,7 +15647,9 @@ var render = function render() {
     staticClass: "text-center d-none d-lg-table-cell w-icon"
   }), _vm._v(" "), _c("td", {
     staticClass: "text-center"
-  }, [_c("b", [_vm._v(_vm._s(_vm.counts.problem))])]), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
+  }, [_c("b", [_vm._v(_vm._s(_vm.counts.problem))])]), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
+    staticClass: "d-none d-xl-table-cell"
+  }), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
     staticClass: "d-none d-lg-table-cell"
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-xl-table-cell"
@@ -15650,11 +15658,11 @@ var render = function render() {
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-sm-table-cell"
   }), _vm._v(" "), _c("td", {
-    staticClass: "d-none d-xl-table-cell"
+    staticClass: "d-none d-sm-table-cell"
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-xl-table-cell"
   }), _vm._v(" "), _c("td", {
-    staticClass: "d-none d-xl-table-cell"
+    staticClass: "d-none d-sm-table-cell"
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-sm-table-cell"
   })]), _vm._v(" "), _c("tr", {
@@ -15670,7 +15678,9 @@ var render = function render() {
     staticClass: "text-center d-none d-lg-table-cell w-icon"
   }), _vm._v(" "), _c("td", {
     staticClass: "text-center"
-  }, [_c("b", [_vm._v(_vm._s(_vm.counts.ok))])]), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
+  }, [_c("b", [_vm._v(_vm._s(_vm.counts.ok))])]), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
+    staticClass: "d-none d-xl-table-cell"
+  }), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
     staticClass: "d-none d-lg-table-cell"
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-xl-table-cell"
@@ -15679,9 +15689,7 @@ var render = function render() {
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-sm-table-cell"
   }), _vm._v(" "), _c("td", {
-    staticClass: "d-none d-xl-table-cell"
-  }), _vm._v(" "), _c("td", {
-    staticClass: "d-none d-xl-table-cell"
+    staticClass: "d-none d-sm-table-cell"
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-xl-table-cell"
   }), _vm._v(" "), _c("td", {
@@ -15692,26 +15700,28 @@ var render = function render() {
     staticClass: "text-center d-none d-lg-table-cell w-icon"
   }), _vm._v(" "), _c("td", {
     staticClass: "text-center"
-  }, [_c("b", [_vm._v(_vm._s(_vm.counts.all))])]), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
+  }, [_c("b", [_vm._v(_vm._s(_vm.counts.all))])]), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
+    staticClass: "d-none d-xl-table-cell"
+  }), _vm._v(" "), _c("td", {}), _vm._v(" "), _c("td", {
     staticClass: "d-none d-lg-table-cell"
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-xl-table-cell"
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-lg-table-cell"
   }), _vm._v(" "), _c("td", {
-    staticClass: "d-none d-sm-table-cell text-right font-weight-bold"
-  }, [_vm._v(_vm._s(_vm.sums.unit_price.toFixed(2)) + " €")]), _vm._v(" "), _c("td", {
-    staticClass: "d-none d-xl-table-cell text-right font-weight-bold"
-  }, [_vm._v(_vm._s(_vm.sums.unit_cost.toFixed(2)) + " €")]), _vm._v(" "), _c("td", {
-    staticClass: "d-none d-xl-table-cell text-right font-weight-bold"
-  }, [_vm._v(_vm._s(_vm.sums.profit.toFixed(2)) + " €")]), _vm._v(" "), _c("td", {
+    staticClass: "d-none d-sm-table-cell"
+  }), _vm._v(" "), _c("td", {
+    staticClass: "d-none d-sm-table-cell"
+  }), _vm._v(" "), _c("td", {
+    staticClass: "d-none d-xl-table-cell"
+  }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-sm-table-cell"
   }), _vm._v(" "), _c("td", {
     staticClass: "d-none d-sm-table-cell"
   })]), _vm._v(" "), _c("tr", [_c("td", {
     staticClass: "align-middle",
     attrs: {
-      colspan: "12"
+      colspan: "13"
     }
   }, [_c("select", {
     directives: [{
