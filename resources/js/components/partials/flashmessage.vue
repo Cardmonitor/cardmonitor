@@ -41,6 +41,14 @@
             Bus.$on('flash-message', function (message) {
                 component.flash(message);
             });
+
+            if (window.user.id) {
+                Echo.private('App.User.' + window.user.id)
+                    .notification((notification) => {
+                        component.flash(notification.message);
+                    });
+            }
+
         },
 
         methods: {
