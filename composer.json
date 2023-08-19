@@ -25,6 +25,7 @@
         "nemiah/php-fints": "^3.0",
         "nemiah/php-sepa-xml": "dev-master",
         "niklasravnsborg/laravel-pdf": "^4.1",
+        "pusher/pusher-php-server": "^7.2",
         "socialiteproviders/dropbox": "^4.2",
         "spatie/flysystem-dropbox": "^1.2",
         "spatie/laravel-cookie-consent": "^2.10"

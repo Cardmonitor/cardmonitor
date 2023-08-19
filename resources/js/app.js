@@ -47,6 +47,8 @@ Highcharts.setOptions({
     }
 });
 
+Vue.prototype.$user = window.user || false;
+
 import Flash from './plugins/flash.js';
 Vue.use(Flash);
 
