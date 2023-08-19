@@ -54,11 +54,13 @@ class StoringHistoryController extends Controller
                 ->select('articles.*')
                 ->join('cards', 'cards.id', 'articles.card_id')
                 ->filter($request->all())
+                ->with('orders', function ($query) {
+                    $query->where('is_purchase', false);
+                })
                 ->with([
                     'card.expansion',
                     'card.localizations',
                     'language',
-                    'orders',
                 ])
                 ->orderBy('articles.number', 'ASC')
                 ->paginate();
