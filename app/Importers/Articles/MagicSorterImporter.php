@@ -101,6 +101,7 @@ class MagicSorterImporter
             'has_sync_error' => false,
             'sync_error' => null,
             'source_sort' => $data['height'],
+            'is_sellable_since' => now(),
         ];
         $attributes = [
             'source_slug' => self::SOURCE_SLUG,

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models\Orders;
 
+use Mockery;
 use Tests\TestCase;
 use App\Models\Items\Item;
 use Illuminate\Support\Arr;
@@ -9,10 +10,12 @@ use App\Models\Images\Image;
 use App\Models\Orders\Order;
 use App\Models\Articles\Article;
 use App\Models\Orders\Evaluation;
+use Illuminate\Support\Facades\App;
 use App\Models\Expansions\Expansion;
 use App\Models\Users\CardmarketUser;
 use App\Models\Localizations\Language;
 use Tests\Traits\RelationshipAssertions;
+use Tests\Support\Snapshots\JsonSnapshot;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class OrderTest extends TestCase
@@ -135,19 +138,44 @@ class OrderTest extends TestCase
 
     /**
      * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function it_can_be_created_from_cardmarket()
     {
-        $this->markTestSkipped('Card Import Mock not implemented');
-
         $cardmarketOrder = json_decode(file_get_contents('tests/snapshots/cardmarket/order/get_seller_paid.json'), true);
 
+        $cardmarket_product_mock = Mockery::mock('overload:' . \Cardmonitor\Cardmarket\Product::class);
+
         $cards = [];
+        $expansions = [];
         foreach ($cardmarketOrder['order']['article'] as $key => $cardmarketArticle) {
+            $cardmarket_product_id = $cardmarketArticle['idProduct'];
+
+            $cardmarket_product_response = JsonSnapshot::get('tests/snapshots/cardmarket/product/' . $cardmarket_product_id . '.json', function () use ($cardmarket_product_id) {
+                return (App::make('CardmarketApi'))->product->get($cardmarket_product_id);
+            });
+
+            $cardmarket_product_mock->shouldReceive('get')
+                ->with($cardmarket_product_id)
+                ->andReturn($cardmarket_product_response);
+
+            $cardmarket_product = $cardmarket_product_response['product'];
+
+            $expansion_id = $cardmarket_product['expansion']['idExpansion'];
+            if (! Arr::has($expansions, $expansion_id)) {
+                $expansions[$expansion_id] = factory(Expansion::class)->create([
+                    'id' => $expansion_id,
+                    'cardmarket_expansion_id' => $cardmarket_product['expansion']['idExpansion'],
+                    'name' => $cardmarket_product['expansion']['enName'],
+                ]);
+            }
+
             $cards[$key] = factory(\App\Models\Cards\Card::class)->create([
-                'cardmarket_product_id' => $cardmarketArticle['idProduct'],
+                'cardmarket_product_id' => $cardmarket_product_id,
                 'rarity' => $cardmarketArticle['product']['rarity'],
                 'name' => $cardmarketArticle['product']['enName'],
+                'expansion_id' => $expansions[$expansion_id]->id,
             ]);
         }
 
@@ -164,6 +192,7 @@ class OrderTest extends TestCase
             'is_signed' => $cardmarketOrder['order']['article'][2]['isSigned'],
             'is_altered' => $cardmarketOrder['order']['article'][2]['isAltered'],
             'is_playset' => $cardmarketOrder['order']['article'][2]['isPlayset'],
+            'is_sellable_since' => now(),
         ]);
 
         $articlesWithCardmarketArticleId = factory(Article::class, 2)->create([
@@ -177,6 +206,7 @@ class OrderTest extends TestCase
             'is_signed' => $cardmarketOrder['order']['article'][1]['isSigned'],
             'is_altered' => $cardmarketOrder['order']['article'][1]['isAltered'],
             'is_playset' => $cardmarketOrder['order']['article'][1]['isPlayset'],
+            'is_sellable_since' => now(),
         ]);
 
         $order = Order::updateOrCreateFromCardmarket($this->user->id, $cardmarketOrder['order']);
@@ -185,6 +215,13 @@ class OrderTest extends TestCase
         $this->assertCount(2, CardmarketUser::all());
         $this->assertCount(4, \App\Models\Cards\Card::all());
         $this->assertCount($cardmarketOrder['order']['articleCount'], $order->fresh()->articles);
+
+        foreach ($order->articles as $article) {
+            $this->assertNotNull($article->first()->sold_at);
+            $this->assertEquals(1, $article->first()->is_sold);
+            $this->assertNotNull($article->first()->is_sellable_since);
+            $this->assertEquals(0, $article->first()->is_sellable);
+        }
 
         $articlesNotinOrder = factory(Article::class, 2)->create([
             'user_id' => $this->user->id,
@@ -197,6 +234,7 @@ class OrderTest extends TestCase
             'is_signed' => $cardmarketOrder['order']['article'][1]['isSigned'],
             'is_altered' => $cardmarketOrder['order']['article'][1]['isAltered'],
             'is_playset' => $cardmarketOrder['order']['article'][1]['isPlayset'],
+            'is_sellable_since' => now(),
         ]);
 
         $order->articles()->syncWithoutDetaching($articlesNotinOrder->pluck('id')->toArray());
@@ -206,6 +244,13 @@ class OrderTest extends TestCase
         $this->assertCount(1, Order::all());
         $this->assertCount($cardmarketOrder['order']['articleCount'], $order->fresh()->articles);
         $this->assertCount(2, CardmarketUser::all());
+
+        foreach ($order->articles as $article) {
+            $this->assertNotNull($article->first()->sold_at);
+            $this->assertEquals(1, $article->first()->is_sold);
+            $this->assertNotNull($article->first()->is_sellable_since);
+            $this->assertEquals(0, $article->first()->is_sellable);
+        }
     }
 
     /**
