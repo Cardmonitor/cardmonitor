@@ -1,0 +1,71 @@
+{
+    "product": {
+        "idProduct": 20998,
+        "idMetaproduct": 10532,
+        "countReprints": 1,
+        "enName": "Madrush Cyclops",
+        "locName": "Anst\u00fcrmender Zyklop",
+        "localization": [
+            {
+                "name": "Madrush Cyclops",
+                "idLanguage": 1,
+                "languageName": "English"
+            },
+            {
+                "name": "Cyclope folh\u00e2te",
+                "idLanguage": 2,
+                "languageName": "French"
+            },
+            {
+                "name": "Anst\u00fcrmender Zyklop",
+                "idLanguage": 3,
+                "languageName": "German"
+            },
+            {
+                "name": "C\u00edclope carga demente",
+                "idLanguage": 4,
+                "languageName": "Spanish"
+            },
+            {
+                "name": "Ciclope in Carica",
+                "idLanguage": 5,
+                "languageName": "Italian"
+            }
+        ],
+        "website": "\/en\/Magic\/Products\/Singles\/Alara-Reborn\/Madrush-Cyclops",
+        "image": "https:\/\/product-images.s3.cardmarket.com\/1\/ARB\/20998\/20998.jpg",
+        "gameName": "Magic the Gathering",
+        "categoryName": "Magic Single",
+        "idGame": 1,
+        "number": "119",
+        "rarity": "Rare",
+        "expansion": {
+            "idExpansion": 108,
+            "enName": "Alara Reborn",
+            "expansionIcon": 105
+        },
+        "priceGuide": {
+            "SELL": 0.32,
+            "LOW": 0.07,
+            "LOWEX": 0.09,
+            "LOWFOIL": 0.1,
+            "AVG": 0.5,
+            "TREND": 0.41,
+            "TRENDFOIL": 0.87
+        },
+        "countArticles": 1959,
+        "countFoils": 125,
+        "links": [
+            {
+                "rel": "self",
+                "href": "\/products\/20998",
+                "method": "GET"
+            },
+            {
+                "rel": "articles",
+                "href": "\/articles\/20998",
+                "method": "GET"
+            }
+        ]
+    }
+}

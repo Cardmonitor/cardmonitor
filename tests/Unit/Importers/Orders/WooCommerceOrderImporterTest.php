@@ -84,6 +84,8 @@ class WooCommerceOrderImporterTest extends TestCase
             $this->assertEquals('NM', $article->condition);
             $this->assertEquals($is_foil === 'true', $article->is_foil);
             $this->assertEquals(\App\Models\Localizations\Language::DEFAULT_ID, $article->language_id);
+            $this->assertEquals(0, $article->is_sellable);
+            $this->assertNull($article->is_sellable_since);
 
             $source_sort++;
         }

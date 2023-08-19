@@ -1,0 +1,71 @@
+{
+    "product": {
+        "idProduct": 20927,
+        "idMetaproduct": 10464,
+        "countReprints": 1,
+        "enName": "Veinfire Borderpost",
+        "locName": "Aderfeuer-Grenzstein",
+        "localization": [
+            {
+                "name": "Veinfire Borderpost",
+                "idLanguage": 1,
+                "languageName": "English"
+            },
+            {
+                "name": "Borne fronti\u00e8re de Veinefeu",
+                "idLanguage": 2,
+                "languageName": "French"
+            },
+            {
+                "name": "Aderfeuer-Grenzstein",
+                "idLanguage": 3,
+                "languageName": "German"
+            },
+            {
+                "name": "Moj\u00f3n vena de fuego",
+                "idLanguage": 4,
+                "languageName": "Spanish"
+            },
+            {
+                "name": "Pietra di Confine della Caverna Infuocata",
+                "idLanguage": 5,
+                "languageName": "Italian"
+            }
+        ],
+        "website": "\/en\/Magic\/Products\/Singles\/Alara-Reborn\/Veinfire-Borderpost",
+        "image": "https:\/\/product-images.s3.cardmarket.com\/1\/ARB\/20927\/20927.jpg",
+        "gameName": "Magic the Gathering",
+        "categoryName": "Magic Single",
+        "idGame": 1,
+        "number": "48",
+        "rarity": "Common",
+        "expansion": {
+            "idExpansion": 108,
+            "enName": "Alara Reborn",
+            "expansionIcon": 105
+        },
+        "priceGuide": {
+            "SELL": 0.23,
+            "LOW": 0.02,
+            "LOWEX": 0.02,
+            "LOWFOIL": 0.3,
+            "AVG": 0.26,
+            "TREND": 0.25,
+            "TRENDFOIL": 0.87
+        },
+        "countArticles": 3719,
+        "countFoils": 163,
+        "links": [
+            {
+                "rel": "self",
+                "href": "\/products\/20927",
+                "method": "GET"
+            },
+            {
+                "rel": "articles",
+                "href": "\/articles\/20927",
+                "method": "GET"
+            }
+        ]
+    }
+}

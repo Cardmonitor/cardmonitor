@@ -1,0 +1,71 @@
+{
+    "product": {
+        "idProduct": 260050,
+        "idMetaproduct": 207253,
+        "countReprints": 1,
+        "enName": "Wrecking Ogre",
+        "locName": "Abrissoger",
+        "localization": [
+            {
+                "name": "Wrecking Ogre",
+                "idLanguage": 1,
+                "languageName": "English"
+            },
+            {
+                "name": "Ogre ravageur",
+                "idLanguage": 2,
+                "languageName": "French"
+            },
+            {
+                "name": "Abrissoger",
+                "idLanguage": 3,
+                "languageName": "German"
+            },
+            {
+                "name": "Ogro de demolici\u00f3n",
+                "idLanguage": 4,
+                "languageName": "Spanish"
+            },
+            {
+                "name": "Ogre da Demolizione",
+                "idLanguage": 5,
+                "languageName": "Italian"
+            }
+        ],
+        "website": "\/en\/Magic\/Products\/Singles\/Gatecrash\/Wrecking-Ogre",
+        "image": "https:\/\/product-images.s3.cardmarket.com\/1\/GTC\/260050\/260050.jpg",
+        "gameName": "Magic the Gathering",
+        "categoryName": "Magic Single",
+        "idGame": 1,
+        "number": "112",
+        "rarity": "Rare",
+        "expansion": {
+            "idExpansion": 1424,
+            "enName": "Gatecrash",
+            "expansionIcon": 208
+        },
+        "priceGuide": {
+            "SELL": 0.12,
+            "LOW": 0.02,
+            "LOWEX": 0.02,
+            "LOWFOIL": 0.1,
+            "AVG": 0.38,
+            "TREND": 0.09,
+            "TRENDFOIL": 0.55
+        },
+        "countArticles": 5215,
+        "countFoils": 253,
+        "links": [
+            {
+                "rel": "self",
+                "href": "\/products\/260050",
+                "method": "GET"
+            },
+            {
+                "rel": "articles",
+                "href": "\/articles\/260050",
+                "method": "GET"
+            }
+        ]
+    }
+}

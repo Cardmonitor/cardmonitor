@@ -167,15 +167,23 @@ class TCGPowerToolsImporterTest extends TestCase
         $this->assertEquals('NM', $articles[0]->condition);
         $this->assertEquals(0, $articles[0]->is_first_edition);
         $this->assertEquals(1, $articles[0]->is_reverse_holo);
+        $this->assertEquals(1, $articles[0]->is_sellable);
+        $this->assertNotNull($articles[0]->is_sellable_since);
 
         $this->assertEquals(1, $articles[1]->is_first_edition);
         $this->assertEquals(0, $articles[1]->is_reverse_holo);
+        $this->assertEquals(1, $articles[1]->is_sellable);
+        $this->assertNotNull($articles[1]->is_sellable_since);
 
         $this->assertEquals(0, $articles[2]->is_first_edition);
         $this->assertEquals(0, $articles[2]->is_reverse_holo);
+        $this->assertEquals(1, $articles[2]->is_sellable);
+        $this->assertNotNull($articles[2]->is_sellable_since);
 
         $this->assertEquals(1, $articles[3]->is_first_edition);
         $this->assertEquals(1, $articles[3]->is_reverse_holo);
+        $this->assertEquals(1, $articles[3]->is_sellable);
+        $this->assertNotNull($articles[3]->is_sellable_since);
 
         $sorted_articles = Article::orderBy('source_sort', 'ASC')->get();
 
