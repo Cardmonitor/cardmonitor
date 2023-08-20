@@ -2726,6 +2726,9 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         status: this.isSyncingArticles,
         interval: null
       },
+      actioning: {
+        status: false
+      },
       imgbox: {
         src: null,
         top: 0,
@@ -2816,6 +2819,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
   methods: {
     action: function action() {
       var component = this;
+      component.actioning.status = true;
       axios.post('/article/action', _objectSpread({
         filter: component.filter
       }, component.actionForm)).then(function (response) {
@@ -2826,6 +2830,11 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
           component.actionForm.action = 'setNumber';
           component.fetch();
         }
+      })["catch"](function (error) {
+        Vue.error('Aktion konnte nicht ausgeführt werden!');
+        console.log(error);
+      })["finally"](function () {
+        component.actioning.status = false;
       });
     },
     apply: function apply(sync) {
@@ -11129,10 +11138,24 @@ var render = function render() {
     staticClass: "align-middle text-right"
   }, [_c("button", {
     staticClass: "btn btn-sm btn-secondary",
+    staticStyle: {
+      width: "132px"
+    },
+    attrs: {
+      disabled: _vm.actioning.status === true
+    },
     on: {
       click: _vm.action
     }
-  }, [_vm._v("Ausführen")])])])])])]) : _c("div", {
+  }, [_c("i", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.actioning.status === true,
+      expression: "actioning.status === true"
+    }],
+    staticClass: "fas fa-spinner fa-spin mr-1"
+  }), _vm._v("Ausführen\n                        ")])])])])])]) : _c("div", {
     staticClass: "alert alert-dark mt-3"
   }, [_c("center", [_vm._v(_vm._s(_vm.$t("article.alerts.no_data")))])], 1), _vm._v(" "), _c("nav", {
     attrs: {
