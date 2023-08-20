@@ -1,0 +1,78 @@
+{
+    "product": {
+        "idProduct": 361735,
+        "idMetaproduct": 264339,
+        "countReprints": 2,
+        "enName": "Windgrace's Judgment",
+        "locName": "Windgraces Richtspruch",
+        "localization": [
+            {
+                "name": "Windgrace's Judgment",
+                "idLanguage": 1,
+                "languageName": "English"
+            },
+            {
+                "name": "Jugement selon Vent des vertus",
+                "idLanguage": 2,
+                "languageName": "French"
+            },
+            {
+                "name": "Windgraces Richtspruch",
+                "idLanguage": 3,
+                "languageName": "German"
+            },
+            {
+                "name": "Juicio de Windgrace",
+                "idLanguage": 4,
+                "languageName": "Spanish"
+            },
+            {
+                "name": "Giudizio di Windgrace",
+                "idLanguage": 5,
+                "languageName": "Italian"
+            }
+        ],
+        "website": "\/en\/Magic\/Products\/Singles\/Commander-2018\/Windgraces-Judgment",
+        "image": "https:\/\/product-images.s3.cardmarket.com\/1\/C18\/361735\/361735.jpg",
+        "gameName": "Magic the Gathering",
+        "categoryName": "Magic Single",
+        "idGame": 1,
+        "number": "49",
+        "rarity": "Rare",
+        "expansion": {
+            "idExpansion": 2110,
+            "enName": "Commander 2018",
+            "expansionIcon": 460
+        },
+        "priceGuide": {
+            "SELL": 0.42,
+            "LOW": 0.19,
+            "LOWEX": 0.19,
+            "LOWFOIL": 0,
+            "AVG": 2.16,
+            "TREND": 0.29,
+            "TRENDFOIL": 0.1
+        },
+        "reprint": [
+            {
+                "idProduct": 652942,
+                "expansion": "Commander: Streets of New Capenna",
+                "expIcon": 854
+            }
+        ],
+        "countArticles": 1125,
+        "countFoils": 0,
+        "links": [
+            {
+                "rel": "self",
+                "href": "\/products\/361735",
+                "method": "GET"
+            },
+            {
+                "rel": "articles",
+                "href": "\/articles\/361735",
+                "method": "GET"
+            }
+        ]
+    }
+}

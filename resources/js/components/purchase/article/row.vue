@@ -2,11 +2,12 @@
     <tr>
         <td class="align-middle d-none d-sm-table-cell pointer" @click="toShow">{{ (index + 1) }}</td>
         <td class="align-middle d-none d-lg-table-cell text-center"><i class="fas fa-fw" :class="item.sync_icon" :title="item.sync_error || 'Karte synchronisiert'"></i></td>
-        <td class="align-middle text-center pointer" @click="toShow"><i class="fas fa-fw" :class="item.state_icon" :title="item.state_comments"></i></td>
+        <td class="align-middle pointer" @click="toShow"><i class="fas fa-fw" :class="item.state_icon" :title="item.state_comments"></i></td>
         <td class="align-middle pointer" @click="toShow">
-            <div><span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.localName }}<span v-if="item.card.number"> ({{ item.card.number }})</span></div>
+            <div><span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.localName }}<span v-if="item.card.number"> (#{{ item.card.number }}) {{ item.id }}</span></div>
             <div v-if="item.cardmarket_comments">{{ item.cardmarket_comments }}</div>
         </td>
+        <td class="align-middle d-none d-xl-table-cell pointer" @click="toShow">{{ item.state_comments }}</td>
         <td class="align-middle pointer" @click="toShow"><expansion-icon :expansion="item.card.expansion" :show-name="false" v-if="item.card.expansion"></expansion-icon></td>
         <td class="align-middle d-none d-lg-table-cell text-center pointer" @click="toShow"><rarity :value="item.card.rarity"></rarity></td>
         <td class="align-middle d-none d-xl-table-cell text-center pointer" @click="toShow"><condition :value="item.condition"></condition></td>
@@ -63,19 +64,18 @@
             toShow() {
                 this.$emit('toshow');
             },
-            update() {
+            destroy() {
                 var component = this;
-                axios.put('/article/' + component.id, component.form)
+                axios.delete(component.item.path)
                     .then( function (response) {
-                        component.errors = {};
-                        component.isEditing = false;
-                        component.$emit('updated', response.data);
-                        Vue.success('Artikel gespeichert.');
+                        if (response.data.deleted) {
+                            Vue.success(component.$t('app.successes.deleted'))
+                            component.$emit("deleted", component.id);
+                            return;
+                        }
+
+                        Vue.error(component.$t('app.errors.deleted'));
                     })
-                    .catch(function (error) {
-                        component.errors = error.response.data.errors;
-                        Vue.error('Artikel konnte nicht gespeichert werden.');
-                });
             },
         },
     };

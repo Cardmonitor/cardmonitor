@@ -71,6 +71,7 @@ class Article extends Model
     const STATE_OK = 0;
     const STATE_PROBLEM = 1;
     const STATE_ON_HOLD = 2;
+    const STATE_NOT_PRESENT = 3;
 
     protected $appends = [
         'can_upload_to_cardmarket',
@@ -125,6 +126,8 @@ class Article extends Model
         'rule_id',
         'should_sync',
         'slot',
+        'is_sellable',
+        'is_sellable_since',
         'sold_at_formatted',
         'sold_at',
         'source_id',
@@ -154,6 +157,7 @@ class Article extends Model
         'cardmarket_last_edited',
         'bought_at',
         'exported_at',
+        'is_sellable_since',
         'sold_at',
     ];
 
@@ -873,6 +877,12 @@ class Article extends Model
         $this->attributes['condition_sort'] = (int) array_search($value, array_keys(array_reverse(self::CONDITIONS)));
     }
 
+    public function setIsSellableSinceAttribute($value)
+    {
+        $this->attributes['is_sellable_since'] = $this->fromDateTime($value);
+        $this->attributes['is_sellable'] = !is_null($this->attributes['is_sellable_since']);
+    }
+
     public function setNumberAttribute($value): void
     {
         $this->attributes['number'] = $value;
@@ -890,6 +900,10 @@ class Article extends Model
     {
         $this->attributes['sold_at'] = $this->fromDateTime($value);
         $this->attributes['is_sold'] = !is_null($this->attributes['sold_at']);
+
+        if ($this->attributes['is_sold']) {
+            $this->attributes['is_sellable'] = false;
+        }
     }
 
     public function setUnitCostFormattedAttribute($value)
@@ -1071,6 +1085,7 @@ class Article extends Model
             case self::STATE_OK: return 'fa-check text-success'; break;
             case self::STATE_PROBLEM: return 'fa-exclamation text-danger'; break;
             case self::STATE_ON_HOLD: return 'fa-pause text-warning'; break;
+            case self::STATE_NOT_PRESENT: return 'fa-times text-danger'; break;
         }
     }
 
@@ -1117,7 +1132,7 @@ class Article extends Model
         return $this->belongsTo(Language::class);
     }
 
-    public function orders() : BelongsToMany
+    public function orders(): BelongsToMany
     {
         return $this->belongsToMany(Order::class);
     }
@@ -1214,6 +1229,22 @@ class Article extends Model
         return $query->where('articles.language_id', $value);
     }
 
+    public function scopeIsSellable(Builder $query, $value) : Builder
+    {
+        if (is_null($value)) {
+            return $query;
+        }
+
+        if ($value == 1) {
+            $query->where('is_sellable', true);
+        }
+        elseif ($value == 0) {
+            $query->where('is_sellable', false);
+        }
+
+        return $query;
+    }
+
     public function scopeIsNumbered(Builder $query, $value) : Builder
     {
         if ($value == 0) {
@@ -1252,6 +1283,7 @@ class Article extends Model
 
         return $query->condition(Arr::get($filter, 'condition_sort'), Arr::get($filter, 'condition_operator'))
             ->sold(Arr::get($filter, 'sold'))
+            ->isSellable(Arr::get($filter, 'is_sellable'))
             ->expansion(Arr::get($filter, 'expansion_id'))
             ->game(Arr::get($filter, 'game_id'))
             ->rule(Arr::get($filter, 'rule_id'))
@@ -1274,6 +1306,9 @@ class Article extends Model
         if (empty($value)) {
             return $query;
         }
+
+        $query->orderBy('articles.number', 'ASC')
+            ->orderBy('articles.source_sort', 'ASC');
 
         return $query->whereHas('orders', function ($query) use ($value) {
             $query->where('orders.id', $value);

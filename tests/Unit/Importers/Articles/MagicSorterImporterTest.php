@@ -96,6 +96,8 @@ class MagicSorterImporterTest extends TestCase
                 $this->assertEquals($condition, $article->condition);
                 $this->assertEquals($language_id, $article->language_id);
                 $this->assertEquals($is_foil, $article->is_foil);
+                $this->assertEquals(1, $article->is_sellable);
+                $this->assertNotNull($article->is_sellable_since);
             }
         }
 

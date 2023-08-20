@@ -4,12 +4,18 @@
             {{ $t('order.article.show.alerts.no_open_cards') }} <span v-show="counts.problem > 0">({{ counts.problem }} {{ counts.problem == 1 ? $t('order.article.show.problems.singular') : $t('order.article.show.problems.plural') }})</span>
         </div>
         <div class="row mb-3">
-            <div class="col-12 col-sm text-center p-3">
-                <img class="img-fluid" :src="item.card.imagePath">
+            <div class="col-12 col-sm text-center d-flex flex-column justify-content-between" v-if="is_changing_card">
+                <card-edit :inital-item="item" :expansions="expansions" :languages="languages" @updated="updated($event)"></card-edit>
+                <button class="btn btn-sm btn-secondary mt-1" @click="is_changing_card = false;">Abbrechen</button>
+            </div>
+            <div class="col-12 col-sm text-center" v-else>
+                <img class="img-fluid p-3" :src="item.card.imagePath">
+                <button class="btn btn-block btn-sm btn-secondary" @click="is_changing_card = true;" v-if="item.is_sellable === 0">Karte ändern</button>
+                <button class="btn btn-block btn-sm btn-danger text-overflow-ellipsis" title="Nächste Karte (Status Nicht vorhanden)" @click="next(true, 3)" v-if="item.is_sellable === 0">Nächste Karte (Karte nicht vorhanden)</button>
             </div>
             <div class="col d-flex flex-column">
                 <div class="mb-3">
-                    <div><b>{{ (index + 1) }}: {{ item.localName }} (#{{ item.card.number }}) <span class="fi" :class="'fi-' + language.code" :title="language.name"></span> </b></div>
+                    <div><b>{{ (index + 1) }}: {{ item.localName }} (#{{ item.card.number }}) <span class="fi" :class="'fi-' + language.code" :title="language.name"></span></b></div>
                     <div><expansion-icon :expansion="item.card.expansion"></expansion-icon></div>
                     <div><rarity :value="item.card.rarity"></rarity> ({{ item.card.rarity }})</div>
                     <div><condition :value="form.condition"></condition> ({{ form.condition }})</div>
@@ -49,8 +55,7 @@
                         <select class="form-control form-control-sm" id="state_comment_boilerplate" :placeholder="$t('order.article.show.problems.placeholder')" @change="form.state_comments += $event.target.value">
                             <option>{{ $t('order.article.show.problems.label') }}</option>
                             <option>{{ $t('order.article.show.problems.not_available') }}</option>
-                            <option>{{ $t('order.article.show.problems.wrong_condition') }}</option>
-                            <option>{{ $t('order.article.show.problems.wrong_language') }}</option>
+                            <option>falsche Karte</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -62,13 +67,8 @@
                     <i class="fas fa-fw mb-3" :class="item.state_icon" :title="item.state_comments"></i> {{ item.state_comments }}
                 </div>
                 <div class="d-flex justify-content-between">
-                    <button class="btn btn-sm btn-danger text-overflow-ellipsis" title="Nächste Karte (Status Problem)" @click="next(true, 1)">{{ $t('order.article.show.actions.next_problem') }}</button>
-                    <button class="btn btn-sm btn-light" @click="next(false)">{{ $t('order.article.show.actions.next') }}</button>
-                    <button class="btn btn-sm btn-primary text-overflow-ellipsis" title="Nächste Karte (Status OK)" @click="next(true, 0)">{{ $t('order.article.show.actions.next_ok') }}</button>
-                </div>
-                <div class="d-flex justify-content-around mt-3">
-                    <button class="btn btn-sm btn-light" @click="next(true, 2)" v-if="item.state != 2">Für Pickliste zurückstellen</button>
-                    <button class="btn btn-sm btn-light" @click="next(true, null)" v-if="item.state !== null">Status zurücksetzen</button>
+                    <button class="btn btn-sm btn-warning text-overflow-ellipsis" title="Nächste Karte (Status Problem)" :disabled="item.is_sellable === 1" @click="next(true, 1)">{{ $t('order.article.show.actions.next_problem') }}</button>
+                    <button class="btn btn-sm btn-primary text-overflow-ellipsis" title="Nächste Karte (Status OK)" :disabled="item.is_sellable === 1" @click="next(true, 0)">{{ $t('order.article.show.actions.next_ok') }}</button>
                 </div>
             </div>
         </div>
@@ -79,10 +79,12 @@
     import condition from '../../partials/emoji/condition.vue';
     import rarity from '../../partials/emoji/rarity.vue';
     import expansionIcon from '../../expansion/icon.vue';
+    import cardEdit from './card/edit.vue';
 
     export default {
 
         components: {
+            cardEdit,
             condition,
             expansionIcon,
             rarity,
@@ -110,6 +112,10 @@
             languages: {
                 required: true,
                 type: Array,
+            },
+            expansions: {
+                type: Array,
+                required: true,
             },
         },
 
@@ -141,7 +147,21 @@
                     is_foil: this.item ? this.item.is_foil : null,
                     unit_cost_formatted: this.item ? this.item.unit_cost_formatted : null,
                 },
+                price_changes: {
+                    language: false,
+                },
+                is_changing_card: false,
             };
+        },
+
+        mounted() {
+            const component = this;
+            window.addEventListener('keyup', function(event) {
+                // Enter
+                if (event.keyCode === 13) {
+                    component.next(true, 0);
+                }
+            });
         },
 
         methods: {
@@ -152,6 +172,10 @@
                     return;
                 }
                 component.form.state = state;
+                if (state === 3) {
+                    component.form.state_comments = 'Karte nicht vorhanden';
+                    component.form.unit_cost_formatted = '0,00';
+                }
                 axios.put('/article/' + component.item.id, component.form)
                     .then( function (response) {
                         component.errors = {};
@@ -175,6 +199,10 @@
             setLanguageId(language) {
                 this.language = language;
                 this.form.language_id = language.id;
+                if (this.price_changes.language === false && this.item.language_id === 1 && language.id !== 1) {
+                    this.changePrice(-10);
+                    this.price_changes.language = true;
+                }
             },
             getIsFoilAktiveClass() {
                 return this.form.is_foil ? 'btn-primary' : 'btn-secondary';
@@ -187,6 +215,10 @@
                 unit_cost = (unit_cost * (1 + percentage / 100)).toFixed(2);
 
                 this.form.unit_cost_formatted = unit_cost.toString().replace('.', ',');
+            },
+            updated(item) {
+                this.$emit('updated', item);
+                this.is_changing_card = false;
             },
         },
     };

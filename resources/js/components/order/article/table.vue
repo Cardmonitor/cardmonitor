@@ -22,7 +22,7 @@
                         <th class="text-right d-none d-sm-table-cell w-formatted-number">{{ $t('app.price_abbr') }}</th>
                         <th class="text-right d-none d-xl-table-cell w-formatted-number">{{ $t('app.price_buying_abbr') }}</th>
                         <th class="text-right d-none d-xl-table-cell w-formatted-number">{{ $t('app.provision') }}</th>
-                        <th class="text-right d-none d-xl-table-cell w-formatted-number" :title="$t('app.profit_anticipated')">{{ $t('app.revenue') }}</th>
+                        <th class="text-right d-none d-xl-table-cell w-formatted-number" :title="$t('app.profit_anticipated')">{{ $t('app.profit') }}</th>
                         <th class="text-right d-none d-sm-table-cell w-action">{{ $t('app.actions.action') }}</th>
                     </tr>
                 </thead>

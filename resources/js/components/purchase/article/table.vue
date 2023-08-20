@@ -15,15 +15,16 @@
                         <th class="d-none d-sm-table-cell" width="75"></th>
                         <th class="text-center d-none d-lg-table-cell w-icon">{{ $t('article.sync') }}</th>
                         <th class="text-center w-icon"></th>
-                        <th class="" width="100%">{{ $t('app.name') }}</th>
+                        <th class="" width="125">{{ $t('app.name') }}</th>
+                        <th class="d-none d-xl-table-cell" width="100%">Problem</th>
                         <th class="w-icon"></th>
                         <th class="text-center d-none d-lg-table-cell w-icon"></th>
                         <th class="text-center d-none d-xl-table-cell w-icon"></th>
                         <th class="d-none d-lg-table-cell" style="width: 100px;"></th>
                         <th class="text-right d-none d-sm-table-cell w-formatted-number">{{ $t('app.price_abbr') }}</th>
-                        <th class="text-right d-none d-xl-table-cell w-formatted-number">{{ $t('app.price_buying_abbr') }}</th>
-                        <th class="text-right d-none d-xl-table-cell w-formatted-number" :title="$t('app.profit_anticipated')">{{ $t('app.revenue') }}</th>
-                        <th class="text-right d-none d-xl-table-cell w-formatted-number">Nummer</th>
+                        <th class="text-right d-none d-sm-table-cell w-formatted-number">{{ $t('app.price_buying_abbr') }}</th>
+                        <th class="text-right d-none d-xl-table-cell w-formatted-number" :title="$t('app.profit_anticipated')">{{ $t('app.profit') }}</th>
+                        <th class="text-right d-none d-sm-table-cell w-formatted-number">Nummer</th>
                         <th class="text-right d-none d-sm-table-cell w-action">{{ $t('app.actions.action') }}</th>
                     </tr>
                 </thead>
@@ -38,14 +39,15 @@
                         <td class="text-center d-none d-lg-table-cell w-icon"></td>
                         <td class="text-center"><b>{{ counts.open }}</b></td>
                         <td class=""></td>
+                        <td class="d-none d-xl-table-cell"></td>
                         <td class=""></td>
                         <td class="d-none d-lg-table-cell"></td>
                         <td class="d-none d-xl-table-cell"></td>
                         <td class="d-none d-lg-table-cell"></td>
                         <td class="d-none d-sm-table-cell"></td>
+                        <td class="d-none d-sm-table-cell"></td>
                         <td class="d-none d-xl-table-cell"></td>
-                        <td class="d-none d-xl-table-cell"></td>
-                        <td class="d-none d-xl-table-cell"></td>
+                        <td class="d-none d-sm-table-cell"></td>
                         <td class="d-none d-sm-table-cell"></td>
                     </tr>
                     <tr v-show="counts.problem > 0">
@@ -53,14 +55,15 @@
                         <td class="text-center d-none d-lg-table-cell w-icon"></td>
                         <td class="text-center"><b>{{ counts.problem }}</b></td>
                         <td class=""></td>
+                        <td class="d-none d-xl-table-cell"></td>
                         <td class=""></td>
                         <td class="d-none d-lg-table-cell"></td>
                         <td class="d-none d-xl-table-cell"></td>
                         <td class="d-none d-lg-table-cell"></td>
                         <td class="d-none d-sm-table-cell"></td>
+                        <td class="d-none d-sm-table-cell"></td>
                         <td class="d-none d-xl-table-cell"></td>
-                        <td class="d-none d-xl-table-cell"></td>
-                        <td class="d-none d-xl-table-cell"></td>
+                        <td class="d-none d-sm-table-cell"></td>
                         <td class="d-none d-sm-table-cell"></td>
                     </tr>
                     <tr v-show="counts.ok > 0">
@@ -68,13 +71,28 @@
                         <td class="text-center d-none d-lg-table-cell w-icon"></td>
                         <td class="text-center"><b>{{ counts.ok }}</b></td>
                         <td class=""></td>
+                        <td class="d-none d-xl-table-cell"></td>
                         <td class=""></td>
                         <td class="d-none d-lg-table-cell"></td>
                         <td class="d-none d-xl-table-cell"></td>
                         <td class="d-none d-lg-table-cell"></td>
                         <td class="d-none d-sm-table-cell"></td>
+                        <td class="d-none d-sm-table-cell"></td>
                         <td class="d-none d-xl-table-cell"></td>
+                        <td class="d-none d-sm-table-cell"></td>
+                        <td class="d-none d-sm-table-cell"></td>
+                    </tr>
+                    <tr v-show="counts.sellable > 0">
+                        <td colspan="2" class="d-none d-sm-table-cell"><b>Verkaufbar</b></td>
+                        <td class="text-center"><b>{{ counts.sellable }}</b></td>
+                        <td class=""></td>
                         <td class="d-none d-xl-table-cell"></td>
+                        <td class=""></td>
+                        <td class="d-none d-lg-table-cell"></td>
+                        <td class="d-none d-xl-table-cell"></td>
+                        <td class="d-none d-lg-table-cell"></td>
+                        <td class="d-none d-sm-table-cell"></td>
+                        <td class="d-none d-sm-table-cell"></td>
                         <td class="d-none d-xl-table-cell"></td>
                         <td class="d-none d-sm-table-cell"></td>
                         <td class="d-none d-sm-table-cell"></td>
@@ -84,34 +102,24 @@
                         <td class="text-center d-none d-lg-table-cell w-icon"></td>
                         <td class="text-center"><b>{{ counts.all }}</b></td>
                         <td class=""></td>
+                        <td class="d-none d-xl-table-cell"></td>
                         <td class=""></td>
                         <td class="d-none d-lg-table-cell"></td>
                         <td class="d-none d-xl-table-cell"></td>
                         <td class="d-none d-lg-table-cell"></td>
-                        <td class="d-none d-sm-table-cell text-right font-weight-bold">{{ sums.unit_price.toFixed(2) }} €</td>
-                        <td class="d-none d-xl-table-cell text-right font-weight-bold">{{ sums.unit_cost.toFixed(2) }} €</td>
-                        <td class="d-none d-xl-table-cell text-right font-weight-bold">{{ sums.profit.toFixed(2) }} €</td>
+                        <td class="d-none d-sm-table-cell"></td>
+                        <td class="d-none d-sm-table-cell"></td>
+                        <td class="d-none d-xl-table-cell"></td>
                         <td class="d-none d-sm-table-cell"></td>
                         <td class="d-none d-sm-table-cell"></td>
                     </tr>
                     <tr>
-                        <td class="align-middle" colspan="12">
-                            <select class="form-control form-control-sm" v-model="actionForm.action">
-                                <option :value="null">{{ $t('app.actions.action') }}</option>
-                                <optgroup label="Bearbeiten">
-                                    <option value="setNumber">Nummern automatisch setzen</option>
-                                    <option value="resetNumber">Nummern entfernen</option>
-                                </optgroup>
-                                <optgroup label="Einlagern">
-                                    <option value="storing" :disabled="!(all_items_are_numbered === true && all_items_are_stored === false)">Einlagern</option>
-                                </optgroup>
-                                <optgroup label="Cardmarket">
-                                    <option value="syncCardmarket" :disabled="all_items_are_numbered === false">Upload zu Cardmarket</option>
-                                </optgroup>
-                            </select>
+                        <td class="align-middle" colspan="13">
+                            <button class="btn btn-success" :disabled="counts.open > 0 || counts.all === counts.sellable" @click="sellable()">Ankauf freigeben</button>
+                            <button class="btn btn-danger" :disabled="counts.sellable > 0" @click="cancel()">Ankauf stornieren</button>
                         </td>
                         <td class="align-middle text-right">
-                            <button class="btn btn-sm btn-secondary" @click="action">Ausführen</button>
+
                         </td>
                     </tr>
                 </tfoot>
@@ -193,10 +201,6 @@
                 form: {
 
                 },
-                actionForm: {
-                    action: null,
-                    storage_id: null,
-                },
                 imgbox: {
                     src: null,
                     show: true,
@@ -235,7 +239,7 @@
             },
             remove(index) {
                 this.items.splice(index, 1);
-                Vue.success('Interaktion gelöscht.');
+                Vue.success('Artikel gelöscht.');
             },
             toshow(index, item) {
                 this.$emit('toshow', {
@@ -251,6 +255,28 @@
             },
             hideImgbox() {
                 this.imgbox.show = false;
+            },
+            sellable() {
+                var component = this;
+                axios.post(component.model.path + '/sellable')
+                .then( function (response) {
+                    Vue.success('Die Bestellung wurde freigegeben.');
+                    location.reload();
+                })
+                .catch( function (error) {
+                    Vue.error(error.response.data.message);
+                });
+            },
+            cancel() {
+                var component = this;
+                axios.post(component.model.path + '/cancel')
+                .then( function (response) {
+                    Vue.success('Die Bestellung wurde storniert.');
+                    location.href = '/purchases';
+                })
+                .catch( function (error) {
+                    Vue.error(error.response.data.message);
+                });
             },
         },
     };

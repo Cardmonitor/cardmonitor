@@ -186,7 +186,9 @@
                             </select>
                         </td>
                         <td class="align-middle text-right">
-                            <button class="btn btn-sm btn-secondary" @click="action">Ausführen</button>
+                            <button class="btn btn-sm btn-secondary" style="width: 132px;" :disabled="actioning.status === true" @click="action">
+                                <i class="fas fa-spinner fa-spin mr-1" v-show="actioning.status === true"></i>Ausführen
+                            </button>
                         </td>
                     </tr>
                 </tfoot>
@@ -312,6 +314,9 @@
                     status: this.isSyncingArticles,
                     interval: null,
                 },
+                actioning: {
+                    status: false,
+                },
                 imgbox: {
                     src: null,
                     top: 0,
@@ -334,7 +339,8 @@
                     rule_id: 0,
                     searchtext: '',
                     show: true,
-                    sold: 0,
+                    sold: null,
+                    is_sellable: 1,
                     is_numbered: -1,
                     is_stored: -1,
                     storage_id: 0,
@@ -408,6 +414,7 @@
         methods: {
             action() {
                 var component = this;
+                component.actioning.status = true;
                 axios.post('/article/action', {
                     filter: component.filter,
                     ...component.actionForm,
@@ -421,6 +428,13 @@
                         component.actionForm.action = 'setNumber';
                         component.fetch();
                     }
+                })
+                .catch( function (error) {
+                    Vue.error('Aktion konnte nicht ausgeführt werden!');
+                    console.log(error);
+                })
+                .finally( function () {
+                    component.actioning.status = false;
                 });
             },
             apply(sync) {

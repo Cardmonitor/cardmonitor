@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Console\Commands\Article\Imports\Cardmarket\StockfileCommand;
 
-class LogfileController extends Controller
+class LogFileController extends Controller
 {
     public function index(Request $request)
     {

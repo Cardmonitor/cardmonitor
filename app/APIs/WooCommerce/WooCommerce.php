@@ -45,6 +45,16 @@ class WooCommerce
         ];
     }
 
+    public function updateOrder(int $id, array $data): array
+    {
+        $response = $this->getClient()->put('/wp-json/wc/v3/orders/' . $id, $data);
+
+        return [
+            'data' => $response->json(),
+            'headers' => $response->headers(),
+        ];
+    }
+
     private function getClient(): PendingRequest
     {
         return Http::baseUrl($this->url)

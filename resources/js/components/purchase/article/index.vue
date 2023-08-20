@@ -1,14 +1,13 @@
 <template>
 
     <div>
-        <article-show :item="show.item" :index="show.index" :counts="counts" :conditions="conditions" :languages="languages" @next="next($event)"></article-show>
+        <article-show :item="show.item" :index="show.index" :counts="counts" :conditions="conditions" :languages="languages" :expansions="expansions" @next="next($event)" @updated="updated($event)"></article-show>
         <article-table :model="model" :initial-items="items" :counts="counts" @toshow="toshow($event)"></article-table>
     </div>
 
 </template>
 
 <script>
-import { arrayMax } from 'highcharts';
     import articleShow from "./show.vue";
     import articleTable from "./table.vue";
 
@@ -31,6 +30,10 @@ import { arrayMax } from 'highcharts';
                 required: true,
                 type: Array,
             },
+            expansions: {
+                type: Array,
+                required: true,
+            },
         },
 
         computed: {
@@ -39,12 +42,18 @@ import { arrayMax } from 'highcharts';
                     return item.state_key;
                 });
             },
+            sellable_items_count() {
+                return this.items.filter(function(item) {
+                    return item.is_sellable === 1;
+                }).length;
+            },
             counts() {
                 return {
                     all: this.items.length,
                     ok: ((0 in this.groupedItems) ? this.groupedItems[0].length : 0),
                     open: ((-1 in this.groupedItems) ? this.groupedItems[-1].length : 0),
                     problem: ((1 in this.groupedItems) ? this.groupedItems[1].length : 0),
+                    sellable: this.sellable_items_count,
                 };
             },
         },
@@ -67,6 +76,10 @@ import { arrayMax } from 'highcharts';
                     this.show.index = 0;
                 }
                 this.show.item = this.items[this.show.index];
+            },
+            updated(item) {
+                Vue.set(this.items, this.show.index, item);
+                this.toshow({index: this.show.index, item: item});
             },
             toshow({index, item}) {
                 this.show.index = index;

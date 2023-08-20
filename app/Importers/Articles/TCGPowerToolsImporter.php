@@ -102,6 +102,7 @@ class TCGPowerToolsImporter
                 'has_sync_error' => false,
                 'sync_error' => null,
                 'source_sort' => $source_sort,
+                'is_sellable_since' => now(),
             ];
             $attributes = [
                 'source_slug' => self::SOURCE_SLUG,

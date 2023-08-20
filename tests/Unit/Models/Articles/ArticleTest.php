@@ -1048,6 +1048,7 @@ class ArticleTest extends TestCase
         $article = factory(Article::class)->create([
             'user_id' => $this->user->id,
             'sold_at' => null,
+            'is_sellable_since' => now(),
         ]);
 
         $now = now();
@@ -1058,6 +1059,7 @@ class ArticleTest extends TestCase
         $article->save();
 
         $this->assertTrue($article->is_sold);
+        $this->assertFalse($article->is_sellable);
         $this->assertEquals($now->format('Y-m-d H:i:s'), $article->sold_at->format('Y-m-d H:i:s'));
 
         $article->sold_at = null;
@@ -1065,6 +1067,32 @@ class ArticleTest extends TestCase
 
         $this->assertNull($article->sold_at);
         $this->assertFalse($article->is_sold);
+    }
+
+    /**
+     * @test
+     */
+    public function it_sets_the_is_sellable_attribute_when_is_sold_since_is_set() {
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'is_sellable_since' => null,
+        ]);
+
+        $now = now();
+
+        $this->assertFalse($article->is_sellable);
+
+        $article->is_sellable_since = $now;
+        $article->save();
+
+        $this->assertTrue($article->is_sellable);
+        $this->assertEquals($now->format('Y-m-d H:i:s'), $article->is_sellable_since->format('Y-m-d H:i:s'));
+
+        $article->is_sellable_since = null;
+        $article->save();
+
+        $this->assertNull($article->is_sellable_since);
+        $this->assertFalse($article->is_sellable);
     }
 
     /**

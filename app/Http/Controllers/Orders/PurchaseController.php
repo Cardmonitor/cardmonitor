@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Orders;
 
-use App\Http\Controllers\Controller;
-use App\Models\Articles\Article;
 use App\Models\Items\Custom;
-use App\Models\Localizations\Language;
 use App\Models\Orders\Order;
 use Illuminate\Http\Request;
+use App\Models\Articles\Article;
+use App\Http\Controllers\Controller;
+use App\Models\Expansions\Expansion;
+use App\Models\Localizations\Language;
 
 class PurchaseController extends Controller
 {
@@ -68,6 +69,7 @@ class PurchaseController extends Controller
                 'seller',
             ]))
             ->with('conditions', Article::CONDITIONS)
-            ->with('languages', $lanugages);
+            ->with('languages', $lanugages)
+            ->with('expansions', Expansion::all());
     }
 }
