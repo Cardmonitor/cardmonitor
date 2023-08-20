@@ -1477,8 +1477,10 @@ class Article extends Model
         }
 
         if ($value == self::SYNC_STATE_SUCCESS) {
-            $query->whereNotNull('articles.exported_at')
-                ->whereNotNull('articles.synced_at');
+            $query->where(function ($query) {
+                return $query->whereNotNull('articles.exported_at')
+                    ->orWhereNotNull('articles.synced_at');
+            });
         }
 
         return $query->where('articles.has_sync_error', $value);
