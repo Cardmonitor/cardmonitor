@@ -73,6 +73,10 @@ class Article extends Model
     const STATE_ON_HOLD = 2;
     const STATE_NOT_PRESENT = 3;
 
+    const SYNC_STATE_SUCCESS = 0;
+    const SYNC_STATE_ERROR = 1;
+    const SYNC_STATE_NOT_SYNCED = 2;
+
     protected $appends = [
         'can_upload_to_cardmarket',
         'localName',
@@ -1464,6 +1468,17 @@ class Article extends Model
     {
         if ($value == -1 || is_null($value)) {
             return $query;
+        }
+
+        if ($value == self::SYNC_STATE_NOT_SYNCED) {
+            return $query->whereNull('articles.exported_at')
+                ->whereNull('articles.synced_at')
+                ->where('articles.has_sync_error', self::SYNC_STATE_SUCCESS);
+        }
+
+        if ($value == self::SYNC_STATE_SUCCESS) {
+            $query->whereNotNull('articles.exported_at')
+                ->whereNotNull('articles.synced_at');
         }
 
         return $query->where('articles.has_sync_error', $value);

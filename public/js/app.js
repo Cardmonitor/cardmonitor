@@ -10580,6 +10580,10 @@ var render = function render() {
     }
   }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _c("option", {
     domProps: {
+      value: 2
+    }
+  }, [_vm._v("Nicht hochgeladen")]), _vm._v(" "), _c("option", {
+    domProps: {
       value: 1
     }
   }, [_vm._v(_vm._s(_vm.$t("filter.sync.error")))]), _vm._v(" "), _c("option", {
