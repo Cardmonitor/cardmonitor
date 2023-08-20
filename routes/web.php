@@ -48,8 +48,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home/order/month/{year}/{month}', 'Home\Orders\MonthController@index')->name('home.order.month');
     Route::get('/home/order/year/{year}', 'Home\Orders\YearController@index')->name('home.order.year');
 
-    Route::put('api/{api}', 'Apis\ApiController@update')->name('api.update');
-    Route::delete('api/{api}', 'Apis\ApiController@destroy')->name('api.destroy');
+    Route::put('api/{api}', [\App\Http\Controllers\Apis\ApiController::class, 'update'])->name('api.update');
+    Route::delete('api/{api}', [\App\Http\Controllers\Apis\ApiController::class, 'destroy'])->name('api.destroy');
 
     Route::get('article/sync', 'Cardmarket\Articles\ArticleController@index')->name('article.sync.index');
 
@@ -64,7 +64,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('article/storing_history/{storing_history}/pdf', 'Articles\StoringHistory\PdfController@show')->name('article.storing_history.pdf.show');
     Route::post('article/storing_history/{storing_history}/pdf', 'Articles\StoringHistory\PdfController@store')->name('article.storing_history.pdf.store');
 
-    Route::get('article/stock/logfile', 'Articles\Stock\LogfileController@index')->name('article.stock.logfile.index');
+    Route::get('article/stock/logfile', [\App\Http\Controllers\Articles\Stock\LogFileController::class, 'index'])->name('article.stock.logfile.index');
 
     Route::get('article/{article}/cardmarket', [\App\Http\Controllers\Cardmarket\Articles\ArticleController::class, 'show'])->name('article.cardmarket.show');
     Route::put('article/{article}/cardmarket', [\App\Http\Controllers\Cardmarket\Articles\ArticleController::class, 'update'])->name('article.cardmarket.update');
@@ -123,7 +123,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('purchases/{order}/sellable', [\App\Http\Controllers\Orders\Purchases\SellableController::class, 'store'])->name('purchases.sellable.store');
     Route::post('purchases/{order}/cancel', [\App\Http\Controllers\Orders\Purchases\CancelController::class, 'store'])->name('purchases.cancel.store');
 
-    Route::get('purchases/{order}/pdf', [\App\Http\Controllers\Orders\Purchases\PDFController::class, 'show'])->name('purchases.pdf.show');
+    Route::get('purchases/{order}/pdf', [\App\Http\Controllers\Orders\Purchases\PdfController::class, 'show'])->name('purchases.pdf.show');
 
     Route::get('purchases', [\App\Http\Controllers\Orders\PurchaseController::class, 'index'])->name('purchases.index');
     Route::get('purchases/{order}', [\App\Http\Controllers\Orders\PurchaseController::class, 'show'])->name('purchases.show');

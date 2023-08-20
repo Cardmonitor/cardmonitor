@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Controller\Orders\Import;
+namespace Tests\Feature\Controller\Orders\Purchases;
 
 use Tests\TestCase;
 use App\Models\Cards\Card;
