@@ -179,6 +179,9 @@ class WooCommerceOrderImporter
                 'sync_error' => null,
                 'storage_id' => null,
                 'source_sort' => $this->source_sort,
+                'is_sellable_since' => null,
+                'state' => null,
+                'state_comments' => null,
             ];
             $attributes = [
                 'source_slug' => self::SOURCE_SLUG,

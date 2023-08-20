@@ -74,7 +74,7 @@
     <div class="card">
         <div class="card-header">{{ __('app.articles') }}</div>
         <div class="card-body">
-            <purchase-article-index :model="{{ json_encode($model) }}" :conditions="{{ json_encode($conditions) }}" :languages="{{ json_encode($languages) }}"></purchase-article-index>
+            <purchase-article-index :model="{{ json_encode($model) }}" :conditions="{{ json_encode($conditions) }}" :languages="{{ json_encode($languages) }}" :expansions="{{ json_encode($expansions) }}"></purchase-article-index>
         </div>
     </div>
 

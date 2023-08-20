@@ -424,6 +424,7 @@ class Card extends Model
                 ->where('localizations.localizationable_type', '=', Card::class)
                 ->where('localizations.language_id', '=', $languageId);
         })
-            ->where('localizations.name', 'like', '%' . $searchtext . '%');
+            ->where('localizations.name', 'like', '%' . $searchtext . '%')
+            ->orWhere('cards.number', 'like', '%' . $searchtext . '%');
     }
 }
