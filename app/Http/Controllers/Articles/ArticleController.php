@@ -208,6 +208,7 @@ class ArticleController extends Controller
             'cardmarket_comments' => 'sometimes|nullable|string',
             'language_id' => 'sometimes|required|integer',
             'condition' => 'sometimes|required|string',
+            'card_id' => 'sometimes|required|integer',
             'number' => 'sometimes|nullable|string',
             'storage_id' => 'sometimes|nullable|exists:storages,id',
             'slot' => 'sometimes|nullable|integer' . ($storage_id ? '|in:0,' . implode(',', \App\Models\Storages\Storage::openSlots($storage_id, $article->id)) : ''),

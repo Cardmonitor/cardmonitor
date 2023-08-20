@@ -71,6 +71,7 @@ class Article extends Model
     const STATE_OK = 0;
     const STATE_PROBLEM = 1;
     const STATE_ON_HOLD = 2;
+    const STATE_NOT_PRESENT = 3;
 
     protected $appends = [
         'can_upload_to_cardmarket',
@@ -1084,6 +1085,7 @@ class Article extends Model
             case self::STATE_OK: return 'fa-check text-success'; break;
             case self::STATE_PROBLEM: return 'fa-exclamation text-danger'; break;
             case self::STATE_ON_HOLD: return 'fa-pause text-warning'; break;
+            case self::STATE_NOT_PRESENT: return 'fa-times text-danger'; break;
         }
     }
 
