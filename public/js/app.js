@@ -6238,7 +6238,7 @@ __webpack_require__.r(__webpack_exports__);
         presale: null,
         searchtext: '',
         show: false,
-        state: 'paid'
+        state: 'on-hold'
       },
       selected: []
     };
@@ -6286,40 +6286,6 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    checkIsSyncingOrders: function checkIsSyncingOrders() {
-      var component = this;
-      this.syncing.interval = setInterval(function () {
-        component.getIsSyncingOrders();
-      }, 3000);
-    },
-    getIsSyncingOrders: function getIsSyncingOrders() {
-      var component = this;
-      axios.get(component.uri + '/sync').then(function (response) {
-        component.syncing.status = response.data.is_syncing_orders;
-        if (component.syncing.status == 0) {
-          clearInterval(component.syncing.interval);
-          component.syncing.interval = null;
-          component.fetch();
-          Vue.success(component.$t('order.successes.synced'));
-        }
-      })["catch"](function (error) {
-        console.log(error);
-      })["finally"](function () {});
-    },
-    download: function download() {
-      var component = this;
-      axios.post(component.uri + '/export/download', component.filter).then(function (response) {
-        if (response.data.path) {
-          Vue.success('Datei heruntergeladen');
-          location.href = response.data.path;
-        } else {
-          Vue.error(component.$t('order.errors.loaded'));
-        }
-      })["catch"](function (error) {
-        Vue.error(component.$t('order.errors.loaded'));
-        console.log(error);
-      });
-    },
     fetch: function fetch() {
       var component = this;
       component.isLoading = true;
@@ -6351,17 +6317,6 @@ __webpack_require__.r(__webpack_exports__);
     },
     updated: function updated(index, item) {
       Vue.set(this.items, index, item);
-    },
-    sync: function sync() {
-      var component = this;
-      axios.put(component.uri + '/sync', component.filter).then(function (response) {
-        component.syncing.status = 1;
-        component.checkIsSyncingOrders();
-        Vue.success(component.$t('order.successes.syncing_background'));
-      })["catch"](function (error) {
-        Vue.error(component.$t('order.errors.synced'));
-        console.log(error);
-      })["finally"](function () {});
     },
     showPageButton: function showPageButton(page) {
       if (page == 1 || page == this.paginate.lastPage) {
@@ -16368,30 +16323,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-filter"
-  })]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-sm btn-secondary ml-1",
-    attrs: {
-      disabled: _vm.syncing.status == 1
-    },
-    on: {
-      click: _vm.sync
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-sync",
-    "class": {
-      "fa-spin": _vm.syncing.status == 1
-    }
-  })]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-sm btn-secondary ml-1",
-    attrs: {
-      disabled: _vm.syncing.status == 1
-    },
-    on: {
-      click: _vm.download
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-download"
-  })]), _vm._v(" "), _vm._m(0)])]), _vm._v(" "), _vm.filter.show ? _c("form", {
+  })])])]), _vm._v(" "), _vm.filter.show ? _c("form", {
     staticClass: "mt-1",
     attrs: {
       id: "filter"
@@ -16428,59 +16360,13 @@ var render = function render() {
         _vm.$set(_vm.filter, "state", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
       }, _vm.search]
     }
-  }, [_c("option", {
-    domProps: {
-      value: null
-    }
-  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _vm._l(_vm.states, function (name, id) {
+  }, _vm._l(_vm.states, function (state) {
     return _c("option", {
       domProps: {
-        value: id
+        value: state
       }
-    }, [_vm._v(_vm._s(name))]);
-  })], 2)])]), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
-  }, [_c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "filter-presale"
-    }
-  }, [_vm._v("Presale")]), _vm._v(" "), _c("select", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.filter.presale,
-      expression: "filter.presale"
-    }],
-    staticClass: "form-control form-control-sm",
-    attrs: {
-      id: "filter-presale"
-    },
-    on: {
-      change: [function ($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-          return o.selected;
-        }).map(function (o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val;
-        });
-        _vm.$set(_vm.filter, "presale", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
-      }, _vm.search]
-    }
-  }, [_c("option", {
-    domProps: {
-      value: null
-    }
-  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "0"
-    }
-  }, [_vm._v("Ohne Presale")]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "1"
-    }
-  }, [_vm._v("Presale")])])])])])]) : _vm._e(), _vm._v(" "), _vm.isLoading ? _c("div", {
+    }, [_vm._v(_vm._s(state))]);
+  }), 0)])])])]) : _vm._e(), _vm._v(" "), _vm.isLoading ? _c("div", {
     staticClass: "mt-3 p-5"
   }, [_c("center", [_c("span", {
     staticStyle: {
@@ -16608,20 +16494,7 @@ var render = function render() {
     }
   }, [_vm._v(_vm._s(_vm.$t("app.paginate.next")))])])], 2)])]);
 };
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("button", {
-    staticClass: "btn btn-sm btn-secondary ml-1",
-    attrs: {
-      type: "button",
-      "data-toggle": "modal",
-      "data-target": "#import-sent"
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-upload"
-  })]);
-}];
+var staticRenderFns = [];
 render._withStripped = true;
 
 
