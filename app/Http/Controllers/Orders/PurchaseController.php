@@ -72,6 +72,22 @@ class PurchaseController extends Controller
             ]))
             ->with('conditions', Article::CONDITIONS)
             ->with('languages', $lanugages)
-            ->with('expansions', Expansion::all());
+            ->with('expansions', Expansion::all())
+            ->with('states', WooCommerce::STATUSES);
+    }
+
+    public function update(Request $request, Order $order)
+    {
+        $attributes = $request->validate([
+            'state' => 'required|string|in:' . implode(',', WooCommerce::STATUSES),
+        ]);
+
+        $order->update($attributes);
+
+        return redirect($order->path)
+            ->with('status', [
+                'type' => 'success',
+                'text' => 'Der Ankauf wurde gespeichert.',
+            ]);
     }
 }

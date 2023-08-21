@@ -127,6 +127,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('purchases', [\App\Http\Controllers\Orders\PurchaseController::class, 'index'])->name('purchases.index');
     Route::get('purchases/{order}', [\App\Http\Controllers\Orders\PurchaseController::class, 'show'])->name('purchases.show');
+    Route::put('purchases/{order}', [\App\Http\Controllers\Orders\PurchaseController::class, 'update'])->name('purchases.update');
     Route::get('purchases/{order}/edit', [\App\Http\Controllers\Orders\PurchaseController::class, 'edit'])->name('purchases.edit');
 
     Route::get('rule/apply', 'Rules\ApplyController@index');
