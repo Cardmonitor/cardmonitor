@@ -30,6 +30,7 @@
                         <label for="filter-sync">{{ $t('filter.sync.label') }}</label>
                         <select class="form-control form-control-sm" id="filter-sync" v-model="filter.sync" @change="search">
                             <option :value="-1">{{ $t('filter.all') }}</option>
+                            <option :value="2">Nicht hochgeladen</option>
                             <option :value="1">{{ $t('filter.sync.error') }}</option>
                             <option :value="0">{{ $t('filter.sync.success') }}</option>
                         </select>
