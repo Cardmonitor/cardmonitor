@@ -4,8 +4,6 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class FlashMessage extends Notification
@@ -13,23 +11,25 @@ class FlashMessage extends Notification
     use Queueable;
 
     private array $message = [];
+    private array $data = [];
 
-    public static function success(string $text)
+    public static function success(string $text, array $data = [])
     {
-        return new self($text, 'success');
+        return new self($text, 'success', $data);
     }
 
-    public static function danger(string $text)
+    public static function danger(string $text, array $data = [])
     {
-        return new self($text, 'danger');
+        return new self($text, 'danger', $data);
     }
 
-    public function __construct(string $text, string $type = 'success')
+    public function __construct(string $text, string $type = 'success', array $data = [])
     {
         $this->message = [
             'type' => $type,
             'text' => $text,
         ];
+        $this->data = $data;
     }
 
     /**
@@ -44,9 +44,10 @@ class FlashMessage extends Notification
     }
 
     public function toBroadcast($notifiable)
-{
-    return new BroadcastMessage([
-        'message' => $this->message
-    ]);
-}
+    {
+        return new BroadcastMessage([
+            'message' => $this->message,
+            'data' => $this->data,
+        ]);
+    }
 }

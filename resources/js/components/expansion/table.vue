@@ -70,18 +70,6 @@
                 </li>
             </ul>
         </nav>
-        <div class="modal fade" tabindex="-1" role="dialog" id="user-backgroundtask-show" ref="user-backgroundtask-show">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Log</h5>
-                    </div>
-                    <div class="model-body">
-                        <user-backgroundtask-show :task="show_backgroundtask"></user-backgroundtask-show>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -138,14 +126,11 @@
         },
 
         mounted() {
-
-            this.fetch();
-
             const component = this;
-            $(this.$refs['user-backgroundtask-show']).on("hidden.bs.modal", function() {
-                component.show_backgroundtask = '';
+            component.fetch();
+            Bus.$on('update-background-tasks', function (background_tasks) {
+                component.updateBackgroundTasks({background_tasks: background_tasks});
             });
-
         },
 
         computed: {
@@ -157,19 +142,7 @@
                     is_importing_expansions[this.items[key].id] = is_importing_expansion;
                 }
 
-                const importing_expansions = Object.entries(is_importing_expansions).filter(function ([key, value]) {
-                    return value !== false;
-                });
-
-                if (importing_expansions.length > 0 && this.interval === null) {
-                    this.checkBackgroundTasks();
-                }
-                else if (importing_expansions.length === 0 && this.interval !== null) {
-                    clearInterval(this.interval);
-                    this.interval = null;
-                }
-
-                return is_importing_expansions;
+               return is_importing_expansions;
             },
             page() {
                 return this.filter.page;
@@ -212,25 +185,8 @@
 
                 return this.background_tasks['expansion']['import'][key] || false;
             },
-            updateBackgroundTasks({background_tasks, backgroundtask_key}) {
+            updateBackgroundTasks({background_tasks}) {
                 this.background_tasks = background_tasks;
-                this.showModal(backgroundtask_key);
-            },
-            fetchBackgroundTasks() {
-                const component = this;
-                axios.get('/user/backgroundtasks')
-                    .then(function (response) {
-                        component.background_tasks = response.data;
-                    })
-                    .catch( function (error) {
-                        console.log(error);
-                });
-            },
-            checkBackgroundTasks() {
-                const component = this;
-                component.interval = setInterval( function () {
-                    component.fetchBackgroundTasks()
-                }, 3000);
             },
             create() {
                 const component = this;
@@ -276,13 +232,6 @@
                 }
 
                 return false;
-            },
-            showModal(task) {
-                const component = this;
-                component.$nextTick(() => {
-                    component.show_backgroundtask = task;
-                    $('#user-backgroundtask-show').modal('show');
-                });
             },
         },
     };
