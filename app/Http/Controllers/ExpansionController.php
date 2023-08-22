@@ -74,6 +74,7 @@ class ExpansionController extends Controller
 
         Artisan::queue('expansion:import', [
             'expansion' => $expansion_id,
+            'user' => auth()->user()->id,
         ]);
 
         return response()->json([
@@ -115,6 +116,7 @@ class ExpansionController extends Controller
 
         Artisan::queue('expansion:import', [
             'expansion' => $expansion->id,
+            'user' => auth()->user()->id,
         ]);
 
         if ($request->wantsJson()) {

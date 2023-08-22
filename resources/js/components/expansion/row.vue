@@ -55,7 +55,6 @@
                         Vue.success('Erweiterung wird im Hintergrund importiert.');
                         component.$emit('update-background-tasks', {
                             background_tasks: response.data.background_tasks,
-                            backgroundtask_key: response.data.backgroundtask_key,
                         });
                 })
                 .catch( function (error) {

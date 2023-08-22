@@ -67,6 +67,7 @@ class ExpansionControllerTest extends TestCase
                 'expansion:import',
                 [
                     'expansion' => $expansion['idExpansion'],
+                    'user' => $this->user->id,
                 ]
             );
 
@@ -120,6 +121,7 @@ class ExpansionControllerTest extends TestCase
                 'expansion:import',
                 [
                     'expansion' => $model->id,
+                    'user' => $this->user->id,
                 ]
             );
 

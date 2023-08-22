@@ -3150,8 +3150,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.put('/expansions/' + component.id).then(function (response) {
         Vue.success('Erweiterung wird im Hintergrund importiert.');
         component.$emit('update-background-tasks', {
-          background_tasks: response.data.background_tasks,
-          backgroundtask_key: response.data.backgroundtask_key
+          background_tasks: response.data.background_tasks
         });
       })["catch"](function (error) {
         component.errors = error.response.data.errors;
@@ -3177,12 +3176,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _row_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./row.vue */ "./resources/js/components/expansion/row.vue");
 /* harmony import */ var _filter_game_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../filter/game.vue */ "./resources/js/components/filter/game.vue");
 /* harmony import */ var _filter_search_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../filter/search.vue */ "./resources/js/components/filter/search.vue");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -3230,10 +3223,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     };
   },
   mounted: function mounted() {
-    this.fetch();
     var component = this;
-    $(this.$refs['user-backgroundtask-show']).on("hidden.bs.modal", function () {
-      component.show_backgroundtask = '';
+    component.fetch();
+    Bus.$on('update-background-tasks', function (background_tasks) {
+      component.updateBackgroundTasks({
+        background_tasks: background_tasks
+      });
     });
   },
   computed: {
@@ -3242,18 +3237,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       for (var key in this.items) {
         var is_importing_expansion = !!this.checkIsImportingExpansion(this.items[key].id);
         is_importing_expansions[this.items[key].id] = is_importing_expansion;
-      }
-      var importing_expansions = Object.entries(is_importing_expansions).filter(function (_ref) {
-        var _ref2 = _slicedToArray(_ref, 2),
-          key = _ref2[0],
-          value = _ref2[1];
-        return value !== false;
-      });
-      if (importing_expansions.length > 0 && this.interval === null) {
-        this.checkBackgroundTasks();
-      } else if (importing_expansions.length === 0 && this.interval !== null) {
-        clearInterval(this.interval);
-        this.interval = null;
       }
       return is_importing_expansions;
     },
@@ -3292,25 +3275,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       }
       return this.background_tasks['expansion']['import'][key] || false;
     },
-    updateBackgroundTasks: function updateBackgroundTasks(_ref3) {
-      var background_tasks = _ref3.background_tasks,
-        backgroundtask_key = _ref3.backgroundtask_key;
+    updateBackgroundTasks: function updateBackgroundTasks(_ref) {
+      var background_tasks = _ref.background_tasks;
       this.background_tasks = background_tasks;
-      this.showModal(backgroundtask_key);
-    },
-    fetchBackgroundTasks: function fetchBackgroundTasks() {
-      var component = this;
-      axios.get('/user/backgroundtasks').then(function (response) {
-        component.background_tasks = response.data;
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    checkBackgroundTasks: function checkBackgroundTasks() {
-      var component = this;
-      component.interval = setInterval(function () {
-        component.fetchBackgroundTasks();
-      }, 3000);
     },
     create: function create() {
       var component = this;
@@ -3350,13 +3317,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         return true;
       }
       return false;
-    },
-    showModal: function showModal(task) {
-      var component = this;
-      component.$nextTick(function () {
-        component.show_backgroundtask = task;
-        $('#user-backgroundtask-show').modal('show');
-      });
     }
   }
 });
@@ -5526,6 +5486,9 @@ __webpack_require__.r(__webpack_exports__);
     if (window.user.id) {
       Echo["private"]('App.User.' + window.user.id).notification(function (notification) {
         component.flash(notification.message);
+        if ('background_tasks' in notification.data) {
+          Bus.$emit('update-background-tasks', notification.data.background_tasks);
+        }
       });
     }
   },
@@ -11833,38 +11796,9 @@ var render = function render() {
         _vm.filter.page++;
       }
     }
-  }, [_vm._v(_vm._s(_vm.$t("app.paginate.next")))])])], 2)]), _vm._v(" "), _c("div", {
-    ref: "user-backgroundtask-show",
-    staticClass: "modal fade",
-    attrs: {
-      tabindex: "-1",
-      role: "dialog",
-      id: "user-backgroundtask-show"
-    }
-  }, [_c("div", {
-    staticClass: "modal-dialog",
-    attrs: {
-      role: "document"
-    }
-  }, [_c("div", {
-    staticClass: "modal-content"
-  }, [_vm._m(0), _vm._v(" "), _c("div", {
-    staticClass: "model-body"
-  }, [_c("user-backgroundtask-show", {
-    attrs: {
-      task: _vm.show_backgroundtask
-    }
-  })], 1)])])])]);
+  }, [_vm._v(_vm._s(_vm.$t("app.paginate.next")))])])], 2)])]);
 };
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "modal-header"
-  }, [_c("h5", {
-    staticClass: "modal-title"
-  }, [_vm._v("Log")])]);
-}];
+var staticRenderFns = [];
 render._withStripped = true;
 
 

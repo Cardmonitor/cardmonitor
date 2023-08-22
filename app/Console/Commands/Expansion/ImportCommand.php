@@ -2,13 +2,14 @@
 
 namespace App\Console\Commands\Expansion;
 
+use App\User;
 use App\Models\Cards\Card;
 use App\Models\Games\Game;
 use Illuminate\Support\Arr;
 use Cardmonitor\Cardmarket\Api;
 use Illuminate\Console\Command;
 use App\Support\BackgroundTasks;
-use App\Console\Traits\HasLogger;
+use App\Notifications\FlashMessage;
 use Illuminate\Support\Facades\App;
 use App\Models\Expansions\Expansion;
 
@@ -21,6 +22,7 @@ class ImportCommand extends Command
      */
     protected $signature = 'expansion:import
         {expansion : The Cardmarket ID of the expansion}
+        {user=0 : The user who started the import}
         {--without-singles : Just update or create the expansions}
         {--force : Force the import of the expansion}';
 
@@ -32,6 +34,7 @@ class ImportCommand extends Command
     protected $description = 'Imports an expansion with all its cards from Cardmarket';
 
     private Api $cardmarket_api;
+    private Expansion $expansion;
 
     /**
      * Execute the console command.
@@ -46,15 +49,38 @@ class ImportCommand extends Command
         $this->cardmarket_api = App::make('CardmarketApi');
 
         $BackgroundTasks->put($backgroundtask_key, 1);
+        $result = self::FAILURE;
 
         try {
             $result = $this->import($expansion_id);
         }
         finally {
             $BackgroundTasks->forget($backgroundtask_key);
+            $this->notifyUser($result);
         }
 
         return $result;
+    }
+
+    private function notifyUser(int $result): void
+    {
+        $user_id = $this->argument('user');
+        if (empty($user_id)) {
+            return;
+        }
+
+        $user = User::find($this->argument('user'));
+
+        $data = [
+            'background_tasks' => App::make(BackgroundTasks::class)->all(),
+        ];
+
+        if ($result === self::SUCCESS) {
+            $user->notify(FlashMessage::success('Erweiterung ' . $this->expansion->name . ' (' . $this->expansion->abbreviation . ') importiert.', $data));
+        }
+        else {
+            $user->notify(FlashMessage::danger('Erweiterung ' . $this->expansion->name . ' (' . $this->expansion->abbreviation . ') konnte nicht importiert werden.', $data));
+        }
     }
 
     protected function import(int $expansion_id)
@@ -98,10 +124,10 @@ class ImportCommand extends Command
         }
 
         $this->line('Creating expansion: ' . $singles['expansion']['enName'] . ' (' . $singles['expansion']['abbreviation'] . ')...');
-        $expansion = Expansion::createOrUpdateFromCardmarket($singles['expansion']);
-        $this->line('Expansion created: ' . $expansion->name . ' (' . $expansion->abbreviation . ')');
+        $this->expansion = Expansion::createOrUpdateFromCardmarket($singles['expansion']);
+        $this->line('Expansion created: ' . $this->expansion->name . ' (' . $this->expansion->abbreviation . ')');
 
-        $this->importSingles($expansion, $singles);
+        $this->importSingles($this->expansion, $singles);
 
         $this->line('Cards imported');
         $this->info('Finished');
