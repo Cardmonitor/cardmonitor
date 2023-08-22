@@ -7,11 +7,6 @@
                     <filter-search v-model="filter.searchtext" @input="search()"></filter-search>
                 </div>
                 <button class="btn btn-sm btn-secondary ml-1" @click="filter.show = !filter.show"><i class="fas fa-filter"></i></button>
-                <button class="btn btn-sm btn-secondary ml-1" @click="sync" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i></button>
-                <button class="btn btn-sm btn-secondary ml-1" @click="download" :disabled="syncing.status == 1"><i class="fas fa-download"></i></button>
-                <button type="button" class="btn btn-sm btn-secondary ml-1" data-toggle="modal" data-target="#import-sent">
-                    <i class="fas fa-upload"></i>
-                </button>
             </div>
         </div>
 
@@ -22,19 +17,7 @@
                     <div class="form-group">
                         <label for="filter-state">{{ $t('app.state') }}</label>
                         <select class="form-control form-control-sm" id="filter-state" v-model="filter.state" @change="search">
-                            <option :value="null">{{ $t('filter.all') }}</option>
-                            <option :value="id" v-for="(name, id) in states">{{ name }}</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-auto">
-                    <div class="form-group">
-                        <label for="filter-presale">Presale</label>
-                        <select class="form-control form-control-sm" id="filter-presale" v-model="filter.presale" @change="search">
-                            <option :value="null">{{ $t('filter.all') }}</option>
-                            <option value="0">Ohne Presale</option>
-                            <option value="1">Presale</option>
+                            <option :value="state" v-for="(state) in states">{{ state }}</option>
                         </select>
                     </div>
                 </div>
@@ -126,7 +109,7 @@
                     presale: null,
                     searchtext: '',
                     show: false,
-                    state: 'paid',
+                    state: 'on-hold',
                 },
                 selected: [],
             };
@@ -181,48 +164,6 @@
         },
 
         methods: {
-            checkIsSyncingOrders() {
-                var component = this;
-                this.syncing.interval = setInterval(function () {
-                    component.getIsSyncingOrders()
-                }, 3000);
-            },
-            getIsSyncingOrders() {
-                var component = this;
-                axios.get(component.uri + '/sync')
-                    .then(function (response) {
-                        component.syncing.status = response.data.is_syncing_orders;
-                        if (component.syncing.status == 0) {
-                            clearInterval(component.syncing.interval)
-                            component.syncing.interval = null;
-                            component.fetch();
-                            Vue.success(component.$t('order.successes.synced'));
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    })
-                    .finally ( function () {
-
-                    });
-            },
-            download() {
-                var component = this;
-                axios.post(component.uri + '/export/download', component.filter)
-                    .then(function (response) {
-                        if (response.data.path) {
-                            Vue.success('Datei heruntergeladen');
-                            location.href = response.data.path;
-                        }
-                        else {
-                            Vue.error(component.$t('order.errors.loaded'));
-                        }
-                    })
-                    .catch(function (error) {
-                        Vue.error(component.$t('order.errors.loaded'));
-                        console.log(error);
-                    });
-            },
             fetch() {
                 var component = this;
                 component.isLoading = true;
@@ -257,22 +198,6 @@
             },
             updated(index, item) {
                 Vue.set(this.items, index, item);
-            },
-            sync() {
-                var component = this;
-                axios.put(component.uri + '/sync', component.filter)
-                    .then(function (response) {
-                        component.syncing.status = 1;
-                        component.checkIsSyncingOrders();
-                        Vue.success(component.$t('order.successes.syncing_background'));
-                    })
-                    .catch(function (error) {
-                        Vue.error(component.$t('order.errors.synced'));
-                        console.log(error);
-                    })
-                    .finally ( function () {
-
-                    });
             },
             showPageButton(page) {
                 if (page == 1 || page == this.paginate.lastPage) {

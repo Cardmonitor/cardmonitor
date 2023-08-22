@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Orders\Purchases;
 
+use App\APIs\WooCommerce\WooCommerce;
 use App\Models\Orders\Order;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
@@ -42,7 +43,10 @@ class SellableController extends Controller
     {
         $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
         $WooCommerce->updateOrder($order->source_id, [
-            'status' => 'completed',
+            'status' => WooCommerce::STATUS_COMPLETED,
+        ]);
+        $order->update([
+            'state' => WooCommerce::STATUS_COMPLETED,
         ]);
     }
 

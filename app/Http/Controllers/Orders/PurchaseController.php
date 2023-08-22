@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Orders;
 
+use App\APIs\WooCommerce\WooCommerce;
 use App\Models\Items\Custom;
 use App\Models\Orders\Order;
 use Illuminate\Http\Request;
@@ -31,6 +32,7 @@ class PurchaseController extends Controller
                 ->purchases()
                 ->select('orders.*')
                 ->search($request->input('searchtext'))
+                ->state($request->input('state'))
                 ->with([
                     'seller'
                 ])
@@ -42,7 +44,7 @@ class PurchaseController extends Controller
         }
 
         return view($this->baseViewPath . '.index')
-            ->with('states', Order::STATES)
+            ->with('states', WooCommerce::STATUSES)
             ->with('is_syncing_orders', auth()->user()->is_syncing_orders);
     }
 
@@ -70,6 +72,22 @@ class PurchaseController extends Controller
             ]))
             ->with('conditions', Article::CONDITIONS)
             ->with('languages', $lanugages)
-            ->with('expansions', Expansion::all());
+            ->with('expansions', Expansion::all())
+            ->with('states', WooCommerce::STATUSES);
+    }
+
+    public function update(Request $request, Order $order)
+    {
+        $attributes = $request->validate([
+            'state' => 'required|string|in:' . implode(',', WooCommerce::STATUSES),
+        ]);
+
+        $order->update($attributes);
+
+        return redirect($order->path)
+            ->with('status', [
+                'type' => 'success',
+                'text' => 'Der Ankauf wurde gespeichert.',
+            ]);
     }
 }

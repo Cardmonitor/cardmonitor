@@ -16,7 +16,6 @@ use Cardmonitor\Cardmarket\Stock;
 use App\Models\Expansions\Expansion;
 use Tests\Traits\AttributeAssertions;
 use App\Models\Localizations\Language;
-use Barryvdh\Debugbar\Twig\Extension\Dump;
 use Tests\Traits\RelationshipAssertions;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -1255,5 +1254,68 @@ class ArticleTest extends TestCase
         $this->assertEquals($cardmarket_article['lastEdited'], $model->cardmarket_last_edited->format('Y-m-d\TH:i:sO'));
 
         Mockery::close();
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_sync_state()
+    {
+        $now = now();
+        $article_sync_state_success_1 = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'has_sync_error' => Article::SYNC_STATE_SUCCESS,
+            'exported_at' => $now,
+        ]);
+
+        $article_sync_state_success_2 = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'has_sync_error' => Article::SYNC_STATE_SUCCESS,
+            'synced_at' => $now,
+        ]);
+
+        $article_sync_state_success_3 = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'has_sync_error' => Article::SYNC_STATE_SUCCESS,
+            'exported_at' => $now,
+            'synced_at' => $now,
+        ]);
+
+        $article_sync_state_error = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'has_sync_error' => Article::SYNC_STATE_ERROR,
+            'exported_at' => $now,
+        ]);
+
+        $article_sync_state_not_synced = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'has_sync_error' => Article::SYNC_STATE_SUCCESS,
+            'exported_at' => null,
+            'synced_at' => null,
+        ]);
+
+        $this->assertCount(5, Article::all());
+        $this->assertCount(5, Article::query()->sync(null)->get());
+        $this->assertCount(5, Article::query()->sync(-1)->get());
+
+        $articles_sync_success = Article::query()->sync(Article::SYNC_STATE_SUCCESS)->get();
+        $this->assertCount(3, $articles_sync_success);
+        $this->assertEquals([
+            $article_sync_state_success_1->id,
+            $article_sync_state_success_2->id,
+            $article_sync_state_success_3->id,
+        ], $articles_sync_success->pluck('id')->toArray());
+
+        $articles_sync_error = Article::query()->sync(Article::SYNC_STATE_ERROR)->get();
+        $this->assertCount(1, $articles_sync_error);
+        $this->assertEquals([
+            $article_sync_state_error->id,
+        ], $articles_sync_error->pluck('id')->toArray());
+
+        $articles_not_synced = Article::query()->sync(Article::SYNC_STATE_NOT_SYNCED)->get();
+        $this->assertCount(1, $articles_not_synced);
+        $this->assertEquals([
+            $article_sync_state_not_synced->id,
+        ], $articles_not_synced->pluck('id')->toArray());
     }
 }

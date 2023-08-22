@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Orders\Purchases;
 use App\Models\Orders\Order;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use App\APIs\WooCommerce\WooCommerce;
 
 class CancelController extends Controller
 {
@@ -28,9 +29,12 @@ class CancelController extends Controller
 
     private function cancelWooCommerceOrder(Order $order): void
     {
-        $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
+        $WooCommerce = new WooCommerce();
         $WooCommerce->updateOrder($order->source_id, [
-            'status' => 'cancelled',
+            'status' => WooCommerce::STATUS_CANCELLED,
+        ]);
+        $order->update([
+            'state' => WooCommerce::STATUS_CANCELLED,
         ]);
     }
 }

@@ -11,6 +11,28 @@ class WooCommerce
     private $consumer_key;
     private $consumer_secret;
 
+    const STATUS_ANY = 'any';
+    const STATUS_PENDING = 'pending';
+    const STATUS_PROCESSING = 'processing';
+    const STATUS_ON_HOLD = 'on-hold';
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_CANCELLED = 'cancelled';
+    const STATUS_REFUNDED = 'refunded';
+    const STATUS_FAILED = 'failed';
+    const STATUS_TRASH = 'trash';
+
+    const STATUSES = [
+        self::STATUS_ANY,
+        self::STATUS_PENDING,
+        self::STATUS_PROCESSING,
+        self::STATUS_ON_HOLD,
+        self::STATUS_COMPLETED,
+        self::STATUS_CANCELLED,
+        self::STATUS_REFUNDED,
+        self::STATUS_FAILED,
+        self::STATUS_TRASH,
+    ];
+
     public function __construct()
     {
         $this->url = config('services.woocommerce.url');
