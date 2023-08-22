@@ -46,6 +46,9 @@
                 Echo.private('App.User.' + window.user.id)
                     .notification((notification) => {
                         component.flash(notification.message);
+                        if ('background_tasks' in notification.data) {
+                            Bus.$emit('update-background-tasks', notification.data.background_tasks);
+                        }
                     });
             }
 
