@@ -5816,6 +5816,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _partials_emoji_rarity_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../partials/emoji/rarity.vue */ "./resources/js/components/partials/emoji/rarity.vue");
 /* harmony import */ var _expansion_icon_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../expansion/icon.vue */ "./resources/js/components/expansion/icon.vue");
 /* harmony import */ var _card_edit_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./card/edit.vue */ "./resources/js/components/purchase/article/card/edit.vue");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -5882,7 +5888,16 @@ __webpack_require__.r(__webpack_exports__);
         unit_cost_formatted: this.item ? this.item.unit_cost_formatted : null
       },
       price_changes: {
-        language: false
+        language: false,
+        conditions: {
+          'MT': -20,
+          'NM': -20,
+          'EX': -20,
+          'GD': -20,
+          'LP': -10,
+          'PL': -10,
+          'PO': -10
+        }
       },
       is_changing_card: false
     };
@@ -5922,7 +5937,36 @@ __webpack_require__.r(__webpack_exports__);
       return this.form.condition === condition ? 'btn-primary' : 'btn-secondary';
     },
     setCondition: function setCondition(condition) {
+      var percentage = this.getPercentageForConditionDowngrade(this.form.condition, condition);
       this.form.condition = condition;
+      if (percentage !== 0) {
+        this.changePrice(percentage);
+        Vue.success('Der Zustand wurde auf <b>' + condition + '</b> geändert.' + (percentage !== 0 ? ' Der Preis wurde um <b>' + percentage + '%</b> reduziert.' : ''));
+      }
+    },
+    getPercentageForConditionDowngrade: function getPercentageForConditionDowngrade(current_condition, condition) {
+      var percentage = 0;
+      var start_adding = false;
+      for (var _i = 0, _Object$entries = Object.entries(this.price_changes.conditions); _i < _Object$entries.length; _i++) {
+        var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
+          conditions_key = _Object$entries$_i[0],
+          price_change_percentage = _Object$entries$_i[1];
+        // add the percentage if the condition is worse
+        if (start_adding) {
+          percentage += price_change_percentage;
+        }
+
+        // start adding after the condition is the current condition
+        if (conditions_key === current_condition) {
+          start_adding = true;
+        }
+
+        // stop adding if the condition is the new condition
+        if (conditions_key === condition) {
+          break;
+        }
+      }
+      return percentage;
     },
     getLanguageAktiveClass: function getLanguageAktiveClass(language_id) {
       return this.form.language_id === language_id ? 'btn-primary' : 'btn-secondary';
@@ -5931,8 +5975,10 @@ __webpack_require__.r(__webpack_exports__);
       this.language = language;
       this.form.language_id = language.id;
       if (this.price_changes.language === false && this.item.language_id === 1 && language.id !== 1) {
-        this.changePrice(-10);
+        var percentage = -10;
+        this.changePrice(percentage);
         this.price_changes.language = true;
+        Vue.success('Die Sprache wurde auf <b>' + language.name + '</b> geändert. Der Preis wurde um <b>' + percentage + '%</b> reduziert.');
       }
     },
     getIsFoilAktiveClass: function getIsFoilAktiveClass() {
