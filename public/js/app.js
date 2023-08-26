@@ -5912,10 +5912,10 @@ __webpack_require__.r(__webpack_exports__);
       axios.put('/article/' + component.item.id, component.form).then(function (response) {
         component.errors = {};
         component.$emit('next', response.data);
-        Vue.success('Artikel gespeichert.');
+        Vue.success('Der Artikel <b>' + response.data.localName + (response.data.index > 1 ? ' (' + response.data.index + ')' : '') + '</b> wurde gespeichert.');
       })["catch"](function (error) {
         component.errors = error.response.data.errors;
-        Vue.error('Artikel konnte nicht gespeichert werden.');
+        Vue.error('Der Artikel <b>' + component.item.localName + (component.item.index > 1 ? ' (' + component.item.index + ')' : '') + '</b> konnte nicht gespeichert werden.');
       });
     },
     getConditionAktiveClass: function getConditionAktiveClass(condition) {
