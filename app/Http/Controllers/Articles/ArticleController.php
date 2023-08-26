@@ -136,6 +136,8 @@ class ArticleController extends Controller
             'unit_cost_formatted' => 'sometimes|required|formated_number',
         ]);
 
+        $attributes['is_sellable_since'] = now();
+
         $articles = [];
         for ($i = 0; $i < $request->input('count'); $i++) {
             $article = Article::create($attributes);
