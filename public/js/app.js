@@ -5578,8 +5578,8 @@ __webpack_require__.r(__webpack_exports__);
       items: [],
       filter: {
         game_id: this.initalItem.card.game_id,
-        searchtext: '',
-        expansion_id: this.initalItem.card.expansion_id,
+        searchtext: this.initalItem.localName,
+        expansion_id: null,
         language_id: this.initalItem.language_id,
         shouldFocus: true
       },
