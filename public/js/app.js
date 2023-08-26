@@ -2747,7 +2747,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         game_id: 0,
         language_id: 0,
         page: 1,
-        product_type: 1,
+        product_type: null,
         rule_id: 0,
         searchtext: '',
         show: true,
@@ -10930,7 +10930,7 @@ var render = function render() {
     }
   }, [_c("option", {
     domProps: {
-      value: -1
+      value: null
     }
   }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _c("option", {
     domProps: {
