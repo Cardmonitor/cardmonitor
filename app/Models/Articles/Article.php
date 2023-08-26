@@ -1364,6 +1364,11 @@ class Article extends Model
             return $query;
         }
 
+        // Wenn der Suchbegriff eine Lagernummer ist
+        if (preg_match('/([A-Z]+)\d{3}\.\d{3}/m', $value) === 1) {
+            return $query->where('articles.number', $value);
+        }
+
         return $query->join('localizations', function ($join) {
             $join->on('localizations.localizationable_id', '=', 'cards.id');
             $join->where('localizations.localizationable_type', '=', Card::class);
