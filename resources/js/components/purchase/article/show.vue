@@ -149,6 +149,15 @@
                 },
                 price_changes: {
                     language: false,
+                    conditions: {
+                        'MT': -20,
+                        'NM': -20,
+                        'EX': -20,
+                        'GD': -20,
+                        'LP': -10,
+                        'PL': -10,
+                        'PO': -10,
+                    }
                 },
                 is_changing_card: false,
             };
@@ -156,9 +165,11 @@
 
         mounted() {
             const component = this;
-            window.addEventListener('keyup', function(event) {
-                // Enter
-                if (event.keyCode === 13) {
+            window.addEventListener('keydown', function(event) {
+
+                // Space: next card
+                if (event.keyCode === 32) {
+                    event.preventDefault();
                     component.next(true, 0);
                 }
             });
@@ -180,18 +191,47 @@
                     .then( function (response) {
                         component.errors = {};
                         component.$emit('next', response.data);
-                        Vue.success('Artikel gespeichert.');
+                        Vue.success('Der Artikel <b>' + response.data.localName + (response.data.index > 1 ? ' (' + response.data.index + ')' : '') + '</b> wurde gespeichert.');
                     })
                     .catch(function (error) {
                         component.errors = error.response.data.errors;
-                        Vue.error('Artikel konnte nicht gespeichert werden.');
+                        Vue.error('Der Artikel <b>' + component.item.localName + (component.item.index > 1 ? ' (' + component.item.index + ')' : '') + '</b> konnte nicht gespeichert werden.');
                 });
             },
             getConditionAktiveClass(condition) {
                 return this.form.condition === condition ? 'btn-primary' : 'btn-secondary';
             },
             setCondition(condition) {
+                const percentage = this.getPercentageForConditionDowngrade(this.form.condition, condition);
+
                 this.form.condition = condition;
+
+                if (percentage !== 0) {
+                    this.changePrice(percentage);
+                    Vue.success('Der Zustand wurde auf <b>' + condition + '</b> geändert.' + (percentage !== 0 ? ' Der Preis wurde um <b>' + percentage + '%</b> reduziert.' : ''));
+                }
+            },
+            getPercentageForConditionDowngrade(current_condition, condition) {
+                let percentage = 0;
+                let start_adding = false;
+                for (const [conditions_key, price_change_percentage] of Object.entries(this.price_changes.conditions)) {
+                    // add the percentage if the condition is worse
+                    if (start_adding) {
+                        percentage += price_change_percentage;
+                    }
+
+                    // start adding after the condition is the current condition
+                    if (conditions_key === current_condition) {
+                        start_adding = true;
+                    }
+
+                    // stop adding if the condition is the new condition
+                    if (conditions_key === condition) {
+                        break;
+                    }
+                }
+
+                return percentage;
             },
             getLanguageAktiveClass(language_id) {
                 return this.form.language_id === language_id ? 'btn-primary' : 'btn-secondary';
@@ -200,8 +240,10 @@
                 this.language = language;
                 this.form.language_id = language.id;
                 if (this.price_changes.language === false && this.item.language_id === 1 && language.id !== 1) {
-                    this.changePrice(-10);
+                    const percentage = -10;
+                    this.changePrice(percentage);
                     this.price_changes.language = true;
+                    Vue.success('Die Sprache wurde auf <b>' + language.name + '</b> geändert. Der Preis wurde um <b>' + percentage + '%</b> reduziert.');
                 }
             },
             getIsFoilAktiveClass() {
