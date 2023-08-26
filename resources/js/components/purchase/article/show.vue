@@ -156,9 +156,11 @@
 
         mounted() {
             const component = this;
-            window.addEventListener('keyup', function(event) {
-                // Enter
-                if (event.keyCode === 13) {
+            window.addEventListener('keydown', function(event) {
+
+                // Space: next card
+                if (event.keyCode === 32) {
+                    event.preventDefault();
                     component.next(true, 0);
                 }
             });
