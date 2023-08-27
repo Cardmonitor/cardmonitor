@@ -16,7 +16,7 @@ class CancelController extends Controller
         }
 
         $this->deleteOrder($order);
-        // $this->cancelWooCommerceOrder($order);
+        $this->cancelWooCommerceOrder($order);
 
         return response()->json([], Response::HTTP_NO_CONTENT);
     }

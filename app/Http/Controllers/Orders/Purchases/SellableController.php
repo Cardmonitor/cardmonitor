@@ -17,7 +17,7 @@ class SellableController extends Controller
         }
 
         $this->deleteNotAvailableArticles($order);
-        // $this->completeWooCommerceOrder($order);
+        $this->completeWooCommerceOrder($order);
 
         $order->articles()->update([
             'is_sellable_since' => now(),
