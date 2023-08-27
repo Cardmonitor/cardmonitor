@@ -5,7 +5,7 @@
         </div>
         <div class="row mb-3">
             <div class="col-12 col-sm text-center d-flex flex-column justify-content-between" v-if="is_changing_card">
-                <card-edit :inital-item="item" :expansions="expansions" :languages="languages" @updated="updated($event)"></card-edit>
+                <card-edit :inital-item="item" :initial-state-comments="form.state_comments" :expansions="expansions" :languages="languages" @updated="updated($event)"></card-edit>
                 <button class="btn btn-sm btn-secondary mt-1" @click="is_changing_card = false;">Abbrechen</button>
             </div>
             <div class="col-12 col-sm text-center" v-else>
@@ -51,16 +51,7 @@
                 </div>
                 <div class="col-12 col-sm px-0 mb-3">
                     <div class="form-group">
-                        <label for="state_comment_boilerplate">{{ $t('order.article.show.problems.label') }}</label>
-                        <select class="form-control form-control-sm" id="state_comment_boilerplate" :placeholder="$t('order.article.show.problems.placeholder')" @change="form.state_comments += $event.target.value">
-                            <option>{{ $t('order.article.show.problems.label') }}</option>
-                            <option>{{ $t('order.article.show.problems.not_available') }}</option>
-                            <option>falsche Karte</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="state_comments">{{ $t('order.article.show.state_comments.label') }}</label>
-                        <input type="text" class="form-control form-control-sm" id="state_comments" v-model="form.state_comments" :placeholder="$t('order.article.show.state_comments.placeholder')">
+                        <textarea class="form-control form-control-sm" id="state_comments" v-model="form.state_comments" rows="5" :maxlength="state_comments.max_length" :placeholder="$t('order.article.show.state_comments.placeholder')"></textarea>
                     </div>
                 </div>
                 <div>
@@ -160,6 +151,9 @@
                     }
                 },
                 is_changing_card: false,
+                state_comments: {
+                    max_length: 255,
+                },
             };
         },
 
@@ -190,7 +184,7 @@
                 }
                 component.form.state = state;
                 if (state === 3) {
-                    component.form.state_comments = 'Karte nicht vorhanden';
+                    component.setStateComments('Karte nicht vorhanden');
                     component.form.unit_cost_formatted = '0,00';
                 }
                 axios.put('/article/' + component.item.id, component.form)
@@ -216,6 +210,8 @@
                     this.changePrice(percentage);
                     Vue.success('Der Zustand wurde auf <b>' + condition + '</b> geändert.' + (percentage !== 0 ? ' Der Preis wurde um <b>' + percentage + '%</b> reduziert.' : ''));
                 }
+
+                this.setStateComments('Zustand geändert: ' + condition);
             },
             getPercentageForConditionDowngrade(current_condition, condition) {
                 let percentage = 0;
@@ -251,18 +247,33 @@
                     this.price_changes.language = true;
                     Vue.success('Die Sprache wurde auf <b>' + language.name + '</b> geändert. Der Preis wurde um <b>' + percentage + '%</b> reduziert.');
                 }
+                this.setStateComments('Sprache geändert: ' + language.code);
             },
             getIsFoilAktiveClass() {
                 return this.form.is_foil ? 'btn-primary' : 'btn-secondary';
             },
             setIsFoil() {
                 this.form.is_foil = !this.form.is_foil;
+                this.setStateComments('Foil geändert: ' + (this.form.is_foil ? 'Ja' : 'Nein'));
             },
             changePrice(percentage) {
                 let unit_cost = Number(this.form.unit_cost_formatted.replace(',', '.'));
                 unit_cost = (unit_cost * (1 + percentage / 100)).toFixed(2);
 
                 this.form.unit_cost_formatted = unit_cost.toString().replace('.', ',');
+            },
+            setStateComments(comment) {
+                if (this.form.state_comments.length + comment.length > this.state_comments.max_length) {
+                    Vue.error('Der Kommentar darf maximal ' + this.state_comments.max_length + ' Zeichen lang sein.');
+                    return;
+                }
+
+                if (this.form.state_comments) {
+                    this.form.state_comments += "\n";
+                }
+
+                this.form.state_comments += comment;
+                this.form.state_comments = this.form.state_comments.trim();
             },
             updated(item) {
                 this.$emit('updated', item);

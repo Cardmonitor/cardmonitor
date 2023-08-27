@@ -5535,6 +5535,10 @@ __webpack_require__.r(__webpack_exports__);
       type: Object,
       required: true
     },
+    initialStateComments: {
+      type: String,
+      required: true
+    },
     expansions: {
       type: Array,
       required: true
@@ -5585,9 +5589,10 @@ __webpack_require__.r(__webpack_exports__);
       },
       form: {
         card_id: this.initalItem.card_id,
-        state_comments: ''
+        state_comments: this.initialStateComments
       },
-      is_loading: false
+      is_loading: false,
+      state_comments_max_length: 255
     };
   },
   watch: {
@@ -5622,7 +5627,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     update: function update() {
       var component = this;
-      component.form.state_comments = 'Die Karte ' + component.initalItem.card.name + ' (' + component.initalItem.card.expansion.abbreviation + ')' + ' wurde ausgetauscht.';
+      component.setStateComments('Die Karte ' + component.initalItem.card.name + ' (' + component.initalItem.card.expansion.abbreviation + ')' + ' wurde ausgetauscht.');
       axios.put(component.initalItem.path, component.form).then(function (response) {
         Vue.success(component.$t('app.successes.updated'));
         component.$emit('updated', response.data);
@@ -5638,6 +5643,17 @@ __webpack_require__.r(__webpack_exports__);
     },
     hideImgbox: function hideImgbox() {
       this.imgbox.show = false;
+    },
+    setStateComments: function setStateComments(comment) {
+      if (this.form.state_comments.length + comment.length > this.state_comments_max_length) {
+        Vue.error('Der Kommentar darf maximal ' + this.state_comments_max_length + ' Zeichen lang sein.');
+        return;
+      }
+      if (this.form.state_comments) {
+        this.form.state_comments += "\n";
+      }
+      this.form.state_comments += comment;
+      this.form.state_comments = this.form.state_comments.trim();
     }
   }
 });
@@ -5899,7 +5915,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
           'PO': -10
         }
       },
-      is_changing_card: false
+      is_changing_card: false,
+      state_comments: {
+        max_length: 255
+      }
     };
   },
   mounted: function mounted() {
@@ -5927,7 +5946,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       }
       component.form.state = state;
       if (state === 3) {
-        component.form.state_comments = 'Karte nicht vorhanden';
+        component.setStateComments('Karte nicht vorhanden');
         component.form.unit_cost_formatted = '0,00';
       }
       axios.put('/article/' + component.item.id, component.form).then(function (response) {
@@ -5949,6 +5968,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         this.changePrice(percentage);
         Vue.success('Der Zustand wurde auf <b>' + condition + '</b> geändert.' + (percentage !== 0 ? ' Der Preis wurde um <b>' + percentage + '%</b> reduziert.' : ''));
       }
+      this.setStateComments('Zustand geändert: ' + condition);
     },
     getPercentageForConditionDowngrade: function getPercentageForConditionDowngrade(current_condition, condition) {
       var percentage = 0;
@@ -5986,17 +6006,30 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         this.price_changes.language = true;
         Vue.success('Die Sprache wurde auf <b>' + language.name + '</b> geändert. Der Preis wurde um <b>' + percentage + '%</b> reduziert.');
       }
+      this.setStateComments('Sprache geändert: ' + language.code);
     },
     getIsFoilAktiveClass: function getIsFoilAktiveClass() {
       return this.form.is_foil ? 'btn-primary' : 'btn-secondary';
     },
     setIsFoil: function setIsFoil() {
       this.form.is_foil = !this.form.is_foil;
+      this.setStateComments('Foil geändert: ' + (this.form.is_foil ? 'Ja' : 'Nein'));
     },
     changePrice: function changePrice(percentage) {
       var unit_cost = Number(this.form.unit_cost_formatted.replace(',', '.'));
       unit_cost = (unit_cost * (1 + percentage / 100)).toFixed(2);
       this.form.unit_cost_formatted = unit_cost.toString().replace('.', ',');
+    },
+    setStateComments: function setStateComments(comment) {
+      if (this.form.state_comments.length + comment.length > this.state_comments.max_length) {
+        Vue.error('Der Kommentar darf maximal ' + this.state_comments.max_length + ' Zeichen lang sein.');
+        return;
+      }
+      if (this.form.state_comments) {
+        this.form.state_comments += "\n";
+      }
+      this.form.state_comments += comment;
+      this.form.state_comments = this.form.state_comments.trim();
     },
     updated: function updated(item) {
       this.$emit('updated', item);
@@ -15589,6 +15622,7 @@ var render = function render() {
   }, [_c("card-edit", {
     attrs: {
       "inital-item": _vm.item,
+      "initial-state-comments": _vm.form.state_comments,
       expansions: _vm.expansions,
       languages: _vm.languages
     },
@@ -15794,28 +15828,7 @@ var render = function render() {
     staticClass: "col-12 col-sm px-0 mb-3"
   }, [_c("div", {
     staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "state_comment_boilerplate"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("order.article.show.problems.label")))]), _vm._v(" "), _c("select", {
-    staticClass: "form-control form-control-sm",
-    attrs: {
-      id: "state_comment_boilerplate",
-      placeholder: _vm.$t("order.article.show.problems.placeholder")
-    },
-    on: {
-      change: function change($event) {
-        _vm.form.state_comments += $event.target.value;
-      }
-    }
-  }, [_c("option", [_vm._v(_vm._s(_vm.$t("order.article.show.problems.label")))]), _vm._v(" "), _c("option", [_vm._v(_vm._s(_vm.$t("order.article.show.problems.not_available")))]), _vm._v(" "), _c("option", [_vm._v("falsche Karte")])])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "state_comments"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("order.article.show.state_comments.label")))]), _vm._v(" "), _c("input", {
+  }, [_c("textarea", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -15824,8 +15837,9 @@ var render = function render() {
     }],
     staticClass: "form-control form-control-sm",
     attrs: {
-      type: "text",
       id: "state_comments",
+      rows: "5",
+      maxlength: _vm.state_comments.max_length,
       placeholder: _vm.$t("order.article.show.state_comments.placeholder")
     },
     domProps: {
