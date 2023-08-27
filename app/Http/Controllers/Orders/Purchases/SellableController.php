@@ -17,6 +17,7 @@ class SellableController extends Controller
         }
 
         $this->deleteNotAvailableArticles($order);
+        $this->resetArticleState($order);
         $this->completeWooCommerceOrder($order);
 
         $order->articles()->update([
@@ -37,6 +38,14 @@ class SellableController extends Controller
     private function deleteNotAvailableArticles(Order $order): void
     {
         $order->articles()->where('state', Article::STATE_NOT_PRESENT)->delete();
+    }
+
+    private function resetArticleState(Order $order): void
+    {
+        $order->articles()->update([
+            'state' => null,
+            'state_comments' => null,
+        ]);
     }
 
     private function completeWooCommerceOrder(Order $order): void
