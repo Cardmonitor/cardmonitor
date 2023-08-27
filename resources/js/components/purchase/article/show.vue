@@ -167,6 +167,12 @@
             const component = this;
             window.addEventListener('keydown', function(event) {
 
+                // Not in input or textarea
+                const target_tag_name = event.target.tagName.toLowerCase();
+                if (target_tag_name === 'input' || target_tag_name === 'textarea') {
+                    return;
+                }
+
                 // Space: next card
                 if (event.keyCode === 32) {
                     event.preventDefault();
