@@ -82,6 +82,11 @@ class PurchaseController extends Controller
             'state' => 'required|string|in:' . implode(',', WooCommerce::STATUSES),
         ]);
 
+        $WooCommerce = new WooCommerce();
+        $WooCommerce->updateOrder($order->source_id, [
+            'status' => $attributes['state'],
+        ]);
+
         $order->update($attributes);
 
         return redirect($order->path)

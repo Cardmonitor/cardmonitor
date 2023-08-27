@@ -31,7 +31,7 @@ class WooCommerceTest extends TestCase
     {
         $this->markTestSkipped();
 
-        $id = 620236;
+        $id = 629161;
         $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
         $response = $WooCommerce->order($id);
         $order = $response['data'];
@@ -40,5 +40,20 @@ class WooCommerceTest extends TestCase
         foreach ($order['line_items'] as $line_item) {
             echo $line_item['name'] . ': ' . $line_item['sku'] . PHP_EOL;
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_update_the_status_of_an_order()
+    {
+        $this->markTestSkipped();
+
+        $id = 629161;
+        $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
+        $response = $WooCommerce->updateOrder($id, [
+            'status' => 'on-hold',
+        ]);
+        echo json_encode($response, JSON_PRETTY_PRINT);
     }
 }
