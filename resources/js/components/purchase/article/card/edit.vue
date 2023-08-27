@@ -59,6 +59,10 @@ export default {
             type: Object,
             required: true,
         },
+        initialStateComments: {
+            type: String,
+            required: true,
+        },
         expansions: {
             type: Array,
             required: true,
@@ -115,9 +119,10 @@ export default {
             },
             form: {
                 card_id: this.initalItem.card_id,
-                state_comments: '',
+                state_comments: this.initialStateComments,
             },
             is_loading: false,
+            state_comments_max_length: 255,
         };
     },
 
@@ -158,7 +163,7 @@ export default {
         update() {
             var component = this;
 
-            component.form.state_comments = 'Die Karte ' + component.initalItem.card.name + ' (' + component.initalItem.card.expansion.abbreviation + ')' + ' wurde ausgetauscht.'
+            component.setStateComments('Die Karte ' + component.initalItem.card.name + ' (' + component.initalItem.card.expansion.abbreviation + ')' + ' wurde ausgetauscht.');
 
             axios.put(component.initalItem.path, component.form)
                 .then(function (response) {
@@ -176,6 +181,18 @@ export default {
         },
         hideImgbox() {
             this.imgbox.show = false;
+        },
+        setStateComments(comment) {
+            if (this.form.state_comments.length + comment.length > this.state_comments_max_length) {
+                Vue.error('Der Kommentar darf maximal ' + this.state_comments_max_length + ' Zeichen lang sein.');
+                return;
+            }
+
+            if (this.form.state_comments) {
+                this.form.state_comments += "\n";
+            }
+            this.form.state_comments += comment;
+            this.form.state_comments = this.form.state_comments.trim();
         },
     }
 

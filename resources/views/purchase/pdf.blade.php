@@ -87,7 +87,7 @@
                             </td>
                             <td class="align-middle">{{ $article->language->name }}</td>
                             <td class="align-middle text-right">{{ number_format($article->unit_cost, 2, ',', '.') }} €</td>
-                            <td class="align-middle">{{ $article->state_comments }}</td>
+                            <td class="align-middle">{!! nl2br($article->state_comments) !!}</td>
                         </tr>
                     @endforeach
                 </tbody>
