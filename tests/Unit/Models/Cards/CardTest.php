@@ -302,4 +302,20 @@ class CardTest extends TestCase
         ]);
         $this->assertEquals('', $card->sku);
     }
+
+    /**
+     * @test
+     */
+    public function it_can_be_searched_by_name_or_number()
+    {
+        $card = factory(Card::class)->create([
+            'name' => 'Test Card',
+            'number' => '123',
+        ]);
+
+        $this->assertCount(1, Card::search('Test Card', Language::DEFAULT_ID)->get());
+        $this->assertCount(0, Card::search('Not available', Language::DEFAULT_ID)->get());
+        $this->assertCount(1, Card::search('123', Language::DEFAULT_ID)->get());
+        $this->assertCount(0, Card::search('321', Language::DEFAULT_ID)->get());
+    }
 }

@@ -417,12 +417,12 @@ class Card extends Model
         return $query->where('cards.expansion_id', $value);
     }
 
-    public function scopeSearch(Builder $query, $searchtext, $languageId) : Builder
+    public function scopeSearch(Builder $query, $searchtext, $language_id) : Builder
     {
-        return $query->join('localizations', function ($join) use ($languageId) {
+        return $query->join('localizations', function ($join) use ($language_id) {
             $join->on('localizations.localizationable_id', '=', 'cards.id')
                 ->where('localizations.localizationable_type', '=', Card::class)
-                ->where('localizations.language_id', '=', $languageId);
+                ->where('localizations.language_id', '=', $language_id);
         })
             ->where('localizations.name', 'like', '%' . $searchtext . '%')
             ->orWhere('cards.number', 'like', '%' . $searchtext . '%');
