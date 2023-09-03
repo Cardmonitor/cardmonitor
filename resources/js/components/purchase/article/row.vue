@@ -4,7 +4,7 @@
         <td class="align-middle d-none d-lg-table-cell text-center"><i class="fas fa-fw" :class="item.sync_icon" :title="item.sync_error || 'Karte synchronisiert'"></i></td>
         <td class="align-middle pointer" @click="toShow"><i class="fas fa-fw" :class="item.state_icon" :title="item.state_comments"></i></td>
         <td class="align-middle pointer" @click="toShow">
-            <div><span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.localName }}<span v-if="item.card.number"> (#{{ item.card.number }}) {{ item.id }}</span></div>
+            <div><span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.local_name }}<span v-if="item.card.number"> (#{{ item.card.number }}) {{ item.id }}</span></div>
             <div v-if="item.cardmarket_comments">{{ item.cardmarket_comments }}</div>
         </td>
         <td class="align-middle d-none d-xl-table-cell pointer" @click="toShow">{{ item.state_comments }}</td>

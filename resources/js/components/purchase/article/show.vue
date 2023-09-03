@@ -15,7 +15,7 @@
             </div>
             <div class="col d-flex flex-column">
                 <div class="mb-3">
-                    <div><b>{{ (index + 1) }}: {{ item.localName }} (#{{ item.card.number }}) <span class="fi" :class="'fi-' + language.code" :title="language.name"></span></b></div>
+                    <div><b>{{ (index + 1) }}: {{ item.local_name }} (#{{ item.card.number }}) <span class="fi" :class="'fi-' + language.code" :title="language.name"></span></b></div>
                     <div><expansion-icon :expansion="item.card.expansion"></expansion-icon></div>
                     <div><rarity :value="item.card.rarity"></rarity> ({{ item.card.rarity }})</div>
                     <div><condition :value="form.condition"></condition> ({{ form.condition }})</div>
@@ -191,11 +191,11 @@
                     .then( function (response) {
                         component.errors = {};
                         component.$emit('next', response.data);
-                        Vue.success('Der Artikel <b>' + response.data.localName + (response.data.index > 1 ? ' (' + response.data.index + ')' : '') + '</b> wurde gespeichert.');
+                        Vue.success('Der Artikel <b>' + response.data.local_name + (response.data.index > 1 ? ' (' + response.data.index + ')' : '') + '</b> wurde gespeichert.');
                     })
                     .catch(function (error) {
                         component.errors = error.response.data.errors;
-                        Vue.error('Der Artikel <b>' + component.item.localName + (component.item.index > 1 ? ' (' + component.item.index + ')' : '') + '</b> konnte nicht gespeichert werden.');
+                        Vue.error('Der Artikel <b>' + component.item.local_name + (component.item.index > 1 ? ' (' + component.item.index + ')' : '') + '</b> konnte nicht gespeichert werden.');
                 });
             },
             getConditionAktiveClass(condition) {

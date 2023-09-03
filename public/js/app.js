@@ -5582,7 +5582,7 @@ __webpack_require__.r(__webpack_exports__);
       items: [],
       filter: {
         game_id: this.initalItem.card.game_id,
-        searchtext: this.initalItem.localName,
+        searchtext: this.initalItem.local_name,
         expansion_id: null,
         language_id: this.initalItem.language_id,
         shouldFocus: true
@@ -5627,7 +5627,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     update: function update() {
       var component = this;
-      component.setStateComments('Die Karte ' + component.initalItem.card.name + ' (' + component.initalItem.card.expansion.abbreviation + ')' + ' wurde ausgetauscht.');
+      component.setStateComments('Die Karte ' + component.initalItem.card_name + ' (' + component.initalItem.card.expansion.abbreviation + ')' + ' wurde ausgetauscht.');
       axios.put(component.initalItem.path, component.form).then(function (response) {
         Vue.success(component.$t('app.successes.updated'));
         component.$emit('updated', response.data);
@@ -5952,10 +5952,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       axios.put('/article/' + component.item.id, component.form).then(function (response) {
         component.errors = {};
         component.$emit('next', response.data);
-        Vue.success('Der Artikel <b>' + response.data.localName + (response.data.index > 1 ? ' (' + response.data.index + ')' : '') + '</b> wurde gespeichert.');
+        Vue.success('Der Artikel <b>' + response.data.local_name + (response.data.index > 1 ? ' (' + response.data.index + ')' : '') + '</b> wurde gespeichert.');
       })["catch"](function (error) {
         component.errors = error.response.data.errors;
-        Vue.error('Der Artikel <b>' + component.item.localName + (component.item.index > 1 ? ' (' + component.item.index + ')' : '') + '</b> konnte nicht gespeichert werden.');
+        Vue.error('Der Artikel <b>' + component.item.local_name + (component.item.index > 1 ? ' (' + component.item.index + ')' : '') + '</b> konnte nicht gespeichert werden.');
       });
     },
     getConditionAktiveClass: function getConditionAktiveClass(condition) {
@@ -8762,7 +8762,7 @@ var render = function render() {
     }
   }, [_vm._v(_vm._s(_vm.$t("app.nav.article")))]), _c("span", {
     staticClass: "d-none d-md-inline"
-  }, [_vm._v(" > " + _vm._s(_vm.model.localName))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(" > " + _vm._s(_vm.model.local_name))])]), _vm._v(" "), _c("div", {
     staticClass: "d-flex align-items-center"
   }, [_c("a", {
     staticClass: "btn btn-sm btn-secondary ml-1",
@@ -9407,9 +9407,9 @@ var render = function render() {
     attrs: {
       title: _vm.item.language.name
     }
-  }), _vm._v(" " + _vm._s(_vm.item.localName)), _vm.item.card.number ? _c("span", [_vm._v(" (" + _vm._s(_vm.item.card.number) + ")")]) : _vm._e(), _vm._v(" "), _vm.item.language_id != 1 ? _c("div", {
+  }), _vm._v(" " + _vm._s(_vm.item.local_name)), _vm.item.card.number ? _c("span", [_vm._v(" (" + _vm._s(_vm.item.card.number) + ")")]) : _vm._e(), _vm._v(" "), _vm.item.language_id != 1 ? _c("div", {
     staticClass: "d-none d-xl-table-cell text-muted"
-  }, [_vm._v(_vm._s(_vm.item.card.name))]) : _vm._e()]), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.item.card_name))]) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "align-middle text-center"
   }, [_c("expansion-icon", {
     attrs: {
@@ -9752,9 +9752,9 @@ var render = function render() {
     attrs: {
       title: _vm.item.language.name
     }
-  }), _vm._v(" " + _vm._s(_vm.item.localName) + " (" + _vm._s(_vm.item.card.number) + ")\n        "), _vm.item.language_id != 1 ? _c("div", {
+  }), _vm._v(" " + _vm._s(_vm.item.local_name) + " (" + _vm._s(_vm.item.card.number) + ")\n        "), _vm.item.language_id != 1 ? _c("div", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.item.card.name))]) : _vm._e()]), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.item.card_name))]) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "align-middle text-center"
   }, [_vm.item.card.expansion ? _c("expansion-icon", {
     attrs: {
@@ -10032,9 +10032,9 @@ var render = function render() {
     attrs: {
       title: _vm.item.language.name
     }
-  }), _vm._v(" " + _vm._s(_vm.item.localName) + " (" + _vm._s(_vm.item.card.number) + ")\n        "), _vm.item.language_id != 1 ? _c("div", {
+  }), _vm._v(" " + _vm._s(_vm.item.local_name) + " (" + _vm._s(_vm.item.card.number) + ")\n        "), _vm.item.language_id != 1 ? _c("div", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.item.card.name))]) : _vm._e()]), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.item.card_name))]) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "align-middle text-right"
   }, [_vm._v("#" + _vm._s(_vm.item.card.number))]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell text-center"
@@ -13819,7 +13819,7 @@ var render = function render() {
     attrs: {
       title: _vm.item.language.name
     }
-  }), _vm._v(" " + _vm._s(_vm.item.localName)), _vm.item.card.number ? _c("span", [_vm._v(" (" + _vm._s(_vm.item.card.number) + ")")]) : _vm._e()]), _vm._v(" "), _vm.item.cardmarket_comments ? _c("div", [_vm._v(_vm._s(_vm.item.cardmarket_comments))]) : _vm._e()]), _vm._v(" "), _c("td", {
+  }), _vm._v(" " + _vm._s(_vm.item.local_name)), _vm.item.card.number ? _c("span", [_vm._v(" (" + _vm._s(_vm.item.card.number) + ")")]) : _vm._e()]), _vm._v(" "), _vm.item.cardmarket_comments ? _c("div", [_vm._v(_vm._s(_vm.item.cardmarket_comments))]) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "align-middle pointer",
     on: {
       click: _vm.toShow
@@ -14013,7 +14013,7 @@ var render = function render() {
     staticClass: "col d-flex flex-column"
   }, [_c("div", {
     staticClass: "mb-3"
-  }, [_c("div", [_c("b", [_vm._v(_vm._s(_vm.index + 1) + ": " + _vm._s(_vm.item.localName) + " (#" + _vm._s(_vm.item.card.number) + ") "), _c("span", {
+  }, [_c("div", [_c("b", [_vm._v(_vm._s(_vm.index + 1) + ": " + _vm._s(_vm.item.local_name) + " (#" + _vm._s(_vm.item.card.number) + ") "), _c("span", {
     staticClass: "fi",
     "class": "fi-" + _vm.item.language.code,
     attrs: {
@@ -15494,7 +15494,7 @@ var render = function render() {
     attrs: {
       title: _vm.item.language.name
     }
-  }), _vm._v(" " + _vm._s(_vm.item.localName)), _vm.item.card.number ? _c("span", [_vm._v(" (#" + _vm._s(_vm.item.card.number) + ") " + _vm._s(_vm.item.id))]) : _vm._e()]), _vm._v(" "), _vm.item.cardmarket_comments ? _c("div", [_vm._v(_vm._s(_vm.item.cardmarket_comments))]) : _vm._e()]), _vm._v(" "), _c("td", {
+  }), _vm._v(" " + _vm._s(_vm.item.local_name)), _vm.item.card.number ? _c("span", [_vm._v(" (#" + _vm._s(_vm.item.card.number) + ") " + _vm._s(_vm.item.id))]) : _vm._e()]), _vm._v(" "), _vm.item.cardmarket_comments ? _c("div", [_vm._v(_vm._s(_vm.item.cardmarket_comments))]) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell pointer",
     on: {
       click: _vm.toShow
@@ -15666,7 +15666,7 @@ var render = function render() {
     staticClass: "col d-flex flex-column"
   }, [_c("div", {
     staticClass: "mb-3"
-  }, [_c("div", [_c("b", [_vm._v(_vm._s(_vm.index + 1) + ": " + _vm._s(_vm.item.localName) + " (#" + _vm._s(_vm.item.card.number) + ") "), _c("span", {
+  }, [_c("div", [_c("b", [_vm._v(_vm._s(_vm.index + 1) + ": " + _vm._s(_vm.item.local_name) + " (#" + _vm._s(_vm.item.card.number) + ") "), _c("span", {
     staticClass: "fi",
     "class": "fi-" + _vm.language.code,
     attrs: {
@@ -18767,7 +18767,7 @@ var render = function render() {
     staticClass: "col d-flex flex-column"
   }, [_c("div", {
     staticClass: "mb-3"
-  }, [_c("div", [_c("b", [_vm._v(_vm._s(_vm.index + 1) + ": " + _vm._s(_vm.item.localName) + " (#" + _vm._s(_vm.item.card.number) + ") "), _c("span", {
+  }, [_c("div", [_c("b", [_vm._v(_vm._s(_vm.index + 1) + ": " + _vm._s(_vm.item.local_name) + " (#" + _vm._s(_vm.item.card.number) + ") "), _c("span", {
     staticClass: "fi",
     "class": "fi-" + _vm.item.language.code,
     attrs: {
