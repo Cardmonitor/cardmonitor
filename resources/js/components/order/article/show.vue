@@ -9,7 +9,7 @@
             </div>
             <div class="col d-flex flex-column">
                 <div class="mb-3">
-                    <div><b>{{ (index + 1) }}: {{ item.localName }} (#{{ item.card.number }}) <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> </b></div>
+                    <div><b>{{ (index + 1) }}: {{ item.local_name }} (#{{ item.card.number }}) <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> </b></div>
                     <div><expansion-icon :expansion="item.card.expansion"></expansion-icon></div>
                     <div><rarity :value="item.card.rarity"></rarity> ({{ item.card.rarity }})</div>
                     <div><condition :value="item.condition"></condition> ({{ item.condition }})</div>

@@ -658,7 +658,7 @@ class Order extends Model
             }
             $text_comments .= "\nFolgendes ist mir aufgefallen:\n";
             foreach ($articlesWithStateComments as $key => $article) {
-                $text_comments .= $article->localName . " " . $article->state_comments . "\n";
+                $text_comments .= $article->local_name . " " . $article->state_comments . "\n";
             }
             $text_comments .= "\n";
         }

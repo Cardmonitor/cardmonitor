@@ -2,7 +2,7 @@
     <div>
 
         <div class="d-flex mb-1">
-            <h2 class="col mb-0 pl-0"><a class="text-body" href="/article">{{ $t('app.nav.article') }}</a><span class="d-none d-md-inline"> > {{ model.localName }}</span></h2>
+            <h2 class="col mb-0 pl-0"><a class="text-body" href="/article">{{ $t('app.nav.article') }}</a><span class="d-none d-md-inline"> > {{ model.local_name }}</span></h2>
             <div class="d-flex align-items-center">
                 <a :href="model.path" class="btn btn-sm btn-secondary ml-1">{{ $t('app.overview') }}</a>
             </div>

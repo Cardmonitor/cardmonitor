@@ -112,7 +112,7 @@ export default {
             items: [],
             filter: {
                 game_id: this.initalItem.card.game_id,
-                searchtext: this.initalItem.localName,
+                searchtext: this.initalItem.local_name,
                 expansion_id: null,
                 language_id: this.initalItem.language_id,
                 shouldFocus: true,
@@ -163,7 +163,7 @@ export default {
         update() {
             var component = this;
 
-            component.setStateComments('Die Karte ' + component.initalItem.card.name + ' (' + component.initalItem.card.expansion.abbreviation + ')' + ' wurde ausgetauscht.');
+            component.setStateComments('Die Karte ' + component.initalItem.card_name + ' (' + component.initalItem.card.expansion.abbreviation + ')' + ' wurde ausgetauscht.');
 
             axios.put(component.initalItem.path, component.form)
                 .then(function (response) {

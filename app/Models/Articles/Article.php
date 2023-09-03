@@ -79,7 +79,6 @@ class Article extends Model
 
     protected $appends = [
         'can_upload_to_cardmarket',
-        'localName',
         'path',
         'edit_path',
         'price_rule_formatted',
@@ -101,6 +100,7 @@ class Article extends Model
         'bought_at_formatted',
         'bought_at',
         'card_id',
+        'card_name',
         'cardmarket_article_id',
         'cardmarket_comments',
         'cardmarket_last_edited',
@@ -118,6 +118,7 @@ class Article extends Model
         'is_playset',
         'is_signed',
         'language_id',
+        'local_name',
         'number',
         'price_rule_formatted',
         'price_rule',
@@ -184,6 +185,11 @@ class Article extends Model
                 $model->language_id = self::DEFAULT_LANGUAGE;
             }
 
+            if ((empty($model->local_name) || empty($model->card_name)) && !is_null($model->card_id)) {
+                $model->local_name = $model->getLocalName();
+                $model->card_name = $model->card->name;
+            }
+
             if (! $model->condition) {
                 $model->condition = self::DEFAULT_CONDITION;
             }
@@ -193,6 +199,13 @@ class Article extends Model
             }
 
             return true;
+        });
+
+        static::updating(function ($model) {
+            if ($model->isDirty('card_id') || $model->isDirty('language_id')) {
+                $model->local_name = $model->getLocalName();
+                $model->card_name = $model->card->name;
+            }
         });
     }
 
@@ -973,7 +986,7 @@ class Article extends Model
         return 'Artikel';
     }
 
-    public function getLocalNameAttribute() : string
+    public function getLocalName(): string
     {
         if ($this->card->relationLoaded('localizations')) {
             $localization = $this->card->localizations->where('language_id', $this->language_id)->first();
@@ -1369,13 +1382,12 @@ class Article extends Model
             return $query->where('articles.number', $value);
         }
 
-        return $query->join('localizations', function ($join) {
-            $join->on('localizations.localizationable_id', '=', 'cards.id');
-            $join->where('localizations.localizationable_type', '=', Card::class);
+        return $query->where(function ($query) use ($value) {
+            $query->orWhere('articles.local_name', 'like', '%' . $value . '%')
+                ->orWhere('articles.card_name', 'like', '%' . $value . '%')
+                ->orWhere('articles.number', 'like', '%' . $value . '%');
         })
-            ->where('localizations.name', 'like', '%' . $value . '%')
-            ->orWhere('articles.number', 'like', '%' . $value . '%')
-            ->groupBy('articles.id');
+        ->groupBy('articles.id');
     }
 
     public function scopeSold(Builder $query, $value) : Builder

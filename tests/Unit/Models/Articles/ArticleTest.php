@@ -139,7 +139,7 @@ class ArticleTest extends TestCase
             'language_id' => Language::DEFAULT_ID,
         ]);
 
-        $this->assertEquals($card->localizations()->where('language_id', Language::DEFAULT_ID)->first()->name, $model->localName);
+        $this->assertEquals($card->localizations()->where('language_id', Language::DEFAULT_ID)->first()->name, $model->local_name);
     }
 
     /**
@@ -1317,5 +1317,77 @@ class ArticleTest extends TestCase
         $this->assertEquals([
             $article_sync_state_not_synced->id,
         ], $articles_not_synced->pluck('id')->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_knows_its_local_and_card_names()
+    {
+        $name_en = 'Test Card';
+        $name_de = 'Test Karte';
+        $card = factory(Card::class)->create([
+            'name' => $name_en,
+        ]);
+
+        $card->localizations()->create([
+            'language_id' => Language::ID_GERMAN,
+            'name' => $name_de,
+        ]);
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'card_id' => $card->id,
+            'language_id' => Language::DEFAULT_ID,
+        ]);
+
+        $this->assertEquals($name_en, $article->local_name);
+        $this->assertEquals($name_en, $article->card_name);
+
+        $article->update([
+            'language_id' => Language::ID_GERMAN,
+        ]);
+
+        $this->assertEquals($name_de, $article->local_name);
+        $this->assertEquals($name_en, $article->card_name);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_searched_by_local_or_card_names()
+    {
+        $name_en = 'Test Card';
+        $name_de = 'Test Karte';
+        $card = factory(Card::class)->create([
+            'name' => $name_en,
+        ]);
+
+        $card->localizations()->create([
+            'language_id' => Language::ID_GERMAN,
+            'name' => $name_de,
+        ]);
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'card_id' => $card->id,
+            'language_id' => Language::DEFAULT_ID,
+        ]);
+
+        $this->assertEquals($name_en, $article->local_name);
+        $this->assertEquals($name_en, $article->card_name);
+
+        $this->assertCount(1, Article::search($name_en)->get());
+        $this->assertCount(0, Article::search($name_de)->get());
+
+        $article->update([
+            'language_id' => Language::ID_GERMAN,
+        ]);
+
+        $this->assertEquals($name_de, $article->local_name);
+        $this->assertEquals($name_en, $article->card_name);
+
+        $this->assertCount(1, Article::search($name_en)->get());
+        $this->assertCount(1, Article::search($name_de)->get());
     }
 }
