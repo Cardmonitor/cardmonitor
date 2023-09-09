@@ -1350,6 +1350,15 @@ class ArticleTest extends TestCase
 
         $this->assertEquals($name_de, $article->local_name);
         $this->assertEquals($name_en, $article->card_name);
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'card_id' => null,
+            'language_id' => Language::DEFAULT_ID,
+        ]);
+
+        $this->assertEquals(null, $article->local_name);
+        $this->assertEquals(null, $article->card_name);
     }
 
     /**

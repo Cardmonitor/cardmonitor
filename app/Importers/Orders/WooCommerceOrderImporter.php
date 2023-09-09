@@ -52,6 +52,18 @@ class WooCommerceOrderImporter
         return array_search(substr($condition['value'], 0, strrpos($condition['value'], ' ')), Article::CONDITIONS);
     }
 
+    /**
+     * Gets the language id from the meta data
+     */
+    public static function getLanguageId(array $line_item): int
+    {
+        $language = Arr::first($line_item['meta_data'], function ($meta) {
+            return str_starts_with($meta['key'], 'sprache');
+        });
+
+        return Language::getIdByGermanName($language['value']);
+    }
+
     public function __construct(int $user_id)
     {
         $this->user_id = $user_id;
@@ -153,22 +165,21 @@ class WooCommerceOrderImporter
 
     public function importLineItem(array $line_item): void
     {
+        $condition = self::getCondition($line_item);
+        $language_id = self::getLanguageId($line_item);
+
         if (self::hasCardmarketId($line_item['sku'])) {
             [$cardmarket_product_id, $is_foil] = explode('-', $line_item['sku']);
             $card = Card::firstOrImport($cardmarket_product_id);
             $quantity = $line_item['quantity'];
+            $local_name = null;
         }
         else {
             $card = Card::make();
             $is_foil = false;
             $quantity = 1;
+            $local_name = $line_item['quantity'] . 'x ' . $line_item['name'] . ' (' . $condition . ')';
         }
-
-        $language = Arr::first($line_item['meta_data'], function ($meta) {
-            return str_starts_with($meta['key'], 'sprache');
-        });
-
-        $condition = self::getCondition($line_item);
 
         $unit_cost = $line_item['total'] / $quantity * (1 + $this->bonus);
 
@@ -179,7 +190,7 @@ class WooCommerceOrderImporter
                 'index' => $index,
                 'user_id' => $this->user_id,
                 'card_id' => $card->id,
-                'language_id' => Language::getIdByGermanName($language['value']),
+                'language_id' => $language_id,
                 'cardmarket_article_id' => null,
                 'condition' => $condition,
                 'unit_price' => $unit_cost * 3,
@@ -198,6 +209,7 @@ class WooCommerceOrderImporter
                 'is_sellable_since' => null,
                 'state' => null,
                 'state_comments' => null,
+                'local_name' => $local_name,
             ];
             $attributes = [
                 'source_slug' => self::SOURCE_SLUG,
