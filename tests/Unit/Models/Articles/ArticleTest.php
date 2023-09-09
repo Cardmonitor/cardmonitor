@@ -1390,4 +1390,19 @@ class ArticleTest extends TestCase
         $this->assertCount(1, Article::search($name_en)->get());
         $this->assertCount(1, Article::search($name_de)->get());
     }
+
+    /**
+     * @test
+     */
+    public function it_can_create_articles_without_a_card()
+    {
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'card_id' => null,
+        ]);
+
+        $this->assertNull($article->card);
+        $this->assertNull($article->card_name);
+        $this->assertNull($article->local_name);
+    }
 }

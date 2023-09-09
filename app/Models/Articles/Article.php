@@ -61,7 +61,7 @@ class Article extends Model
     const CONDITIONS = [
         'MT' => 'Mint',
         'NM' => 'Near Mint',
-        'EX' => 'Excelent',
+        'EX' => 'Excellent',
         'GD' => 'Good',
         'LP' => 'Light Played',
         'PL' => 'Played',
