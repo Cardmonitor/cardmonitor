@@ -9,15 +9,17 @@
                 <button class="btn btn-sm btn-secondary mt-1" @click="is_changing_card = false;">Abbrechen</button>
             </div>
             <div class="col-12 col-sm text-center" v-else>
-                <img class="img-fluid p-3" :src="item.card.imagePath">
-                <button class="btn btn-block btn-sm btn-secondary" @click="is_changing_card = true;" v-if="item.is_sellable === 0">Karte ändern</button>
+                <template v-if="item.card">
+                    <img class="img-fluid p-3" :src="item.card.imagePath">
+                    <button class="btn btn-block btn-sm btn-secondary" @click="is_changing_card = true;" v-if="item.is_sellable === 0">Karte ändern</button>
+                </template>
                 <button class="btn btn-block btn-sm btn-danger text-overflow-ellipsis" title="Nächste Karte (Status Nicht vorhanden)" @click="next(true, 3)" v-if="item.is_sellable === 0">Nächste Karte (Karte nicht vorhanden)</button>
             </div>
             <div class="col d-flex flex-column">
                 <div class="mb-3">
-                    <div><b>{{ (index + 1) }}: {{ item.local_name }} (#{{ item.card.number }}) <span class="fi" :class="'fi-' + language.code" :title="language.name"></span></b></div>
-                    <div><expansion-icon :expansion="item.card.expansion"></expansion-icon></div>
-                    <div><rarity :value="item.card.rarity"></rarity> ({{ item.card.rarity }})</div>
+                    <div><b>{{ (index + 1) }}: {{ item.local_name }} <span v-if="item.card && item.card.number">(#{{ item.card.number }})</span> <span class="fi" :class="'fi-' + language.code" :title="language.name"></span></b></div>
+                    <div><expansion-icon :expansion="item.card.expansion" v-if="item.card && item.card.expansion"></expansion-icon></div>
+                    <div v-if="item.card"><rarity :value="item.card.rarity"></rarity> ({{ item.card.rarity }})</div>
                     <div><condition :value="form.condition"></condition> ({{ form.condition }})</div>
                     <div class="d-flex justify-content-between my-3">
                         <button class="btn" :class="getConditionAktiveClass(condition_key)" :key="condition" v-for="(condition, condition_key) in conditions" @click="setCondition(condition_key)">{{ condition_key }}</button>

@@ -5792,6 +5792,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     show: function show(event) {
+      if (this.item.card === null) {
+        return;
+      }
       this.$emit('show', {
         src: this.item.card.imagePath,
         top: event.y - 425 + 'px',
@@ -15494,7 +15497,7 @@ var render = function render() {
     attrs: {
       title: _vm.item.language.name
     }
-  }), _vm._v(" " + _vm._s(_vm.item.local_name)), _vm.item.card.number ? _c("span", [_vm._v(" (#" + _vm._s(_vm.item.card.number) + ") " + _vm._s(_vm.item.id))]) : _vm._e()]), _vm._v(" "), _vm.item.cardmarket_comments ? _c("div", [_vm._v(_vm._s(_vm.item.cardmarket_comments))]) : _vm._e()]), _vm._v(" "), _c("td", {
+  }), _vm._v(" " + _vm._s(_vm.item.local_name)), _vm.item.card && _vm.item.card.number ? _c("span", [_vm._v(" (#" + _vm._s(_vm.item.card.number) + ") " + _vm._s(_vm.item.id))]) : _vm._e()]), _vm._v(" "), _vm.item.cardmarket_comments ? _c("div", [_vm._v(_vm._s(_vm.item.cardmarket_comments))]) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell pointer",
     on: {
       click: _vm.toShow
@@ -15504,7 +15507,7 @@ var render = function render() {
     on: {
       click: _vm.toShow
     }
-  }, [_vm.item.card.expansion ? _c("expansion-icon", {
+  }, [_vm.item.card && _vm.item.card.expansion ? _c("expansion-icon", {
     attrs: {
       expansion: _vm.item.card.expansion,
       "show-name": false
@@ -15514,11 +15517,11 @@ var render = function render() {
     on: {
       click: _vm.toShow
     }
-  }, [_c("rarity", {
+  }, [_vm.item.card ? _c("rarity", {
     attrs: {
       value: _vm.item.card.rarity
     }
-  })], 1), _vm._v(" "), _c("td", {
+  }) : _vm._e()], 1), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell text-center pointer",
     on: {
       click: _vm.toShow
@@ -15640,7 +15643,7 @@ var render = function render() {
     }
   }, [_vm._v("Abbrechen")])], 1) : _c("div", {
     staticClass: "col-12 col-sm text-center"
-  }, [_c("img", {
+  }, [_vm.item.card ? [_c("img", {
     staticClass: "img-fluid p-3",
     attrs: {
       src: _vm.item.card.imagePath
@@ -15652,7 +15655,7 @@ var render = function render() {
         _vm.is_changing_card = true;
       }
     }
-  }, [_vm._v("Karte ändern")]) : _vm._e(), _vm._v(" "), _vm.item.is_sellable === 0 ? _c("button", {
+  }, [_vm._v("Karte ändern")]) : _vm._e()] : _vm._e(), _vm._v(" "), _vm.item.is_sellable === 0 ? _c("button", {
     staticClass: "btn btn-block btn-sm btn-danger text-overflow-ellipsis",
     attrs: {
       title: "Nächste Karte (Status Nicht vorhanden)"
@@ -15662,25 +15665,25 @@ var render = function render() {
         return _vm.next(true, 3);
       }
     }
-  }, [_vm._v("Nächste Karte (Karte nicht vorhanden)")]) : _vm._e()]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Nächste Karte (Karte nicht vorhanden)")]) : _vm._e()], 2), _vm._v(" "), _c("div", {
     staticClass: "col d-flex flex-column"
   }, [_c("div", {
     staticClass: "mb-3"
-  }, [_c("div", [_c("b", [_vm._v(_vm._s(_vm.index + 1) + ": " + _vm._s(_vm.item.local_name) + " (#" + _vm._s(_vm.item.card.number) + ") "), _c("span", {
+  }, [_c("div", [_c("b", [_vm._v(_vm._s(_vm.index + 1) + ": " + _vm._s(_vm.item.local_name) + " "), _vm.item.card && _vm.item.card.number ? _c("span", [_vm._v("(#" + _vm._s(_vm.item.card.number) + ")")]) : _vm._e(), _vm._v(" "), _c("span", {
     staticClass: "fi",
     "class": "fi-" + _vm.language.code,
     attrs: {
       title: _vm.language.name
     }
-  })])]), _vm._v(" "), _c("div", [_c("expansion-icon", {
+  })])]), _vm._v(" "), _c("div", [_vm.item.card && _vm.item.card.expansion ? _c("expansion-icon", {
     attrs: {
       expansion: _vm.item.card.expansion
     }
-  })], 1), _vm._v(" "), _c("div", [_c("rarity", {
+  }) : _vm._e()], 1), _vm._v(" "), _vm.item.card ? _c("div", [_c("rarity", {
     attrs: {
       value: _vm.item.card.rarity
     }
-  }), _vm._v(" (" + _vm._s(_vm.item.card.rarity) + ")")], 1), _vm._v(" "), _c("div", [_c("condition", {
+  }), _vm._v(" (" + _vm._s(_vm.item.card.rarity) + ")")], 1) : _vm._e(), _vm._v(" "), _c("div", [_c("condition", {
     attrs: {
       value: _vm.form.condition
     }
