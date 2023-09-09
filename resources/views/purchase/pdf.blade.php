@@ -77,15 +77,22 @@
                                     <div class="text-muted">{{ $article->card->name }}</div>
                                 @endif
                             </td>
-                            <td class="align-middle text-right">{{ $article->card->expansion->name }} ({{ $article->card->expansion->abbreviation }})</td>
-                            <td class="align-middle text-right">{{ $article->card->number }}</td>
-                            <td class="align-middle">
-                                {{ $article->condition }}
-                                @if ($article->is_foil)
-                                    <div class="text-muted">Foil</div>
-                                @endif
-                            </td>
-                            <td class="align-middle">{{ $article->language->name }}</td>
+                            @if ($article->card_id)
+                                <td class="align-middle text-right">{{ $article->card->expansion->name }} ({{ $article->card->expansion->abbreviation }})</td>
+                                <td class="align-middle text-right">{{ $article->card->number }}</td>
+                                <td class="align-middle">
+                                    {{ $article->condition }}
+                                    @if ($article->is_foil)
+                                        <div class="text-muted">Foil</div>
+                                    @endif
+                                </td>
+                                <td class="align-middle">{{ $article->language->name }}</td>
+                            @else
+                                <td class="align-middle text-right"></td>
+                                <td class="align-middle text-right"></td>
+                                <td class="align-middle"></td>
+                                <td class="align-middle"></td>
+                            @endif
                             <td class="align-middle text-right">{{ number_format($article->unit_cost, 2, ',', '.') }} €</td>
                             <td class="align-middle">{!! nl2br($article->state_comments) !!}</td>
                         </tr>
@@ -93,7 +100,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="5" class="text-right">{{ $order->articles->count() }} Einzelkarten</td>
+                        <td colspan="5" class="text-right">{{ $order->articles->count() }} Positionen</td>
                         <td class="text-right">{{ number_format($order->articles->sum('unit_cost'), 2, ',', '.') }} €</td>
                         <td></td>
                     </tr>
