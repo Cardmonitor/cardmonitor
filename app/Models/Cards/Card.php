@@ -385,6 +385,7 @@ class Card extends Model
             Game::ID_MAGIC => 'A11360',
             Game::ID_POKEMON => 'A11359',
             Game::ID_FLESH_AND_BLOOD => 'A11433',
+            Game::ID_LORCANA => 'A11982',
             default => '',
         };
     }

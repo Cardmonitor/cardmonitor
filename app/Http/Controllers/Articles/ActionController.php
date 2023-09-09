@@ -48,7 +48,7 @@ class ActionController extends Controller
                     'orders',
                     'storage',
                 ])
-                ->orderBy('cards.name', 'ASC')
+                ->orderBy('articles.card_name', 'ASC')
                 ->get();
 
         switch ($attributes['action']) {

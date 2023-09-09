@@ -11,6 +11,7 @@ class Game extends Model
     const ID_YUGIOH = 3;
     const ID_POKEMON = 6;
     const ID_FLESH_AND_BLOOD = 16;
+    const ID_LORCANA = 19;
 
     public $incrementing = false;
 

@@ -51,7 +51,7 @@ class ArticleController extends Controller
                     'rule',
                     'storage',
                 ])
-                ->orderBy('cards.name', 'ASC')
+                ->orderBy('articles.card_name', 'ASC')
                 ->paginate();
         }
 
