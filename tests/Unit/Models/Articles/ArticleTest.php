@@ -1350,6 +1350,15 @@ class ArticleTest extends TestCase
 
         $this->assertEquals($name_de, $article->local_name);
         $this->assertEquals($name_en, $article->card_name);
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'card_id' => null,
+            'language_id' => Language::DEFAULT_ID,
+        ]);
+
+        $this->assertEquals(null, $article->local_name);
+        $this->assertEquals(null, $article->card_name);
     }
 
     /**
@@ -1389,5 +1398,20 @@ class ArticleTest extends TestCase
 
         $this->assertCount(1, Article::search($name_en)->get());
         $this->assertCount(1, Article::search($name_de)->get());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_create_articles_without_a_card()
+    {
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'card_id' => null,
+        ]);
+
+        $this->assertNull($article->card);
+        $this->assertNull($article->card_name);
+        $this->assertNull($article->local_name);
     }
 }

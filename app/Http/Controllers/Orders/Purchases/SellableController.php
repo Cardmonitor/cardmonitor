@@ -16,6 +16,7 @@ class SellableController extends Controller
             abort(403);
         }
 
+        $this->deleteArticlesWithoutCard($order);
         $this->deleteNotAvailableArticles($order);
         $this->resetArticleState($order);
         $this->completeWooCommerceOrder($order);
@@ -33,6 +34,11 @@ class SellableController extends Controller
                 ]);
             },
         ]);
+    }
+
+    private function deleteArticlesWithoutCard(Order $order): void
+    {
+        $order->articles()->whereNull('card_id')->delete();
     }
 
     private function deleteNotAvailableArticles(Order $order): void

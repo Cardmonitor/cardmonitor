@@ -120,7 +120,8 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->validate([
-            'card_id' => 'required|integer',
+            'card_id' => 'nullable|integer',
+            'count' => 'required|integer|min:1',
             'cardmarket_comments' => 'sometimes|nullable|string',
             'language_id' => 'sometimes|required|integer',
             'storage_id' => 'sometimes|nullable|exists:storages,id',
@@ -134,13 +135,21 @@ class ArticleController extends Controller
             'is_playset' => 'sometimes|required|boolean',
             'unit_price_formatted' => 'sometimes|required|formated_number',
             'unit_cost_formatted' => 'sometimes|required|formated_number',
+            'order_id' => 'sometimes|required|integer',
+            'local_name' => 'sometimes|required|string',
         ]);
 
-        $attributes['is_sellable_since'] = now();
+        if (! $request->has('order_id')) {
+            $attributes['is_sellable_since'] = now();
+        }
 
         $articles = [];
         for ($i = 0; $i < $request->input('count'); $i++) {
             $article = Article::create($attributes);
+
+            if ($attributes['order_id'] ?? false) {
+                $article->orders()->attach($attributes['order_id']);
+            }
 
             if ($request->input('sync')) {
                 $article->syncAdd();
@@ -153,6 +162,13 @@ class ArticleController extends Controller
                 'orders',
                 'storage',
             ]);
+
+            if (count($article->orders)) {
+                foreach ($article->orders as $order) {
+                    $order->calculateProfits()
+                        ->save();
+                }
+            }
 
             $articles[] = $article;
         }
@@ -228,6 +244,7 @@ class ArticleController extends Controller
             'provision_formatted' => 'sometimes|required|formated_number',
             'state' => 'sometimes|nullable|integer',
             'state_comments' => 'sometimes|nullable|string',
+            'local_name' => 'sometimes|nullable|string',
         ]));
 
         if (count($article->orders)) {

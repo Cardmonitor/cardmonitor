@@ -28,6 +28,42 @@ class WooCommerceOrderImporter
         return $importer->importOrder($woocommerce_order);
     }
 
+    /**
+     * Checks if the sku contains a cardmarket product id
+     * With this we can check if the article is a card or something else
+     * SKU: 123456-true
+     * SKU: 123456-false
+     * SKU: bulkrares
+     */
+    public static function hasCardmarketId(string $sku): bool
+    {
+        return strpos($sku, '-') !== false;
+    }
+
+    /**
+     * Gets the condition from the meta data
+     */
+    public static function getCondition(array $line_item): string
+    {
+        $condition = Arr::first($line_item['meta_data'], function ($meta) {
+            return $meta['key'] == 'zustand';
+        });
+
+        return array_search(substr($condition['value'], 0, strrpos($condition['value'], ' ')), Article::CONDITIONS);
+    }
+
+    /**
+     * Gets the language id from the meta data
+     */
+    public static function getLanguageId(array $line_item): int
+    {
+        $language = Arr::first($line_item['meta_data'], function ($meta) {
+            return str_starts_with($meta['key'], 'sprache');
+        });
+
+        return Language::getIdByGermanName($language['value']);
+    }
+
     public function __construct(int $user_id)
     {
         $this->user_id = $user_id;
@@ -39,11 +75,6 @@ class WooCommerceOrderImporter
         $this->createOrder($woocommerce_order);
 
         foreach ($woocommerce_order['line_items'] as $line_item) {
-
-            if (strpos($line_item['sku'], '-') === false) {
-                continue;
-            }
-
             $this->importLineItem($line_item);
         }
 
@@ -57,12 +88,8 @@ class WooCommerceOrderImporter
         $articles_count = 0;
         $articles_cost = 0;
         foreach ($woocommerce_order['line_items'] as $line_item) {
-            [$cardmarket_product_id] = explode('-', $line_item['sku']);
-            if (! is_numeric($cardmarket_product_id)) {
-                continue;
-            }
             $articles_cost += $line_item['total'];
-            $articles_count += $line_item['quantity'];
+            $articles_count += self::hasCardmarketId($line_item['sku']) ? $line_item['quantity'] : 1;
         }
 
         $values = [
@@ -138,34 +165,34 @@ class WooCommerceOrderImporter
 
     public function importLineItem(array $line_item): void
     {
-        [$cardmarket_product_id, $is_foil] = explode('-', $line_item['sku']);
-        // Positionen ohne Cardmarket-Produkt-ID ignorieren, z.B. Bulk Rares
-        if (! is_numeric($cardmarket_product_id)) {
-            return;
+        $condition = self::getCondition($line_item);
+        $language_id = self::getLanguageId($line_item);
+
+        if (self::hasCardmarketId($line_item['sku'])) {
+            [$cardmarket_product_id, $is_foil] = explode('-', $line_item['sku']);
+            $card = Card::firstOrImport($cardmarket_product_id);
+            $quantity = $line_item['quantity'];
+            $local_name = null;
+        }
+        else {
+            $card = Card::make();
+            $is_foil = false;
+            $quantity = 1;
+            $local_name = $line_item['quantity'] . 'x ' . $line_item['name'] . ' (' . $condition . ')';
         }
 
-        $card = Card::firstOrImport($cardmarket_product_id);
+        $unit_cost = $line_item['total'] / $quantity * (1 + $this->bonus);
 
-        $language = Arr::first($line_item['meta_data'], function ($meta) {
-            return str_starts_with($meta['key'], 'sprache');
-        });
-
-        $condition = Arr::first($line_item['meta_data'], function ($meta) {
-            return $meta['key'] == 'zustand';
-        });
-
-        $unit_cost = $line_item['total'] / $line_item['quantity'] * (1 + $this->bonus);
-
-        for ($index=1; $index <= $line_item['quantity']; $index++) {
+        for ($index=1; $index <= $quantity; $index++) {
             $values = [
                 'source_slug' => self::SOURCE_SLUG,
                 'source_id' => $line_item['id'],
                 'index' => $index,
                 'user_id' => $this->user_id,
                 'card_id' => $card->id,
-                'language_id' => Language::getIdByGermanName($language['value']),
+                'language_id' => $language_id,
                 'cardmarket_article_id' => null,
-                'condition' => array_search(substr($condition['value'], 0, strrpos($condition['value'], ' ')), Article::CONDITIONS),
+                'condition' => $condition,
                 'unit_price' => $unit_cost * 3,
                 'unit_cost' => $unit_cost,
                 'sold_at' => null,
@@ -182,6 +209,7 @@ class WooCommerceOrderImporter
                 'is_sellable_since' => null,
                 'state' => null,
                 'state_comments' => null,
+                'local_name' => $local_name,
             ];
             $attributes = [
                 'source_slug' => self::SOURCE_SLUG,
@@ -189,7 +217,8 @@ class WooCommerceOrderImporter
                 'index' => $index,
             ];
 
-            $this->articles[] = $this->order->articles()->updateOrCreate($attributes, $values);
+            $article = $this->order->articles()->updateOrCreate($attributes, $values);
+            $this->articles[] = $article;
 
             $this->source_sort++;
         }

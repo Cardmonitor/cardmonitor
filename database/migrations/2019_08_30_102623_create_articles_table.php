@@ -17,7 +17,7 @@ class CreateArticlesTable extends Migration
             $table->bigIncrements('id');
 
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('card_id');
+            $table->unsignedBigInteger('card_id')->nullable();
             $table->unsignedTinyInteger('language_id');
 
             $table->unsignedBigInteger('storage_id')->nullable();
