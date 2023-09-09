@@ -32,6 +32,25 @@
                     <template v-for="(item, index) in items">
                         <row :model="model" :item="item" :index="index" :key="item.id" :uri="uri" @deleted="remove(index)" @updated="updated(index, $event)" @show="showImgbox($event)" @hide="hideImgbox()" @toshow="toshow(index, item)"></row>
                     </template>
+                    <tr>
+                        <td class="d-none d-sm-table-cell" width="75"></td>
+                        <td class="text-center d-none d-lg-table-cell w-icon"></td>
+                        <td class="text-center w-icon"></td>
+                        <td colspan="2">
+                            <input class="form-control form-control-sm" :class="'local_name' in errors ? 'is-invalid' : ''" type="text" v-model="form.local_name" placeholder="Bezeichnung" @keydown.enter="store">
+                            <div class="invalid-feedback" v-text="'local_name' in errors ? errors.local_name[0] : ''"></div>
+                        </td>
+                        <td class="w-icon"></td>
+                        <td class="text-center d-none d-lg-table-cell w-icon"></td>
+                        <td class="text-center d-none d-xl-table-cell w-icon"></td>
+                        <td class="d-none d-lg-table-cell" style="width: 100px;"></td>
+                        <td colspan="3" class="text-right d-none d-sm-table-cell w-formatted-number">
+                            <input class="form-control form-control-sm" :class="'unit_cost_formatted' in errors ? 'is-invalid' : ''" type="text" v-model="form.unit_cost_formatted" @keydown.enter="store">
+                            <div class="invalid-feedback" v-text="'unit_cost_formatted' in errors ? errors.unit_cost_formatted[0] : ''"></div>
+                        </td>
+                        <td class="text-right d-none d-sm-table-cell w-formatted-number"></td>
+                        <td class="text-right d-none d-sm-table-cell w-action"><button class="btn btn-sm btn-primary" @click="store">Anlegen</button></td>
+                    </tr>
                 </tbody>
                 <tfoot>
                     <tr v-show="counts.open > 0">
@@ -199,7 +218,13 @@
                     sync: -1,
                 },
                 form: {
-
+                    local_name: null,
+                    card_id: null,
+                    order_id: this.model.id,
+                    unit_cost_formatted: '0,00',
+                    language_id: 1,
+                    condition: 'NM',
+                    count: 1,
                 },
                 imgbox: {
                     src: null,
@@ -233,6 +258,20 @@
                 .then( function (response) {
                     component.items = response.data;
                 });
+            },
+            store() {
+                var component = this;
+                axios.post('/article', component.form)
+                    .then(function (response) {
+                        component.items.push(response.data[0]);
+                        component.form.local_name = null;
+                        component.form.unit_cost_formatted = '0,00';
+                        Vue.success(component.$t('app.successes.created'));
+                    })
+                     .catch(function (error) {
+                        component.errors = error.response.data.errors;
+                        Vue.error(component.$t('app.errors.loading'));
+                    });
             },
             updated(index, item) {
                 Vue.set(this.items, index, item);

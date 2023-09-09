@@ -5888,6 +5888,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       this.form.language_id = newValue ? newValue.language_id : null;
       this.form.is_foil = newValue ? newValue.is_foil : null;
       this.form.unit_cost_formatted = newValue ? newValue.unit_cost_formatted : null;
+      this.form.local_name = newValue ? newValue.card_id == null ? newValue.local_name : null : null;
       this.language = newValue ? newValue.language : null;
     }
   },
@@ -5904,7 +5905,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         condition: this.item ? this.item.condition : null,
         language_id: this.item ? this.item.language_id : null,
         is_foil: this.item ? this.item.is_foil : null,
-        unit_cost_formatted: this.item ? this.item.unit_cost_formatted : null
+        unit_cost_formatted: this.item ? this.item.unit_cost_formatted : null,
+        local_name: this.item ? this.item.card_id == null ? this.item.local_name : null : null
       },
       price_changes: {
         language: false,
@@ -6124,7 +6126,15 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         sold: 0,
         sync: -1
       },
-      form: {},
+      form: {
+        local_name: null,
+        card_id: null,
+        order_id: this.model.id,
+        unit_cost_formatted: '0,00',
+        language_id: 1,
+        condition: 'NM',
+        count: 1
+      },
       imgbox: {
         src: null,
         show: true
@@ -6151,6 +6161,18 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       var component = this;
       axios.get(component.uri, component.filter).then(function (response) {
         component.items = response.data;
+      });
+    },
+    store: function store() {
+      var component = this;
+      axios.post('/article', component.form).then(function (response) {
+        component.items.push(response.data[0]);
+        component.form.local_name = null;
+        component.form.unit_cost_formatted = '0,00';
+        Vue.success(component.$t('app.successes.created'));
+      })["catch"](function (error) {
+        component.errors = error.response.data.errors;
+        Vue.error(component.$t('app.errors.loading'));
       });
     },
     updated: function updated(index, item) {
@@ -15575,7 +15597,18 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fw fa-eye"
-  })])])])]);
+  })]), _vm._v(" "), _vm.item.card == null ? _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      title: _vm.$t("app.actions.delete")
+    },
+    on: {
+      click: _vm.destroy
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-fw fa-trash"
+  })]) : _vm._e()])])]);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -15669,38 +15702,25 @@ var render = function render() {
     staticClass: "col d-flex flex-column"
   }, [_c("div", {
     staticClass: "mb-3"
-  }, [_c("div", [_c("b", [_vm._v(_vm._s(_vm.index + 1) + ": " + _vm._s(_vm.item.local_name) + " "), _vm.item.card && _vm.item.card.number ? _c("span", [_vm._v("(#" + _vm._s(_vm.item.card.number) + ")")]) : _vm._e(), _vm._v(" "), _c("span", {
+  }, [_c("div", [_c("b", [_vm._v(_vm._s(_vm.index + 1) + ": " + _vm._s(_vm.item.local_name) + " "), _vm.item.card && _vm.item.card.number ? _c("span", [_vm._v("(#" + _vm._s(_vm.item.card.number) + ")")]) : _vm._e(), _vm._v(" "), _vm.item.card ? _c("span", {
     staticClass: "fi",
     "class": "fi-" + _vm.language.code,
     attrs: {
       title: _vm.language.name
     }
-  })])]), _vm._v(" "), _c("div", [_vm.item.card && _vm.item.card.expansion ? _c("expansion-icon", {
+  }) : _vm._e()])]), _vm._v(" "), _c("div", [_vm.item.card && _vm.item.card.expansion ? _c("expansion-icon", {
     attrs: {
       expansion: _vm.item.card.expansion
     }
-  }) : _vm._e()], 1), _vm._v(" "), _vm.item.card ? _c("div", [_c("rarity", {
+  }) : _vm._e()], 1), _vm._v(" "), _vm.item.card ? [_c("div", [_c("rarity", {
     attrs: {
       value: _vm.item.card.rarity
     }
-  }), _vm._v(" (" + _vm._s(_vm.item.card.rarity) + ")")], 1) : _vm._e(), _vm._v(" "), _c("div", [_c("condition", {
+  }), _vm._v(" (" + _vm._s(_vm.item.card.rarity) + ")")], 1), _vm._v(" "), _c("div", [_c("condition", {
     attrs: {
       value: _vm.form.condition
     }
   }), _vm._v(" (" + _vm._s(_vm.form.condition) + ")")], 1), _vm._v(" "), _c("div", {
-    staticClass: "d-flex justify-content-between my-3"
-  }, _vm._l(_vm.conditions, function (condition, condition_key) {
-    return _c("button", {
-      key: condition,
-      staticClass: "btn",
-      "class": _vm.getConditionAktiveClass(condition_key),
-      on: {
-        click: function click($event) {
-          return _vm.setCondition(condition_key);
-        }
-      }
-    }, [_vm._v(_vm._s(condition_key))]);
-  }), 0), _vm._v(" "), _c("div", {
     staticClass: "d-flex mb-3"
   }, _vm._l(_vm.languages, function (language) {
     return _c("button", {
@@ -15714,6 +15734,19 @@ var render = function render() {
       }
     }, [_vm._v(_vm._s(language.name))]);
   }), 0), _vm._v(" "), _c("div", {
+    staticClass: "d-flex justify-content-between my-3"
+  }, _vm._l(_vm.conditions, function (condition, condition_key) {
+    return _c("button", {
+      key: condition,
+      staticClass: "btn",
+      "class": _vm.getConditionAktiveClass(condition_key),
+      on: {
+        click: function click($event) {
+          return _vm.setCondition(condition_key);
+        }
+      }
+    }, [_vm._v(_vm._s(condition_key))]);
+  }), 0), _vm._v(" "), _c("div", {
     staticClass: "mb-3"
   }, [_c("button", {
     staticClass: "btn mr-3",
@@ -15723,7 +15756,36 @@ var render = function render() {
         return _vm.setIsFoil();
       }
     }
-  }, [_vm._v("Foil")])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Foil")])])] : _vm._e(), _vm._v(" "), _vm.item.card == null ? _c("div", {
+    staticClass: "form-group"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.local_name,
+      expression: "form.local_name"
+    }],
+    staticClass: "form-control",
+    "class": "local_name" in _vm.errors ? "is-invalid" : "",
+    attrs: {
+      type: "text",
+      placeholder: "Bezeichnung"
+    },
+    domProps: {
+      value: _vm.form.local_name
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form, "local_name", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("div", {
+    staticClass: "invalid-feedback",
+    domProps: {
+      textContent: _vm._s("local_name" in _vm.errors ? _vm.errors.local_name[0] : "")
+    }
+  })]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "mb-3"
   }, [_c("div", {
     staticClass: "d-flex justify-content-between"
@@ -15827,7 +15889,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-boxes"
-  }), _vm._v(" " + _vm._s(_vm.item.number))]) : _vm._e()]), _vm._v(" "), _c("div", {
+  }), _vm._v(" " + _vm._s(_vm.item.number))]) : _vm._e()], 2), _vm._v(" "), _c("div", {
     staticClass: "col-12 col-sm px-0 mb-3"
   }, [_c("div", {
     staticClass: "form-group"
@@ -15988,7 +16050,106 @@ var render = function render() {
         }
       }
     })];
-  })], 2), _vm._v(" "), _c("tfoot", [_c("tr", {
+  }), _vm._v(" "), _c("tr", [_c("td", {
+    staticClass: "d-none d-sm-table-cell",
+    attrs: {
+      width: "75"
+    }
+  }), _vm._v(" "), _c("td", {
+    staticClass: "text-center d-none d-lg-table-cell w-icon"
+  }), _vm._v(" "), _c("td", {
+    staticClass: "text-center w-icon"
+  }), _vm._v(" "), _c("td", {
+    attrs: {
+      colspan: "2"
+    }
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.local_name,
+      expression: "form.local_name"
+    }],
+    staticClass: "form-control form-control-sm",
+    "class": "local_name" in _vm.errors ? "is-invalid" : "",
+    attrs: {
+      type: "text",
+      placeholder: "Bezeichnung"
+    },
+    domProps: {
+      value: _vm.form.local_name
+    },
+    on: {
+      keydown: function keydown($event) {
+        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+        return _vm.store.apply(null, arguments);
+      },
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form, "local_name", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("div", {
+    staticClass: "invalid-feedback",
+    domProps: {
+      textContent: _vm._s("local_name" in _vm.errors ? _vm.errors.local_name[0] : "")
+    }
+  })]), _vm._v(" "), _c("td", {
+    staticClass: "w-icon"
+  }), _vm._v(" "), _c("td", {
+    staticClass: "text-center d-none d-lg-table-cell w-icon"
+  }), _vm._v(" "), _c("td", {
+    staticClass: "text-center d-none d-xl-table-cell w-icon"
+  }), _vm._v(" "), _c("td", {
+    staticClass: "d-none d-lg-table-cell",
+    staticStyle: {
+      width: "100px"
+    }
+  }), _vm._v(" "), _c("td", {
+    staticClass: "text-right d-none d-sm-table-cell w-formatted-number",
+    attrs: {
+      colspan: "3"
+    }
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.unit_cost_formatted,
+      expression: "form.unit_cost_formatted"
+    }],
+    staticClass: "form-control form-control-sm",
+    "class": "unit_cost_formatted" in _vm.errors ? "is-invalid" : "",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.form.unit_cost_formatted
+    },
+    on: {
+      keydown: function keydown($event) {
+        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+        return _vm.store.apply(null, arguments);
+      },
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form, "unit_cost_formatted", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("div", {
+    staticClass: "invalid-feedback",
+    domProps: {
+      textContent: _vm._s("unit_cost_formatted" in _vm.errors ? _vm.errors.unit_cost_formatted[0] : "")
+    }
+  })]), _vm._v(" "), _c("td", {
+    staticClass: "text-right d-none d-sm-table-cell w-formatted-number"
+  }), _vm._v(" "), _c("td", {
+    staticClass: "text-right d-none d-sm-table-cell w-action"
+  }, [_c("button", {
+    staticClass: "btn btn-sm btn-primary",
+    on: {
+      click: _vm.store
+    }
+  }, [_vm._v("Anlegen")])])])], 2), _vm._v(" "), _c("tfoot", [_c("tr", {
     directives: [{
       name: "show",
       rawName: "v-show",

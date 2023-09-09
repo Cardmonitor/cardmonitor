@@ -21,6 +21,7 @@
         <td class="align-middle d-none d-sm-table-cell text-right">
             <div class="btn-group btn-group-sm" role="group">
                 <button type="button" class="btn btn-sm btn-secondary" :title="$t('app.actions.show')" @click="toShow"><i class="fas fa-fw fa-eye"></i></button>
+                <button type="button" class="btn btn-secondary" :title="$t('app.actions.delete')" @click="destroy" v-if="item.card == null"><i class="fas fa-fw fa-trash"></i></button>
             </div>
         </td>
     </tr>
