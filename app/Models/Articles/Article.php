@@ -175,7 +175,7 @@ class Article extends Model
     {
         parent::boot();
 
-        static::creating(function($model)
+        static::creating(function(self $model)
         {
             if (! $model->user_id) {
                 $model->user_id = auth()->user()->id;
@@ -185,7 +185,7 @@ class Article extends Model
                 $model->language_id = self::DEFAULT_LANGUAGE;
             }
 
-            if ((empty($model->local_name) || empty($model->card_name)) && !is_null($model->card_id)) {
+            if ($model->shouldUpdateLocalAndCardNames()) {
                 $model->local_name = $model->getLocalName();
                 $model->card_name = $model->card->name;
             }
@@ -201,8 +201,8 @@ class Article extends Model
             return true;
         });
 
-        static::updating(function ($model) {
-            if ($model->isDirty('card_id') || $model->isDirty('language_id')) {
+        static::updating(function (self $model) {
+            if ($model->shouldUpdateLocalAndCardNames()) {
                 $model->local_name = $model->getLocalName();
                 $model->card_name = $model->card->name;
             }
@@ -984,6 +984,23 @@ class Article extends Model
     public function getPositionTypeAttribute() : string
     {
         return 'Artikel';
+    }
+
+    /**
+     * Check if the local and card names should be updated
+     * It is updated if the card_id or language_id is changed
+     * Or if the local_name or card_name is empty and the articles has a card
+     */
+    public function shouldUpdateLocalAndCardNames(): bool {
+        if (is_null($this->card_id)) {
+            return false;
+        }
+
+        if (!empty($this->local_name) && !empty($this->card_name) && !$this->isDirty('card_id') && !$this->isDirty('language_id')) {
+            return false;
+        }
+
+        return true;
     }
 
     public function getLocalName(): string
