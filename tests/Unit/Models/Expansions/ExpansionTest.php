@@ -2,16 +2,17 @@
 
 namespace Tests\Unit\Models\Expansions;
 
+use Mockery;
+use Tests\TestCase;
 use App\Models\Cards\Card;
+use Illuminate\Support\Facades\App;
 use App\Models\Expansions\Expansion;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Localizations\Language;
+use Tests\Traits\RelationshipAssertions;
+use Tests\Support\Snapshots\JsonSnapshot;
 use App\Models\Localizations\Localization;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Cache;
-use Tests\TestCase;
-use Tests\Traits\RelationshipAssertions;
 
 class ExpansionTest extends TestCase
 {
@@ -84,57 +85,21 @@ class ExpansionTest extends TestCase
      */
     public function it_can_be_created_from_cardmarket()
     {
-        $cardmarketExpansion = [
-            "idExpansion" => 1408,
-            "enName" => "Filler Cards",
-            "localization" => [
-                0 => [
-                    "name" => "Filler Cards",
-                    "idLanguage" => "1",
-                    "languageName" => "English",
-                ],
-                1 => [
-                    "name" => "Filler Cards",
-                    "idLanguage" => "2",
-                    "languageName" => "French",
-                ],
-                2 => [
-                    "name" => "Filler Cards",
-                    "idLanguage" => "3",
-                    "languageName" => "German",
-                ],
-                3 => [
-                    "name" => "Filler Cards",
-                    "idLanguage" => "4",
-                    "languageName" => "Spanish",
-                ],
-                4 => [
-                    "name" => "Filler Cards",
-                    "idLanguage" => "5",
-                    "languageName" => "Italian",
-                ],
-            ],
-            "abbreviation" => "MGFC",
-            "icon" => 203,
-            "releaseDate" => "1900-01-01T00:00:00+0100",
-            "isReleased" => true,
-            "idGame" => "1",
-            "links" => [
-                0 => [
-                    "rel" => "singles",
-                    "href" => "/expansions/1408/singles",
-                    "method" => "GET",
-                ],
-            ],
-        ];
-        $expansion = Expansion::createFromCardmarket($cardmarketExpansion);
-        $this->assertEquals(1408, $expansion->cardmarket_expansion_id);
-        $this->assertEquals('Filler Cards', $expansion->name);
-        $this->assertEquals('MGFC', $expansion->abbreviation);
+        $cardmarket_expansion_id = 1469;
+        $cardmarket_expansion_response = JsonSnapshot::get('tests/snapshots/cardmarket/expansion/singles/' . $cardmarket_expansion_id . '.json', function () use ($cardmarket_expansion_id) {
+            return App::make('CardmarketApi')->expansion->singles($cardmarket_expansion_id);
+        });
+
+        $cardmarket_expansion = $cardmarket_expansion_response['expansion'];
+
+        $expansion = Expansion::createFromCardmarket($cardmarket_expansion);
+        $this->assertEquals($cardmarket_expansion['idExpansion'], $expansion->cardmarket_expansion_id);
+        $this->assertEquals($cardmarket_expansion['enName'], $expansion->name);
+        $this->assertEquals($cardmarket_expansion['abbreviation'], $expansion->abbreviation);
         $this->assertTrue($expansion->is_released);
-        $this->assertEquals('1900-01-01', $expansion->released_at->format('Y-m-d'));
-        $this->assertEquals(1, $expansion->game_id);
-        $this->assertCount(5, $expansion->localizations);
+        $this->assertEquals($cardmarket_expansion['releaseDate'], $expansion->released_at->format('Y-m-d\TH:i:sO'));
+        $this->assertEquals($cardmarket_expansion['idGame'], $expansion->game_id);
+        $this->assertCount(count($cardmarket_expansion['localization']), $expansion->localizations);
     }
 
     /**
@@ -142,22 +107,29 @@ class ExpansionTest extends TestCase
      */
     public function it_can_be_imported()
     {
-        $this->markTestSkipped();
+        $cardmarket_expansion_id = 1469;
+        $cardmarket_expansion_response = JsonSnapshot::get('tests/snapshots/cardmarket/expansion/singles/' . $cardmarket_expansion_id . '.json', function () use ($cardmarket_expansion_id) {
+            return App::make('CardmarketApi')->expansion->singles($cardmarket_expansion_id);
+        });
 
-        $cardmarketExpansionId = 1408;
+        $cardmarket_expansion_mock = Mockery::mock('overload:' . \Cardmonitor\Cardmarket\Expansion::class);
+        $cardmarket_expansion_mock->shouldReceive('singles')
+            ->with($cardmarket_expansion_id)
+            ->andReturn($cardmarket_expansion_response);
+
         $this->assertDatabaseMissing('expansions', [
-            'id' => $cardmarketExpansionId,
+            'id' => $cardmarket_expansion_id,
         ]);
 
-        $model = Expansion::import($cardmarketExpansionId);
+        $model = Expansion::import($cardmarket_expansion_id);
 
         $this->assertDatabaseHas('expansions', [
-            'id' => $cardmarketExpansionId,
+            'id' => $cardmarket_expansion_id,
         ]);
 
-        $model = Expansion::import($cardmarketExpansionId);
+        $model = Expansion::import($cardmarket_expansion_id);
 
-        $this->assertEquals(1, Expansion::where('id', $cardmarketExpansionId)->count());
+        $this->assertEquals(1, Expansion::where('id', $cardmarket_expansion_id)->count());
     }
 
     /**
