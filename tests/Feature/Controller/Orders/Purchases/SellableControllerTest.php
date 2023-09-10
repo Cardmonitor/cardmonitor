@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controller\Orders\Purchases;
 
+use App\APIs\WooCommerce\Status;
 use Mockery;
 use Tests\TestCase;
 use App\Models\Cards\Card;
@@ -18,8 +19,6 @@ class SellableControllerTest extends TestCase
      */
     public function it_can_make_a_purchase_sellable()
     {
-        $this->markTestIncomplete('WooCommerceMock not working');
-
         $woocommerce_order_id = 619687;
         $woocommerce_order_response = JsonSnapshot::get('tests/snapshots/woocommerce/orders/' . $woocommerce_order_id . '.json', function () use ($woocommerce_order_id) {
             return (new \App\APIs\WooCommerce\WooCommerce())->order($woocommerce_order_id);
@@ -40,6 +39,11 @@ class SellableControllerTest extends TestCase
 
             $quantity += $line_item['quantity'];
         }
+
+        $woocommerce_mock = Mockery::mock('overload:' . WooCommerce::class);
+        $woocommerce_mock->shouldReceive('updateOrderState')
+            ->with($woocommerce_order_id, Status::COMPLETED)
+            ->once();
 
         $order = \App\Importers\Orders\WooCommerceOrderImporter::import($this->user->id, $woocommerce_order);
         $order->loadMissing('articles');
@@ -66,10 +70,6 @@ class SellableControllerTest extends TestCase
 
         $this->signIn();
 
-        $woocommerce_mock = Mockery::mock('overload:' . WooCommerce::class);
-        $woocommerce_mock->shouldReceive('updateOrder')
-            ->once();
-
         $response = $this->post(route('purchases.sellable.store', $order));
         $response->assertOk();
 
@@ -86,6 +86,7 @@ class SellableControllerTest extends TestCase
         $order->refresh();
 
         $this->assertCount($quantity - 1, $order->articles);
+        $this->assertEquals(Status::COMPLETED->value, $order->state);
         foreach ($order->articles as $article) {
             $this->assertEquals(1, $article->is_sellable);
             $this->assertNotNull($article->is_sellable_since);

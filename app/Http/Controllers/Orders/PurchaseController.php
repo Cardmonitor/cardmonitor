@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Orders;
 
+use App\APIs\WooCommerce\Status;
 use App\APIs\WooCommerce\WooCommerce;
 use App\Models\Items\Custom;
 use App\Models\Orders\Order;
@@ -44,7 +45,7 @@ class PurchaseController extends Controller
         }
 
         return view($this->baseViewPath . '.index')
-            ->with('states', WooCommerce::STATUSES)
+            ->with('states', Status::values())
             ->with('is_syncing_orders', auth()->user()->is_syncing_orders);
     }
 
@@ -73,13 +74,13 @@ class PurchaseController extends Controller
             ->with('conditions', Article::CONDITIONS)
             ->with('languages', $lanugages)
             ->with('expansions', Expansion::all())
-            ->with('states', WooCommerce::STATUSES);
+            ->with('states', Status::values());
     }
 
     public function update(Request $request, Order $order)
     {
         $attributes = $request->validate([
-            'state' => 'required|string|in:' . implode(',', WooCommerce::STATUSES),
+            'state' => 'required|string|in:' . implode(',', Status::values()),
         ]);
 
         $WooCommerce = new WooCommerce();

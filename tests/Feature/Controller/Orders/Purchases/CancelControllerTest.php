@@ -18,15 +18,11 @@ class CancelControllerTest extends TestCase
      */
     public function it_can_cancel_a_purchase()
     {
-        $this->markTestIncomplete('WooCommerceMock not working');
-
         $woocommerce_order_id = 619687;
         $woocommerce_order_response = JsonSnapshot::get('tests/snapshots/woocommerce/orders/' . $woocommerce_order_id . '.json', function () use ($woocommerce_order_id) {
             return (new \App\APIs\WooCommerce\WooCommerce())->order($woocommerce_order_id);
         });
         $woocommerce_order = $woocommerce_order_response['data'];
-
-        $woocommerce_mock =
 
         $quantity = 0;
         foreach ($woocommerce_order['line_items'] as $line_item) {
@@ -58,7 +54,8 @@ class CancelControllerTest extends TestCase
         $this->signIn();
 
         $woocommerce_mock = Mockery::mock('overload:' . WooCommerce::class);
-        $woocommerce_mock->shouldReceive('updateOrder')
+        $woocommerce_mock->shouldReceive('updateOrderState')
+            ->with($woocommerce_order_id, \App\APIs\WooCommerce\Status::CANCELLED)
             ->once();
 
         $response = $this->post(route('purchases.cancel.store', $order));

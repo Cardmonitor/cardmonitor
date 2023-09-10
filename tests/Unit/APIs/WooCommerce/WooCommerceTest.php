@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\APIs\WooCommerce;
 
+use App\APIs\WooCommerce\Status;
 use Tests\TestCase;
 
 class WooCommerceTest extends TestCase
