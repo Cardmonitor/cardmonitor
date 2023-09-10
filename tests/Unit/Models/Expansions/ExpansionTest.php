@@ -104,6 +104,8 @@ class ExpansionTest extends TestCase
 
     /**
      * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function it_can_be_imported()
     {
