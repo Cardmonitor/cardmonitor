@@ -74,7 +74,7 @@
                             <td class="align-middle">
                                 <div>{{ $article->local_name }}</div>
                                 @if ($article->language_id != \App\Models\Localizations\Language::DEFAULT_ID)
-                                    <div class="text-muted">{{ $article->card->name }}</div>
+                                    <div class="text-muted">{{ $article->card_name }}</div>
                                 @endif
                             </td>
                             @if ($article->card_id)
