@@ -88,6 +88,7 @@ class Article extends Model
         'sync_icon',
         'unit_cost_formatted',
         'unit_price_formatted',
+        'should_show_card_name',
     ];
 
     protected $casts = [
@@ -1107,6 +1108,11 @@ class Article extends Model
     public function getProvisionFormattedAttribute()
     {
         return number_format($this->provision, 2, ',', '');
+    }
+
+    public function getShouldShowCardNameAttribute()
+    {
+        return $this->card_name != $this->local_name;
     }
 
     public function getStateIconAttribute()

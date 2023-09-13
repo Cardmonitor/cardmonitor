@@ -121,8 +121,8 @@
                                         <td class="align-middle">{{ $article->slot }}</td>
                                         <td class="align-middle">
                                             <span class="fi fi-{{ $article->language->code }}" title="{{ $article->language->name }}"></span> {{ $article->local_name }} ({{ $article->card->number }})
-                                            @if ($article->language_id != \App\Models\Localizations\Language::DEFAULT_ID)
-                                                <div class="text-muted">{{ $article->card->name }}</div>
+                                            @if ($article->should_show_card_name)
+                                                <div class="text-muted">{{ $article->card_name }}</div>
                                             @endif
                                         </td>
                                         <td class="align-middle">{{ $article->unit_price_formatted }} €</td>

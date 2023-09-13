@@ -9432,7 +9432,7 @@ var render = function render() {
     attrs: {
       title: _vm.item.language.name
     }
-  }), _vm._v(" " + _vm._s(_vm.item.local_name)), _vm.item.card.number ? _c("span", [_vm._v(" (" + _vm._s(_vm.item.card.number) + ")")]) : _vm._e(), _vm._v(" "), _vm.item.language_id != 1 ? _c("div", {
+  }), _vm._v(" " + _vm._s(_vm.item.local_name)), _vm.item.card.number ? _c("span", [_vm._v(" (" + _vm._s(_vm.item.card.number) + ")")]) : _vm._e(), _vm._v(" "), _vm.item.should_show_card_name ? _c("div", {
     staticClass: "d-none d-xl-table-cell text-muted"
   }, [_vm._v(_vm._s(_vm.item.card_name))]) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "align-middle text-center"
@@ -9777,7 +9777,7 @@ var render = function render() {
     attrs: {
       title: _vm.item.language.name
     }
-  }), _vm._v(" " + _vm._s(_vm.item.local_name) + " (" + _vm._s(_vm.item.card.number) + ")\n        "), _vm.item.language_id != 1 ? _c("div", {
+  }), _vm._v(" " + _vm._s(_vm.item.local_name) + " (" + _vm._s(_vm.item.card.number) + ")\n        "), _vm.item.should_show_card_name ? _c("div", {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.item.card_name))]) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "align-middle text-center"
@@ -10057,7 +10057,7 @@ var render = function render() {
     attrs: {
       title: _vm.item.language.name
     }
-  }), _vm._v(" " + _vm._s(_vm.item.local_name) + " (" + _vm._s(_vm.item.card.number) + ")\n        "), _vm.item.language_id != 1 ? _c("div", {
+  }), _vm._v(" " + _vm._s(_vm.item.local_name) + " (" + _vm._s(_vm.item.card.number) + ")\n        "), _vm.item.should_show_card_name ? _c("div", {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.item.card_name))]) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "align-middle text-right"

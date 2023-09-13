@@ -4,7 +4,7 @@
         <td class="align-middle d-none d-xl-table-cell text-center pointer"><i class="fas fa-image" @mouseover="showImage($event)" @mouseout="$emit('hide')"></i></td>
         <td class="align-middle">
             <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.local_name }}<span v-if="item.card.number"> ({{ item.card.number }})</span>
-            <div class="d-none d-xl-table-cell text-muted" v-if="item.language_id != 1">{{ item.card_name }}</div>
+            <div class="d-none d-xl-table-cell text-muted" v-if="item.should_show_card_name">{{ item.card_name }}</div>
         </td>
         <td class="align-middle text-center"><expansion-icon :expansion="item.card.expansion" :show-name="false"></expansion-icon></td>
         <td class="align-middle d-none d-xl-table-cell text-center"><rarity :value="item.card.rarity" v-if="item.card.rarity"></rarity></td>
@@ -64,7 +64,7 @@
         <td class="align-middle d-none d-xl-table-cell pointer"><i class="fas fa-image" @mouseover="showImage($event)" @mouseout="$emit('hide')"></i></td>
         <td class="align-middle pointer" @click="show()">
             <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> {{ item.local_name }} ({{ item.card.number }})
-            <div class="text-muted" v-if="item.language_id != 1">{{ item.card_name }}</div></td>
+            <div class="text-muted" v-if="item.should_show_card_name">{{ item.card_name }}</div></td>
         <td class="align-middle text-center"><expansion-icon :expansion="item.card.expansion" :show-name="false" v-if="item.card.expansion"></expansion-icon></td>
         <td class="align-middle d-none d-xl-table-cell text-center"><rarity :value="item.card.rarity" v-if="item.card.rarity"></rarity></td>
         <td class="align-middle d-none d-lg-table-cell text-center"><condition :value="item.condition"></condition></td>
