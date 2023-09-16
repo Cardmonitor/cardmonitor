@@ -39,6 +39,10 @@ class CancelControllerTest extends TestCase
             $quantity += $line_item['quantity'];
         }
 
+        $woocommerce_mock = Mockery::mock('overload:' . WooCommerce::class);
+        $woocommerce_mock->shouldReceive('updateOrderState')
+            ->with($woocommerce_order_id, \App\APIs\WooCommerce\Status::PROCESSING);
+
         $order = \App\Importers\Orders\WooCommerceOrderImporter::import($this->user->id, $woocommerce_order);
         $order->loadMissing('articles');
 
@@ -53,7 +57,6 @@ class CancelControllerTest extends TestCase
 
         $this->signIn();
 
-        $woocommerce_mock = Mockery::mock('overload:' . WooCommerce::class);
         $woocommerce_mock->shouldReceive('updateOrderState')
             ->with($woocommerce_order_id, \App\APIs\WooCommerce\Status::CANCELLED)
             ->once();

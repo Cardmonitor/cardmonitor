@@ -18,6 +18,8 @@ class WooCommerceOrderImporterTest extends TestCase
 {
     /**
      * @test
+     * @runTestsInSeparateProcesses
+     * @preserveGlobalState disabled
      */
     public function it_can_update_or_create_an_order_from_woocommerce_api()
     {

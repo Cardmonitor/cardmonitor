@@ -42,8 +42,7 @@ class SellableControllerTest extends TestCase
 
         $woocommerce_mock = Mockery::mock('overload:' . WooCommerce::class);
         $woocommerce_mock->shouldReceive('updateOrderState')
-            ->with($woocommerce_order_id, Status::COMPLETED)
-            ->once();
+            ->with($woocommerce_order_id, Status::PROCESSING);
 
         $order = \App\Importers\Orders\WooCommerceOrderImporter::import($this->user->id, $woocommerce_order);
         $order->loadMissing('articles');
@@ -69,6 +68,10 @@ class SellableControllerTest extends TestCase
         Auth::logout();
 
         $this->signIn();
+
+        $woocommerce_mock->shouldReceive('updateOrderState')
+            ->with($woocommerce_order_id, Status::COMPLETED)
+            ->once();
 
         $response = $this->post(route('purchases.sellable.store', $order));
         $response->assertOk();
