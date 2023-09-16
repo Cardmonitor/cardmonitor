@@ -361,4 +361,22 @@ class OrderTest extends TestCase
         $this->assertCount($orders_count, Order::cancelled(null)->get());
         $this->assertCount($orders_count, Order::all());
     }
+
+    /**
+     * @test
+     */
+    public function it_can_only_be_imported_if_state_is_on_hold()
+    {
+        $order = factory(Order::class)->create([
+            'state' => \App\APIs\WooCommerce\Status::ON_HOLD->value,
+        ]);
+
+        $this->assertTrue($order->is_importable);
+
+        $order->update([
+            'state' => \App\APIs\WooCommerce\Status::PROCESSING->value,
+        ]);
+
+        $this->assertFalse($order->fresh()->is_importable);
+    }
 }

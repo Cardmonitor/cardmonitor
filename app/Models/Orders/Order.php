@@ -712,6 +712,11 @@ class Order extends Model
         return $this->is_purchase ? 'purchases' : 'order';
     }
 
+    public function getIsImportableAttribute(): bool
+    {
+        return $this->state == \App\APIs\WooCommerce\Status::ON_HOLD->value;
+    }
+
     public function getPaidAtFormattedAttribute() : string
     {
         return (is_null($this->paid_at) ? '' : $this->paid_at->format('d.m.Y H:i'));
@@ -814,6 +819,10 @@ class Order extends Model
     public function scopeState(Builder $query, $value): Builder
     {
         if (! $value) {
+            return $query;
+        }
+
+        if ($value == \App\APIs\WooCommerce\Status::ANY->value) {
             return $query;
         }
 

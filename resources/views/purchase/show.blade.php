@@ -5,13 +5,15 @@
     <div class="d-flex mb-3">
         <h2 class="col mb-0"><a class="text-body" href="{{ route('purchases.index') }}">Ankäufe</a><span class="d-none d-md-inline"> > {{ $model->source_id }}<span class="d-none d-lg-inline"> - {{ $model->state }}</span></span></h2>
         <div class="d-flex align-items-center">
-        <form action="{{ route('woocommerce.order.store') }}" class="ml-1" method="POST">
-                @csrf
-                @method('POST')
+            @if ($model->is_importable)
+                <form action="{{ route('woocommerce.order.store') }}" class="ml-1" method="POST">
+                    @csrf
+                    @method('POST')
 
-                <input type="hidden" name="id" value="{{ $model->source_id }}">
-                <button type="submit" class="btn btn-sm btn-secondary" title="Importieren"><i class="fas fa-fw fa-sync"></i></button>
-            </form>
+                    <input type="hidden" name="id" value="{{ $model->source_id }}">
+                    <button type="submit" class="btn btn-sm btn-secondary" title="Importieren"><i class="fas fa-fw fa-sync"></i></button>
+                </form>
+            @endif
             <a href="{{ route('purchases.pdf.show', ['order' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1" title="PDF"><i class="fas fa-fw fa-file-pdf"></i></a>
             <a href="{{ route('purchases.index') }}" class="btn btn-sm btn-secondary ml-1">{{ __('app.overview') }}</a>
         </div>

@@ -109,7 +109,7 @@
                     presale: null,
                     searchtext: '',
                     show: false,
-                    state: 'on-hold',
+                    state: 'processing',
                 },
                 selected: [],
             };

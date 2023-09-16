@@ -6312,7 +6312,7 @@ __webpack_require__.r(__webpack_exports__);
         presale: null,
         searchtext: '',
         show: false,
-        state: 'on-hold'
+        state: 'processing'
       },
       selected: []
     };
@@ -19346,6 +19346,7 @@ var render = function render() {
     staticClass: "btn btn-sm btn-secondary",
     attrs: {
       type: "button",
+      disabled: _vm.item.status !== "on-hold",
       title: "Importieren"
     },
     on: {

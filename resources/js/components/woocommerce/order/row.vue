@@ -7,7 +7,7 @@
         <td class="align-middle pointer text-right" @click="show">{{ item.line_items.length }}</td>
         <td class="align-middle text-right">
             <div class="btn-group btn-group-sm" role="group">
-                <button type="button" class="btn btn-sm btn-secondary" title="Importieren" @click="store()">
+                <button type="button" class="btn btn-sm btn-secondary" :disabled="item.status !== 'on-hold'" title="Importieren" @click="store()">
                     <i class="fas fa-file-import" v-show="!is_storing"></i>
                     <i class="fas fa-spinner fa-spin" v-show="is_storing"></i>
                 </button>
