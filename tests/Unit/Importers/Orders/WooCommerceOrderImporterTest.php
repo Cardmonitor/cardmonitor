@@ -2,14 +2,17 @@
 
 namespace Tests\Unit\Importers\Orders;
 
+use Mockery;
 use Tests\TestCase;
 use App\Models\Cards\Card;
 use App\Models\Games\Game;
 use App\Models\Orders\Order;
+use App\APIs\WooCommerce\Status;
 use App\Models\Articles\Article;
-use App\Importers\Orders\WooCommerceOrderImporter;
 use App\Models\Users\CardmarketUser;
+use App\APIs\WooCommerce\WooCommerce;
 use Tests\Support\Snapshots\JsonSnapshot;
+use App\Importers\Orders\WooCommerceOrderImporter;
 
 class WooCommerceOrderImporterTest extends TestCase
 {
@@ -43,6 +46,11 @@ class WooCommerceOrderImporterTest extends TestCase
         $this->assertCount(0, Order::all());
         $this->assertCount(0, CardmarketUser::all());
 
+        $woocommerce_mock = Mockery::mock('overload:' . WooCommerce::class);
+        $woocommerce_mock->shouldReceive('updateOrderState')
+            ->with($woocommerce_order_id, Status::PROCESSING)
+            ->once();
+
         WooCommerceOrderImporter::import($this->user->id, $woocommerce_order);
 
         $this->assertCount($quantity, Article::all());
@@ -68,6 +76,7 @@ class WooCommerceOrderImporterTest extends TestCase
         $this->assertEquals($woocommerce_order['id'], $order->source_id);
         $this->assertEquals(WooCommerceOrderImporter::SOURCE_SLUG, $order->source_slug);
         $this->assertEquals($order->seller->id, $order->seller_id);
+        $this->assertEquals(Status::PROCESSING->value, $order->state);
         $this->assertEquals($quantity, $order->articles_count);
 
         $source_sort = 1;

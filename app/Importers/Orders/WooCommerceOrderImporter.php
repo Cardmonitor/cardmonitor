@@ -6,6 +6,7 @@ use App\Models\Cards\Card;
 use Illuminate\Support\Arr;
 use App\Models\Orders\Order;
 use Illuminate\Support\Carbon;
+use App\APIs\WooCommerce\Status;
 use App\Models\Articles\Article;
 use App\Models\Users\CardmarketUser;
 use App\Models\Localizations\Language;
@@ -78,6 +79,8 @@ class WooCommerceOrderImporter
             $this->importLineItem($line_item);
         }
 
+        $this->processWooCommerceOrder($this->order);
+
         return $this->order;
     }
 
@@ -97,7 +100,7 @@ class WooCommerceOrderImporter
             'buyer_id' => null,
             'seller_id' => $seller->id,
             'shipping_method_id' => 0,
-            'state' => $woocommerce_order['status'],
+            'state' => Status::PROCESSING->value,
             'shippingmethod' => '',
             'shipping_name' => $woocommerce_order['shipping']['first_name'] . ' ' . $woocommerce_order['shipping']['last_name'],
             'shipping_extra' => '',
@@ -222,5 +225,11 @@ class WooCommerceOrderImporter
 
             $this->source_sort++;
         }
+    }
+
+    private function processWooCommerceOrder(Order $order): void
+    {
+        $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
+        $WooCommerce->updateOrderState($order->source_id, Status::PROCESSING);
     }
 }
