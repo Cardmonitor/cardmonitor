@@ -10,6 +10,7 @@ $factory->define(Card::class, function (Faker $faker) {
     return [
         'expansion_id' => factory(Expansion::class),
         'cardmarket_product_id' => $faker->unique()->randomNumber,
+        'category_name' => 'Magic Single',
         'reprints_count' => $faker->numberBetween(1, 10),
         'name' => $faker->word,
         'website' => '',

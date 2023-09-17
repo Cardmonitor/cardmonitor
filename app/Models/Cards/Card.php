@@ -113,55 +113,30 @@ class Card extends Model
         return $model;
     }
 
-    public static function createFromCardmarket(array $cardmarketCard, int $expansionId = 0) : self
-    {
-        $model = self::create([
-            'cardmarket_product_id' => $cardmarketCard['idProduct'],
-            'expansion_id' => $expansionId,
-            'game_id' => $cardmarketCard['idGame'],
-            'image' => $cardmarketCard['image'],
-            'name' => $cardmarketCard['enName'],
-            'number' => $cardmarketCard['number'],
-            'rarity' => $cardmarketCard['rarity'],
-            'reprints_count' => $cardmarketCard['countReprints'],
-            'website' => $cardmarketCard['website'],
-        ]);
-        foreach ($cardmarketCard['localization'] as $key => $localization) {
-            if ($localization['idLanguage'] == 1) {
-                continue;
-            }
-
-            $model->localizations()->create([
-                'language_id' => $localization['idLanguage'],
-                'name' => $localization['name'],
-            ]);
-        }
-
-        return $model;
-    }
-
-    public static function createOrUpdateFromCardmarket(array $cardmarketCard, $expansionId = null) : self
+    public static function createOrUpdateFromCardmarket(array $cardmarket_card, int $expansion_id) : self
     {
         $values = [
-            'cardmarket_product_id' => $cardmarketCard['idProduct'],
-            'expansion_id' => $expansionId,
-            'game_id' => $cardmarketCard['idGame'],
-            'image' => $cardmarketCard['image'],
-            'name' => $cardmarketCard['enName'],
-            'number' => $cardmarketCard['number'] ?? null,
-            'rarity' => $cardmarketCard['rarity'] ?? null,
-            'reprints_count' => $cardmarketCard['countReprints'],
-            'website' => $cardmarketCard['website'],
+            'cardmarket_product_id' => $cardmarket_card['idProduct'],
+            'cardmarket_meta_product_id' => Arr::get($cardmarket_card, 'idMetaproduct'),
+            'category_name' => Arr::get($cardmarket_card, 'categoryName'),
+            'expansion_id' => $expansion_id ?: null,
+            'game_id' => $cardmarket_card['idGame'],
+            'image' => $cardmarket_card['image'],
+            'name' => $cardmarket_card['enName'],
+            'number' => Arr::get($cardmarket_card, 'number'),
+            'rarity' => Arr::get($cardmarket_card, 'rarity'),
+            'reprints_count' => $cardmarket_card['countReprints'],
+            'website' => $cardmarket_card['website'],
         ];
 
         $attributes = [
-            'cardmarket_product_id' => $cardmarketCard['idProduct'],
+            'cardmarket_product_id' => $cardmarket_card['idProduct'],
         ];
 
         $model = self::updateOrCreate($attributes, $values);
 
-        foreach ($cardmarketCard['localization'] as $key => $localization) {
-            if ($localization['idLanguage'] == 1) {
+        foreach ($cardmarket_card['localization'] as $key => $localization) {
+            if ($localization['idLanguage'] == \App\Models\Localizations\Language::DEFAULT_ID) {
                 continue;
             }
 
@@ -227,18 +202,18 @@ class Card extends Model
         return $this;
     }
 
-    public static function import(int $cardmarketProductId) : self
+    public static function import(int $cardmarket_product_id) : self
     {
-        $cardmarketApi = App::make('CardmarketApi');
-        $data = $cardmarketApi->product->get($cardmarketProductId);
-        $cardmarketProduct = $data['product'];
-        $cardmarketExpansionId = $cardmarketProduct['expansion']['idExpansion'] ?? null;
+        $cardmarket_api = App::make('CardmarketApi');
+        $cardmarket_product_response = $cardmarket_api->product->get($cardmarket_product_id);
+        $cardmarket_product = $cardmarket_product_response['product'];
+        $cardmarket_expansion_id = Arr::get($cardmarket_product, 'expansion.idExpansion', 0);
 
-        if (isset($cardmarketExpansionId)) {
-            $expansion = Expansion::firstOrImport($cardmarketExpansionId);
+        if ($cardmarket_expansion_id > 0) {
+            Expansion::firstOrImport($cardmarket_expansion_id);
         }
 
-        return self::createOrUpdateFromCardmarket($cardmarketProduct, $cardmarketExpansionId);
+        return self::createOrUpdateFromCardmarket($cardmarket_product, $cardmarket_expansion_id);
     }
 
     public static function updatePricesFromCardmarket(array $data)
@@ -348,6 +323,14 @@ class Card extends Model
     public function getImageStoragePathAttribute(): string
     {
         return Storage::disk('public')->path('items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg');
+    }
+
+    public function getIsSingleAttribute(): bool
+    {
+        if (is_null($this->category_name)) {
+            return true;
+        }
+        return preg_match('/^.+( Single(s?))$/m', $this->category_name);
     }
 
     public function getHasSkryfallDataAttribute(): bool

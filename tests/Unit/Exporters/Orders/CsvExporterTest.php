@@ -168,7 +168,7 @@ class CsvExporterTest extends TestCase
     /**
      * @test
      */
-    public function it_deos_not_export_presale_orders()
+    public function it_does_not_export_presale_orders()
     {
         $this->markTestSkipped('SQL Lite error');
 

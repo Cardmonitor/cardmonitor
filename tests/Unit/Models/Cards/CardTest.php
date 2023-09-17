@@ -91,7 +91,7 @@ class CardTest extends TestCase
             'name' => $cardmarket_product['expansion']['enName'],
         ]);
 
-        $card = Card::createFromCardmarket($cardmarket_product, $expansion->id);
+        $card = Card::createOrUpdateFromCardmarket($cardmarket_product, $expansion->id);
         $this->assertEquals($cardmarket_product['idProduct'], $card->cardmarket_product_id);
         $this->assertEquals($cardmarket_product['enName'], $card->name);
         $this->assertEquals($cardmarket_product['image'], $card->image);
@@ -111,10 +111,11 @@ class CardTest extends TestCase
     public function it_can_be_imported()
     {
         $cardmarket_product_id = 265882;
-
         $cardmarket_product_response = JsonSnapshot::get('tests/snapshots/cardmarket/product/' . $cardmarket_product_id . '.json', function () use ($cardmarket_product_id) {
             return App::make('CardmarketApi')->product->get($cardmarket_product_id);
         });
+        $cardmarket_product = $cardmarket_product_response['product'];
+
         $cardmarket_product_mock = Mockery::mock('overload:' . Product::class);
         $cardmarket_product_mock->shouldReceive('get')
             ->with($cardmarket_product_id)
@@ -151,6 +152,20 @@ class CardTest extends TestCase
 
         $this->assertEquals(1, Card::where('id', $cardmarket_product_id)->count());
         $this->assertEquals(1, Expansion::where('id', $cardmarket_expansion_id)->count());
+
+        $this->assertEquals($cardmarket_product['idProduct'], $model->cardmarket_product_id);
+        $this->assertEquals($cardmarket_product['idMetaproduct'], $model->cardmarket_meta_product_id);
+        $this->assertEquals($cardmarket_product['categoryName'], $model->category_name);
+        $this->assertEquals($cardmarket_product['countReprints'], $model->reprints_count);
+        $this->assertEquals($cardmarket_product['expansion']['idExpansion'], $model->expansion_id);
+        $this->assertEquals($cardmarket_product['idGame'], $model->game_id);
+        $this->assertEquals($cardmarket_product['image'], $model->image);
+        $this->assertEquals($cardmarket_product['idGame'], $model->game_id);
+        $this->assertEquals($cardmarket_product['enName'], $model->name);
+        $this->assertEquals($cardmarket_product['number'], $model->number);
+        $this->assertEquals($cardmarket_product['rarity'], $model->rarity);
+        $this->assertEquals($cardmarket_product['countReprints'], $model->reprints_count);
+        $this->assertEquals($cardmarket_product['website'], $model->website);
 
         Mockery::close();
     }
@@ -317,5 +332,47 @@ class CardTest extends TestCase
         $this->assertCount(0, Card::search('Not available', Language::DEFAULT_ID)->get());
         $this->assertCount(1, Card::search('123', Language::DEFAULT_ID)->get());
         $this->assertCount(0, Card::search('321', Language::DEFAULT_ID)->get());
+    }
+
+    /**
+     * @test
+     */
+    public function it_knwos_if_it_is_a_singles_product()
+    {
+        $card = factory(Card::class)->create([
+            'category_name' => null
+        ]);
+        $this->assertTrue($card->is_single);
+
+        $single_category_names = [
+            'Magic Single',
+            'Yugioh Single',
+            'WOW Single',
+            'Cardfight!! Vanguard Single',
+            'Star Wars: Destiny Singles',
+            'Dragon Ball Super Singles',
+        ];
+
+        foreach ($single_category_names as $category_name) {
+            $card->update([
+                'category_name' => $category_name
+            ]);
+            $this->assertTrue($card->is_single, $category_name);
+        }
+
+        $other_category_names = [
+            'MtG Set',
+            'Yugioh Booster',
+            'Magic Intropack',
+            'Magic Theme Deck Display',
+            'WOW Booster',
+        ];
+
+        foreach ($other_category_names as $category_name) {
+            $card->update([
+                'category_name' => $category_name
+            ]);
+            $this->assertFalse($card->is_single, $category_name);
+        }
     }
 }
