@@ -189,9 +189,9 @@ class ArticleControllerTest extends TestCase
      */
     public function a_user_can_delete_a_model()
     {
-        $this->markTestIncomplete('This test has not been implemented yet.');
-
-        $model = $this->createModel();
+        $model = $this->createModel([
+            'cardmarket_article_id' => null,
+        ]);
 
         $this->deleteModel($model, ['article' => $model->id])
             ->assertRedirect();

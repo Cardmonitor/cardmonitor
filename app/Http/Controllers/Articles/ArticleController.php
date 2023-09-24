@@ -278,8 +278,8 @@ class ArticleController extends Controller
      */
     public function destroy(Request $request, Article $article)
     {
-        if ($isDeletable = $article->isDeletable()) {
-            if ($isDeletable = $article->syncDelete()) {
+        if ($is_deletable = $article->isDeletable()) {
+            if ($is_deletable = $article->syncDelete()) {
                 $article->delete();
             }
         }
@@ -287,7 +287,7 @@ class ArticleController extends Controller
         if ($request->wantsJson())
         {
             return [
-                'deleted' => $isDeletable,
+                'deleted' => $is_deletable,
             ];
         }
 
