@@ -162,8 +162,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('item/{item}/quantity', 'Items\QuantityController@index')->name('quantity.index');
     Route::post('item/{item}/quantity', 'Items\QuantityController@store')->name('quantity.store');
 
-    Route::get('/user/balance', 'Users\Balances\BalanceController@index');
-
     Route::get('/user/reset', 'Users\ResetController@index')->name('user.index');
 
     Route::get('/user/backgroundtasks', [\App\Http\Controllers\Users\BackgroundTaskController::class, 'index'])->name('user.backgroundtasks.index');

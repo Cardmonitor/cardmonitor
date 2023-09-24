@@ -7,7 +7,6 @@ use App\Models\Apis\Api;
 use App\Models\Items\Item;
 use App\Models\Rules\Rule;
 use App\Models\Orders\Order;
-use App\Models\Users\Balance;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
 use Kalnoy\Nestedset\Collection;
@@ -24,7 +23,7 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $appends = [
-        'balance_in_euro_formatted',
+        //
     ];
 
     /**
@@ -34,7 +33,6 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'api_token',
-        'balance_in_cents',
         'credits',
         'email',
         'is_applying_rules',
@@ -87,20 +85,6 @@ class User extends Authenticatable
         });
     }
 
-    public function canPay(int $amount_in_cents) : bool
-    {
-        if ($this->id == 1) {
-            return true;
-        }
-
-        return ($this->balance_in_cents >= $amount_in_cents);
-    }
-
-    public function deposit(int $amount_in_cents)
-    {
-
-    }
-
     public function reset()
     {
         $this->update([
@@ -110,34 +94,9 @@ class User extends Authenticatable
         ]);
     }
 
-    public function withdraw(int $amount_in_cents, string $reason)
-    {
-        if ($this->id == 1) {
-            $amount_in_cents = 0;
-        }
-
-        if (! $this->canPay($amount_in_cents)) {
-            return false;
-        }
-
-        Balance::create([
-            'user_id' => $this->id,
-            'amount_in_cents' => $amount_in_cents,
-            'type' => 'debit',
-            'multiplier' => -1,
-            'received_at' => now(),
-            'charge_reason' => $reason,
-        ]);
-    }
-
     public function getCardmarketApiAttribute() : CardmarketApi
     {
         return new CardmarketApi($this->api);
-    }
-
-    public function getBalanceInEuroFormattedAttribute()
-    {
-        return number_format(($this->balance_in_cents / 100), 2, ',', '.');
     }
 
     public function setup() : void {
@@ -163,12 +122,7 @@ class User extends Authenticatable
         return $this->hasMany(Article::class);
     }
 
-    public function balances() : HasMany
-    {
-        return $this->hasMany(Balance::class);
-    }
-
-    public function items() : HasMany
+   public function items() : HasMany
     {
         return $this->hasMany(Item::class);
     }

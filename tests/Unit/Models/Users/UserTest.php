@@ -7,7 +7,6 @@ use App\Models\Items\Item;
 use App\Models\Orders\Order;
 use App\Models\Rules\Rule;
 use App\Models\Storages\Storage;
-use App\Models\Users\Balance;
 use App\Support\Users\CardmarketApi;
 use App\User;
 use Tests\TestCase;
@@ -25,44 +24,6 @@ class UserTest extends TestCase
         $user = factory(User::class)->create();
         $this->assertDatabaseHas('apis', [
             'user_id' => $user->id,
-        ]);
-    }
-
-    /**
-     * @test
-     */
-    public function it_knows_if_a_user_can_pay_an_amount()
-    {
-        $user = factory(User::class)->create([
-            'id' => 2,
-            'balance_in_cents' => 0,
-        ]);
-        $this->assertFalse($user->canPay(100));
-
-        $user->balance_in_cents = 100;
-
-        $this->assertTrue($user->canPay(100));
-    }
-
-    /**
-     * @test
-     */
-    public function it_can_withdraw_its_balance()
-    {
-        $user = factory(User::class)->create([
-            'id' => 2,
-            'balance_in_cents' => 100,
-        ]);
-
-        $user->withdraw(100, 'test');
-
-        $this->assertEquals(0, $user->fresh()->balance_in_cents);
-        $this->assertDatabaseHas('balances', [
-            'user_id' => $user->id,
-            'amount_in_cents' => 100,
-            'type' => 'debit',
-            'multiplier' => -1,
-            'charge_reason' => 'test',
         ]);
     }
 
@@ -87,19 +48,6 @@ class UserTest extends TestCase
         ]);
 
         $this->assertHasMany($model, $related, 'articles');
-    }
-
-    /**
-     * @test
-     */
-    public function it_has_many_balances()
-    {
-        $model = factory(User::class)->create();
-        $related = factory(Balance::class)->create([
-            'user_id' => $model->id,
-        ]);
-
-        $this->assertHasMany($model, $related, 'balances');
     }
 
     /**
