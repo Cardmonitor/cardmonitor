@@ -31,14 +31,6 @@ class UserTest extends TestCase
     /**
      * @test
      */
-    public function it_sends_a_mail_when_created()
-    {
-        $this->markTestIncomplete('This test has not been implemented yet.');
-    }
-
-    /**
-     * @test
-     */
     public function it_knows_if_a_user_can_pay_an_amount()
     {
         $user = factory(User::class)->create([

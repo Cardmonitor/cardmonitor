@@ -5,8 +5,6 @@ namespace Tests\Feature\Controller\Orders\Import;
 use Mockery;
 use App\Models\Orders\Order;
 use Cardmonitor\Cardmarket\Order as CardmarketOrder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -28,8 +26,6 @@ class SentControllerTest extends TestCase
      */
     public function it_can_mark_orders_as_sent()
     {
-        // $this->markTestIncomplete();
-
         $this->signIn();
 
         $returnValue = json_decode(file_get_contents('tests/snapshots/cardmarket/order/get_seller.json'), true);
