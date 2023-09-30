@@ -33,7 +33,7 @@
                 <div class="card-header">{{ $model->source_id }}</div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-label"><b>{{ __('order.id') }}</b></div>
+                        <div class="col-label"><b>Ankaufnummer</b></div>
                         <div class="col-value">{{ $model->source_id }}</div>
                     </div>
                     @if ($model->seller)
@@ -48,28 +48,6 @@
                     </div>
                 </div>
             </div>
-
-            <form action="{{ $model->path }}" method="POST">
-                @method('PUT')
-                @csrf
-                <div class="card mb-3">
-                    <div class="card-header">Status</div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col">
-                                <select class="form-control form-control-sm" name="state">
-                                    @foreach ($states as $state)
-                                        <option value="{{ $state }}" @if ($model->state == $state) selected @endif>{{ $state }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-auto">
-                                <button type="submit" class="btn btn-sm btn-primary">Speichern</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </from>
 
         </div>
 

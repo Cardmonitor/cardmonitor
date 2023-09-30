@@ -15782,17 +15782,6 @@ var render = function render() {
   }), _vm._v(" " + _vm._s(_vm.item.state_comments) + "\n            ")]), _vm._v(" "), _c("div", {
     staticClass: "d-flex justify-content-between"
   }, [_c("button", {
-    staticClass: "btn btn-sm btn-warning text-overflow-ellipsis",
-    attrs: {
-      title: "Nächste Karte (Status Problem)",
-      disabled: _vm.item.is_sellable === 1
-    },
-    on: {
-      click: function click($event) {
-        return _vm.next(true, 1);
-      }
-    }
-  }, [_vm._v(_vm._s(_vm.$t("order.article.show.actions.next_problem")))]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-sm btn-primary text-overflow-ellipsis",
     attrs: {
       title: "Nächste Karte (Status OK)",
@@ -16409,7 +16398,7 @@ var render = function render() {
     attrs: {
       width: "15%"
     }
-  }, [_vm._v(_vm._s(_vm.$t("order.singular")))]), _vm._v(" "), _c("th", {
+  }, [_vm._v("Ankäufe")]), _vm._v(" "), _c("th", {
     staticClass: "text-right d-none d-md-table-cell",
     attrs: {
       width: "10%"
@@ -19102,7 +19091,7 @@ var render = function render() {
     attrs: {
       width: "125"
     }
-  }, [_vm._v("Bestellung")]), _vm._v(" "), _c("th", {
+  }, [_vm._v("Ankauf")]), _vm._v(" "), _c("th", {
     staticClass: "align-middle",
     attrs: {
       width: "90%"
@@ -19132,7 +19121,7 @@ var render = function render() {
     })];
   })], 2)])]) : _c("div", {
     staticClass: "alert alert-dark mt-3"
-  }, [_c("center", [_vm._v("Keine Bestellungen vorhanden")])], 1), _vm._v(" "), _c("nav", {
+  }, [_c("center", [_vm._v("Keine Ankäufe vorhanden")])], 1), _vm._v(" "), _c("nav", {
     attrs: {
       "aria-label": "Page navigation example"
     }

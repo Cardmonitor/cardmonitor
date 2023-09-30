@@ -66,7 +66,6 @@
                     <i class="fas fa-fw mb-3" :class="item.state_icon" :title="item.state_comments"></i> {{ item.state_comments }}
                 </div>
                 <div class="d-flex justify-content-between">
-                    <button class="btn btn-sm btn-warning text-overflow-ellipsis" title="Nächste Karte (Status Problem)" :disabled="item.is_sellable === 1" @click="next(true, 1)">{{ $t('order.article.show.actions.next_problem') }}</button>
                     <button class="btn btn-sm btn-primary text-overflow-ellipsis" title="Nächste Karte (Status OK)" :disabled="item.is_sellable === 1" @click="next(true, 0)">{{ $t('order.article.show.actions.next_ok') }}</button>
                 </div>
             </div>

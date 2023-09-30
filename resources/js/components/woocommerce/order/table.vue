@@ -37,7 +37,7 @@
                 <thead>
                     <tr>
                         <th class="align-middle" width="125">Datum</th>
-                        <th class="align-middle" width="125">Bestellung</th>
+                        <th class="align-middle" width="125">Ankauf</th>
                         <th class="align-middle" width="90%">Käufer</th>
                         <th class="align-middle" width="125">Status</th>
                         <th class="align-middle text-right" width="75">Artikel</th>
@@ -51,7 +51,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="alert alert-dark mt-3" v-else><center>Keine Bestellungen vorhanden</center></div>
+        <div class="alert alert-dark mt-3" v-else><center>Keine Ankäufe vorhanden</center></div>
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center" v-show="paginate.total_pages > 1">
                 <li class="page-item" v-show="filter.page > 1">

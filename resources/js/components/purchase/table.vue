@@ -38,7 +38,7 @@
                 <thead>
                     <tr>
                         <th class="d-none d-sm-table-cell" width="10%">{{ $t('app.date') }}</th>
-                        <th width="15%">{{ $t('order.singular') }}</th>
+                        <th width="15%">Ankäufe</th>
                         <th class="text-right d-none d-md-table-cell" width="10%">{{ $t('app.cards') }}</th>
                         <th class="text-right d-none d-xl-table-cell" width="10%">{{ $t('app.costs') }}</th>
                         <th class="d-none d-md-table-cell" width="15%">{{ $t('app.state') }}</th>
