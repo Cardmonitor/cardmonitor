@@ -2763,9 +2763,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         unit_price_min: 0
       },
       actionForm: {
-        articles: 'filtered-to-storage_id',
-        storage_id: this.storages[0].id || 0,
-        action: 'setNumber'
+        action: null
       },
       selected: [],
       errors: {}
@@ -2819,6 +2817,10 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
   methods: {
     action: function action() {
       var component = this;
+      if (component.actionForm.action == null) {
+        Vue.error('Bitte wähle eine Aktion aus!');
+        return;
+      }
       component.actioning.status = true;
       axios.post('/article/action', _objectSpread({
         filter: component.filter
@@ -2827,7 +2829,6 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         if (response.data.model) {
           location.href = response.data.model.path;
         } else {
-          component.actionForm.action = 'setNumber';
           component.fetch();
         }
       })["catch"](function (error) {
@@ -2835,6 +2836,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         console.log(error);
       })["finally"](function () {
         component.actioning.status = false;
+        component.actionForm.action = null;
       });
     },
     apply: function apply(sync) {
@@ -10948,6 +10950,9 @@ var render = function render() {
       expression: "actionForm.action"
     }],
     staticClass: "form-control form-control-sm",
+    attrs: {
+      placeholder: "Aktion wählen"
+    },
     on: {
       change: function change($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
@@ -10959,7 +10964,25 @@ var render = function render() {
         _vm.$set(_vm.actionForm, "action", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
       }
     }
-  }, [_vm._m(1), _vm._v(" "), _c("optgroup", {
+  }, [_c("option", {
+    domProps: {
+      value: null
+    }
+  }, [_vm._v("Aktion wählen")]), _vm._v(" "), _c("optgroup", {
+    attrs: {
+      label: "Bearbeiten"
+    }
+  }, [_c("option", {
+    attrs: {
+      value: "setNumber",
+      disabled: _vm.filter.storage_id === 0
+    }
+  }, [_vm._v("Nummern automatisch setzen")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "resetNumber",
+      disabled: _vm.filter.storage_id === 0
+    }
+  }, [_vm._v("Nummern entfernen")])]), _vm._v(" "), _c("optgroup", {
     attrs: {
       label: "Einlagern"
     }
@@ -10977,54 +11000,12 @@ var render = function render() {
       value: "syncCardmarket",
       disabled: _vm.filter.is_numbered !== 1
     }
-  }, [_vm._v("Upload zu Cardmarket")])]), _vm._v(" "), _vm.storages.length ? _c("optgroup", {
-    attrs: {
-      label: "Lagerplatz"
-    }
-  }, [_c("option", {
-    attrs: {
-      value: "setStorage"
-    }
-  }, [_vm._v("Lagerplatz setzen")]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "resetStorage"
-    }
-  }, [_vm._v("Lagerplatz entfernen")])]) : _vm._e()])]), _vm._v(" "), _c("td", {
+  }, [_vm._v("Upload zu Cardmarket")])])])]), _vm._v(" "), _c("td", {
     staticClass: "align-middle",
     attrs: {
       colspan: "2"
     }
-  }, [_c("select", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.actionForm.storage_id,
-      expression: "actionForm.storage_id"
-    }, {
-      name: "show",
-      rawName: "v-show",
-      value: _vm.actionForm.action == "setStorage",
-      expression: "actionForm.action == 'setStorage'"
-    }],
-    staticClass: "form-control form-control-sm",
-    on: {
-      change: function change($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-          return o.selected;
-        }).map(function (o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val;
-        });
-        _vm.$set(_vm.actionForm, "storage_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
-      }
-    }
-  }, _vm._l(_vm.storages, function (storage, index) {
-    return _c("option", {
-      domProps: {
-        value: storage.id
-      }
-    }, [_vm._v(_vm._s(storage.full_name))]);
-  }), 0)]), _vm._v(" "), _c("td", {
+  }), _vm._v(" "), _c("td", {
     staticClass: "align-middle text-right"
   }, [_c("button", {
     staticClass: "btn btn-sm btn-secondary",
@@ -11149,7 +11130,7 @@ var render = function render() {
     staticClass: "modal-header"
   }, [_c("h5", {
     staticClass: "modal-title"
-  }, [_vm._v(_vm._s(_vm.$t("rule.apply")))]), _vm._v(" "), _vm._m(2)]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("rule.apply")))]), _vm._v(" "), _vm._m(1)]), _vm._v(" "), _c("div", {
     staticClass: "modal-body"
   }, [_c("p", [_vm._v(_vm._s(_vm.$t("rule.modal_apply.body.question")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.$t("rule.modal_apply.body.comment")))]), _vm._v(" "), _c("div", {
     staticClass: "alert alert-danger",
@@ -11199,22 +11180,6 @@ var staticRenderFns = [function () {
   }, [_c("i", {
     staticClass: "fas fa-plus-square"
   })])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("optgroup", {
-    attrs: {
-      label: "Bearbeiten"
-    }
-  }, [_c("option", {
-    attrs: {
-      value: "setNumber"
-    }
-  }, [_vm._v("Nummern automatisch setzen")]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "resetNumber"
-    }
-  }, [_vm._v("Nummern entfernen")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

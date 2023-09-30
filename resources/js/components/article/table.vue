@@ -164,10 +164,11 @@
                         <td></td>
                         <td class="align-middle">{{ items.length }} von {{ paginate.total }}</td>
                         <td class="align-middle" colspan="5">
-                            <select class="form-control form-control-sm" v-model="actionForm.action">
+                            <select class="form-control form-control-sm" v-model="actionForm.action" placeholder="Aktion wählen">
+                                <option :value="null">Aktion wählen</option>
                                 <optgroup label="Bearbeiten">
-                                    <option value="setNumber">Nummern automatisch setzen</option>
-                                    <option value="resetNumber">Nummern entfernen</option>
+                                    <option value="setNumber" :disabled="filter.storage_id === 0">Nummern automatisch setzen</option>
+                                    <option value="resetNumber" :disabled="filter.storage_id === 0">Nummern entfernen</option>
                                 </optgroup>
                                 <optgroup label="Einlagern">
                                     <option value="storing" :disabled="!(filter.is_numbered === 1 && filter.is_stored === 0)">Einlagern</option>
@@ -175,17 +176,9 @@
                                 <optgroup label="Cardmarket">
                                     <option value="syncCardmarket" :disabled="filter.is_numbered !== 1">Upload zu Cardmarket</option>
                                 </optgroup>
-                                <optgroup label="Lagerplatz" v-if="storages.length">
-                                    <option value="setStorage">Lagerplatz setzen</option>
-                                    <option value="resetStorage">Lagerplatz entfernen</option>
-                                </optgroup>
                             </select>
                         </td>
-                        <td class="align-middle" colspan="2">
-                            <select class="form-control form-control-sm" v-model="actionForm.storage_id" v-show="actionForm.action == 'setStorage'">
-                                <option :value="storage.id" v-for="(storage, index) in storages">{{ storage.full_name }}</option>
-                            </select>
-                        </td>
+                        <td class="align-middle" colspan="2"></td>
                         <td class="align-middle text-right">
                             <button class="btn btn-sm btn-secondary" style="width: 132px;" :disabled="actioning.status === true" @click="action">
                                 <i class="fas fa-spinner fa-spin mr-1" v-show="actioning.status === true"></i>Ausführen
@@ -352,9 +345,7 @@
                     unit_price_min: 0,
                 },
                 actionForm: {
-                    articles: 'filtered-to-storage_id',
-                    storage_id: this.storages[0].id || 0,
-                    action: 'setNumber',
+                    action: null,
                 },
                 selected: [],
                 errors: {},
@@ -415,6 +406,12 @@
         methods: {
             action() {
                 var component = this;
+
+                if (component.actionForm.action == null) {
+                    Vue.error('Bitte wähle eine Aktion aus!');
+                    return;
+                }
+
                 component.actioning.status = true;
                 axios.post('/article/action', {
                     filter: component.filter,
@@ -426,7 +423,6 @@
                         location.href = response.data.model.path;
                     }
                     else {
-                        component.actionForm.action = 'setNumber';
                         component.fetch();
                     }
                 })
@@ -436,6 +432,7 @@
                 })
                 .finally( function () {
                     component.actioning.status = false;
+                    component.actionForm.action = null;
                 });
             },
             apply(sync) {

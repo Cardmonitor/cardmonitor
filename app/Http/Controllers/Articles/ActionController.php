@@ -6,8 +6,6 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Models\Articles\Article;
 use App\Http\Controllers\Controller;
-use App\Models\Articles\StoringHistory;
-use App\Models\Storages\Storage;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Artisan;
 
@@ -31,7 +29,6 @@ class ActionController extends Controller
     {
         $attributes = $request->validate([
             'action' => 'required|string',
-            'storage_id' => 'nullable|integer',
             'filter' => 'required|array',
         ]);
 
@@ -54,12 +51,10 @@ class ActionController extends Controller
         switch ($attributes['action']) {
             case 'setNumber': $this->setNumber($user, $articles); break;
             case 'resetNumber': $this->resetNumber($articles); break;
-            case 'setStorage': $this->setStorage($articles, $attributes['storage_id']); break;
-            case 'resetStorage': $this->resetStorage($articles); break;
             case 'syncCardmarket': $this->syncCardmarket($articles); break;
             case 'storing': $this->storing($user, $articles); break;
 
-            default: $message = 'Aktion nicht verfügbar'; break;
+            default: $this->message = 'Aktion nicht verfügbar'; break;
         }
 
         return [
@@ -97,26 +92,6 @@ class ActionController extends Controller
         });
 
         $this->message = 'Nummern bei ' . $articles->count() . ' Artikeln entfernt.';
-    }
-
-    private function setStorage(Collection $articles, int $storage_id): void
-    {
-        $storage = Storage::find($storage_id);
-
-        $articles->each(function ($article) use ($storage) {
-            $article->setStorage($storage)->save();
-        });
-
-        $this->message = 'Lagerplatz bei ' . $articles->count() . ' Artikeln gesetzt.';
-    }
-
-    private function resetStorage(Collection $articles): void
-    {
-        $articles->each(function ($article) {
-            $article->unsetStorage()->save();
-        });
-
-        $this->message = 'Lagerplatz bei ' . $articles->count() . ' Artikeln entfernt.';
     }
 
     private function syncCardmarket(Collection $articles): void

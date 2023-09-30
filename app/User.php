@@ -117,12 +117,12 @@ class User extends Authenticatable
     //     return $this->hasMany(Api::class);
     // }
 
-    public function articles() : HasMany
+    public function articles(): HasMany
     {
         return $this->hasMany(Article::class);
     }
 
-   public function items() : HasMany
+   public function items(): HasMany
     {
         return $this->hasMany(Item::class);
     }
