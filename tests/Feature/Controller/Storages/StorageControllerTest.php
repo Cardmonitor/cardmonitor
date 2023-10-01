@@ -120,7 +120,7 @@ class StorageControllerTest extends TestCase
 
         $data = [
             'name' => 'Updated Model',
-            'slots' => 100,
+            'is_uploaded' => 0,
             'parent_id' => null,
         ];
 
