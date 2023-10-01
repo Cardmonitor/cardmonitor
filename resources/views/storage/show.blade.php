@@ -18,6 +18,12 @@
         </div>
     </div>
 
+    @if ($model->is_uploaded)
+        <div class="alert alert-info">
+            Alle Artikel wurden hochgeladen und der Lagerplatz ist nicht mehr im Lagerplatzfilter verfügbar.
+        </div>
+    @endif
+
     <div class="row align-items-stretch">
 
         <div class="col-md-6 mb-3">
@@ -30,17 +36,9 @@
                                 <div class="col-label"><b>{{ __('app.name') }}</b></div>
                                 <div class="col-value">{{ $model->name }}</div>
                             </div>
-                            <div class="row">
-                                <div class="col-label"><b>Slots</b></div>
-                                <div class="col-value">{{ $model->slots }}</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-label"><b>Freie Slots</b></div>
-                                <div class="col-value">{{ $model->slots - $model->articles->count() }}</div>
-                            </div>
                             @if ($model->parent)
                                 <div class="row">
-                                    <div class="col-label"><b>{{ __('storages.main_storages') }}</b></div>
+                                    <div class="col-label"><b>{{ __('storages.main_storage') }}</b></div>
                                     <div class="col-value"><a class="text-body" href="{{ $model->parent->path }}">{{ $model->parent->name }}</a></div>
                                 </div>
                             @endif
@@ -62,13 +60,6 @@
                         <div class="col-label"><b>{{ __('storages.price') }}</b></div>
                         <div class="col-value">{{ $model->articleStats->price_formatted }} €</div>
                     </div>
-                </div>
-            </div>
-
-            <div class="card mb-3">
-                <div class="card-header">Standard Zuordnung</div>
-                <div class="card-body">
-                    <storage-content-table :model="{{ json_encode($model) }}" :games="{{ json_encode($games) }}" :expansions="{{ json_encode($expansions) }}"></storage-content-table>
                 </div>
             </div>
 

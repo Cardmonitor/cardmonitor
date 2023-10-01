@@ -27,6 +27,8 @@ class StorageController extends Controller
         if ($request->wantsJson()) {
             $storages = auth()->user()
                 ->storages()
+                ->search($request->input('searchtext'))
+                ->isUploaded($request->input('is_uploaded'))
                 ->withCount(['contents'])
                 ->withDepth()
                 ->defaultOrder()
@@ -41,16 +43,6 @@ class StorageController extends Controller
         }
 
         return view($this->baseViewPath . '.index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -126,7 +118,7 @@ class StorageController extends Controller
     {
         $attributes = $request->validate([
             'name' => 'required|string',
-            'slots' => 'required|integer',
+            'is_uploaded' => 'required|boolean',
             'parent_id' => 'nullable|exists:storages,id',
         ]);
 

@@ -15,9 +15,25 @@
                     <filter-search v-model="filter.searchtext" @input="fetch()"></filter-search>
                 </div>
                 <button class="btn btn-sm btn-secondary ml-1" @click="filter.show = !filter.show"><i class="fas fa-filter"></i></button>
-                <button class="btn btn-sm btn-secondary text-overflow-ellipsis ml-1" :disabled="isAssigning" title="Lagerplätze neu zuweisen" @click="assign">{{ $t('storages.actions.assign') }}</button>
             </div>
         </div>
+
+        <form v-if="filter.show" id="filter" class="mt-1">
+            <div  class="form-row">
+
+                <div class="col-auto">
+                    <div class="form-group">
+                        <label for="filter-is_uploaded">Hochgeladen</label>
+                        <select class="form-control form-control-sm" id="filter-is_uploaded" v-model="filter.is_uploaded" @change="fetch">
+                            <option :value="null">Alle Lagerplätze</option>
+                            <option :value="0">Nicht alle Artikel hochgeladen</option>
+                            <option :value="1">Alle Artikel hochgeladen</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </form>
 
         <div v-if="isLoading" class="mt-3 p-5">
             <center>
@@ -71,7 +87,9 @@
                 items: [],
                 isLoading: true,
                 filter: {
-
+                    show: false,
+                    searchtext: '',
+                    is_uploaded: null,
                 },
                 form: {
                     name: '',

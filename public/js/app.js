@@ -6992,7 +6992,11 @@ __webpack_require__.r(__webpack_exports__);
       uri: '/storages',
       items: [],
       isLoading: true,
-      filter: {},
+      filter: {
+        show: false,
+        searchtext: '',
+        is_uploaded: null
+      },
       form: {
         name: ''
       },
@@ -18036,16 +18040,56 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-filter"
-  })]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-sm btn-secondary text-overflow-ellipsis ml-1",
+  })])])]), _vm._v(" "), _vm.filter.show ? _c("form", {
+    staticClass: "mt-1",
     attrs: {
-      disabled: _vm.isAssigning,
-      title: "Lagerplätze neu zuweisen"
+      id: "filter"
+    }
+  }, [_c("div", {
+    staticClass: "form-row"
+  }, [_c("div", {
+    staticClass: "col-auto"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "filter-is_uploaded"
+    }
+  }, [_vm._v("Hochgeladen")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.is_uploaded,
+      expression: "filter.is_uploaded"
+    }],
+    staticClass: "form-control form-control-sm",
+    attrs: {
+      id: "filter-is_uploaded"
     },
     on: {
-      click: _vm.assign
+      change: [function ($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "is_uploaded", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }, _vm.fetch]
     }
-  }, [_vm._v(_vm._s(_vm.$t("storages.actions.assign")))])])]), _vm._v(" "), _vm.isLoading ? _c("div", {
+  }, [_c("option", {
+    domProps: {
+      value: null
+    }
+  }, [_vm._v("Alle Lagerplätze")]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: 0
+    }
+  }, [_vm._v("Nicht alle Artikel hochgeladen")]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: 1
+    }
+  }, [_vm._v("Alle Artikel hochgeladen")])])])])])]) : _vm._e(), _vm._v(" "), _vm.isLoading ? _c("div", {
     staticClass: "mt-3 p-5"
   }, [_c("center", [_c("span", {
     staticStyle: {

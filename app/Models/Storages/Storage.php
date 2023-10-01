@@ -208,4 +208,22 @@ class Storage extends Model
             ->where('name', self::NAME_NO_STORAGE);
     }
 
+    public function scopeIsUploaded(Builder $query, $value): Builder
+    {
+        if (is_null($value)) {
+            return $query;
+        }
+
+        return $query->where('is_uploaded', $value);
+    }
+
+    public function scopeSearch(Builder $query, $value) : Builder
+    {
+        if (! $value) {
+            return $query;
+        }
+
+        return $query->where('name', 'LIKE', '%' . $value . '%');
+    }
+
 }

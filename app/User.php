@@ -166,6 +166,7 @@ class User extends Authenticatable
     {
         return $this->storages()->withDepth()
             ->defaultOrder()
+            ->isUploaded(false)
             ->get()->each(function ($storage, $key) {
                 $storage->sort = $key;
             });

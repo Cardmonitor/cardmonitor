@@ -29,10 +29,13 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-4 col-form-label col-form-label-sm" for="slots">Slots</label>
+                            <label class="col-sm-4 col-form-label col-form-label-sm" for="parent_id">Hochgeladen</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control form-control-sm @error('slots') is-invalid @enderror" id="slots" name="slots" placeholder="Slots" value="{{ $model->slots }}">
-                                @error('slots')
+                                <select class="form-control form-control-sm @error('is_uploaded') is-invalid @enderror" id="is_uploaded" name="is_uploaded">
+                                    <option value="0">Nicht alle Karten hochgeladen</option>
+                                    <option value="1">Alle Karten hochgeladen</option>
+                                </select>
+                                @error('is_uploaded')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
