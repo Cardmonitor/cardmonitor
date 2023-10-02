@@ -32,8 +32,8 @@
                             <label class="col-sm-4 col-form-label col-form-label-sm" for="parent_id">Hochgeladen</label>
                             <div class="col-sm-8">
                                 <select class="form-control form-control-sm @error('is_uploaded') is-invalid @enderror" id="is_uploaded" name="is_uploaded">
-                                    <option value="0">Nicht alle Karten hochgeladen</option>
-                                    <option value="1">Alle Karten hochgeladen</option>
+                                    <option value="0" {{ $model->is_uploaded == 0 ? 'selected="selected"' : '' }}>Nicht alle Karten hochgeladen</option>
+                                    <option value="1"{{ $model->is_uploaded == 1 ? 'selected="selected"' : '' }}>Alle Karten hochgeladen</option>
                                 </select>
                                 @error('is_uploaded')
                                     <div class="invalid-feedback">
