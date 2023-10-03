@@ -21,6 +21,7 @@
         :rarities="{{ json_encode($rarities) }}"
         :rules="{{ json_encode($rules) }}"
         :storages="{{ json_encode($storages) }}"
+        :initial-background-tasks="{{ json_encode($background_tasks) }}"
     ></article-table>
 
     @include('article.tcg-powertools-import.create')

@@ -96,14 +96,12 @@ class ActionController extends Controller
 
     private function syncCardmarket(Collection $articles): void
     {
-        $synced_articles_count = 0;
-        $articles->each(function ($article) use (&$synced_articles_count) {
-            if ($article->sync()) {
-                $synced_articles_count++;
-            }
-        });
+        Artisan::queue('article:cardmarket:update', [
+            'user' => auth()->user()->id,
+            '--articles' => $articles->pluck('id')->toArray(),
+        ]);
 
-        $this->message = $synced_articles_count . '/' . $articles->count() . ' zu Cardmarket hochgeladen.';
+        $this->message = 'Die Artikel werden im Hintergrund an Cardmarket übertragen. ' . $articles->count() . ' Artikel werden synchronisiert.';
     }
 
     private function storing(User $user, Collection $articles): void

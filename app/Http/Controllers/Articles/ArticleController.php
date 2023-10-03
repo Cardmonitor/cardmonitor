@@ -8,6 +8,7 @@ use App\Models\Games\Game;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Articles\Article;
+use App\Support\BackgroundTasks;
 use App\Http\Controllers\Controller;
 use App\Models\Expansions\Expansion;
 use App\Models\Items\Card as ItemCard;
@@ -71,7 +72,8 @@ class ArticleController extends Controller
             ->with('is_syncing_articles', $user->is_syncing_articles)
             ->with('rules', $user->rules)
             ->with('storages', $user->storagesForFilter())
-            ->with('log_file_exists', StockfileCommand::zipArchiveExists($user));
+            ->with('log_file_exists', StockfileCommand::zipArchiveExists($user))
+            ->with('background_tasks', BackgroundTasks::make()->all());
     }
 
     private function getLogFileUrl(User $user): ?string

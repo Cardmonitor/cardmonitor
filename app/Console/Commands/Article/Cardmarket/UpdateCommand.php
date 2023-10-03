@@ -4,6 +4,9 @@ namespace App\Console\Commands\Article\Cardmarket;
 
 use App\User;
 use Illuminate\Console\Command;
+use App\Support\BackgroundTasks;
+use App\Notifications\FlashMessage;
+use Illuminate\Support\Facades\App;
 
 class UpdateCommand extends Command
 {
@@ -15,6 +18,7 @@ class UpdateCommand extends Command
     protected $signature = 'article:cardmarket:update
         {user}
         {--article= : id of the article to update}
+        {--articles=* : ids of the articles to update}
         {--limit= : amount of articles to update}';
 
     /**
@@ -31,9 +35,13 @@ class UpdateCommand extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(BackgroundTasks $BackgroundTasks)
     {
         $this->user = User::with('api')->findOrFail($this->argument('user'));
+
+        $backgroundtask_key = 'user.' . $this->user->id . '.article.cardmarket.update';
+        $BackgroundTasks->put($backgroundtask_key, 1);
+
         $CardmarketApi = $this->user->cardmarketApi;
         $updated_count = 0;
 
@@ -55,6 +63,10 @@ class UpdateCommand extends Command
 
         $this->line('Updated ' . $updated_count . ' articles.');
 
+        $BackgroundTasks->forget($backgroundtask_key);
+
+        $this->notifyUser($updated_count);
+
         return self::SUCCESS;
     }
 
@@ -71,10 +83,21 @@ class UpdateCommand extends Command
             $query->where('id', $this->option('article'));
         }
 
+        if ($this->option('articles')) {
+            $query->whereIn('id', $this->option('articles'));
+        }
+
         if ($this->option('limit')) {
             $query->limit($this->option('limit'));
         }
 
         return $query->cursor();
+    }
+
+    private function notifyUser(int $updated_count): void
+    {
+        $this->user->notify(FlashMessage::success($updated_count . ' Artikel ' . ($updated_count === 1 ? 'wurde' : 'wurden') . ' zu Cardmarket hochgeladen', [
+            'background_tasks' => App::make(BackgroundTasks::class)->all(),
+        ]));
     }
 }

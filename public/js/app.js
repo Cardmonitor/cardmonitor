@@ -2711,6 +2711,9 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     storages: {
       required: true,
       type: Array
+    },
+    initialBackgroundTasks: {
+      required: true
     }
   },
   data: function data() {
@@ -2777,6 +2780,10 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     if (this.isSyncingArticles) {
       this.checkIsSyncingArticles();
     }
+    this.checkBackgroundTasks(this.initialBackgroundTasks);
+    Bus.$on('update-background-tasks', function (background_tasks) {
+      this.checkBackgroundTasks(background_tasks);
+    }.bind(this));
   },
   watch: {
     page: function page() {
@@ -2835,7 +2842,10 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         Vue.error('Aktion konnte nicht ausgeführt werden!');
         console.log(error);
       })["finally"](function () {
-        component.actioning.status = false;
+        // syncCardmarket is ececuted as a job, so we don't want to reset the actioning status
+        if (component.actionForm.action != 'syncCardmarket') {
+          component.actioning.status = false;
+        }
         component.actionForm.action = null;
       });
     },
@@ -2892,6 +2902,10 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       })["catch"](function (error) {
         console.log(error);
       })["finally"](function () {});
+    },
+    checkBackgroundTasks: function checkBackgroundTasks(background_tasks) {
+      var component = this;
+      component.actioning.status = !!background_tasks['user'][window.user.id]['article']['cardmarket']['update'] || false;
     },
     fetch: function fetch() {
       var component = this;

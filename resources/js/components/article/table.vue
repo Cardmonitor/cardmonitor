@@ -293,6 +293,9 @@
                 required: true,
                 type: Array,
             },
+            initialBackgroundTasks: {
+                required: true,
+            },
         },
 
         data () {
@@ -361,6 +364,11 @@
             if (this.isSyncingArticles) {
                 this.checkIsSyncingArticles();
             }
+
+            this.checkBackgroundTasks(this.initialBackgroundTasks);
+            Bus.$on('update-background-tasks', function (background_tasks) {
+                this.checkBackgroundTasks(background_tasks);
+            }.bind(this));
 
         },
 
@@ -431,7 +439,10 @@
                     console.log(error);
                 })
                 .finally( function () {
-                    component.actioning.status = false;
+                    // syncCardmarket is ececuted as a job, so we don't want to reset the actioning status
+                    if (component.actionForm.action != 'syncCardmarket') {
+                        component.actioning.status = false;
+                    }
                     component.actionForm.action = null;
                 });
             },
@@ -503,6 +514,10 @@
                     .finally ( function () {
 
                     });
+            },
+            checkBackgroundTasks(background_tasks) {
+                const component = this;
+                component.actioning.status = !!background_tasks['user'][window.user.id]['article']['cardmarket']['update'] || false;
             },
             fetch() {
                 var component = this;
