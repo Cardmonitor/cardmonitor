@@ -76,7 +76,6 @@ class UpdateCommand extends Command
             ->with('card.expansion')
             ->whereNotNull('number')
             ->sold(0)
-            ->whereNotNull('cardmarket_article_id')
             ->oldest('synced_at');
 
         if ($this->option('article')) {
@@ -85,6 +84,9 @@ class UpdateCommand extends Command
 
         if ($this->option('articles')) {
             $query->whereIn('id', $this->option('articles'));
+        }
+        else {
+            $query->whereNotNull('cardmarket_article_id');
         }
 
         if ($this->option('limit')) {
