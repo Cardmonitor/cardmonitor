@@ -49,7 +49,7 @@ class UpdateCommand extends Command
             $this->output->write($article->id . "\t" . $article->number . "\t" . $article->card->expansion->abbreviation . "\t" . $article->local_name  . "\t\t\t");
 
             // Es gibt keine eindeutige Fehlermeldung mehr, deshalb wird das Ergbis der Anfrage hier nicht ausgewertet
-            $response = $CardmarketApi->stock->update([$article->toCardmarket()]);
+            $article->sync();
             $article->update([
                 'synced_at' => now(),
                 'has_sync_error' => false,
