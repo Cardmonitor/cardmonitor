@@ -57,7 +57,7 @@ class UpdateCommand extends Command
             $this->output->writeln('');
         }
 
-        $this->line('Updated ' . $updated_count . ' articles.');
+        $this->line('Updated ' . $updated_count . '/' . $articles_count . ' articles.');
 
         $this->setStorageIsUploaded($articles_count, $updated_count);
 
@@ -107,11 +107,13 @@ class UpdateCommand extends Command
         $this->user->storages()->find($this->option('storage'))->update([
             'is_uploaded' => 1,
         ]);
+
+        $this->line('Storage ' . $this->option('storage') . ' set as is uploaded.');
     }
 
     private function notifyUser(int $articles_count, int $updated_count): void
     {
-        $this->user->notify(FlashMessage::success($articles_count .'/' . $updated_count . ' Artikel ' . ($updated_count === 1 ? 'wurde' : 'wurden') . ' zu Cardmarket hochgeladen', [
+        $this->user->notify(FlashMessage::success($updated_count .'/' . $articles_count . ' Artikel ' . ($updated_count === 1 ? 'wurde' : 'wurden') . ' zu Cardmarket hochgeladen', [
             'background_tasks' => App::make(BackgroundTasks::class)->all(),
         ]));
     }
