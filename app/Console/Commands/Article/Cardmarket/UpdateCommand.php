@@ -42,21 +42,16 @@ class UpdateCommand extends Command
         $backgroundtask_key = 'user.' . $this->user->id . '.article.cardmarket.update';
         $BackgroundTasks->put($backgroundtask_key, 1);
 
-        $CardmarketApi = $this->user->cardmarketApi;
+        $articles_count = 0;
         $updated_count = 0;
 
         foreach ($this->getArticles() as $article) {
             $this->output->write($article->id . "\t" . $article->number . "\t" . $article->card->expansion->abbreviation . "\t" . $article->local_name  . "\t\t\t");
 
-            // Es gibt keine eindeutige Fehlermeldung mehr, deshalb wird das Ergbis der Anfrage hier nicht ausgewertet
-            $article->sync();
-            $article->update([
-                'synced_at' => now(),
-                'has_sync_error' => false,
-                'sync_error' => null,
-                'should_sync' => false,
-            ]);
-            $updated_count++;
+            if ($article->sync()) {
+                $updated_count++;
+            }
+            $articles_count++;
 
             $this->output->writeln('');
         }
@@ -65,7 +60,7 @@ class UpdateCommand extends Command
 
         $BackgroundTasks->forget($backgroundtask_key);
 
-        $this->notifyUser($updated_count);
+        $this->notifyUser($articles_count, $updated_count);
 
         return self::SUCCESS;
     }
@@ -96,9 +91,9 @@ class UpdateCommand extends Command
         return $query->cursor();
     }
 
-    private function notifyUser(int $updated_count): void
+    private function notifyUser(int $articles_count, int $updated_count): void
     {
-        $this->user->notify(FlashMessage::success($updated_count . ' Artikel ' . ($updated_count === 1 ? 'wurde' : 'wurden') . ' zu Cardmarket hochgeladen', [
+        $this->user->notify(FlashMessage::success($articles_count .'/' . $updated_count . ' Artikel ' . ($updated_count === 1 ? 'wurde' : 'wurden') . ' zu Cardmarket hochgeladen', [
             'background_tasks' => App::make(BackgroundTasks::class)->all(),
         ]));
     }
