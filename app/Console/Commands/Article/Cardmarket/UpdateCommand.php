@@ -19,7 +19,8 @@ class UpdateCommand extends Command
         {user}
         {--article= : id of the article to update}
         {--articles=* : ids of the articles to update}
-        {--limit= : amount of articles to update}';
+        {--limit= : amount of articles to update}
+        {--storage= : id of the storage}';
 
     /**
      * The console command description.
@@ -58,6 +59,8 @@ class UpdateCommand extends Command
 
         $this->line('Updated ' . $updated_count . ' articles.');
 
+        $this->setStorageIsUploaded($articles_count, $updated_count);
+
         $BackgroundTasks->forget($backgroundtask_key);
 
         $this->notifyUser($articles_count, $updated_count);
@@ -89,6 +92,21 @@ class UpdateCommand extends Command
         }
 
         return $query->cursor();
+    }
+
+    private function setStorageIsUploaded(int $articles_count, int $updated_count): void
+    {
+        if (!$this->option('storage')) {
+            return;
+        }
+
+        if ($articles_count !== $updated_count) {
+            return;
+        }
+
+        $this->user->storages()->find($this->option('storage'))->update([
+            'is_uploaded' => 1,
+        ]);
     }
 
     private function notifyUser(int $articles_count, int $updated_count): void

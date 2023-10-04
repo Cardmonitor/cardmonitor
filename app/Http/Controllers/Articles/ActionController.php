@@ -51,7 +51,7 @@ class ActionController extends Controller
         switch ($attributes['action']) {
             case 'setNumber': $this->setNumber($user, $articles); break;
             case 'resetNumber': $this->resetNumber($articles); break;
-            case 'syncCardmarket': $this->syncCardmarket($articles); break;
+            case 'syncCardmarket': $this->syncCardmarket($articles, $attributes['filter']); break;
             case 'storing': $this->storing($user, $articles); break;
 
             default: $this->message = 'Aktion nicht verfügbar'; break;
@@ -94,11 +94,12 @@ class ActionController extends Controller
         $this->message = 'Nummern bei ' . $articles->count() . ' Artikeln entfernt.';
     }
 
-    private function syncCardmarket(Collection $articles): void
+    private function syncCardmarket(Collection $articles, array $filter): void
     {
         Artisan::queue('article:cardmarket:update', [
             'user' => auth()->user()->id,
             '--articles' => $articles->pluck('id')->toArray(),
+            '--storage' => $filter['storage_id'],
         ]);
 
         $this->message = 'Die Artikel werden im Hintergrund an Cardmarket übertragen. ' . $articles->count() . ' Artikel werden synchronisiert.';
