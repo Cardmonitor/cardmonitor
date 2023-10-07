@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Orders\Evaluation;
+use Illuminate\Support\Arr;
 use App\Models\Orders\Order;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
+use App\Support\BackgroundTasks;
+use App\Models\Orders\Evaluation;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 
 class HomeController extends Controller
 {
@@ -68,6 +69,6 @@ class HomeController extends Controller
             ->with('paidOrders_count', count($paidOrders))
             ->with('api', $user->api)
             ->with('is_syncing_articles', $user->is_syncing_articles)
-            ->with('is_syncing_orders', $user->is_syncing_orders);
+            ->with('background_tasks', BackgroundTasks::make()->all());
     }
 }

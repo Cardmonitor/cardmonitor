@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Orders;
 
-use App\Http\Controllers\Controller;
 use App\Models\Items\Custom;
 use App\Models\Orders\Order;
 use Illuminate\Http\Request;
+use App\Support\BackgroundTasks;
+use App\Http\Controllers\Controller;
 
 class OrderController extends Controller
 {
@@ -43,7 +44,7 @@ class OrderController extends Controller
 
         return view($this->baseViewPath . '.index')
             ->with('states', Order::STATES)
-            ->with('is_syncing_orders', auth()->user()->is_syncing_orders);
+            ->with('background_tasks', BackgroundTasks::make()->all());
     }
 
     /**

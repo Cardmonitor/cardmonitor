@@ -8,7 +8,7 @@
             <a href="{{ route('order.picklist.index') }}" class="btn btn-sm btn-secondary">Pickliste</a>
         </div>
     </div>
-    <order-table :is-syncing-orders="{{ $is_syncing_orders }}" :states="{{ json_encode($states) }}"></order-table>
+    <order-table :initial-background-tasks="{{ json_encode($background_tasks) }}" :states="{{ json_encode($states) }}"></order-table>
 
     @include('order.import.sent.create')
 

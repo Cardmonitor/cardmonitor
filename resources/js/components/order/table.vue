@@ -100,9 +100,9 @@
         },
 
         props: {
-            isSyncingOrders: {
+            initialBackgroundTasks: {
+                type: Object,
                 required: true,
-                type: Number,
             },
             states: {
                 required: true,
@@ -116,7 +116,7 @@
                 items: [],
                 isLoading: true,
                 syncing: {
-                    status: this.isSyncingOrders,
+                    status: false,
                     interval: null,
                 },
                 paginate: {
@@ -136,12 +136,10 @@
         },
 
         mounted() {
-
-            this.fetch();
-            if (this.isSyncingOrders) {
-                this.checkIsSyncingOrders();
-            }
-
+            this.checkBackgroundTasks(this.initialBackgroundTasks);
+            Bus.$on('update-background-tasks', function (background_tasks) {
+                this.checkBackgroundTasks(background_tasks);
+            }.bind(this));
         },
 
         watch: {
@@ -184,30 +182,13 @@
         },
 
         methods: {
-            checkIsSyncingOrders() {
-                var component = this;
-                this.syncing.interval = setInterval(function () {
-                    component.getIsSyncingOrders()
-                }, 3000);
-            },
-            getIsSyncingOrders() {
-                var component = this;
-                axios.get(component.uri + '/sync')
-                    .then(function (response) {
-                        component.syncing.status = response.data.is_syncing_orders;
-                        if (component.syncing.status == 0) {
-                            clearInterval(component.syncing.interval)
-                            component.syncing.interval = null;
-                            component.fetch();
-                            Vue.success(component.$t('order.successes.synced'));
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    })
-                    .finally ( function () {
+            checkBackgroundTasks(background_tasks) {
+                const component = this;
+                component.syncing.status = !!background_tasks['user'][window.user.id].order.sync || false;
 
-                    });
+                if (!component.syncing.status) {
+                    this.fetch();
+                }
             },
             download() {
                 var component = this;
@@ -265,8 +246,7 @@
                 var component = this;
                 axios.put(component.uri + '/sync', component.filter)
                     .then(function (response) {
-                        component.syncing.status = 1;
-                        component.checkIsSyncingOrders();
+                        component.syncing.status = true;
                         Vue.success(component.$t('order.successes.syncing_background'));
                     })
                     .catch(function (error) {

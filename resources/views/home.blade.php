@@ -3,7 +3,7 @@
 @section('content')
 <div class="row mb-3 align-items-stretch">
 
-        <home-order-paid class="col-12 mb-3" :is-syncing-orders="{{ $is_syncing_orders }}"></home-order-paid>
+        <home-order-paid class="col-12 mb-3" :initial-background-tasks="{{ json_encode($background_tasks) }}"></home-order-paid>
         @include('order.import.sent.create')
 
         <div class="col">

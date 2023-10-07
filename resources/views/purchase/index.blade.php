@@ -8,6 +8,6 @@
             <a href="{{ route('purchases.import.index') }}" class="btn btn-sm btn-secondary">Import</a>
         </div>
     </div>
-    <purchase-table :is-syncing-orders="{{ $is_syncing_orders }}" :states="{{ json_encode($states) }}"></purchase-table>
+    <purchase-table :states="{{ json_encode($states) }}"></purchase-table>
 
 @endsection

@@ -79,9 +79,9 @@
     export default {
 
         props: {
-            isSyncingOrders: {
+            initialBackgroundTasks: {
+                type: Object,
                 required: true,
-                type: Number,
             },
         },
 
@@ -90,7 +90,7 @@
                 uri: '/order',
                 isLoading: true,
                 syncing: {
-                    status: this.isSyncingOrders,
+                    status: false,
                     interval: null,
                     timeout: null,
                 },
@@ -135,13 +135,10 @@
         },
 
         mounted() {
-            if (this.isSyncingOrders) {
-                this.checkIsSyncingOrders();
-            }
-            else {
-                // this.sync();
-                this.fetch();
-            }
+            this.checkBackgroundTasks(this.initialBackgroundTasks);
+            Bus.$on('update-background-tasks', function (background_tasks) {
+                this.checkBackgroundTasks(background_tasks);
+            }.bind(this));
         },
 
         watch: {
@@ -190,30 +187,13 @@
                         console.log(error);
                     });
             },
-            checkIsSyncingOrders() {
-                var component = this;
-                this.syncing.interval = setInterval(function () {
-                    component.getIsSyncingOrders()
-                }, 3000);
-            },
-            getIsSyncingOrders() {
-                var component = this;
-                axios.get('/order/sync')
-                    .then(function (response) {
-                        component.syncing.status = response.data.is_syncing_articles;
-                        if (component.syncing.status == 0) {
-                            clearInterval(component.syncing.interval)
-                            component.syncing.interval = null;
-                            component.fetch();
-                            Vue.success('Bestellungen wurden synchronisiert.');
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    })
-                    .finally ( function () {
+            checkBackgroundTasks(background_tasks) {
+                const component = this;
+                component.syncing.status = !!background_tasks['user'][window.user.id].order.sync || false;
 
-                    });
+                if (!component.syncing.status) {
+                    this.fetch();
+                }
             },
             send(item) {
                 var component = this;

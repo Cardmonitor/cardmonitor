@@ -80,13 +80,9 @@
         },
 
         props: {
-            isSyncingOrders: {
-                required: true,
-                type: Number,
-            },
             states: {
                 required: true,
-                type: Object,
+                type: Array,
             },
         },
 
@@ -95,10 +91,6 @@
                 uri: '/purchases',
                 items: [],
                 isLoading: true,
-                syncing: {
-                    status: this.isSyncingOrders,
-                    interval: null,
-                },
                 paginate: {
                     nextPageUrl: null,
                     prevPageUrl: null,
@@ -116,12 +108,7 @@
         },
 
         mounted() {
-
             this.fetch();
-            if (this.isSyncingOrders) {
-                this.checkIsSyncingOrders();
-            }
-
         },
 
         watch: {

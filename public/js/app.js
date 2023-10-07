@@ -3848,9 +3848,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
-    isSyncingOrders: {
-      required: true,
-      type: Number
+    initialBackgroundTasks: {
+      type: Object,
+      required: true
     }
   },
   data: function data() {
@@ -3858,7 +3858,7 @@ __webpack_require__.r(__webpack_exports__);
       uri: '/order',
       isLoading: true,
       syncing: {
-        status: this.isSyncingOrders,
+        status: false,
         interval: null,
         timeout: null
       },
@@ -3904,12 +3904,10 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    if (this.isSyncingOrders) {
-      this.checkIsSyncingOrders();
-    } else {
-      // this.sync();
-      this.fetch();
-    }
+    this.checkBackgroundTasks(this.initialBackgroundTasks);
+    Bus.$on('update-background-tasks', function (background_tasks) {
+      this.checkBackgroundTasks(background_tasks);
+    }.bind(this));
   },
   watch: {
     page: function page() {
@@ -3951,25 +3949,12 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    checkIsSyncingOrders: function checkIsSyncingOrders() {
+    checkBackgroundTasks: function checkBackgroundTasks(background_tasks) {
       var component = this;
-      this.syncing.interval = setInterval(function () {
-        component.getIsSyncingOrders();
-      }, 3000);
-    },
-    getIsSyncingOrders: function getIsSyncingOrders() {
-      var component = this;
-      axios.get('/order/sync').then(function (response) {
-        component.syncing.status = response.data.is_syncing_articles;
-        if (component.syncing.status == 0) {
-          clearInterval(component.syncing.interval);
-          component.syncing.interval = null;
-          component.fetch();
-          Vue.success('Bestellungen wurden synchronisiert.');
-        }
-      })["catch"](function (error) {
-        console.log(error);
-      })["finally"](function () {});
+      component.syncing.status = !!background_tasks['user'][window.user.id].order.sync || false;
+      if (!component.syncing.status) {
+        this.fetch();
+      }
     },
     send: function send(item) {
       var component = this;
@@ -5151,9 +5136,9 @@ __webpack_require__.r(__webpack_exports__);
     filterSearch: _filter_search_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   props: {
-    isSyncingOrders: {
-      required: true,
-      type: Number
+    initialBackgroundTasks: {
+      type: Object,
+      required: true
     },
     states: {
       required: true,
@@ -5166,7 +5151,7 @@ __webpack_require__.r(__webpack_exports__);
       items: [],
       isLoading: true,
       syncing: {
-        status: this.isSyncingOrders,
+        status: false,
         interval: null
       },
       paginate: {
@@ -5185,10 +5170,10 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    this.fetch();
-    if (this.isSyncingOrders) {
-      this.checkIsSyncingOrders();
-    }
+    this.checkBackgroundTasks(this.initialBackgroundTasks);
+    Bus.$on('update-background-tasks', function (background_tasks) {
+      this.checkBackgroundTasks(background_tasks);
+    }.bind(this));
   },
   watch: {
     page: function page() {
@@ -5227,25 +5212,12 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    checkIsSyncingOrders: function checkIsSyncingOrders() {
+    checkBackgroundTasks: function checkBackgroundTasks(background_tasks) {
       var component = this;
-      this.syncing.interval = setInterval(function () {
-        component.getIsSyncingOrders();
-      }, 3000);
-    },
-    getIsSyncingOrders: function getIsSyncingOrders() {
-      var component = this;
-      axios.get(component.uri + '/sync').then(function (response) {
-        component.syncing.status = response.data.is_syncing_orders;
-        if (component.syncing.status == 0) {
-          clearInterval(component.syncing.interval);
-          component.syncing.interval = null;
-          component.fetch();
-          Vue.success(component.$t('order.successes.synced'));
-        }
-      })["catch"](function (error) {
-        console.log(error);
-      })["finally"](function () {});
+      component.syncing.status = !!background_tasks['user'][window.user.id].order.sync || false;
+      if (!component.syncing.status) {
+        this.fetch();
+      }
     },
     download: function download() {
       var component = this;
@@ -5296,8 +5268,7 @@ __webpack_require__.r(__webpack_exports__);
     sync: function sync() {
       var component = this;
       axios.put(component.uri + '/sync', component.filter).then(function (response) {
-        component.syncing.status = 1;
-        component.checkIsSyncingOrders();
+        component.syncing.status = true;
         Vue.success(component.$t('order.successes.syncing_background'));
       })["catch"](function (error) {
         Vue.error(component.$t('order.errors.synced'));
@@ -6300,13 +6271,9 @@ __webpack_require__.r(__webpack_exports__);
     filterSearch: _filter_search_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   props: {
-    isSyncingOrders: {
-      required: true,
-      type: Number
-    },
     states: {
       required: true,
-      type: Object
+      type: Array
     }
   },
   data: function data() {
@@ -6314,10 +6281,6 @@ __webpack_require__.r(__webpack_exports__);
       uri: '/purchases',
       items: [],
       isLoading: true,
-      syncing: {
-        status: this.isSyncingOrders,
-        interval: null
-      },
       paginate: {
         nextPageUrl: null,
         prevPageUrl: null,
@@ -6335,9 +6298,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.fetch();
-    if (this.isSyncingOrders) {
-      this.checkIsSyncingOrders();
-    }
   },
   watch: {
     page: function page() {

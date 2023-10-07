@@ -45,8 +45,7 @@ class PurchaseController extends Controller
         }
 
         return view($this->baseViewPath . '.index')
-            ->with('states', Status::values())
-            ->with('is_syncing_orders', auth()->user()->is_syncing_orders);
+            ->with('states', Status::values());
     }
 
     /**
