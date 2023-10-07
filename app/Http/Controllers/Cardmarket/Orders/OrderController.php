@@ -51,7 +51,6 @@ class OrderController extends Controller
                 $state = $request->input('state');
                 $this->syncStateOrders($user, $state);
                 if ($state == Order::STATE_PAID) {
-                    $this->syncStateOrders($user, Order::STATE_BOUGHT);
                     Artisan::queue('article:imports:cardmarket:stockfile', [
                         'user' => $user->id,
                     ]);
@@ -90,12 +89,17 @@ class OrderController extends Controller
         ]);
     }
 
-    protected function syncStateOrders(User $user, string $state, $force = false)
+    protected function syncStateOrders(User $user, string $state)
     {
+        $states = [$state];
+        if ($state == Order::STATE_PAID) {
+            $states[] = Order::STATE_BOUGHT;
+        }
+
         Artisan::queue('order:sync', [
             'user' => $user->id,
             '--actor' => 'seller',
-            '--state' => $state,
+            '--states' => $states,
         ]);
     }
 

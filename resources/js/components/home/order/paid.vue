@@ -139,6 +139,7 @@
             Bus.$on('update-background-tasks', function (background_tasks) {
                 this.checkBackgroundTasks(background_tasks);
             }.bind(this));
+            this.fetch();
         },
 
         watch: {
@@ -190,10 +191,6 @@
             checkBackgroundTasks(background_tasks) {
                 const component = this;
                 component.syncing.status = !!background_tasks['user'][window.user.id].order.sync || false;
-
-                if (!component.syncing.status) {
-                    this.fetch();
-                }
             },
             send(item) {
                 var component = this;
@@ -219,7 +216,6 @@
                 axios.put('/order/sync', component.filter)
                     .then(function (response) {
                         component.syncing.status = 1;
-                        component.checkIsSyncingOrders();
                         Vue.success('Bestellungen werden im Hintergrund aktualisiert.');
                     })
                     .catch(function (error) {

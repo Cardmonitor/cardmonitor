@@ -14,7 +14,8 @@ class SyncCommand extends Command
     protected $signature = 'order:sync
         {user}
         {--actor=seller}
-        {--state=received}
+        {--state=}
+        {--states=*}
         {--order=}';
 
     protected $description = 'Add/Update orders from cardmarket API';
@@ -35,18 +36,13 @@ class SyncCommand extends Command
             $backgroundtask_key = 'user.' . $this->user->id . '.order.sync';
             $BackgroundTasks->put($backgroundtask_key, 1);
 
-            $orders = Order::where('user_id', $this->user->id)->where('source_slug', 'cardmarket')->state($this->option('state'))->get();
-            $order_source_ids = $orders->pluck('source_id');
-
-            $synced_orders = $this->user->cardmarketApi->syncOrders($this->option('actor'), $this->option('state'));
-
-            $not_synced_orders = $order_source_ids->diff($synced_orders);
-            foreach ($not_synced_orders as $cardmarket_order_id) {
-                $this->syncOrder($cardmarket_order_id);
+            $states = $this->getStates();
+            foreach ($states as $state) {
+                $this->handleState($this->option('actor'), $state);
             }
 
             $BackgroundTasks->forget($backgroundtask_key);
-            $this->user->notify(FlashMessage::success('Die Bestellungen im Status <b>' . $this->option('state') . '</b> wurden synchronisiert.', [
+            $this->user->notify(FlashMessage::success('Die Bestellungen im Status <b>' . implode(', ', $states) . '</b> wurden synchronisiert.', [
                 'background_tasks' => App::make(BackgroundTasks::class)->all(),
             ]));
 
@@ -54,10 +50,33 @@ class SyncCommand extends Command
         }
         catch (\Exception $e) {
             $BackgroundTasks->forget($backgroundtask_key);
-            $this->user->notify(FlashMessage::danger('Die Bestellungen im Status <b>' . $this->option('state') . '</b> konnten nicht synchronisiert werden.', [
+            $this->user->notify(FlashMessage::danger('Die Bestellungen im Status <b>' . implode(', ', $states) . '</b> konnten nicht synchronisiert werden.', [
                 'background_tasks' => App::make(BackgroundTasks::class)->all(),
             ]));
             return self::FAILURE;
+        }
+    }
+
+    private function getStates(): array
+    {
+        $states = $this->option('states');
+        if ($this->option('state')) {
+            $states[] = $this->option('state');
+        }
+
+        return $states;
+    }
+
+    private function handleState(string $actor, string $state): void
+    {
+        $orders = Order::where('user_id', $this->user->id)->where('source_slug', 'cardmarket')->state($state)->get();
+        $order_source_ids = $orders->pluck('source_id');
+
+        $synced_orders = $this->user->cardmarketApi->syncOrders($actor, $state);
+
+        $not_synced_orders = $order_source_ids->diff($synced_orders);
+        foreach ($not_synced_orders as $cardmarket_order_id) {
+            $this->syncOrder($cardmarket_order_id);
         }
     }
 

@@ -3908,6 +3908,7 @@ __webpack_require__.r(__webpack_exports__);
     Bus.$on('update-background-tasks', function (background_tasks) {
       this.checkBackgroundTasks(background_tasks);
     }.bind(this));
+    this.fetch();
   },
   watch: {
     page: function page() {
@@ -3952,9 +3953,6 @@ __webpack_require__.r(__webpack_exports__);
     checkBackgroundTasks: function checkBackgroundTasks(background_tasks) {
       var component = this;
       component.syncing.status = !!background_tasks['user'][window.user.id].order.sync || false;
-      if (!component.syncing.status) {
-        this.fetch();
-      }
     },
     send: function send(item) {
       var component = this;
@@ -3974,7 +3972,6 @@ __webpack_require__.r(__webpack_exports__);
       clearTimeout(component.syncing.timeout);
       axios.put('/order/sync', component.filter).then(function (response) {
         component.syncing.status = 1;
-        component.checkIsSyncingOrders();
         Vue.success('Bestellungen werden im Hintergrund aktualisiert.');
       })["catch"](function (error) {
         Vue.error(component.$t('order.errors.synced'));
