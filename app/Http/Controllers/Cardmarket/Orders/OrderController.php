@@ -50,11 +50,12 @@ class OrderController extends Controller
             if ($request->has('state') && in_array($request->input('state'), array_keys(Order::STATES))) {
                 $state = $request->input('state');
                 $this->syncStateOrders($user, $state);
-                if ($state == Order::STATE_PAID) {
-                    Artisan::queue('article:imports:cardmarket:stockfile', [
-                        'user' => $user->id,
-                    ]);
-                }
+                // Funktioniert aktuell nicht 429 Too Many Requests
+                // if ($state == Order::STATE_PAID) {
+                //     Artisan::queue('article:imports:cardmarket:stockfile', [
+                //         'user' => $user->id,
+                //     ]);
+                // }
             }
             else {
                 $this->syncAllOrders($user);
