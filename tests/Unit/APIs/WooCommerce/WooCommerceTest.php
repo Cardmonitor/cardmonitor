@@ -14,7 +14,7 @@ class WooCommerceTest extends TestCase
     {
         $this->markTestSkipped();
 
-        $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
+        $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
         $orders = $WooCommerce->orders();
 
         echo PHP_EOL;
@@ -33,7 +33,7 @@ class WooCommerceTest extends TestCase
         $this->markTestSkipped();
 
         $id = 629161;
-        $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
+        $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
         $response = $WooCommerce->order($id);
         $order = $response['data'];
 
@@ -51,10 +51,26 @@ class WooCommerceTest extends TestCase
         $this->markTestSkipped();
 
         $id = 629161;
-        $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
+        $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
         $response = $WooCommerce->updateOrder($id, [
             'status' => 'on-hold',
         ]);
         echo json_encode($response, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * @test
+     */
+    public function it_gets_all_products()
+    {
+        $WooCommerce = new \App\APIs\WooCommerce\WooCommerceOrder();
+        $product_response = $WooCommerce->products();
+
+        echo PHP_EOL;
+        foreach ($product_response['data'] as $product) {
+            dump($product);
+        }
+
+        $this->assertTrue(true);
     }
 }

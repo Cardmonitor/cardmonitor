@@ -34,7 +34,7 @@ class ImportCommand extends Command
     {
         $this->user = User::find($this->argument('user'));
         $woocommerce_order_id = $this->argument('order');
-        $woocommerce_order_response = (new \App\APIs\WooCommerce\WooCommerce())->order($woocommerce_order_id);
+        $woocommerce_order_response = (new \App\APIs\WooCommerce\WooCommercePurchase())->order($woocommerce_order_id);
 
         WooCommerceOrderImporter::import($this->user->id, $woocommerce_order_response['data']);
     }

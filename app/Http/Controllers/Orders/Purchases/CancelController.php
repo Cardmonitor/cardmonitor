@@ -6,7 +6,7 @@ use App\APIs\WooCommerce\Status;
 use App\Models\Orders\Order;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use App\APIs\WooCommerce\WooCommerce;
+use App\APIs\WooCommerce\WooCommercePurchase;
 
 class CancelController extends Controller
 {
@@ -30,7 +30,7 @@ class CancelController extends Controller
 
     private function cancelWooCommerceOrder(Order $order): void
     {
-        $WooCommerce = new WooCommerce();
+        $WooCommerce = new WooCommercePurchase();
         $WooCommerce->updateOrderState($order->source_id, Status::CANCELLED);
         $order->update([
             'state' => Status::CANCELLED->value,

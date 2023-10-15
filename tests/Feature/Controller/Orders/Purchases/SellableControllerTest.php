@@ -7,7 +7,7 @@ use Mockery;
 use Tests\TestCase;
 use App\Models\Cards\Card;
 use Illuminate\Support\Facades\Auth;
-use App\APIs\WooCommerce\WooCommerce;
+use App\APIs\WooCommerce\WooCommercePurchase;
 use Tests\Support\Snapshots\JsonSnapshot;
 
 class SellableControllerTest extends TestCase
@@ -21,7 +21,7 @@ class SellableControllerTest extends TestCase
     {
         $woocommerce_order_id = 619687;
         $woocommerce_order_response = JsonSnapshot::get('tests/snapshots/woocommerce/orders/' . $woocommerce_order_id . '.json', function () use ($woocommerce_order_id) {
-            return (new \App\APIs\WooCommerce\WooCommerce())->order($woocommerce_order_id);
+            return (new \App\APIs\WooCommerce\WooCommercePurchase())->order($woocommerce_order_id);
         });
         $woocommerce_order = $woocommerce_order_response['data'];
 
@@ -40,7 +40,7 @@ class SellableControllerTest extends TestCase
             $quantity += $line_item['quantity'];
         }
 
-        $woocommerce_mock = Mockery::mock('overload:' . WooCommerce::class);
+        $woocommerce_mock = Mockery::mock('overload:' . WooCommercePurchase::class);
         $woocommerce_mock->shouldReceive('updateOrderState')
             ->with($woocommerce_order_id, Status::PROCESSING);
 

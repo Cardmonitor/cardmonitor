@@ -10,7 +10,7 @@ use App\Models\Orders\Order;
 use App\APIs\WooCommerce\Status;
 use App\Models\Articles\Article;
 use App\Models\Users\CardmarketUser;
-use App\APIs\WooCommerce\WooCommerce;
+use App\APIs\WooCommerce\WooCommercePurchase;
 use Tests\Support\Snapshots\JsonSnapshot;
 use App\Importers\Orders\WooCommerceOrderImporter;
 
@@ -25,7 +25,7 @@ class WooCommerceOrderImporterTest extends TestCase
     {
         $woocommerce_order_id = 627483;
         $woocommerce_order_response = JsonSnapshot::get('tests/snapshots/woocommerce/orders/' . $woocommerce_order_id . '.json', function () use ($woocommerce_order_id) {
-            return (new \App\APIs\WooCommerce\WooCommerce())->order($woocommerce_order_id);
+            return (new \App\APIs\WooCommerce\WooCommercePurchase())->order($woocommerce_order_id);
         });
         $woocommerce_order = $woocommerce_order_response['data'];
 
@@ -48,7 +48,7 @@ class WooCommerceOrderImporterTest extends TestCase
         $this->assertCount(0, Order::all());
         $this->assertCount(0, CardmarketUser::all());
 
-        $woocommerce_mock = Mockery::mock('overload:' . WooCommerce::class);
+        $woocommerce_mock = Mockery::mock('overload:' . WooCommercePurchase::class);
         $woocommerce_mock->shouldReceive('updateOrderState')
             ->with($woocommerce_order_id, Status::PROCESSING)
             ->once();

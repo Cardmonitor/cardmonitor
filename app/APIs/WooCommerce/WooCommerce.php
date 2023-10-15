@@ -5,18 +5,13 @@ namespace App\APIs\WooCommerce;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
-class WooCommerce
+abstract class WooCommerce
 {
-    private $url;
-    private $consumer_key;
-    private $consumer_secret;
+    protected $url;
+    protected $consumer_key;
+    protected $consumer_secret;
 
-    public function __construct()
-    {
-        $this->url = config('services.woocommerce.url');
-        $this->consumer_key = config('services.woocommerce.consumer_key');
-        $this->consumer_secret = config('services.woocommerce.consumer_secret');
-    }
+    public abstract function __construct();
 
     public function orders(array $parameters = []): array
     {
@@ -62,7 +57,17 @@ class WooCommerce
         ]);
     }
 
-    private function getClient(): PendingRequest
+    public function products(array $filter = []): array
+    {
+        $response = $this->getClient()->get('/wp-json/wc/v3/products', $filter);
+
+        return [
+            'data' => $response->json(),
+            'headers' => $response->headers(),
+        ];
+    }
+
+    protected function getClient(): PendingRequest
     {
         return Http::baseUrl($this->url)
             ->withBasicAuth($this->consumer_key, $this->consumer_secret);

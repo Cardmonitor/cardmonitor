@@ -25,7 +25,7 @@ class OrderController extends Controller
                 'status' => 'nullable|string',
             ]);
 
-            $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
+            $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
             return $WooCommerce->orders($attributes);
         }
 
@@ -44,7 +44,7 @@ class OrderController extends Controller
             'id' => 'required|integer',
         ]);
 
-        $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
+        $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
         $woocomerce_order_response = $WooCommerce->order($attributes['id']);
         $woocomerce_order = $woocomerce_order_response['data'];
 
@@ -62,7 +62,7 @@ class OrderController extends Controller
 
     public function show(int $id)
     {
-        $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
+        $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
         $response = $WooCommerce->order($id);
         $order = $response['data'];
         $cards = [];

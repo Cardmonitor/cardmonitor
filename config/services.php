@@ -49,9 +49,16 @@ return [
     ],
 
     'woocommerce' => [
-        'url' => env('WOO_COMMERCE_URL'),
-        'consumer_key' => env('WOO_COMMERCE_CONSUMER_KEY'),
-        'consumer_secret' => env('WOO_COMMERCE_CONSUMER_SECRET'),
+        'purchase' => [
+            'url' => env('WOO_COMMERCE_PURCHASE_URL'),
+            'consumer_key' => env('WOO_COMMERCE_PURCHASE_CONSUMER_KEY'),
+            'consumer_secret' => env('WOO_COMMERCE_PURCHASE_CONSUMER_SECRET'),
+        ],
+        'order' => [
+            'url' => env('WOO_COMMERCE_ORDER_URL'),
+            'consumer_key' => env('WOO_COMMERCE_ORDER_CONSUMER_KEY'),
+            'consumer_secret' => env('WOO_COMMERCE_ORDER_CONSUMER_SECRET'),
+        ],
     ],
 
 ];

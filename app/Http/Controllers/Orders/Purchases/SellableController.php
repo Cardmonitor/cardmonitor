@@ -57,7 +57,7 @@ class SellableController extends Controller
 
     private function completeWooCommerceOrder(Order $order): void
     {
-        $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
+        $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
         $WooCommerce->updateOrderState($order->source_id, Status::COMPLETED);
         $order->update([
             'state' => Status::COMPLETED->value,
