@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Orders;
 
 use App\APIs\WooCommerce\Status;
-use App\APIs\WooCommerce\WooCommerce;
+use App\APIs\WooCommerce\WooCommercePurchase;
 use App\Models\Items\Custom;
 use App\Models\Orders\Order;
 use Illuminate\Http\Request;
@@ -82,7 +82,7 @@ class PurchaseController extends Controller
             'state' => 'required|string|in:' . implode(',', Status::values()),
         ]);
 
-        $WooCommerce = new WooCommerce();
+        $WooCommerce = new WooCommercePurchase();
         $WooCommerce->updateOrder($order->source_id, [
             'status' => $attributes['state'],
         ]);

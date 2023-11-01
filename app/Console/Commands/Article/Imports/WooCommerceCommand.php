@@ -27,7 +27,7 @@ class WooCommerceCommand extends Command
 
     private function getOrders(): array
     {
-        $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
+        $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
 
         if ($this->option('order')) {
             $response = $WooCommerce->order($this->option('order'));

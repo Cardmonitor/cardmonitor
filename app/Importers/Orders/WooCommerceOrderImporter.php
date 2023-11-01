@@ -229,7 +229,7 @@ class WooCommerceOrderImporter
 
     private function processWooCommerceOrder(Order $order): void
     {
-        $WooCommerce = new \App\APIs\WooCommerce\WooCommerce();
+        $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
         $WooCommerce->updateOrderState($order->source_id, Status::PROCESSING);
     }
 }
