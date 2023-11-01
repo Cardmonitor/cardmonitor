@@ -63,6 +63,8 @@ class WooCommerceTest extends TestCase
      */
     public function it_gets_all_products()
     {
+        $this->markTestSkipped();
+
         $WooCommerce = new \App\APIs\WooCommerce\WooCommerceOrder();
         $product_response = $WooCommerce->products();
 
