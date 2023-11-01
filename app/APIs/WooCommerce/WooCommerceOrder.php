@@ -2,7 +2,7 @@
 
 namespace App\APIs\WooCommerce;
 
-class WooCommerceOrder extends WooCommercePurchase
+class WooCommerceOrder extends WooCommerce
 {
     public function __construct()
     {
