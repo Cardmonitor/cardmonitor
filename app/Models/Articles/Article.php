@@ -2,24 +2,25 @@
 
 namespace App\Models\Articles;
 
-use App\Collections\ArticleCollection;
-use App\Models\Cards\Card;
-use App\Models\Expansions\Expansion;
-use App\Models\Games\Game;
-use App\Models\Localizations\Language;
-use App\Models\Orders\Order;
-use App\Models\Rules\Rule;
-use App\Models\Storages\Storage;
-use App\Transformers\Articles\Csvs\Transformer;
 use App\User;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Cards\Card;
+use App\Models\Games\Game;
+use App\Models\Rules\Rule;
+use Illuminate\Support\Arr;
+use App\Models\Orders\Order;
+use App\Models\Storages\Storage;
+use Illuminate\Support\Facades\DB;
+use App\Models\Expansions\Expansion;
+use App\Collections\ArticleCollection;
+use App\Models\Localizations\Language;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Database\Eloquent\Builder;
+use App\Transformers\Articles\Csvs\Transformer;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
 
 class Article extends Model
 {
@@ -615,6 +616,17 @@ class Article extends Model
                 'should_sync' => false,
             ]);
 
+            $this->externalIds()->updateOrCreate([
+                'user_id' => $this->user_id,
+                'external_type' => 'cardmarket',
+            ], [
+                'external_id' => $cardmarketArticle['idArticle'],
+                'external_updated_at' => new Carbon($cardmarketArticle['lastEdited']),
+                'sync_status' => self::SYNC_STATE_SUCCESS,
+                'sync_message' => null,
+                'exported_at' => now(),
+            ]);
+
             return true;
         }
 
@@ -623,6 +635,14 @@ class Article extends Model
             'sync_error' => $response['inserted']['error'],
             'should_sync' => true,
             // 'cardmarket_article_id' => null,
+        ]);
+
+        $this->externalIds()->updateOrCreate([
+            'user_id' => $this->user_id,
+            'external_type' => 'cardmarket',
+        ], [
+            'sync_status' => self::SYNC_STATE_ERROR,
+            'sync_message' => $response['inserted']['error'],
         ]);
 
         return false;
@@ -641,6 +661,17 @@ class Article extends Model
                     'has_sync_error' => false,
                     'sync_error' => null,
                     'should_sync' => false,
+                ]);
+
+                $this->externalIds()->updateOrCreate([
+                    'user_id' => $this->user_id,
+                    'external_type' => 'cardmarket',
+                ], [
+                    'external_id' => $cardmarket_article['idArticle'],
+                    'external_updated_at' => new Carbon($cardmarket_article['lastEdited']),
+                    'sync_status' => self::SYNC_STATE_SUCCESS,
+                    'sync_message' => null,
+                    'exported_at' => now(),
                 ]);
 
                 return true;
@@ -664,6 +695,17 @@ class Article extends Model
                     'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
                 ]);
 
+                $this->externalIds()->updateOrCreate([
+                    'user_id' => $this->user_id,
+                    'external_type' => 'cardmarket',
+                ], [
+                    'external_id' => $cardmarket_article['idArticle'],
+                    'external_updated_at' => new Carbon($cardmarket_article['lastEdited']),
+                    'sync_status' => self::SYNC_STATE_SUCCESS,
+                    'sync_message' => null,
+                    'exported_at' => now(),
+                ]);
+
                 return false;
             }
             else {
@@ -673,6 +715,15 @@ class Article extends Model
                     'sync_error' => 'Artikel nicht auf Cardmarket vorhanden. Bitte alle Artikel synchronisieren.',
                     'should_sync' => true,
                     'cardmarket_article_id' => null,
+                ]);
+
+                $this->externalIds()->updateOrCreate([
+                    'user_id' => $this->user_id,
+                    'external_type' => 'cardmarket',
+                ], [
+                    'external_id' => null,
+                    'sync_status' => self::SYNC_STATE_ERROR,
+                    'sync_message' => 'Artikel nicht auf Cardmarket vorhanden.',
                 ]);
 
                 return false;
@@ -1165,6 +1216,11 @@ class Article extends Model
     public function card() : BelongsTo
     {
         return $this->belongsTo(Card::class);
+    }
+
+    public function externalIds(): HasMany
+    {
+        return $this->hasMany(ExternalId::class);
     }
 
     public function language() : BelongsTo
