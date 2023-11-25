@@ -13,10 +13,12 @@ use App\Models\Orders\Order;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
 use Cardmonitor\Cardmarket\Stock;
+use Illuminate\Support\Facades\App;
 use App\Models\Expansions\Expansion;
 use Tests\Traits\AttributeAssertions;
 use App\Models\Localizations\Language;
 use Tests\Traits\RelationshipAssertions;
+use Tests\Support\Snapshots\JsonSnapshot;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -1413,5 +1415,132 @@ class ArticleTest extends TestCase
         $this->assertNull($article->card);
         $this->assertNull($article->card_name);
         $this->assertNull($article->local_name);
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_many_external_ids()
+    {
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        $this->assertCount(0, $article->externalIds);
+
+        $external_id = $article->externalIds()->create([
+            'user_id' => $this->user->id,
+            'external_id' => 'test',
+            'external_type' => 'test',
+        ]);
+
+        $this->assertCount(1, $article->externalIds()->get());
+        $this->assertEquals($external_id->id, $article->externalIds()->first()->id);
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function it_can_be_exported_to_cardmarket()
+    {
+        $sync_add_response = JsonSnapshot::get('tests/snapshots/cardmarket/articles/responses/add/success.json', function () {
+            return [];
+        });
+        $cardmarket_product_id = $sync_add_response['inserted']['idArticle']['idProduct'];
+
+        $card = factory(Card::class)->create([
+            'cardmarket_product_id' => $cardmarket_product_id,
+        ]);
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'card_id' => $card->id,
+            'cardmarket_article_id' => null,
+            'cardmarket_comments' => $sync_add_response['inserted']['idArticle']['comments'],
+            'unit_price' => 1.23,
+            'condition' => 'EX',
+            'is_foil' => false,
+            'is_signed' => false,
+            'is_playset' => false,
+            'is_first_edition' => false,
+            'language_id' => Language::DEFAULT_ID,
+        ]);
+
+        $stockMock = Mockery::mock('overload:' . Stock::class);
+        $stockMock->shouldReceive('add')
+            ->andReturn($sync_add_response);
+
+        $is_synced = $article->sync();
+
+        $article->load('externalIds');
+        $external_id = $article->externalIds()->first();
+
+        $this->assertTrue($is_synced);
+        $this->assertCount(1, $article->externalIds);
+        $this->assertEquals($sync_add_response['inserted']['idArticle']['idArticle'], $article->cardmarket_article_id);
+        $this->assertEquals($sync_add_response['inserted']['idArticle']['comments'], $article->cardmarket_comments);
+
+        $this->assertEquals('cardmarket', $external_id->external_type);
+        $this->assertEquals($sync_add_response['inserted']['idArticle']['idArticle'], $external_id->external_id);
+        $this->assertEquals($sync_add_response['inserted']['idArticle']['lastEdited'], $external_id->external_updated_at->format('Y-m-d\TH:i:sO'));
+        $this->assertEquals(Article::SYNC_STATE_SUCCESS, $external_id->sync_state);
+        $this->assertNull($external_id->sync_message);
+
+        Mockery::close();
+    }
+
+        /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function it_can_be_updated_on_cardmarket()
+    {
+        $sync_update_response = JsonSnapshot::get('tests/snapshots/cardmarket/articles/responses/update/success.json', function () {
+            return [];
+        });
+        $cardmarket_product_id = $sync_update_response['updatedArticles']['idProduct'];
+
+        $card = factory(Card::class)->create([
+            'cardmarket_product_id' => $cardmarket_product_id,
+        ]);
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'card_id' => $card->id,
+            'cardmarket_article_id' => $sync_update_response['updatedArticles']['idArticle'],
+            'cardmarket_comments' => $sync_update_response['updatedArticles']['comments'],
+            'unit_price' => $sync_update_response['updatedArticles']['price'],
+            'condition' => $sync_update_response['updatedArticles']['condition'],
+            'is_foil' => false,
+            'is_signed' => false,
+            'is_playset' => false,
+            'is_first_edition' => false,
+            'language_id' => Language::DEFAULT_ID,
+        ]);
+
+        $stockMock = Mockery::mock('overload:' . Stock::class);
+        $stockMock->shouldReceive('update')
+            ->andReturn($sync_update_response);
+
+        $is_synced = $article->sync();
+
+        $article->load('externalIds');
+        $external_id = $article->externalIds()->first();
+
+        $this->assertTrue($is_synced);
+        $this->assertCount(1, $article->externalIds);
+        $this->assertEquals($sync_update_response['updatedArticles']['idArticle'], $article->cardmarket_article_id);
+        $this->assertEquals($sync_update_response['updatedArticles']['comments'], $article->cardmarket_comments);
+
+        $this->assertEquals('cardmarket', $external_id->external_type);
+        $this->assertEquals($sync_update_response['updatedArticles']['idArticle'], $external_id->external_id);
+        $this->assertEquals($sync_update_response['updatedArticles']['lastEdited'], $external_id->external_updated_at->format('Y-m-d\TH:i:sO'));
+        $this->assertEquals(Article::SYNC_STATE_SUCCESS, $external_id->sync_state);
+        $this->assertNull($external_id->sync_message);
+
+        Mockery::close();
     }
 }
