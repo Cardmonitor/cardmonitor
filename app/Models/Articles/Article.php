@@ -209,6 +209,10 @@ class Article extends Model
                 $model->card_name = $model->card->name;
             }
         });
+
+        static::deleting(function (self $model) {
+            $model->externalIds()->whereNull('external_id')->delete();
+        });
     }
 
     public static function syncFromStockFile(int $user_id, int $game_id, string $path): array
@@ -751,6 +755,12 @@ class Article extends Model
         }
 
         if (Arr::has($response['deleted'], 'message')) {
+            $this->externalIds()
+                ->where('user_id', $this->user_id)
+                ->where('external_type', 'cardmarket')
+                ->where('external_id', $this->cardmarket_article_id)
+                ->delete();
+
             $this->update([
                 'cardmarket_article_id' => null
             ]);
