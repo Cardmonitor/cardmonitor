@@ -1491,7 +1491,7 @@ class ArticleTest extends TestCase
         Mockery::close();
     }
 
-        /**
+    /**
      * @test
      * @runInSeparateProcess
      * @preserveGlobalState disabled
@@ -1542,5 +1542,102 @@ class ArticleTest extends TestCase
         $this->assertNull($external_id->sync_message);
 
         Mockery::close();
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_transformed_to_woocommerce()
+    {
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'number' => 'A000.001',
+            'unit_price' => 1.23,
+            'condition' => 'EX',
+            'is_foil' => false,
+            'is_signed' => false,
+            'is_playset' => false,
+            'is_first_edition' => false,
+            'language_id' => Language::DEFAULT_ID,
+        ]);
+
+        $woocommerce_product = $article->toWoocommerce();
+
+        $this->assertEquals('A000.001', $woocommerce_product['sku']);
+        $this->assertEquals(1.23, $woocommerce_product['regular_price']);
+        $this->assertEquals([
+            [
+                'key' => 'cardmarket_comments',
+                'value' => '##A000.001##',
+            ],
+            [
+                'key' => 'condition',
+                'value' => 'EX',
+            ],
+            [
+                'key' => 'is_altered',
+                'value' => false,
+            ],
+            [
+                'key' => 'is_foil',
+                'value' => false,
+            ],
+            [
+                'key' => 'is_playset',
+                'value' => false,
+            ],
+            [
+                'key' => 'is_reverse_holo',
+                'value' => false,
+            ],
+            [
+                'key' => 'is_signed',
+                'value' => false,
+            ],
+            [
+                'key' => 'is_first_edition',
+                'value' => false,
+            ],
+            [
+                'key' => 'language_id',
+                'value' => Language::DEFAULT_ID,
+            ],
+        ], $woocommerce_product['meta_data']);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_exported_to_woocommerce()
+    {
+        $cardmarket_product_id = 265882;
+        $cardmarket_product_response = JsonSnapshot::get('tests/snapshots/cardmarket/product/' . $cardmarket_product_id . '.json', function () use ($cardmarket_product_id) {
+            return App::make('CardmarketApi')->product->get($cardmarket_product_id);
+        });
+
+        $cardmarket_product = $cardmarket_product_response['product'];
+
+        $expansion = factory(Expansion::class)->create([
+            'id' => $cardmarket_product['expansion']['idExpansion'],
+            'cardmarket_expansion_id' => $cardmarket_product['expansion']['idExpansion'],
+            'name' => $cardmarket_product['expansion']['enName'],
+        ]);
+
+        $card = Card::createOrUpdateFromCardmarket($cardmarket_product, $expansion->id);
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'card_id' => $card->id,
+            'number' => 'A000.001',
+            'unit_price' => 1.23,
+            'condition' => 'EX',
+            'is_foil' => false,
+            'is_signed' => false,
+            'is_playset' => false,
+            'is_first_edition' => false,
+            'language_id' => Language::DEFAULT_ID,
+        ]);
+
+        $article->syncWoocommerceAdd();
     }
 }

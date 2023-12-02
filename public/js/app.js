@@ -2905,6 +2905,17 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     },
     checkBackgroundTasks: function checkBackgroundTasks(background_tasks) {
       var component = this;
+      var keys = ['user', window.user.id, 'article', 'cardmarket', 'update'];
+      var check_object = background_tasks;
+
+      // check if all keys exist
+      for (var i in keys) {
+        if (check_object[keys[i]] === undefined) {
+          component.actioning.status = false;
+          return;
+        }
+        check_object = check_object[keys[i]];
+      }
       component.actioning.status = !!background_tasks['user'][window.user.id]['article']['cardmarket']['update'] || false;
     },
     fetch: function fetch() {
@@ -10975,7 +10986,16 @@ var render = function render() {
       value: "syncCardmarket",
       disabled: _vm.filter.is_numbered !== 1
     }
-  }, [_vm._v("Upload zu Cardmarket")])])])]), _vm._v(" "), _c("td", {
+  }, [_vm._v("Upload zu Cardmarket")])]), _vm._v(" "), _c("optgroup", {
+    attrs: {
+      label: "WooCommerce"
+    }
+  }, [_c("option", {
+    attrs: {
+      value: "syncWooCommerce",
+      disabled: _vm.filter.is_numbered !== 1
+    }
+  }, [_vm._v("Upload zu WooCommerce")])])])]), _vm._v(" "), _c("td", {
     staticClass: "align-middle",
     attrs: {
       colspan: "2"
