@@ -292,6 +292,11 @@ class ArticleController extends Controller
                 }
             }
 
+            // Fallback, wenn es keine external_id gibt
+            if ($article->cardmarket_article_id) {
+                $is_deletable = $article->syncDelete();
+            }
+
             if ($is_deletable) {
                 $article->delete();
             }

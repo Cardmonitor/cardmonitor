@@ -1614,6 +1614,8 @@ class ArticleTest extends TestCase
      */
     public function it_can_be_exported_to_woocommerce()
     {
+        $this->markTestSkipped('This test is skipped because it needs a valid WooCommerce API connection.');
+
         $cardmarket_product_id = 265882;
         $cardmarket_product_response = JsonSnapshot::get('tests/snapshots/cardmarket/product/' . $cardmarket_product_id . '.json', function () use ($cardmarket_product_id) {
             return App::make('CardmarketApi')->product->get($cardmarket_product_id);
