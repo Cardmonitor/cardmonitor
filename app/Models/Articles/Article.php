@@ -2,6 +2,7 @@
 
 namespace App\Models\Articles;
 
+use App\APIs\WooCommerce\WooCommerceOrder;
 use App\User;
 use Carbon\Carbon;
 use App\Models\Cards\Card;
@@ -802,6 +803,176 @@ class Article extends Model
             ->whereNull('sold_at')
             ->where('index', '>', $cardmarket_article_count)
             ->delete();
+    }
+
+    public function toWooCommerce(): array
+    {
+        return [
+            'name' => $this->card->name,
+            'type' => 'simple',
+            'regular_price' => $this->unit_price,
+            'description' => '',
+            'short_description' => $this->card->type_line,
+            'images' => [
+                [
+                    'src' => 'https://cardmonitor.d15r.de/' . $this->card->image_path,
+                ],
+            ],
+            'manage_stock' => true,
+            'stock_quantity' => 1,
+            'stock_status' => 'instock',
+            'sku' => $this->number,
+            'meta_data' => [
+                [
+                    'key' => 'cardmarket_comments',
+                    'value' => $this->cardmarket_comments ?? '',
+                ],
+                [
+                    'key' => 'condition',
+                    'value' => $this->condition,
+                ],
+                [
+                    'key' => 'is_altered',
+                    'value' => $this->is_altered ? 'Ja' : 'Nein',
+                ],
+                [
+                    'key' => 'is_foil',
+                    'value' => $this->is_foil ? 'Ja' : 'Nein',
+                ],
+                [
+                    'key' => 'is_playset',
+                    'value' => $this->is_playset ? 'Ja' : 'Nein',
+                ],
+                [
+                    'key' => 'is_reverse_holo',
+                    'value' => $this->is_reverse_holo ? 'Ja' : 'Nein',
+                ],
+                [
+                    'key' => 'is_signed',
+                    'value' => $this->is_signed ? 'Ja' : 'Nein',
+                ],
+                [
+                    'key' => 'is_first_edition',
+                    'value' => $this->is_first_edition ? 'Ja' : 'Nein',
+                ],
+                [
+                    'key' => 'language_id',
+                    'value' => $this->language_id,
+                ],
+                [
+                    'key' => 'language_code',
+                    'value' => $this->language->code,
+                ],
+            ],
+        ];
+    }
+
+    public function syncWooCommerce(): bool
+    {
+        $external_id = $this->externalIds()->where('external_type', 'woocommerce')->first();
+        if (is_null($external_id) || is_null($external_id->external_id)) {
+            return $this->syncWooCommerceAdd();
+        }
+
+        return $this->syncWooCommerceUpdate();
+    }
+
+    public function syncWooCommerceAdd(): bool
+    {
+        $response = (new WooCommerceOrder())->createProduct($this->toWooCommerce());
+        if ($response->successful()) {
+            $woocommerce_product = $response->json();
+
+            $this->externalIds()->updateOrCreate([
+                'user_id' => $this->user_id,
+                'external_type' => 'woocommerce',
+            ], [
+                'external_id' => $woocommerce_product['id'],
+                'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
+                'sync_status' => self::SYNC_STATE_SUCCESS,
+                'sync_message' => null,
+                'exported_at' => now(),
+            ]);
+
+            return true;
+        }
+
+        $woocommerce_error = $response->json();
+        $this->externalIds()->updateOrCreate([
+            'user_id' => $this->user_id,
+            'external_type' => 'woocommerce',
+        ], [
+            'sync_status' => self::SYNC_STATE_ERROR,
+            'sync_message' => $woocommerce_error['data']['message'],
+        ]);
+
+        return false;
+    }
+
+    public function syncWooCommerceUpdate(): bool
+    {
+        $response = (new WooCommerceOrder())->updateProduct($this->externalIds()->where('external_type', 'woocommerce')->first()->external_id, $this->toWooCommerce());
+        if ($response->successful()) {
+            $woocommerce_product = $response->json();
+
+            $this->externalIds()->updateOrCreate([
+                'user_id' => $this->user_id,
+                'external_type' => 'woocommerce',
+            ], [
+                'external_id' => $woocommerce_product['id'],
+                'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
+                'sync_status' => self::SYNC_STATE_SUCCESS,
+                'sync_message' => null,
+                'exported_at' => now(),
+            ]);
+
+            return true;
+        }
+
+        $woocommerce_error = $response->json();
+        $this->externalIds()->updateOrCreate([
+            'user_id' => $this->user_id,
+            'external_type' => 'woocommerce',
+        ], [
+            'sync_status' => self::SYNC_STATE_ERROR,
+            'sync_message' => $woocommerce_error['data']['message'],
+        ]);
+
+        return false;
+    }
+
+    public function syncWooCommerceDelete(): bool
+    {
+        $woocommerce__product_id = $this->externalIds()->where('external_type', 'woocommerce')->first()->external_id;
+        if (is_null($woocommerce__product_id)) {
+            return true;
+        }
+
+        $response = (new WooCommerceOrder())->deleteProduct($woocommerce__product_id);
+        if ($response->successful()) {
+            $this->externalIds()->updateOrCreate([
+                'user_id' => $this->user_id,
+                'external_type' => 'woocommerce',
+            ], [
+                'external_id' => null,
+                'external_updated_at' => null,
+                'sync_status' => self::SYNC_STATE_SUCCESS,
+                'sync_message' => null,
+            ]);
+
+            return true;
+        }
+
+        $woocommerce_error = $response->json();
+        $this->externalIds()->updateOrCreate([
+            'user_id' => $this->user_id,
+            'external_type' => 'woocommerce',
+        ], [
+            'sync_status' => self::SYNC_STATE_ERROR,
+            'sync_message' => $woocommerce_error['data']['message'],
+        ]);
+
+        return false;
     }
 
     public function setCardmarketArticleIdForSimilar($cardmarket_article_id = null)

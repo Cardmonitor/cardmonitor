@@ -67,6 +67,21 @@ abstract class WooCommerce
         ];
     }
 
+    public function createProduct(array $data)
+    {
+        return $this->getClient()->post('/wp-json/wc/v3/products', $data);
+    }
+
+    public function updateProduct(int $product_id, array $data)
+    {
+        return $this->getClient()->put('/wp-json/wc/v3/products/' . $product_id, $data);
+    }
+
+    public function deleteProduct(int $product_id)
+    {
+        return $this->getClient()->delete('/wp-json/wc/v3/products/' . $product_id);
+    }
+
     protected function getClient(): PendingRequest
     {
         return Http::baseUrl($this->url)

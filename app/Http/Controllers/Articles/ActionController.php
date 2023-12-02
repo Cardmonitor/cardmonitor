@@ -52,6 +52,7 @@ class ActionController extends Controller
             case 'setNumber': $this->setNumber($user, $articles); break;
             case 'resetNumber': $this->resetNumber($articles); break;
             case 'syncCardmarket': $this->syncCardmarket($articles, $attributes['filter']); break;
+            case 'syncWooCommerce': $this->syncWooCommerce($articles, $attributes['filter']); break;
             case 'storing': $this->storing($user, $articles); break;
 
             default: $this->message = 'Aktion nicht verfügbar'; break;
@@ -103,6 +104,16 @@ class ActionController extends Controller
         ]);
 
         $this->message = 'Die Artikel werden im Hintergrund an Cardmarket übertragen. ' . $articles->count() . ' Artikel werden synchronisiert.';
+    }
+
+    private function syncWooCommerce(Collection $articles, array $filter): void
+    {
+        Artisan::queue('woocommerce:products:update', [
+            'user' => auth()->user()->id,
+            '--articles' => $articles->pluck('id')->toArray(),
+        ]);
+
+        $this->message = 'Die Artikel werden im Hintergrund an WooCommerce übertragen. ' . $articles->count() . ' Artikel werden synchronisiert.';
     }
 
     private function storing(User $user, Collection $articles): void

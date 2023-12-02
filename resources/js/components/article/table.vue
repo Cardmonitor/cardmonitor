@@ -176,6 +176,9 @@
                                 <optgroup label="Cardmarket">
                                     <option value="syncCardmarket" :disabled="filter.is_numbered !== 1">Upload zu Cardmarket</option>
                                 </optgroup>
+                                <optgroup label="WooCommerce">
+                                    <option value="syncWooCommerce" :disabled="filter.is_numbered !== 1">Upload zu WooCommerce</option>
+                                </optgroup>
                             </select>
                         </td>
                         <td class="align-middle" colspan="2"></td>
@@ -517,6 +520,24 @@
             },
             checkBackgroundTasks(background_tasks) {
                 const component = this;
+                const keys = [
+                    'user',
+                    window.user.id,
+                    'article',
+                    'cardmarket',
+                    'update',
+                ];
+                let check_object = background_tasks;
+
+                // check if all keys exist
+                for (let i in keys) {
+                    if (check_object[keys[i]] === undefined) {
+                        component.actioning.status = false;
+                        return;
+                    }
+                    check_object = check_object[keys[i]];
+                }
+
                 component.actioning.status = !!background_tasks['user'][window.user.id]['article']['cardmarket']['update'] || false;
             },
             fetch() {

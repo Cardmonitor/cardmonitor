@@ -281,7 +281,23 @@ class ArticleController extends Controller
     public function destroy(Request $request, Article $article)
     {
         if ($is_deletable = $article->isDeletable()) {
-            if ($is_deletable = $article->syncDelete()) {
+            foreach ($article->externalIds()->whereNotNull('external_id')->get() as $external_id) {
+                $is_deletable = match ($external_id->external_type) {
+                    'cardmarket' => $article->syncDelete(),
+                    'woocommerce' => $article->syncWooCommerceDelete(),
+                };
+
+                if (!$is_deletable) {
+                    break;
+                }
+            }
+
+            // Fallback, wenn es keine external_id gibt
+            if ($article->cardmarket_article_id) {
+                $is_deletable = $article->syncDelete();
+            }
+
+            if ($is_deletable) {
                 $article->delete();
             }
         }
