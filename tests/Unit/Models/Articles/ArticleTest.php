@@ -1576,32 +1576,36 @@ class ArticleTest extends TestCase
             ],
             [
                 'key' => 'is_altered',
-                'value' => false,
+                'value' => 'Nein',
             ],
             [
                 'key' => 'is_foil',
-                'value' => false,
+                'value' => 'Nein',
             ],
             [
                 'key' => 'is_playset',
-                'value' => false,
+                'value' => 'Nein',
             ],
             [
                 'key' => 'is_reverse_holo',
-                'value' => false,
+                'value' => 'Nein',
             ],
             [
                 'key' => 'is_signed',
-                'value' => false,
+                'value' => 'Nein',
             ],
             [
                 'key' => 'is_first_edition',
-                'value' => false,
+                'value' => 'Nein',
             ],
             [
                 'key' => 'language_id',
                 'value' => Language::DEFAULT_ID,
             ],
+            [
+                'key' => 'language_code',
+                'value' => 'gb',
+            ]
         ], $woocommerce_product['meta_data']);
     }
 

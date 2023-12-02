@@ -833,32 +833,36 @@ class Article extends Model
                 ],
                 [
                     'key' => 'is_altered',
-                    'value' => $this->is_altered,
+                    'value' => $this->is_altered ? 'Ja' : 'Nein',
                 ],
                 [
                     'key' => 'is_foil',
-                    'value' => $this->is_foil,
+                    'value' => $this->is_foil ? 'Ja' : 'Nein',
                 ],
                 [
                     'key' => 'is_playset',
-                    'value' => $this->is_playset,
+                    'value' => $this->is_playset ? 'Ja' : 'Nein',
                 ],
                 [
                     'key' => 'is_reverse_holo',
-                    'value' => $this->is_reverse_holo,
+                    'value' => $this->is_reverse_holo ? 'Ja' : 'Nein',
                 ],
                 [
                     'key' => 'is_signed',
-                    'value' => $this->is_signed,
+                    'value' => $this->is_signed ? 'Ja' : 'Nein',
                 ],
                 [
                     'key' => 'is_first_edition',
-                    'value' => $this->is_first_edition,
+                    'value' => $this->is_first_edition ? 'Ja' : 'Nein',
                 ],
                 [
                     'key' => 'language_id',
                     'value' => $this->language_id,
-                ]
+                ],
+                [
+                    'key' => 'language_code',
+                    'value' => $this->language->code,
+                ],
             ],
         ];
     }
