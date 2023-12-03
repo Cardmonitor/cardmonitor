@@ -309,6 +309,6 @@ class ArticleController extends Controller
             ];
         }
 
-        return back();
+        return redirect()->route('article.index');
     }
 }

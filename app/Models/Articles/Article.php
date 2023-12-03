@@ -755,7 +755,14 @@ class Article extends Model
             return false;
         }
 
-        if (Arr::has($response['deleted'], 'message')) {
+        $success = Arr::get($response['deleted'], 'success', false);
+
+        // Artikel ist nicht vorhanden, kann also gelöscht werden
+        if ($success === false && is_null($this->user->cardmarketApi->stock->article($this->cardmarket_article_id))) {
+            $success = true;
+        }
+
+        if ($success) {
             $this->externalIds()
                 ->where('user_id', $this->user_id)
                 ->where('external_type', 'cardmarket')
@@ -765,11 +772,9 @@ class Article extends Model
             $this->update([
                 'cardmarket_article_id' => null
             ]);
-
-            return true;
         }
 
-        return $response['deleted']['success'];
+        return $success;
     }
 
     public function syncAmount() : void
