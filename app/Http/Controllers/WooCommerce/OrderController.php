@@ -45,10 +45,10 @@ class OrderController extends Controller
         ]);
 
         $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
-        $woocomerce_order_response = $WooCommerce->order($attributes['id']);
-        $woocomerce_order = $woocomerce_order_response['data'];
+        $woocommerce_order_response = $WooCommerce->order($attributes['id']);
+        $woocommerce_order = $woocommerce_order_response['data'];
 
-        $order = WooCommerceOrderImporter::import(auth()->user()->id, $woocomerce_order);
+        $order = WooCommerceOrderImporter::import(auth()->user()->id, $woocommerce_order);
 
         if ($request->wantsJson()) {
             return $order;
@@ -56,7 +56,7 @@ class OrderController extends Controller
 
         return back()->with('status', [
             'type' => 'success',
-            'text' => 'Bestellung #' . $woocomerce_order['id'] . ' importiert.',
+            'text' => 'Bestellung #' . $woocommerce_order['id'] . ' importiert.',
         ]);
     }
 
