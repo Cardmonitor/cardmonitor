@@ -4,28 +4,16 @@ namespace App\Console\Commands\Article\Imports\Cardmarket;
 
 use App\User;
 use ZipArchive;
-use App\Models\Games\Game;
 use Illuminate\Support\Arr;
 use Illuminate\Console\Command;
 use App\Models\Articles\Article;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Storage;
 
 class StockfileCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'article:imports:cardmarket:stockfile {user}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Import Articles from Cardmarket Stockfile';
+    protected $description = 'Updates Articles from Cardmarket Stockfile';
 
     private User $user;
     private ZipArchive $zip_archive;
@@ -50,13 +38,10 @@ class StockfileCommand extends Command
     public function handle()
     {
         $this->user = User::find($this->argument('user'));
-        $importable_games = Game::importables();
 
         $this->createZipArchive();
 
-        foreach ($importable_games as $game) {
-            $this->importGame($game);
-        }
+        $this->import();
 
         $this->zip_archive->close();
 
@@ -65,9 +50,9 @@ class StockfileCommand extends Command
         }
     }
 
-    public function importGame(Game $game)
+    public function import()
     {
-        $csv_path = storage_path('app/articles/stock/' . $this->user->id . '-stock-' . $game->id . '-log.csv');
+        $csv_path = storage_path('app/articles/stock/' . $this->user->id . '-stock-log.csv');
         if (file_exists($csv_path)) {
             unlink($csv_path);
         }
@@ -78,7 +63,7 @@ class StockfileCommand extends Command
         $header = array_keys($this->output(0, '', new Article(), []));
         fputcsv($this->csv_file_handle, $header, ';');
 
-        $cardmarket_cards = $this->getCardmarketCards($game);
+        $cardmarket_cards = $this->getCardmarketCards();
 
         $stockfile_article_count = 0;
         $all_updated_article_ids = [];
@@ -100,7 +85,6 @@ class StockfileCommand extends Command
             $articles_for_card = Article::select('articles.*')
                 ->join('cards', 'cards.id', '=', 'articles.card_id')
                 ->where('articles.user_id', $this->user->id)
-                ->where('cards.game_id', $game->id)
                 ->where('articles.card_id', $cardmarket_product_id)
                 ->whereNull('articles.sold_at')
                 ->get()
@@ -274,7 +258,6 @@ class StockfileCommand extends Command
         $articles = Article::select('articles.*')
             ->where('user_id', $this->user->id)
             ->join('cards', 'cards.id', '=', 'articles.card_id')
-            ->where('cards.game_id', $game->id)
             ->whereNull('articles.sold_at')
             ->whereNotNull('articles.cardmarket_article_id')
             ->whereNotIn('articles.id', $all_updated_article_ids)
@@ -296,7 +279,6 @@ class StockfileCommand extends Command
         $article_count_query = Article::select('articles.*')
             ->where('user_id', $this->user->id)
             ->join('cards', 'cards.id', '=', 'articles.card_id')
-            ->where('cards.game_id', $game->id)
             ->whereNull('articles.sold_at');
 
         $article_count = $article_count_query->whereNotNull('cardmarket_article_id')->count();
@@ -318,9 +300,9 @@ class StockfileCommand extends Command
 
         fclose($this->csv_file_handle);
 
-        $this->zip_archive->addFile($csv_path, now()->format('Y-m-d H-i-s') . '-' . $game->abbreviation . '-log.csv');
+        $this->zip_archive->addFile($csv_path, now()->format('Y-m-d H-i-s') . '-log.csv');
 
-        $this->import_states[$game->id] = $import_states;
+        $this->import_states[0] = $import_states;
     }
 
     private function output(int $cardmarket_product_id, $import_state, Article $article, array $cardmarket_article = []): array
@@ -353,21 +335,16 @@ class StockfileCommand extends Command
         fputcsv($this->csv_file_handle, array_map(fn($item) => trim($item), $output), ';');
     }
 
-    private function getCardmarketCards(Game $game): array
+    private function getCardmarketCards(): array
     {
-        $path = storage_path('app/' . $this->user->id . '-stock-' . $game->id . '.csv');
-        if (file_exists($path)) {
-            unlink($path);
-        }
+        $Json = new \App\Importers\Articles\Cardmarket\Stockfile\Json($this->user->id);
+        $path = $Json->download();
 
-        $Stockfile = new \App\Importers\Articles\Cardmarket\Stockfile($this->user->id, $path, $game->id);
-        $this->csv_files[] = $Stockfile->download();
-
-        $this->zip_archive->addFile($path, now()->format('Y-m-d H-i-s') . '-' . $game->abbreviation . '-stock.csv');
+        $this->zip_archive->addFile($path, now()->format('Y-m-d H-i-s') . '-stock.json');
 
         $shoppingcart_articles_response = $this->user->cardmarketApi->stock->shoppingcartArticles();
 
-        return $Stockfile->setCardmarketCards($shoppingcart_articles_response['article'] ?? []);
+        return $Json->setCardmarketCards($shoppingcart_articles_response['article'] ?? []);
     }
 
     private function createZipArchive()
