@@ -118,12 +118,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cardmonitor/cardmarket-api.git",
-                "reference": "58c2b489361e266c73de2350711da4530cbeb5e0"
+                "reference": "d0baaa5bf65f2383b85f25237633ad6bfec2411b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Cardmonitor/cardmarket-api/zipball/58c2b489361e266c73de2350711da4530cbeb5e0",
-                "reference": "58c2b489361e266c73de2350711da4530cbeb5e0",
+                "url": "https://api.github.com/repos/Cardmonitor/cardmarket-api/zipball/d0baaa5bf65f2383b85f25237633ad6bfec2411b",
+                "reference": "d0baaa5bf65f2383b85f25237633ad6bfec2411b",
                 "shasum": ""
             },
             "require": {
@@ -157,7 +157,7 @@
                 "issues": "https://github.com/Cardmonitor/cardmarket-api/issues",
                 "source": "https://github.com/Cardmonitor/cardmarket-api/tree/master"
             },
-            "time": "2023-07-08T03:32:27+00:00"
+            "time": "2023-12-09T04:25:36+00:00"
         },
         {
             "name": "cardmonitor/skryfall-api",
