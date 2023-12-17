@@ -841,6 +841,14 @@ class Article extends Model
                     'value' => $this->card->game_id,
                 ],
                 [
+                    'key' => 'expansion_abbreviation',
+                    'value' => $this->card->expansion->abbreviation,
+                ],
+                [
+                    'key' => 'expansion_name',
+                    'value' => $this->card->expansion->name,
+                ],
+                [
                     'key' => 'condition',
                     'value' => $this->condition,
                 ],
