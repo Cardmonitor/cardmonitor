@@ -377,7 +377,7 @@ class StockfileCommand extends Command
             return;
         }
 
-        Artisan::queue('article:woocommerce:products:update', [
+        Artisan::queue('woocommerce:products:update', [
             'user' => $this->user->id,
             '--article' => $article->id,
         ]);
