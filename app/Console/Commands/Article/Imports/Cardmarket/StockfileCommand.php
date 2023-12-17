@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Console\Command;
 use App\Models\Articles\Article;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Artisan;
 
 class StockfileCommand extends Command
 {
@@ -83,6 +84,10 @@ class StockfileCommand extends Command
             $stockfile_article_count += $cardmarket_card['amount'];
 
             $articles_for_card = Article::select('articles.*')
+                ->with('externalIds', function ($query) {
+                    $query->where('external_type', 'woocommerce')
+                        ->whereNotNull('external_id');
+                })
                 ->join('cards', 'cards.id', '=', 'articles.card_id')
                 ->where('articles.user_id', $this->user->id)
                 ->where('articles.card_id', $cardmarket_product_id)
@@ -115,6 +120,8 @@ class StockfileCommand extends Command
                         'should_sync' => false,
                     ]);
 
+                    $this->updateOnWooCommerce($article);
+
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
                     $cardmarket_article['amount']--;
@@ -143,6 +150,8 @@ class StockfileCommand extends Command
                         'sync_error' => null,
                         'should_sync' => false,
                     ]);
+
+                    $this->updateOnWooCommerce($article);
 
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
@@ -180,6 +189,8 @@ class StockfileCommand extends Command
                         'should_sync' => false,
                     ]);
 
+                    $this->updateOnWooCommerce($article);
+
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
                     $cardmarket_article['amount']--;
@@ -215,6 +226,8 @@ class StockfileCommand extends Command
                         'sync_error' => null,
                         'should_sync' => false,
                     ]);
+
+                    $this->updateOnWooCommerce($article);
 
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
@@ -356,5 +369,17 @@ class StockfileCommand extends Command
 
         $this->zip_archive = new ZipArchive();
         $this->zip_archive->open($zip_path, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+    }
+
+    private function updateOnWooCommerce(Article $article): void
+    {
+        if ($article->externalIds->isEmpty()) {
+            return;
+        }
+
+        Artisan::queue('article:woocommerce:products:update', [
+            'user' => $this->user->id,
+            '--article' => $article->id,
+        ]);
     }
 }
