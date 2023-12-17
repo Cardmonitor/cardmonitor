@@ -833,6 +833,14 @@ class Article extends Model
                     'value' => $this->cardmarket_comments ?? '',
                 ],
                 [
+                    'key' => 'local_name',
+                    'value' => $this->local_name,
+                ],
+                [
+                    'key' => 'game_id',
+                    'value' => $this->card->game_id,
+                ],
+                [
                     'key' => 'condition',
                     'value' => $this->condition,
                 ],

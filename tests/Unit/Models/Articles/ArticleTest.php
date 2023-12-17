@@ -1571,6 +1571,14 @@ class ArticleTest extends TestCase
                 'value' => '##A000.001##',
             ],
             [
+                'key' => 'local_name',
+                'value' => $article->local_name,
+            ],
+            [
+                'key' => 'game_id',
+                'value' => $article->card->game_id,
+            ],
+            [
                 'key' => 'condition',
                 'value' => 'EX',
             ],
