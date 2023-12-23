@@ -57,14 +57,9 @@ abstract class WooCommerce
         ]);
     }
 
-    public function products(array $filter = []): array
+    public function products(array $filter = [])
     {
-        $response = $this->getClient()->get('/wp-json/wc/v3/products', $filter);
-
-        return [
-            'data' => $response->json(),
-            'headers' => $response->headers(),
-        ];
+        return $this->getClient()->get('/wp-json/wc/v3/products', $filter);
     }
 
     public function createProduct(array $data)

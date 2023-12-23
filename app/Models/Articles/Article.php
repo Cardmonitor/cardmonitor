@@ -917,8 +917,23 @@ class Article extends Model
 
             return true;
         }
-
         $woocommerce_error = $response->json();
+
+        // Produkt mit der SKU existiert bereits
+        if ($woocommerce_error['code'] === 'product_invalid_sku' && Arr::get($woocommerce_error, 'data.resource_id')) {
+            $this->externalIds()->updateOrCreate([
+                'user_id' => $this->user_id,
+                'external_type' => 'woocommerce',
+            ], [
+                'external_id' => $woocommerce_error['data']['resource_id'],
+                'sync_status' => self::SYNC_STATE_SUCCESS,
+                'sync_message' => null,
+                'exported_at' => now(),
+            ]);
+
+            return true;
+        }
+
         $this->externalIds()->updateOrCreate([
             'user_id' => $this->user_id,
             'external_type' => 'woocommerce',
@@ -951,13 +966,45 @@ class Article extends Model
         }
 
         $woocommerce_error = $response->json();
+
+        $values = [
+            'sync_status' => self::SYNC_STATE_ERROR,
+            'sync_message' => Arr::get($woocommerce_error, 'data.message', 'Unbekannter Fehler'),
+        ];
+
+        // Produkt mit der ID nicht gefunden
+        if (Arr::get($woocommerce_error, 'code') === 'woocommerce_rest_product_invalid_id') {
+            // Produkt anhand der SKU suchen
+            $response = (new WooCommerceOrder())->products($this->toWooCommerce(), [
+                'sku' => $this->number,
+            ]);
+            $woocommerce_products = $response->json();
+            if ($response->successful() && count($woocommerce_products) == 1) {
+                $woocommerce_product = $woocommerce_products[0];
+                $this->externalIds()->updateOrCreate([
+                    'user_id' => $this->user_id,
+                    'external_type' => 'woocommerce',
+                ], [
+                    'external_id' => $woocommerce_product['id'],
+                    'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
+                    'sync_status' => self::SYNC_STATE_SUCCESS,
+                    'sync_message' => null,
+                    'exported_at' => now(),
+                ]);
+
+                return true;
+            }
+
+            // Produkt nicht (mehr) vorhanden
+            $values['external_id'] = null;
+            $values['sync_status'] = self::SYNC_STATE_NOT_SYNCED;
+            $values['sync_message'] = 'Ungültige ID.';
+        }
+
         $this->externalIds()->updateOrCreate([
             'user_id' => $this->user_id,
             'external_type' => 'woocommerce',
-        ], [
-            'sync_status' => self::SYNC_STATE_ERROR,
-            'sync_message' => Arr::get($woocommerce_error, 'data.message', 'Unbekannter Fehler'),
-        ]);
+        ], $values);
 
         return false;
     }

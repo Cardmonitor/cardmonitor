@@ -67,9 +67,8 @@ class WooCommerceTest extends TestCase
 
         $WooCommerce = new \App\APIs\WooCommerce\WooCommerceOrder();
         $product_response = $WooCommerce->products();
-
         echo PHP_EOL;
-        foreach ($product_response['data'] as $product) {
+        foreach ($product_response->json() as $product) {
             dump($product);
         }
 
