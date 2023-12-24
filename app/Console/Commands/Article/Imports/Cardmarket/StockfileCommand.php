@@ -120,6 +120,7 @@ class StockfileCommand extends Command
                         'should_sync' => false,
                     ]);
 
+                    $this->updateOrCreateExternalId($article, $cardmarket_article);
                     $this->updateOnWooCommerce($article);
 
                     $articles_for_card->forget($article->id);
@@ -151,6 +152,7 @@ class StockfileCommand extends Command
                         'should_sync' => false,
                     ]);
 
+                    $this->updateOrCreateExternalId($article, $cardmarket_article);
                     $this->updateOnWooCommerce($article);
 
                     $articles_for_card->forget($article->id);
@@ -189,6 +191,7 @@ class StockfileCommand extends Command
                         'should_sync' => false,
                     ]);
 
+                    $this->updateOrCreateExternalId($article, $cardmarket_article);
                     $this->updateOnWooCommerce($article);
 
                     $articles_for_card->forget($article->id);
@@ -227,6 +230,7 @@ class StockfileCommand extends Command
                         'should_sync' => false,
                     ]);
 
+                    $this->updateOrCreateExternalId($article, $cardmarket_article);
                     $this->updateOnWooCommerce($article);
 
                     $articles_for_card->forget($article->id);
@@ -369,6 +373,19 @@ class StockfileCommand extends Command
 
         $this->zip_archive = new ZipArchive();
         $this->zip_archive->open($zip_path, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+    }
+
+    private function updateOrCreateExternalId(Article $article, array $cardmarket_article): void
+    {
+        $article->externalIds()->updateOrCreate([
+            'user_id' => $article->user_id,
+            'external_type' =>'cardmarket',
+        ], [
+            'external_id' => $article->cardmarket_article_id,
+            'external_updated_at' => $article->cardmarket_last_edited,
+            'sync_status' => Article::SYNC_STATE_SUCCESS,
+            'sync_message' => empty(Arr::get($cardmarket_article, 'number_from_cardmarket_comments')) ? 'Number from Cardmarket Comments is empty' : null,
+        ]);
     }
 
     private function updateOnWooCommerce(Article $article): void

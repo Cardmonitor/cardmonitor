@@ -23,7 +23,12 @@ class Json
     {
         $user = \App\User::findOrFail($this->user_id);
         $response = $user->cardmarketApi->stock_export->get();
-        $stock_export = $response['stockExports'][0];
+        $stock_exports = $response['stockExports'];
+        foreach ($stock_exports as $stock_export) {
+            if ($stock_export['status'] === 'finished') {
+                break;
+            }
+        }
 
         $response = Http::get($stock_export['url']);
         $relative_path = 'articles/stock/';
