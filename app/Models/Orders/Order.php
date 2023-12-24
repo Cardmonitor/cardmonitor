@@ -531,6 +531,7 @@ class Order extends Model
             'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
             'is_playset' => Arr::get($cardmarket_article, 'isPlayset', false),
             'cardmarket_comments' => $cardmarket_article['comments'] ?: null,
+            'number' => $number_from_cardmarket_comments ?: null,
         ];
         foreach (range($articles_count, ($articles_left_count - 1)) as $value) {
             $article = $this->articles()->create($attributes);
