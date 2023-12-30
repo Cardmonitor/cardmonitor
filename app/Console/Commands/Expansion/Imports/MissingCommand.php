@@ -2,9 +2,7 @@
 
 namespace App\Console\Commands\Expansion\Imports;
 
-use App\Models\Cards\Card;
 use App\Models\Games\Game;
-use Illuminate\Support\Arr;
 use Cardmonitor\Cardmarket\Api;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
@@ -41,6 +39,7 @@ class MissingCommand extends Command
         $games = Game::where('is_importable', true)->get();
         $expansions = Expansion::get();
         $expansion_ids = $expansions->pluck('cardmarket_expansion_id')->toArray();
+        $missing_cardmarket_expansions = [];
         $results = [
             'total' => 0,
             'existing' => 0,
@@ -57,13 +56,17 @@ class MissingCommand extends Command
                     $results['existing']++;
                     continue;
                 }
+
+                if ($results['missing'] === 0) {
+                    $this->line('Cardmarket ID' . "\t" . 'Abbreviation' . "\t" . 'Name');
+                }
+
                 $results['missing']++;
-                $this->line('Missing expansion: ' . $cardmarket_expansion['enName'] . ' (' . $cardmarket_expansion['abbreviation'] . ')...');
+
+                $this->line($cardmarket_expansion['idExpansion'] . "\t\t" . $cardmarket_expansion['abbreviation'] . "\t\t" . $cardmarket_expansion['enName']);
+
                 if ($this->option('queue')) {
-                    $this->line('Queuing...');
-                    Artisan::queue('expansion:import', [
-                        'expansion' => $cardmarket_expansion['idExpansion'],
-                    ]);
+                    $missing_cardmarket_expansions[] = $cardmarket_expansion;
                 }
             }
 
@@ -76,6 +79,19 @@ class MissingCommand extends Command
                 'existing' => 0,
                 'missing' => 0,
             ];
+
+            $this->line('');
+        }
+
+        if (!empty($missing_cardmarket_expansions)) {
+            $this->line('Queueing missing expansions: ' . count($missing_cardmarket_expansions));
+            $this->line('Cardmarket ID' . "\t" . 'Abbreviation' . "\t" . 'Name');
+            foreach ($missing_cardmarket_expansions as $cardmarket_expansion) {
+                $this->line($cardmarket_expansion['idExpansion'] . "\t\t" . $cardmarket_expansion['abbreviation'] . "\t\t" . $cardmarket_expansion['enName']);
+                Artisan::queue('expansion:import', [
+                    'expansion' => $cardmarket_expansion['idExpansion'],
+                ]);
+            }
         }
 
         return self::SUCCESS;
