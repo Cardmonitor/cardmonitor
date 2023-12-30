@@ -755,7 +755,7 @@ class Article extends Model
             return false;
         }
 
-        $success = Arr::get($response['deleted'], 'success', false);
+        $success = Arr::get($response, 'deleted.success', false);
 
         // Artikel ist nicht vorhanden, kann also gelöscht werden
         if ($success === false && is_null($this->user->cardmarketApi->stock->article($this->cardmarket_article_id))) {
@@ -763,11 +763,15 @@ class Article extends Model
         }
 
         if ($success) {
-            $this->externalIds()
-                ->where('user_id', $this->user_id)
-                ->where('external_type', 'cardmarket')
-                ->where('external_id', $this->cardmarket_article_id)
-                ->delete();
+            $this->externalIds()->updateOrCreate([
+                'user_id' => $this->user_id,
+                'external_type' => 'cardmarket',
+            ], [
+                'external_id' => null,
+                'external_updated_at' => null,
+                'sync_status' => self::SYNC_STATE_SUCCESS,
+                'sync_message' => null,
+            ]);
 
             $this->update([
                 'cardmarket_article_id' => null
