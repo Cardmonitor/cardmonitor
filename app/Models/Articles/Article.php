@@ -742,7 +742,8 @@ class Article extends Model
 
     public function syncDelete() : bool
     {
-        if (is_null($this->cardmarket_article_id)) {
+        $external_id_cardmarket = $this->externalIds()->where('external_type', 'cardmarket')->first();
+        if (is_null($this->cardmarket_article_id) && (is_null($external_id_cardmarket) || is_null($external_id_cardmarket->external_id))) {
             return true;
         }
 
