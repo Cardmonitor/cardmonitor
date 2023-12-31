@@ -1025,7 +1025,7 @@ class Article extends Model
 
     public function syncWooCommerceDelete(): bool
     {
-        $woocommerce__product_id = $this->externalIds()->where('external_type', 'woocommerce')->first()->external_id;
+        $woocommerce__product_id = $this->externalIds()->where('external_type', 'woocommerce')->first()?->external_id;
         if (is_null($woocommerce__product_id)) {
             return true;
         }

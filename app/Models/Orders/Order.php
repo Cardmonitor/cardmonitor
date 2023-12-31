@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 class Order extends Model
@@ -112,9 +113,11 @@ class Order extends Model
             'source_slug' => 'cardmarket',
             'source_id' => $cardmarket_order['idOrder'],
         ], $values);
+
         if (Arr::has($cardmarket_order, 'evaluation')) {
             $evaluation = Evaluation::updateOrCreateFromCardmarket($order->id, $cardmarket_order['evaluation']);
         }
+
         if ($order->wasRecentlyCreated || $force) {
             $order->findItems();
             $order->addArticlesFromCardmarket($cardmarket_order);
@@ -400,6 +403,12 @@ class Order extends Model
 
         // Überflüssige Artikel entknüpfen
         $this->articles()->sync($article_ids);
+
+        // Artikel auf WooCommerce löschen
+        Artisan::queue('woocommerce:products:delete', [
+            'user' => $this->user_id,
+            '--articles' => $article_ids,
+        ]);
     }
 
     protected function addArticleFromCardmarket(array $cardmarket_article): array
