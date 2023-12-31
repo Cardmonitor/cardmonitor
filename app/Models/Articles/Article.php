@@ -822,6 +822,7 @@ class Article extends Model
             'type' => 'simple',
             'regular_price' => $this->unit_price,
             'description' => '',
+            'status' => 'publish',
             'short_description' => $this->card->type_line,
             'images' => [
                 [
@@ -983,22 +984,30 @@ class Article extends Model
             $response = (new WooCommerceOrder())->products($this->toWooCommerce(), [
                 'sku' => $this->number,
             ]);
-            $woocommerce_products = $response->json();
-            if ($response->successful() && count($woocommerce_products) === 1) {
-                $woocommerce_product = $woocommerce_products[0];
-                $this->externalIds()->updateOrCreate([
-                    'user_id' => $this->user_id,
-                    'external_type' => 'woocommerce',
-                ], [
-                    'external_id' => $woocommerce_product['id'],
-                    'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
-                    'sync_status' => self::SYNC_STATE_SUCCESS,
-                    'sync_message' => null,
-                    'exported_at' => now(),
-                ]);
+            if ($response->successful()) {
+                $woocommerce_products = $response->json();
+                $woocommerce_products_count = count($woocommerce_products);
+                if ($woocommerce_products_count === 0) {
+                    return $this->syncWooCommerceAdd();
+                }
+                if ($woocommerce_products_count === 1) {
+                    $woocommerce_product = $woocommerce_products[0];
+                    $this->externalIds()->updateOrCreate([
+                        'user_id' => $this->user_id,
+                        'external_type' => 'woocommerce',
+                    ], [
+                        'external_id' => $woocommerce_product['id'],
+                        'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
+                        'sync_status' => self::SYNC_STATE_SUCCESS,
+                        'sync_message' => null,
+                        'exported_at' => now(),
+                    ]);
 
-                return true;
+                    return true;
+                }
+
             }
+
 
             // Produkt nicht (mehr) vorhanden
             $values['external_id'] = null;
@@ -1076,6 +1085,19 @@ class Article extends Model
                     return $this->syncWooCommerceDelete();
                 }
             }
+        }
+        elseif (Arr::get($woocommerce_error, 'code') === 'woocommerce_rest_already_trashed') {
+            $this->externalIds()->updateOrCreate([
+                'user_id' => $this->user_id,
+                'external_type' => 'woocommerce',
+            ], [
+                'external_id' => null,
+                'external_updated_at' => null,
+                'sync_status' => self::SYNC_STATE_SUCCESS,
+                'sync_message' => null,
+            ]);
+
+            return true;
         }
 
         $this->externalIds()->updateOrCreate([

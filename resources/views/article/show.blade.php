@@ -18,6 +18,9 @@
             @if ($model->cardmarket_article_id)
                 <a href="{{ route('article.cardmarket.show', ['article' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1">Cardmarket Data</a>
             @endif
+            @if ($model->externalIds->where('external_type', 'woocommerce')->first()->external_id)
+                <a href="{{ route('article.woocommerce.show', ['article' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1">WooCommerce Data</a>
+            @endif
         </div>
     </div>
 
@@ -152,6 +155,34 @@
                     <div class="row">
                         <div class="col-label"><b>Nummer aus Kommentar</b></div>
                         <div class="col-value">{{ $model->number_from_cardmarket_comments }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">WooCommerce</div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-label"><b>Produkt ID</b></div>
+                        <div class="col-value d-flex align-items-center justify-content-between">
+                            {{ $model->externalIds->where('external_type', 'woocommerce')->first()->external_id ?? 'nicht vorhanden' }}
+                            @if ($model->can_upload_to_cardmarket)
+                                <form action="{{ route('article.woocommerce.update', ['article' => $model->id]) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+
+                                    <button type="submit" class="btn btn-sm btn-secondary ml-1" title="{{ __('app.actions.update') }}"><i class="fas fa-fw fa-cloud-upload-alt"></i></button>
+                                </form>
+                            @endif
+                            @if ($model->externalIds->where('external_type', 'woocommerce')->first()->external_id)
+                                <form action="{{ route('article.woocommerce.destroy', ['article' => $model->id]) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit" class="btn btn-sm btn-danger ml-1" title="{{ __('app.actions.delete') }}"><i class="fas fa-fw fa-trash"></i></button>
+                                </form>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>

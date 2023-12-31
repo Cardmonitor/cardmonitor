@@ -67,6 +67,11 @@ abstract class WooCommerce
         return $this->getClient()->post('/wp-json/wc/v3/products', $data);
     }
 
+    public function findProduct(int $product_id)
+    {
+        return $this->getClient()->get('/wp-json/wc/v3/products/' . $product_id);
+    }
+
     public function updateProduct(int $product_id, array $data)
     {
         return $this->getClient()->put('/wp-json/wc/v3/products/' . $product_id, $data);

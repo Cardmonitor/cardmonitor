@@ -186,6 +186,10 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
+        $article->load([
+            'externalIds',
+        ]);
+
         return view($this->baseViewPath . '.show')
             ->with('model', $article);
     }
