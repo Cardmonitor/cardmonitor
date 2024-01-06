@@ -17,8 +17,11 @@ class PdfController extends Controller
             },
         ]);
 
+        $articles_gt_500 = $order->articles->where('unit_cost', '>', 500);
+
         return \PDF::loadView('purchase.pdf', [
             'order' => $order,
+            'articles_gt_500' => $articles_gt_500,
             'last_section' => '',
         ], [], [
             'margin_top' => 10,
