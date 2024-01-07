@@ -20,6 +20,7 @@ class ExternalId extends Model
         'exported_at',
         'sync_status',
         'sync_message',
+        'sync_action',
     ];
 
     protected $dates = [

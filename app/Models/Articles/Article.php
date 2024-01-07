@@ -1711,7 +1711,8 @@ class Article extends Model
             ->unitCost(Arr::get($filter, 'unit_cost_min'), Arr::get($filter, 'unit_cost_max'))
             ->search(Arr::get($filter, 'searchtext'))
             ->storage(Arr::get($filter, 'storage_id'))
-            ->sync(Arr::get($filter, 'sync'));
+            ->sync(Arr::get($filter, 'sync'))
+            ->syncAction(Arr::get($filter, 'cardmarket_sync_action'), 'cardmarket');
     }
 
     public function scopeOrder(Builder $query, $value) : Builder
@@ -1898,4 +1899,18 @@ class Article extends Model
 
         return $query->where('articles.has_sync_error', $value);
     }
+
+    public function scopeSyncAction(Builder $query, $value, $external_type) : Builder
+    {
+        if (is_null($value)) {
+            return $query;
+        }
+
+        return $query->whereHas('externalIds', function ($query) use ($value, $external_type) {
+            $query->where('external_type', $external_type)
+                ->where('sync_action', $value);
+        });
+    }
+
+
 }

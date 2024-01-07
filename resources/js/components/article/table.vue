@@ -125,6 +125,16 @@
                     </div>
                 </div>
 
+                <div class="col-auto">
+                    <div class="form-group">
+                        <label for="filter-cardmarket-sync_action">Artikelabgleich Cardmarket</label>
+                        <select class="form-control form-control-sm" id="filter-cardmarket-sync_action" v-model="filter.cardmarket_sync_action" @change="search">
+                            <option :value="null">{{ $t('filter.all') }}</option>
+                            <option :value="sync_action.slug" :key="sync_action.slug" v-for="sync_action in sync_actions">{{ sync_action.name }}</option>
+                        </select>
+                    </div>
+                </div>
+
             </div>
         </form>
 
@@ -349,12 +359,21 @@
                     unit_cost_min: 0,
                     unit_price_max: 0,
                     unit_price_min: 0,
+                    cardmarket_sync_action: null,
                 },
                 actionForm: {
                     action: null,
                 },
                 selected: [],
                 errors: {},
+                sync_actions: [
+                    {slug: 'NUMBER', name: 'Nummer'},
+                    {slug: 'CARDMARKET_ID', name: 'Cardmarket Article ID'},
+                    {slug: 'SIMILAR', name: 'Ähnliche Karte'},
+                    {slug: 'CARD', name: 'Karte'},
+                    {slug: 'DELETED', name: 'Gelöscht'},
+                    {slug: 'DELETED_REST', name: 'Sonstige gelöschte Artikel'},
+                ],
             };
         },
 

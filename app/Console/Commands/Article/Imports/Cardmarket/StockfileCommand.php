@@ -69,7 +69,7 @@ class StockfileCommand extends Command
         $stockfile_article_count = 0;
         $all_updated_article_ids = [];
 
-        $import_states = [
+        $sync_actions = [
             'NUMBER' => 0,
             'CARDMARKET_ID' => 0,
             'SIMILAR' => 0,
@@ -97,7 +97,7 @@ class StockfileCommand extends Command
 
             $cardmarket_articles = $cardmarket_card['articles'];
 
-            $import_state = 'NUMBER';
+            $sync_action = 'NUMBER';
             foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
 
                 if (empty($cardmarket_article['number_from_cardmarket_comments'])) {
@@ -108,7 +108,7 @@ class StockfileCommand extends Command
                     ->where('number', $cardmarket_article['number_from_cardmarket_comments'])
                     ->take($cardmarket_article['amount']);
                 foreach ($articles as $article) {
-                    $output = $this->output($cardmarket_product_id, $import_state, $article, $cardmarket_article);
+                    $output = $this->output($cardmarket_product_id, $sync_action, $article, $cardmarket_article);
                     $this->line(implode("\t", $output));
                     $this->addToCsvFile($output);
 
@@ -120,13 +120,13 @@ class StockfileCommand extends Command
                         'should_sync' => false,
                     ]);
 
-                    $this->updateOrCreateExternalId($article, $cardmarket_article);
+                    $this->updateOrCreateExternalId($article, $cardmarket_article, $sync_action);
                     $this->updateOnWooCommerce($article);
 
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
                     $cardmarket_article['amount']--;
-                    $import_states[$import_state]++;
+                    $sync_actions[$sync_action]++;
                 }
 
                 if ($cardmarket_article['amount'] === 0) {
@@ -134,13 +134,13 @@ class StockfileCommand extends Command
                 }
             }
 
-            $import_state = 'CARDMARKET_ID';
+            $sync_action = 'CARDMARKET_ID';
             foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
                 $articles = $articles_for_card
                     ->where('cardmarket_article_id', $cardmarket_article['cardmarket_article_id'])
                     ->take($cardmarket_article['amount']);
                 foreach ($articles as $article) {
-                    $output = $this->output($cardmarket_product_id, $import_state, $article, $cardmarket_article);
+                    $output = $this->output($cardmarket_product_id, $sync_action, $article, $cardmarket_article);
                     $this->line(implode("\t", $output));
                     $this->addToCsvFile($output);
 
@@ -152,13 +152,13 @@ class StockfileCommand extends Command
                         'should_sync' => false,
                     ]);
 
-                    $this->updateOrCreateExternalId($article, $cardmarket_article);
+                    $this->updateOrCreateExternalId($article, $cardmarket_article, $sync_action);
                     $this->updateOnWooCommerce($article);
 
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
                     $cardmarket_article['amount']--;
-                    $import_states[$import_state]++;
+                    $sync_actions[$sync_action]++;
                 }
 
                 if ($cardmarket_article['amount'] === 0) {
@@ -166,7 +166,7 @@ class StockfileCommand extends Command
                 }
             }
 
-            $import_state = 'SIMILAR';
+            $sync_action = 'SIMILAR';
             foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
                 $articles = $articles_for_card
                     ->where('language_id', $cardmarket_article['language_id'])
@@ -179,7 +179,7 @@ class StockfileCommand extends Command
                     ->where('is_playset', Arr::get($cardmarket_article, 'is_playset', false))
                     ->take($cardmarket_article['amount']);
                 foreach ($articles as $article) {
-                    $output = $this->output($cardmarket_product_id, $import_state, $article, $cardmarket_article);
+                    $output = $this->output($cardmarket_product_id, $sync_action, $article, $cardmarket_article);
                     $this->line(implode("\t", $output));
                     $this->addToCsvFile($output);
 
@@ -191,13 +191,13 @@ class StockfileCommand extends Command
                         'should_sync' => false,
                     ]);
 
-                    $this->updateOrCreateExternalId($article, $cardmarket_article);
+                    $this->updateOrCreateExternalId($article, $cardmarket_article, $sync_action);
                     $this->updateOnWooCommerce($article);
 
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
                     $cardmarket_article['amount']--;
-                    $import_states[$import_state]++;
+                    $sync_actions[$sync_action]++;
                 }
 
                 if ($cardmarket_article['amount'] === 0) {
@@ -205,12 +205,12 @@ class StockfileCommand extends Command
                 }
             }
 
-            $import_state = 'CARD';
+            $sync_action = 'CARD';
             foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
                 $articles = $articles_for_card
                     ->take($cardmarket_article['amount']);
                 foreach ($articles as $article) {
-                    $output = $this->output($cardmarket_product_id, $import_state, $article, $cardmarket_article);
+                    $output = $this->output($cardmarket_product_id, $sync_action, $article, $cardmarket_article);
                     $this->line(implode("\t", $output));
                     $this->addToCsvFile($output);
 
@@ -230,13 +230,13 @@ class StockfileCommand extends Command
                         'should_sync' => false,
                     ]);
 
-                    $this->updateOrCreateExternalId($article, $cardmarket_article);
+                    $this->updateOrCreateExternalId($article, $cardmarket_article, $sync_action);
                     $this->updateOnWooCommerce($article);
 
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
                     $cardmarket_article['amount']--;
-                    $import_states[$import_state]++;
+                    $sync_actions[$sync_action]++;
                 }
 
                 if ($cardmarket_article['amount'] === 0) {
@@ -244,34 +244,37 @@ class StockfileCommand extends Command
                 }
             }
 
-            $import_state = 'CREATED';
+            $sync_action = 'CREATED';
             foreach ($cardmarket_articles as $cardmarket_article_id => &$cardmarket_article) {
                 if ($cardmarket_article['amount'] < 1) {
                     continue;
                 }
                 foreach (range(0, ($cardmarket_article['amount'] - 1)) as $index) {
-                    $output = $this->output($cardmarket_product_id, $import_state, new Article(), $cardmarket_article);
+                    $output = $this->output($cardmarket_product_id, $sync_action, new Article(), $cardmarket_article);
                     $this->line(implode("\t", $output));
                     $this->addToCsvFile($output);
-                    $import_states[$import_state]++;
+                    $sync_actions[$sync_action]++;
                 }
             }
 
-            $import_state = 'DELETED';
+            $sync_action = 'DELETED';
             $articles = $articles_for_card;
             foreach ($articles as $article) {
-                $output = $this->output($cardmarket_product_id, $import_state, $article, [
+                $output = $this->output($cardmarket_product_id, $sync_action, $article, [
                     'cardmarket_article_id' => $article->cardmarket_article_id
                 ]);
                 $this->line(implode("\t", $output));
                 $this->addToCsvFile($output);
+
+                $this->updateOrCreateExternalId($article, [], $sync_action, Article::SYNC_STATE_ERROR);
+
                 $articles_for_card->forget($article->id);
                 $all_updated_article_ids[] = $article->id;
-                $import_states[$import_state]++;
+                $sync_actions[$sync_action]++;
             }
         }
 
-        $import_state = 'DELETED_REST';
+        $sync_action = 'DELETED_REST';
         $articles = Article::select('articles.*')
             ->where('user_id', $this->user->id)
             ->join('cards', 'cards.id', '=', 'articles.card_id')
@@ -280,17 +283,20 @@ class StockfileCommand extends Command
             ->whereNotIn('articles.id', $all_updated_article_ids)
             ->cursor();
         foreach ($articles as $article) {
-            $output = $this->output($article->card_id, $import_state, $article, [
+            $output = $this->output($article->card_id, $sync_action, $article, [
                 'cardmarket_article_id' => $article->cardmarket_article_id
             ]);
             $this->line(implode("\t", $output));
             $this->addToCsvFile($output);
+
+            $this->updateOrCreateExternalId($article, [], $sync_action, Article::SYNC_STATE_ERROR);
+
             $articles_for_card->forget($article->id);
-            $import_states[$import_state]++;
+            $sync_actions[$sync_action]++;
         }
 
-        foreach ($import_states as $import_state => $count) {
-            $this->line($import_state . ': ' . $count);
+        foreach ($sync_actions as $sync_action => $count) {
+            $this->line($sync_action . ': ' . $count);
         }
 
         $article_count_query = Article::select('articles.*')
@@ -300,7 +306,7 @@ class StockfileCommand extends Command
 
         $article_count = $article_count_query->whereNotNull('cardmarket_article_id')->count();
         $article_count_without_cardmarket_article_id = $article_count_query->whereNull('cardmarket_article_id')->count();
-        $article_count_calculated = $article_count - $article_count_without_cardmarket_article_id - $import_states['DELETED'] - $import_states['DELETED_REST'] + $import_states['CREATED'];
+        $article_count_calculated = $article_count - $article_count_without_cardmarket_article_id - $sync_actions['DELETED'] - $sync_actions['DELETED_REST'] + $sync_actions['CREATED'];
 
         $this->line('Stockfile Article Count: ' . $stockfile_article_count);
         $this->line('Database Article Count: ' . $article_count);
@@ -319,7 +325,7 @@ class StockfileCommand extends Command
 
         $this->zip_archive->addFile($csv_path, now()->format('Y-m-d H-i-s') . '-log.csv');
 
-        $this->import_states[0] = $import_states;
+        $this->import_states[0] = $sync_actions;
     }
 
     private function output(int $cardmarket_product_id, $import_state, Article $article, array $cardmarket_article = []): array
@@ -375,7 +381,7 @@ class StockfileCommand extends Command
         $this->zip_archive->open($zip_path, ZipArchive::CREATE | ZipArchive::OVERWRITE);
     }
 
-    private function updateOrCreateExternalId(Article $article, array $cardmarket_article): void
+    private function updateOrCreateExternalId(Article $article, array $cardmarket_article, string $sync_action, int $sync_status = Article::SYNC_STATE_SUCCESS): void
     {
         $article->externalIds()->updateOrCreate([
             'user_id' => $article->user_id,
@@ -383,8 +389,9 @@ class StockfileCommand extends Command
         ], [
             'external_id' => $article->cardmarket_article_id,
             'external_updated_at' => $article->cardmarket_last_edited,
-            'sync_status' => Article::SYNC_STATE_SUCCESS,
+            'sync_status' => $sync_status,
             'sync_message' => empty(Arr::get($cardmarket_article, 'number_from_cardmarket_comments')) ? 'Number from Cardmarket Comments is empty' : null,
+            'sync_action' => $sync_action,
         ]);
     }
 

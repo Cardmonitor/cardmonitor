@@ -2763,13 +2763,33 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         unit_cost_max: 0,
         unit_cost_min: 0,
         unit_price_max: 0,
-        unit_price_min: 0
+        unit_price_min: 0,
+        cardmarket_sync_action: null
       },
       actionForm: {
         action: null
       },
       selected: [],
-      errors: {}
+      errors: {},
+      sync_actions: [{
+        slug: 'NUMBER',
+        name: 'Nummer'
+      }, {
+        slug: 'CARDMARKET_ID',
+        name: 'Cardmarket Article ID'
+      }, {
+        slug: 'SIMILAR',
+        name: 'Ähnliche Karte'
+      }, {
+        slug: 'CARD',
+        name: 'Karte'
+      }, {
+        slug: 'DELETED',
+        name: 'Gelöscht'
+      }, {
+        slug: 'DELETED_REST',
+        name: 'Sonstige gelöschte Artikel'
+      }]
     };
   },
   mounted: function mounted() {
@@ -10849,7 +10869,48 @@ var render = function render() {
     domProps: {
       value: 0
     }
-  }, [_vm._v("Andere Artikel")])])])])])]) : _vm._e(), _vm._v(" "), _vm.isLoading ? _c("div", {
+  }, [_vm._v("Andere Artikel")])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-auto"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "filter-cardmarket-sync_action"
+    }
+  }, [_vm._v("Artikelabgleich Cardmarket")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.cardmarket_sync_action,
+      expression: "filter.cardmarket_sync_action"
+    }],
+    staticClass: "form-control form-control-sm",
+    attrs: {
+      id: "filter-cardmarket-sync_action"
+    },
+    on: {
+      change: [function ($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "cardmarket_sync_action", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }, _vm.search]
+    }
+  }, [_c("option", {
+    domProps: {
+      value: null
+    }
+  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _vm._l(_vm.sync_actions, function (sync_action) {
+    return _c("option", {
+      key: sync_action.slug,
+      domProps: {
+        value: sync_action.slug
+      }
+    }, [_vm._v(_vm._s(sync_action.name))]);
+  })], 2)])])])]) : _vm._e(), _vm._v(" "), _vm.isLoading ? _c("div", {
     staticClass: "mt-3 p-5"
   }, [_c("center", [_c("span", {
     staticStyle: {
