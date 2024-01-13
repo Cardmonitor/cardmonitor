@@ -14,7 +14,7 @@ use App\APIs\WooCommerce\WooCommercePurchase;
 use Tests\Support\Snapshots\JsonSnapshot;
 use App\Importers\Orders\WooCommercePurchaseImporter;
 
-class WooCommerceOrderImporterTest extends TestCase
+class WooCommercePurchaseImporterTest extends TestCase
 {
     /**
      * @test
