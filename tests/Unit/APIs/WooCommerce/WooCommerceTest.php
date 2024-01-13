@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\APIs\WooCommerce;
 
-use App\APIs\WooCommerce\Status;
 use Tests\TestCase;
 
 class WooCommerceTest extends TestCase
@@ -15,10 +14,10 @@ class WooCommerceTest extends TestCase
         $this->markTestSkipped();
 
         $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
-        $orders = $WooCommerce->orders();
+        $response = $WooCommerce->orders();
 
         echo PHP_EOL;
-        foreach ($orders['data'] as $order) {
+        foreach ($response->json() as $order) {
             echo $order['status'] . PHP_EOL;
         }
 
@@ -35,7 +34,7 @@ class WooCommerceTest extends TestCase
         $id = 629161;
         $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
         $response = $WooCommerce->order($id);
-        $order = $response['data'];
+        $order = $response->json();
 
         echo PHP_EOL;
         foreach ($order['line_items'] as $line_item) {

@@ -21,7 +21,7 @@ class SellableControllerTest extends TestCase
     {
         $woocommerce_order_id = 619687;
         $woocommerce_order_response = JsonSnapshot::get('tests/snapshots/woocommerce/purchases/' . $woocommerce_order_id . '.json', function () use ($woocommerce_order_id) {
-            return (new \App\APIs\WooCommerce\WooCommercePurchase())->order($woocommerce_order_id);
+            return (new \App\APIs\WooCommerce\WooCommercePurchase())->order($woocommerce_order_id)->json();
         });
         $woocommerce_order = $woocommerce_order_response['data'];
 

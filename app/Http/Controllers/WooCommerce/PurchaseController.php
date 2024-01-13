@@ -26,7 +26,17 @@ class PurchaseController extends Controller
             ]);
 
             $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
-            return $WooCommerce->orders($attributes);
+            $response = $WooCommerce->orders($attributes);
+
+            $headers = $response->headers();
+
+            return [
+                'data' => $response->json(),
+                'pagination' => [
+                    'total' => (int)$headers['X-WP-Total'][0],
+                    'total_pages' => (int)$headers['X-WP-TotalPages'][0],
+                ],
+            ];
         }
 
         return view($this->baseViewPath . '.index');
@@ -46,7 +56,7 @@ class PurchaseController extends Controller
 
         $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
         $woocommerce_order_response = $WooCommerce->order($attributes['id']);
-        $woocommerce_order = $woocommerce_order_response['data'];
+        $woocommerce_order = $woocommerce_order_response->json();
 
         $order = WooCommercePurchaseImporter::import(auth()->user()->id, $woocommerce_order);
 
@@ -64,7 +74,7 @@ class PurchaseController extends Controller
     {
         $WooCommerce = new \App\APIs\WooCommerce\WooCommercePurchase();
         $response = $WooCommerce->order($id);
-        $order = $response['data'];
+        $order = $response->json();
         $cards = [];
 
         foreach ($order['line_items'] as $key => $line_item) {

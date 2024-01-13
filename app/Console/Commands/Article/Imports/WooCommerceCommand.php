@@ -18,7 +18,7 @@ class WooCommerceCommand extends Command
 
         $orders = $this->getOrders();
 
-        foreach ($orders['data'] as $order) {
+        foreach ($orders as $order) {
             WooCommercePurchaseImporter::import($user->id, $order);
         }
 
@@ -31,15 +31,9 @@ class WooCommerceCommand extends Command
 
         if ($this->option('order')) {
             $response = $WooCommerce->order($this->option('order'));
-            return [
-                'data' => [
-                    $response['data'],
-                ],
-            ];
+            return $response->json();
         }
 
-        $orders = $WooCommerce->orders();
-
-        return $orders;
+        return $WooCommerce->orders()->json();
     }
 }
