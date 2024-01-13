@@ -11,7 +11,7 @@ use App\Models\Articles\Article;
 use App\Models\Users\CardmarketUser;
 use App\Models\Localizations\Language;
 
-class WooCommerceOrderImporter
+class WooCommercePurchaseImporter
 {
     CONST SOURCE_SLUG = 'woocommerce-api';
 

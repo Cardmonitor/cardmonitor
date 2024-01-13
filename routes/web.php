@@ -124,7 +124,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('priceguide/{game}', 'PriceguideController@show');
 
-    Route::get('purchases/import', [\App\Http\Controllers\WooCommerce\OrderController::class, 'index'])->name('purchases.import.index');
+    Route::get('purchases/import', [\App\Http\Controllers\WooCommerce\PurchaseController::class, 'index'])->name('purchases.import.index');
 
     Route::post('purchases/{order}/sellable', [\App\Http\Controllers\Orders\Purchases\SellableController::class, 'store'])->name('purchases.sellable.store');
     Route::post('purchases/{order}/cancel', [\App\Http\Controllers\Orders\Purchases\CancelController::class, 'store'])->name('purchases.cancel.store');
@@ -180,8 +180,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/settings/api_token', 'Users\ApiTokenController@store')->name('user.api_token.store');
     Route::put('/user/settings/api_token', 'Users\ApiTokenController@update')->name('user.api_token.update');
 
-    Route::get('/woocommerce/order', [\App\Http\Controllers\WooCommerce\OrderController::class, 'index'])->name('woocommerce.order.index');
-    Route::post('/woocommerce/order', [\App\Http\Controllers\WooCommerce\OrderController::class, 'store'])->name('woocommerce.order.store');
-    Route::get('/woocommerce/order/{id}', [\App\Http\Controllers\WooCommerce\OrderController::class, 'show'])->name('woocommerce.order.show');
+    Route::get('/woocommerce/purchase', [\App\Http\Controllers\WooCommerce\PurchaseController::class, 'index'])->name('woocommerce.purchase.index');
+    Route::post('/woocommerce/purchase', [\App\Http\Controllers\WooCommerce\PurchaseController::class, 'store'])->name('woocommerce.purchase.store');
+    Route::get('/woocommerce/purchase/{id}', [\App\Http\Controllers\WooCommerce\PurchaseController::class, 'show'])->name('woocommerce.purchase.show');
 
 });

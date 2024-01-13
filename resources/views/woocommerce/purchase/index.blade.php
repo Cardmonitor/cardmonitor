@@ -9,6 +9,6 @@
         </div>
     </div>
 
-    <woocommerce-order-table></woocommerce-order-table>
+    <woocommerce-purchase-table></woocommerce-purchase-table>
 
 @endsection

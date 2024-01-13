@@ -12,7 +12,7 @@ use App\Models\Articles\Article;
 use App\Models\Users\CardmarketUser;
 use App\APIs\WooCommerce\WooCommercePurchase;
 use Tests\Support\Snapshots\JsonSnapshot;
-use App\Importers\Orders\WooCommerceOrderImporter;
+use App\Importers\Orders\WooCommercePurchaseImporter;
 
 class WooCommerceOrderImporterTest extends TestCase
 {
@@ -21,17 +21,17 @@ class WooCommerceOrderImporterTest extends TestCase
      * @runTestsInSeparateProcesses
      * @preserveGlobalState disabled
      */
-    public function it_can_update_or_create_an_order_from_woocommerce_api()
+    public function it_can_update_or_create_a_purchase_from_woocommerce_api()
     {
         $woocommerce_order_id = 627483;
-        $woocommerce_order_response = JsonSnapshot::get('tests/snapshots/woocommerce/orders/' . $woocommerce_order_id . '.json', function () use ($woocommerce_order_id) {
+        $woocommerce_order_response = JsonSnapshot::get('tests/snapshots/woocommerce/purchases/' . $woocommerce_order_id . '.json', function () use ($woocommerce_order_id) {
             return (new \App\APIs\WooCommerce\WooCommercePurchase())->order($woocommerce_order_id);
         });
         $woocommerce_order = $woocommerce_order_response['data'];
 
         $quantity = 0;
         foreach ($woocommerce_order['line_items'] as $line_item) {
-            if (! WooCommerceOrderImporter::hasCardmarketId($line_item['sku'])) {
+            if (! WooCommercePurchaseImporter::hasCardmarketId($line_item['sku'])) {
                 $quantity++;
                 continue;
             }
@@ -53,7 +53,7 @@ class WooCommerceOrderImporterTest extends TestCase
             ->with($woocommerce_order_id, Status::PROCESSING)
             ->once();
 
-        WooCommerceOrderImporter::import($this->user->id, $woocommerce_order);
+        WooCommercePurchaseImporter::import($this->user->id, $woocommerce_order);
 
         $this->assertCount($quantity, Article::all());
         $this->assertCount(1, Order::all());
@@ -76,7 +76,7 @@ class WooCommerceOrderImporterTest extends TestCase
         $this->assertEquals(1, $order->is_purchase);
         $this->assertEquals($this->user->id, $order->user_id);
         $this->assertEquals($woocommerce_order['id'], $order->source_id);
-        $this->assertEquals(WooCommerceOrderImporter::SOURCE_SLUG, $order->source_slug);
+        $this->assertEquals(WooCommercePurchaseImporter::SOURCE_SLUG, $order->source_slug);
         $this->assertEquals($order->seller->id, $order->seller_id);
         $this->assertEquals(Status::PROCESSING->value, $order->state);
         $this->assertEquals($quantity, $order->articles_count);
@@ -84,7 +84,7 @@ class WooCommerceOrderImporterTest extends TestCase
         $source_sort = 1;
         foreach ($order->articles as $key => $article) {
             $line_item = $woocommerce_order['line_items'][$key];
-            if (WooCommerceOrderImporter::hasCardmarketId($line_item['sku'])) {
+            if (WooCommercePurchaseImporter::hasCardmarketId($line_item['sku'])) {
                 [$cardmarket_product_id, $is_foil] = explode('-', $line_item['sku']);
             }
             else {
@@ -92,13 +92,13 @@ class WooCommerceOrderImporterTest extends TestCase
                 $is_foil = false;
             }
 
-            $this->assertEquals(WooCommerceOrderImporter::SOURCE_SLUG, $article->source_slug);
+            $this->assertEquals(WooCommercePurchaseImporter::SOURCE_SLUG, $article->source_slug);
             $this->assertEquals($line_item['id'], $article->source_id);
             $this->assertEquals($source_sort, $article->source_sort);
             $this->assertEquals($cardmarket_product_id, $article->card_id);
             $this->assertEquals(round($line_item['total'] * (1 + 0.15), 6), $article->unit_cost);
             $this->assertEquals(round($line_item['total'] * (1 + 0.15) * 3, 6), $article->unit_price);
-            $this->assertEquals(WooCommerceOrderImporter::getCondition($line_item), $article->condition);
+            $this->assertEquals(WooCommercePurchaseImporter::getCondition($line_item), $article->condition);
             $this->assertEquals($is_foil === 'true', $article->is_foil);
             $this->assertEquals(\App\Models\Localizations\Language::DEFAULT_ID, $article->language_id);
             $this->assertEquals(0, $article->is_sellable);
@@ -107,7 +107,7 @@ class WooCommerceOrderImporterTest extends TestCase
             $source_sort++;
         }
 
-        WooCommerceOrderImporter::import($this->user->id, $woocommerce_order);
+        WooCommercePurchaseImporter::import($this->user->id, $woocommerce_order);
 
         $this->assertCount(1, Order::all());
         $this->assertCount($quantity, Article::all());

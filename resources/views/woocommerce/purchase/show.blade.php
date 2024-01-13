@@ -9,10 +9,10 @@
         </div>
     </div>
 
-    <woocommerce-order-show
+    <woocommerce-purchase-show
         :cards="{{ json_encode($cards) }}"
         :conditions="{{ json_encode($conditions) }}"
         :order="{{ json_encode($order) }}"
-    ></woocommerce-order-show>
+    ></woocommerce-purchase-show>
 
 @endsection

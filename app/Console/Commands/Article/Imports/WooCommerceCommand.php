@@ -4,7 +4,7 @@ namespace App\Console\Commands\Article\Imports;
 
 use App\User;
 use Illuminate\Console\Command;
-use App\Importers\Orders\WooCommerceOrderImporter;
+use App\Importers\Orders\WooCommercePurchaseImporter;
 
 class WooCommerceCommand extends Command
 {
@@ -19,7 +19,7 @@ class WooCommerceCommand extends Command
         $orders = $this->getOrders();
 
         foreach ($orders['data'] as $order) {
-            WooCommerceOrderImporter::import($user->id, $order);
+            WooCommercePurchaseImporter::import($user->id, $order);
         }
 
         return self::SUCCESS;

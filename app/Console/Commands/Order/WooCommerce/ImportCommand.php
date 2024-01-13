@@ -5,7 +5,7 @@ namespace App\Console\Commands\Order\WooCommerce;
 use App\User;
 use App\Models\Orders\Order;
 use Illuminate\Console\Command;
-use App\Importers\Orders\WooCommerceOrderImporter;
+use App\Importers\Orders\WooCommercePurchaseImporter;
 
 class ImportCommand extends Command
 {
@@ -36,6 +36,6 @@ class ImportCommand extends Command
         $woocommerce_order_id = $this->argument('order');
         $woocommerce_order_response = (new \App\APIs\WooCommerce\WooCommercePurchase())->order($woocommerce_order_id);
 
-        WooCommerceOrderImporter::import($this->user->id, $woocommerce_order_response['data']);
+        WooCommercePurchaseImporter::import($this->user->id, $woocommerce_order_response['data']);
     }
 }

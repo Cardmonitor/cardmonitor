@@ -3,18 +3,18 @@
         <div class="card">
             <div class="card-header">Artikel</div>
             <div class="card-body">
-                <woocommerce-order-article-index :model="model" :cards="cards" :conditions="conditions" v-model="model.line_items"></woocommerce-order-article-index>
+                <woocommerce-purchase-article-index :model="model" :cards="cards" :conditions="conditions" v-model="model.line_items"></woocommerce-purchase-article-index>
             </div>
         </div>
     </div>
 </template>
 <script>
-    import woocommerceOrderArticleIndex from './article/index.vue';
+    import woocommercePurchaseArticleIndex from './article/index.vue';
 
     export default {
 
         components: {
-            woocommerceOrderArticleIndex,
+            woocommercePurchaseArticleIndex,
         },
 
         props: {

@@ -44,7 +44,7 @@
                 }
 
                 component.is_storing = true;
-                axios.post('/woocommerce/order', {
+                axios.post('/woocommerce/purchase', {
                     id: component.id,
                 })
                     .then(function (response) {
@@ -59,7 +59,7 @@
                 });
             },
             show() {
-                location.href = '/woocommerce/order/' + this.item.id;
+                location.href = '/woocommerce/purchase/' + this.item.id;
             }
         },
     };

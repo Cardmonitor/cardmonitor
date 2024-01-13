@@ -6,7 +6,7 @@
         <h2 class="col mb-0"><a class="text-body" href="{{ route('purchases.index') }}">Ankäufe</a><span class="d-none d-md-inline"> > {{ $model->source_id }}<span class="d-none d-lg-inline"> - {{ $model->state }}</span></span></h2>
         <div class="d-flex align-items-center">
             @if ($model->is_importable)
-                <form action="{{ route('woocommerce.order.store') }}" class="ml-1" method="POST">
+                <form action="{{ route('woocommerce.p.store') }}" class="ml-1" method="POST">
                     @csrf
                     @method('POST')
 

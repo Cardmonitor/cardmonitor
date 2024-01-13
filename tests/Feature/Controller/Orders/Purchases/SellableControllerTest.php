@@ -20,7 +20,7 @@ class SellableControllerTest extends TestCase
     public function it_can_make_a_purchase_sellable()
     {
         $woocommerce_order_id = 619687;
-        $woocommerce_order_response = JsonSnapshot::get('tests/snapshots/woocommerce/orders/' . $woocommerce_order_id . '.json', function () use ($woocommerce_order_id) {
+        $woocommerce_order_response = JsonSnapshot::get('tests/snapshots/woocommerce/purchases/' . $woocommerce_order_id . '.json', function () use ($woocommerce_order_id) {
             return (new \App\APIs\WooCommerce\WooCommercePurchase())->order($woocommerce_order_id);
         });
         $woocommerce_order = $woocommerce_order_response['data'];
@@ -44,7 +44,7 @@ class SellableControllerTest extends TestCase
         $woocommerce_mock->shouldReceive('updateOrderState')
             ->with($woocommerce_order_id, Status::PROCESSING);
 
-        $order = \App\Importers\Orders\WooCommerceOrderImporter::import($this->user->id, $woocommerce_order);
+        $order = \App\Importers\Orders\WooCommercePurchaseImporter::import($this->user->id, $woocommerce_order);
         $order->loadMissing('articles');
 
         $this->assertCount($quantity, $order->articles);

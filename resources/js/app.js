@@ -91,8 +91,8 @@ Vue.component('storage-content-table', require('./components/storage/content/tab
 Vue.component('storage-table', require('./components/storage/table.vue').default);
 Vue.component('user-backgroundtask-show', require('./components/user/backgroundtask/show.vue').default);
 Vue.component('card-export-index', require('./components/card/export/index.vue').default);
-Vue.component('woocommerce-order-table', require('./components/woocommerce/order/table.vue').default);
-Vue.component('woocommerce-order-show', require('./components/woocommerce/order/show.vue').default);
+Vue.component('woocommerce-purchase-table', require('./components/woocommerce/purchase/table.vue').default);
+Vue.component('woocommerce-purchase-show', require('./components/woocommerce/purchase/show.vue').default);
 
 var common = require('./common').default;
 

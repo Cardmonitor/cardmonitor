@@ -6,11 +6,11 @@ use App\Models\Cards\Card;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Importers\Orders\WooCommerceOrderImporter;
+use App\Importers\Orders\WooCommercePurchaseImporter;
 
-class OrderController extends Controller
+class PurchaseController extends Controller
 {
-    protected $baseViewPath = 'woocommerce.order';
+    protected $baseViewPath = 'woocommerce.purchase';
 
     /**
      * Display a listing of the resource.
@@ -48,7 +48,7 @@ class OrderController extends Controller
         $woocommerce_order_response = $WooCommerce->order($attributes['id']);
         $woocommerce_order = $woocommerce_order_response['data'];
 
-        $order = WooCommerceOrderImporter::import(auth()->user()->id, $woocommerce_order);
+        $order = WooCommercePurchaseImporter::import(auth()->user()->id, $woocommerce_order);
 
         if ($request->wantsJson()) {
             return $order;
@@ -75,6 +75,9 @@ class OrderController extends Controller
 
             [$cardmarket_product_id, $is_foil] = explode('-', $line_item['sku']);
             $cards[$line_item['sku']] = Card::firstOrImport($cardmarket_product_id);
+            $cards[$line_item['sku']]->load([
+                'expansion',
+            ]);
         }
 
         return view($this->baseViewPath . '.show', [

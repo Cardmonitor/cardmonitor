@@ -79,7 +79,7 @@
 
         data () {
             return {
-                uri: '/woocommerce/order',
+                uri: '/woocommerce/purchase',
                 items: [],
                 isLoading: true,
                 filter: {
