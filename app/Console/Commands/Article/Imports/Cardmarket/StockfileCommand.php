@@ -266,7 +266,9 @@ class StockfileCommand extends Command
                 $this->line(implode("\t", $output));
                 $this->addToCsvFile($output);
 
-                $this->updateOrCreateExternalId($article, [], $sync_action, Article::SYNC_STATE_ERROR);
+                $this->updateOrCreateExternalId($article, [
+                    'number_from_cardmarket_comments' => $article->numberFromCardmarketComments,
+                ], $sync_action, Article::SYNC_STATE_ERROR);
 
                 $articles_for_card->forget($article->id);
                 $all_updated_article_ids[] = $article->id;
@@ -289,7 +291,9 @@ class StockfileCommand extends Command
             $this->line(implode("\t", $output));
             $this->addToCsvFile($output);
 
-            $this->updateOrCreateExternalId($article, [], $sync_action, Article::SYNC_STATE_ERROR);
+            $this->updateOrCreateExternalId($article, [
+                'number_from_cardmarket_comments' => $article->numberFromCardmarketComments,
+            ], $sync_action, Article::SYNC_STATE_ERROR);
 
             $articles_for_card->forget($article->id);
             $sync_actions[$sync_action]++;
