@@ -68,4 +68,19 @@ class ArticleController extends Controller
 
         return $cardmarket_article;
     }
+
+    public function destroy(Article $article)
+    {
+        if (!$article->syncDelete()) {
+            return back()->with('status', [
+                'type' => 'danger',
+                'text' => 'Der Artikel konnte nicht auf Cardmarket gelöscht werden.',
+            ]);
+        }
+
+        return back()->with('status', [
+            'type' => 'success',
+            'text' => 'Der Artikel wurde auf Cardmarket gelöscht.',
+        ]);
+    }
 }

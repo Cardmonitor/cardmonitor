@@ -35,4 +35,14 @@ class ExternalId extends Model
     {
         return $this->belongsTo(Article::class, 'article_id');
     }
+
+    public function getSyncStatusNameAttribute(): string
+    {
+        return match ($this->sync_status) {
+            0 => 'OK',
+            1 => 'Fehler',
+            2 => 'Nicht synchron',
+            default => '-',
+        };
+    }
 }

@@ -18,9 +18,6 @@
             @if ($model->cardmarket_article_id)
                 <a href="{{ route('article.cardmarket.show', ['article' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1">Cardmarket Data</a>
             @endif
-            @if ($model->externalIds->where('external_type', 'woocommerce')->first()?->external_id)
-                <a href="{{ route('article.woocommerce.show', ['article' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1">WooCommerce Data</a>
-            @endif
         </div>
     </div>
 
@@ -118,6 +115,15 @@
                                     <button type="submit" class="btn btn-sm btn-secondary ml-1" title="{{ __('app.actions.update') }}"><i class="fas fa-fw fa-cloud-upload-alt"></i></button>
                                 </form>
                             @endif
+                            @if ($external_id_cardmarket?->external_id)
+                                <a href="{{ route('article.cardmarket.show', ['article' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1"><i class="fas fa-fw fa-eye"></i></a>
+                                <form action="{{ route('article.cardmarket.destroy', ['article' => $model->id]) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit" class="btn btn-sm btn-danger ml-1" title="{{ __('app.actions.delete') }}"><i class="fas fa-fw fa-trash"></i></button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                     <div class="row">
@@ -156,6 +162,24 @@
                         <div class="col-label"><b>Nummer aus Kommentar</b></div>
                         <div class="col-value">{{ $model->number_from_cardmarket_comments }}</div>
                     </div>
+                    @if ($external_id_cardmarket)
+                        <div class="row">
+                            <div class="col-label">&nbsp;</div>
+                            <div class="col-value">&nbsp;</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-label"><b>Sync Status</b></div>
+                            <div class="col-value">{{ $external_id_cardmarket->sync_status_name }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-label"><b>Sync Action</b></div>
+                            <div class="col-value">{{ $external_id_cardmarket->sync_action ?: '-' }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-label"><b>Sync Message</b></div>
+                            <div class="col-value">{{ $external_id_cardmarket->sync_message ?: '-' }}</div>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -165,7 +189,7 @@
                     <div class="row align-items-center">
                         <div class="col-label"><b>Produkt ID</b></div>
                         <div class="col-value d-flex align-items-center justify-content-between">
-                            {{ $model->externalIds->where('external_type', 'woocommerce')->first()?->external_id ?? 'nicht vorhanden' }}
+                            {{ $external_id_woocommerce?->external_id ?? 'nicht vorhanden' }}
                             @if ($model->can_upload_to_cardmarket)
                                 <form action="{{ route('article.woocommerce.update', ['article' => $model->id]) }}" method="POST">
                                     @csrf
@@ -174,7 +198,8 @@
                                     <button type="submit" class="btn btn-sm btn-secondary ml-1" title="{{ __('app.actions.update') }}"><i class="fas fa-fw fa-cloud-upload-alt"></i></button>
                                 </form>
                             @endif
-                            @if ($model->externalIds->where('external_type', 'woocommerce')->first()?->external_id)
+                            @if ($external_id_woocommerce?->external_id)
+                                <a href="{{ route('article.woocommerce.show', ['article' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1"><i class="fas fa-fw fa-eye"></i></a>
                                 <form action="{{ route('article.woocommerce.destroy', ['article' => $model->id]) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
@@ -184,6 +209,24 @@
                             @endif
                         </div>
                     </div>
+                    @if ($external_id_woocommerce)
+                        <div class="row">
+                            <div class="col-label">&nbsp;</div>
+                            <div class="col-value">&nbsp;</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-label"><b>Sync Status</b></div>
+                            <div class="col-value">{{ $external_id_woocommerce->sync_status_name }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-label"><b>Sync Action</b></div>
+                            <div class="col-value">{{ $external_id_woocommerce->sync_action ?: '-' }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-label"><b>Sync Message</b></div>
+                            <div class="col-value">{{ $external_id_woocommerce->sync_message ?: '-' }}</div>
+                        </div>
+                    @endif
                 </div>
             </div>
 

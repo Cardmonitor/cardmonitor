@@ -68,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('article/{article}/cardmarket', [\App\Http\Controllers\Cardmarket\Articles\ArticleController::class, 'show'])->name('article.cardmarket.show');
     Route::put('article/{article}/cardmarket', [\App\Http\Controllers\Cardmarket\Articles\ArticleController::class, 'update'])->name('article.cardmarket.update');
+    Route::delete('article/{article}/cardmarket', [\App\Http\Controllers\Cardmarket\Articles\ArticleController::class, 'destroy'])->name('article.cardmarket.destroy');
 
     Route::get('article/{article}/woocommerce', [\App\Http\Controllers\WooCommerce\ArticleController::class, 'show'])->name('article.woocommerce.show');
     Route::put('article/{article}/woocommerce', [\App\Http\Controllers\WooCommerce\ArticleController::class, 'update'])->name('article.woocommerce.update');

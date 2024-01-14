@@ -191,7 +191,9 @@ class ArticleController extends Controller
         ]);
 
         return view($this->baseViewPath . '.show')
-            ->with('model', $article);
+            ->with('model', $article)
+            ->with('external_id_cardmarket', $article->externalIds()->where('external_type', 'cardmarket')->first())
+            ->with('external_id_woocommerce', $article->externalIds()->where('external_type', 'woocommerce')->first());
     }
 
     /**
