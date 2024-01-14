@@ -1884,6 +1884,13 @@ class Article extends Model
             return $query;
         }
 
+        if ($value == 3) {
+            return $query->whereHas('externalIds', function ($query) {
+                $query->where('external_type', 'cardmarket')
+                    ->where('sync_message', 'Number from Cardmarket Comments is empty');
+            });
+        };
+
         if ($value == self::SYNC_STATE_NOT_SYNCED) {
             return $query->whereNull('articles.exported_at')
                 ->whereNull('articles.synced_at')

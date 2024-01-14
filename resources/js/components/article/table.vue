@@ -33,6 +33,7 @@
                             <option :value="2">Nicht hochgeladen</option>
                             <option :value="1">{{ $t('filter.sync.error') }}</option>
                             <option :value="0">{{ $t('filter.sync.success') }}</option>
+                            <option :value="3">Keine Lagernummer im Kommentar</option>
                         </select>
                     </div>
                 </div>

@@ -10484,7 +10484,11 @@ var render = function render() {
     domProps: {
       value: 0
     }
-  }, [_vm._v(_vm._s(_vm.$t("filter.sync.success")))])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("filter.sync.success")))]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: 3
+    }
+  }, [_vm._v("Keine Lagernummer im Kommentar")])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-auto d-none"
   }, [_c("div", {
     staticClass: "form-group"
