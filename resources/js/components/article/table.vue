@@ -27,13 +27,38 @@
 
                 <div class="col-auto">
                     <div class="form-group">
-                        <label for="filter-sync">{{ $t('filter.sync.label') }}</label>
+                        <label for="filter-sync">Cardmarket Alt (Zum Testen)</label>
                         <select class="form-control form-control-sm" id="filter-sync" v-model="filter.sync" @change="search">
                             <option :value="-1">{{ $t('filter.all') }}</option>
                             <option :value="2">Nicht hochgeladen</option>
                             <option :value="1">{{ $t('filter.sync.error') }}</option>
                             <option :value="0">{{ $t('filter.sync.success') }}</option>
                             <option :value="3">Keine Lagernummer im Kommentar</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-auto">
+                    <div class="form-group">
+                        <label for="filter-sync">Cardmarket</label>
+                        <select class="form-control form-control-sm" id="filter-sync" v-model="filter.sync_cardmarket" @change="search">
+                            <option :value="-1">{{ $t('filter.all') }}</option>
+                            <option :value="2">Nicht hochgeladen</option>
+                            <option :value="1">{{ $t('filter.sync.error') }}</option>
+                            <option :value="0">{{ $t('filter.sync.success') }}</option>
+                            <option :value="3">Keine Lagernummer im Kommentar</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-auto">
+                    <div class="form-group">
+                        <label for="filter-sync">WooCommerce</label>
+                        <select class="form-control form-control-sm" id="filter-sync" v-model="filter.sync_woocommerce" @change="search">
+                            <option :value="-1">{{ $t('filter.all') }}</option>
+                            <option :value="2">Nicht hochgeladen</option>
+                            <option :value="1">{{ $t('filter.sync.error') }}</option>
+                            <option :value="0">{{ $t('filter.sync.success') }}</option>
                         </select>
                     </div>
                 </div>
@@ -151,7 +176,9 @@
             <table class="table table-sm table-hover table-striped bg-white">
                 <thead>
                     <tr>
-                        <th class="text-center d-none d-lg-table-cell w-icon">{{ $t('article.sync') }}</th>
+                        <th class="text-center d-none d-lg-table-cell w-icon" title="Sync Alt">{{ $t('article.sync') }}</th>
+                        <th class="text-center d-none d-lg-table-cell w-icon" title="Sync Cardmarket">C</th>
+                        <th class="text-center d-none d-lg-table-cell w-icon" title="Sync WooCommerce">W</th>
                         <th class="text-right d-none d-xl-table-cell w-icon"></th>
                         <th class="" width="100%">{{ $t('app.name') }}</th>
                         <th class="w-icon"></th>
@@ -173,6 +200,8 @@
                     <tr>
                         <td></td>
                         <td></td>
+                        <td></td>
+                        <td></td>
                         <td class="align-middle">{{ items.length }} von {{ paginate.total }}</td>
                         <td class="align-middle" colspan="5">
                             <select class="form-control form-control-sm" v-model="actionForm.action" placeholder="Aktion wählen">
@@ -192,7 +221,7 @@
                                 </optgroup>
                             </select>
                         </td>
-                        <td class="align-middle" colspan="2"></td>
+                        <td class="align-middle" colspan="3"></td>
                         <td class="align-middle text-right">
                             <button class="btn btn-sm btn-secondary" style="width: 132px;" :disabled="actioning.status === true" @click="action">
                                 <i class="fas fa-spinner fa-spin mr-1" v-show="actioning.status === true"></i>Ausführen
@@ -356,6 +385,8 @@
                     is_stored: -1,
                     storage_id: 0,
                     sync: -1,
+                    sync_cardmarket: -1,
+                    sync_woocommerce: -1,
                     unit_cost_max: 0,
                     unit_cost_min: 0,
                     unit_price_max: 0,

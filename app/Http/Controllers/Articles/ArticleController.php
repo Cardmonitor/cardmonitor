@@ -48,6 +48,10 @@ class ArticleController extends Controller
                     $query->where('is_purchase', false);
                 })
                 ->with([
+                    'externalIdsCardmarket',
+                    'externalIdsWooCommerce',
+                ])
+                ->with([
                     'language',
                     'rule',
                     'storage',

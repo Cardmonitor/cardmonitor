@@ -2760,6 +2760,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         is_stored: -1,
         storage_id: 0,
         sync: -1,
+        sync_cardmarket: -1,
+        sync_woocommerce: -1,
         unit_cost_max: 0,
         unit_cost_min: 0,
         unit_price_max: 0,
@@ -9278,6 +9280,16 @@ var render = function render() {
       title: _vm.item.sync_error || "Karte synchronisiert"
     }
   })]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle d-none d-lg-table-cell text-center"
+  }, [_c("i", {
+    staticClass: "fas fa-fw",
+    "class": _vm.item.sync_icon_cardmarket
+  })]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle d-none d-lg-table-cell text-center"
+  }, [_c("i", {
+    staticClass: "fas fa-fw",
+    "class": _vm.item.sync_icon_woocommerce
+  })]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell text-center pointer"
   }, [_c("i", {
     staticClass: "fas fa-image",
@@ -9617,6 +9629,16 @@ var render = function render() {
     attrs: {
       title: _vm.item.sync_error || "Karte synchronisiert"
     }
+  })]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle d-none d-lg-table-cell text-center"
+  }, [_c("i", {
+    staticClass: "fas fa-fw",
+    "class": _vm.item.sync_icon_cardmarket
+  })]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle d-none d-lg-table-cell text-center"
+  }, [_c("i", {
+    staticClass: "fas fa-fw",
+    "class": _vm.item.sync_icon_woocommerce
   })]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell pointer"
   }, [_c("i", {
@@ -10446,7 +10468,7 @@ var render = function render() {
     attrs: {
       "for": "filter-sync"
     }
-  }, [_vm._v(_vm._s(_vm.$t("filter.sync.label")))]), _vm._v(" "), _c("select", {
+  }, [_vm._v("Cardmarket Alt (Zum Testen)")]), _vm._v(" "), _c("select", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -10489,6 +10511,102 @@ var render = function render() {
       value: 3
     }
   }, [_vm._v("Keine Lagernummer im Kommentar")])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-auto"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "filter-sync"
+    }
+  }, [_vm._v("Cardmarket")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.sync_cardmarket,
+      expression: "filter.sync_cardmarket"
+    }],
+    staticClass: "form-control form-control-sm",
+    attrs: {
+      id: "filter-sync"
+    },
+    on: {
+      change: [function ($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "sync_cardmarket", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }, _vm.search]
+    }
+  }, [_c("option", {
+    domProps: {
+      value: -1
+    }
+  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: 2
+    }
+  }, [_vm._v("Nicht hochgeladen")]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: 1
+    }
+  }, [_vm._v(_vm._s(_vm.$t("filter.sync.error")))]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: 0
+    }
+  }, [_vm._v(_vm._s(_vm.$t("filter.sync.success")))]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: 3
+    }
+  }, [_vm._v("Keine Lagernummer im Kommentar")])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-auto"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "filter-sync"
+    }
+  }, [_vm._v("WooCommerce")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.sync_woocommerce,
+      expression: "filter.sync_woocommerce"
+    }],
+    staticClass: "form-control form-control-sm",
+    attrs: {
+      id: "filter-sync"
+    },
+    on: {
+      change: [function ($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "sync_woocommerce", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }, _vm.search]
+    }
+  }, [_c("option", {
+    domProps: {
+      value: -1
+    }
+  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: 2
+    }
+  }, [_vm._v("Nicht hochgeladen")]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: 1
+    }
+  }, [_vm._v(_vm._s(_vm.$t("filter.sync.error")))]), _vm._v(" "), _c("option", {
+    domProps: {
+      value: 0
+    }
+  }, [_vm._v(_vm._s(_vm.$t("filter.sync.success")))])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-auto d-none"
   }, [_c("div", {
     staticClass: "form-group"
@@ -10927,8 +11045,21 @@ var render = function render() {
   }, [_c("table", {
     staticClass: "table table-sm table-hover table-striped bg-white"
   }, [_c("thead", [_c("tr", [_c("th", {
-    staticClass: "text-center d-none d-lg-table-cell w-icon"
+    staticClass: "text-center d-none d-lg-table-cell w-icon",
+    attrs: {
+      title: "Sync Alt"
+    }
   }, [_vm._v(_vm._s(_vm.$t("article.sync")))]), _vm._v(" "), _c("th", {
+    staticClass: "text-center d-none d-lg-table-cell w-icon",
+    attrs: {
+      title: "Sync Cardmarket"
+    }
+  }, [_vm._v("C")]), _vm._v(" "), _c("th", {
+    staticClass: "text-center d-none d-lg-table-cell w-icon",
+    attrs: {
+      title: "Sync WooCommerce"
+    }
+  }, [_vm._v("W")]), _vm._v(" "), _c("th", {
     staticClass: "text-right d-none d-xl-table-cell w-icon"
   }), _vm._v(" "), _c("th", {
     attrs: {
@@ -10986,7 +11117,7 @@ var render = function render() {
         }
       }
     })];
-  })], 2), _vm._v(" "), _c("tfoot", [_c("tr", [_c("td"), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
+  })], 2), _vm._v(" "), _c("tfoot", [_c("tr", [_c("td"), _vm._v(" "), _c("td"), _vm._v(" "), _c("td"), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_vm._v(_vm._s(_vm.items.length) + " von " + _vm._s(_vm.paginate.total))]), _vm._v(" "), _c("td", {
     staticClass: "align-middle",
@@ -11063,7 +11194,7 @@ var render = function render() {
   }, [_vm._v("Upload zu WooCommerce")])])])]), _vm._v(" "), _c("td", {
     staticClass: "align-middle",
     attrs: {
-      colspan: "2"
+      colspan: "3"
     }
   }), _vm._v(" "), _c("td", {
     staticClass: "align-middle text-right"

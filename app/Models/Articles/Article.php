@@ -22,6 +22,7 @@ use App\Transformers\Articles\Csvs\Transformer;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Article extends Model
 {
@@ -88,6 +89,8 @@ class Article extends Model
         'state_icon',
         'state_key',
         'sync_icon',
+        'sync_icon_cardmarket',
+        'sync_icon_woocommerce',
         'unit_cost_formatted',
         'unit_price_formatted',
         'should_show_card_name',
@@ -1510,6 +1513,37 @@ class Article extends Model
         return 'fa-check text-success';
     }
 
+    public function getSyncIconCardmarketAttribute()
+    {
+        if (! $this->relationLoaded('externalIdsCardmarket')) {
+            return '';
+        }
+
+        return $this->getSyncIcon($this->externalIdsCardmarket);
+    }
+
+    public function getSyncIconWooCommerceAttribute()
+    {
+        if (! $this->relationLoaded('externalIdsCardmarket')) {
+            return '';
+        }
+
+        return $this->getSyncIcon($this->externalIdsWooCommerce);
+    }
+
+    private function getSyncIcon(?ExternalId $external_id): string
+    {
+        if (is_null($external_id) || is_null($external_id->external_id)) {
+            return 'fa-cloud-upload-alt text-warning';
+        }
+
+        if ($external_id->sync_status == self::SYNC_STATE_ERROR) {
+            return 'fa-exclamation text-danger';
+        }
+
+        return 'fa-check text-success';
+    }
+
     public function getStateKeyAttribute()
     {
         return $this->state ?? -1;
@@ -1538,6 +1572,16 @@ class Article extends Model
     public function externalIds(): HasMany
     {
         return $this->hasMany(ExternalId::class);
+    }
+
+    public function externalIdsCardmarket(): HasOne
+    {
+        return $this->hasOne(ExternalId::class)->where('external_type', 'cardmarket');
+    }
+
+    public function externalIdsWooCommerce(): HasOne
+    {
+        return $this->hasOne(ExternalId::class)->where('external_type', 'woocommerce');
     }
 
     public function language() : BelongsTo
@@ -1712,6 +1756,8 @@ class Article extends Model
             ->search(Arr::get($filter, 'searchtext'))
             ->storage(Arr::get($filter, 'storage_id'))
             ->sync(Arr::get($filter, 'sync'))
+            ->externalIdSyncState(Arr::get($filter, 'sync_cardmarket'), 'cardmarket')
+            ->externalIdSyncState(Arr::get($filter, 'sync_woocommerce'), 'woocommerce')
             ->syncAction(Arr::get($filter, 'cardmarket_sync_action'), 'cardmarket');
     }
 
@@ -1878,7 +1924,40 @@ class Article extends Model
             );
     }
 
-    public function scopeSync(Builder $query, $value) : Builder
+    public function scopeExternalIdSyncState(Builder $query, $value, $external_type): Builder
+    {
+        if ($value == -1 || is_null($value)) {
+            return $query;
+        }
+
+        // Number from Cardmarket Comments is empty
+        if ($value == 3) {
+            return $query->whereHas('externalIds', function ($query) {
+                $query->where('external_type', 'cardmarket')
+                    ->where('sync_message', 'Number from Cardmarket Comments is empty');
+            });
+        };
+
+        if ($value == self::SYNC_STATE_NOT_SYNCED) {
+            return $query->where(function ($query) use ($external_type) {
+                $query->whereDoesntHave('externalIds', function ($query) use ($external_type) {
+                    $query->where('external_type', $external_type);
+                })
+                ->orWhereHas('externalIds', function ($query) use ($external_type) {
+                    $query->where('external_type', $external_type)
+                        ->whereNull('external_id');
+                });
+            });
+        }
+
+        return $query->whereHas('externalIds', function ($query) use ($external_type, $value) {
+            $query->where('external_type', $external_type)
+                ->whereNotNull('external_id')
+                ->where('sync_status', $value);
+        });
+    }
+
+    public function scopeSync(Builder $query, $value): Builder
     {
         if ($value == -1 || is_null($value)) {
             return $query;
@@ -1907,7 +1986,7 @@ class Article extends Model
         return $query->where('articles.has_sync_error', $value);
     }
 
-    public function scopeSyncAction(Builder $query, $value, $external_type) : Builder
+    public function scopeSyncAction(Builder $query, $value, $external_type): Builder
     {
         if (is_null($value)) {
             return $query;
