@@ -2766,14 +2766,15 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         unit_cost_min: 0,
         unit_price_max: 0,
         unit_price_min: 0,
-        cardmarket_sync_action: null
+        cardmarket_sync_action: null,
+        woocommerce_sync_action: null
       },
       actionForm: {
         action: null
       },
       selected: [],
       errors: {},
-      sync_actions: [{
+      sync_actions_cardmarket: [{
         slug: 'NUMBER',
         name: 'Nummer'
       }, {
@@ -2791,6 +2792,13 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       }, {
         slug: 'DELETED_REST',
         name: 'Sonstige gelöschte Artikel'
+      }],
+      sync_actions_woocommerce: [{
+        slug: 'NUMBER',
+        name: 'Nummer'
+      }, {
+        slug: 'DELETED_REST',
+        name: 'Gelöschte Artikel'
       }]
     };
   },
@@ -9283,12 +9291,18 @@ var render = function render() {
     staticClass: "align-middle d-none d-lg-table-cell text-center"
   }, [_c("i", {
     staticClass: "fas fa-fw",
-    "class": _vm.item.sync_icon_cardmarket
+    "class": _vm.item.sync_icon_cardmarket,
+    attrs: {
+      title: _vm.item.sync_title_cardmarket
+    }
   })]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-lg-table-cell text-center"
   }, [_c("i", {
     staticClass: "fas fa-fw",
-    "class": _vm.item.sync_icon_woocommerce
+    "class": _vm.item.sync_icon_woocommerce,
+    attrs: {
+      title: _vm.item.external_ids_woo_commerce.sync_message || _vm.item.external_ids_woo_commerce.sync_action
+    }
   })]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell text-center pointer"
   }, [_c("i", {
@@ -9633,12 +9647,18 @@ var render = function render() {
     staticClass: "align-middle d-none d-lg-table-cell text-center"
   }, [_c("i", {
     staticClass: "fas fa-fw",
-    "class": _vm.item.sync_icon_cardmarket
+    "class": _vm.item.sync_icon_cardmarket,
+    attrs: {
+      title: _vm.item.sync_title_cardmarket
+    }
   })]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-lg-table-cell text-center"
   }, [_c("i", {
     staticClass: "fas fa-fw",
-    "class": _vm.item.sync_icon_woocommerce
+    "class": _vm.item.sync_icon_woocommerce,
+    attrs: {
+      title: _vm.item.sync_title_woocommerce
+    }
   })]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-xl-table-cell pointer"
   }, [_c("i", {
@@ -11025,7 +11045,48 @@ var render = function render() {
     domProps: {
       value: null
     }
-  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _vm._l(_vm.sync_actions, function (sync_action) {
+  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _vm._l(_vm.sync_actions_cardmarket, function (sync_action) {
+    return _c("option", {
+      key: sync_action.slug,
+      domProps: {
+        value: sync_action.slug
+      }
+    }, [_vm._v(_vm._s(sync_action.name))]);
+  })], 2)])]), _vm._v(" "), _c("div", {
+    staticClass: "col-auto"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "filter-woocommerce-sync_action"
+    }
+  }, [_vm._v("Artikelabgleich Woocommerce")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.woocommerce_sync_action,
+      expression: "filter.woocommerce_sync_action"
+    }],
+    staticClass: "form-control form-control-sm",
+    attrs: {
+      id: "filter-woocommerce-sync_action"
+    },
+    on: {
+      change: [function ($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "woocommerce_sync_action", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }, _vm.search]
+    }
+  }, [_c("option", {
+    domProps: {
+      value: null
+    }
+  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _vm._l(_vm.sync_actions_woocommerce, function (sync_action) {
     return _c("option", {
       key: sync_action.slug,
       domProps: {

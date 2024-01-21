@@ -91,6 +91,8 @@ class Article extends Model
         'sync_icon',
         'sync_icon_cardmarket',
         'sync_icon_woocommerce',
+        'sync_title_cardmarket',
+        'sync_title_woocommerce',
         'unit_cost_formatted',
         'unit_price_formatted',
         'should_show_card_name',
@@ -1544,6 +1546,37 @@ class Article extends Model
         return 'fa-check text-success';
     }
 
+    public function getSyncTitleCardmarketAttribute()
+    {
+        if (! $this->relationLoaded('externalIdsCardmarket')) {
+            return '';
+        }
+
+        return $this->getSyncTitle($this->externalIdsCardmarket);
+    }
+
+    public function getSyncTitleWooCommerceAttribute()
+    {
+        if (! $this->relationLoaded('externalIdsCardmarket')) {
+            return '';
+        }
+
+        return $this->getSyncTitle($this->externalIdsWooCommerce);
+    }
+
+    private function getSyncTitle(?ExternalId $external_id): string
+    {
+        if (is_null($external_id) || is_null($external_id->external_id)) {
+            return 'Artikel nicht auf WooCommerce vorhanden.';
+        }
+
+        if ($external_id->sync_message) {
+            return $external_id->sync_message;
+        }
+
+        return $external_id->sync_action;
+    }
+
     public function getStateKeyAttribute()
     {
         return $this->state ?? -1;
@@ -1758,7 +1791,8 @@ class Article extends Model
             ->sync(Arr::get($filter, 'sync'))
             ->externalIdSyncState(Arr::get($filter, 'sync_cardmarket'), 'cardmarket')
             ->externalIdSyncState(Arr::get($filter, 'sync_woocommerce'), 'woocommerce')
-            ->syncAction(Arr::get($filter, 'cardmarket_sync_action'), 'cardmarket');
+            ->syncAction(Arr::get($filter, 'cardmarket_sync_action'), 'cardmarket')
+            ->syncAction(Arr::get($filter, 'woocommerce_sync_action'), 'woocommerce');
     }
 
     public function scopeOrder(Builder $query, $value) : Builder
