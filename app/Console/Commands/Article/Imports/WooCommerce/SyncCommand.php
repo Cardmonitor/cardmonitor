@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Article\Imports;
+namespace App\Console\Commands\Article\Imports\WooCommerce;
 
 use App\User;
 use Generator;
@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
 use App\Models\Articles\Article;
 use App\Models\Articles\ExternalId;
 
-class WooCommerceCommand extends Command
+class SyncCommand extends Command
 {
     protected $signature = 'article:imports:woocommerce:sync {user}';
 
