@@ -1536,11 +1536,15 @@ class Article extends Model
     private function getSyncIcon(?ExternalId $external_id): string
     {
         if (is_null($external_id) || is_null($external_id->external_id)) {
-            return 'fa-cloud-upload-alt text-warning';
+            return 'fa-cloud-upload-alt text-info';
         }
 
         if ($external_id->sync_status == self::SYNC_STATE_ERROR) {
             return 'fa-exclamation text-danger';
+        }
+
+        if ($external_id->sync_message == 'Number from Cardmarket Comments is empty') {
+            return 'fa-check  text-warning';
         }
 
         return 'fa-check text-success';
