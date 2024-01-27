@@ -1594,7 +1594,7 @@ class Article extends Model
             return $external_id->sync_message;
         }
 
-        return $external_id->sync_action;
+        return $external_id->sync_action ?? '';
     }
 
     public function getStateKeyAttribute()
