@@ -930,6 +930,7 @@ class Article extends Model
                 'external_id' => $woocommerce_product['id'],
                 'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
                 'sync_status' => self::SYNC_STATE_SUCCESS,
+                'sync_action' => null,
                 'sync_message' => null,
                 'exported_at' => now(),
             ]);
@@ -947,6 +948,7 @@ class Article extends Model
                 'external_id' => $woocommerce_error['data']['resource_id'],
                 'sync_status' => self::SYNC_STATE_SUCCESS,
                 'sync_message' => null,
+                'sync_action' => null,
                 'exported_at' => now(),
             ]);
 
@@ -977,6 +979,7 @@ class Article extends Model
                 'external_id' => $woocommerce_product['id'],
                 'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
                 'sync_status' => self::SYNC_STATE_SUCCESS,
+                'sync_action' => null,
                 'sync_message' => null,
                 'exported_at' => now(),
             ]);
@@ -1012,6 +1015,7 @@ class Article extends Model
                         'external_id' => $woocommerce_product['id'],
                         'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
                         'sync_status' => self::SYNC_STATE_SUCCESS,
+                        'sync_action' => null,
                         'sync_message' => null,
                         'exported_at' => now(),
                     ]);
@@ -1021,10 +1025,10 @@ class Article extends Model
 
             }
 
-
             // Produkt nicht (mehr) vorhanden
             $values['external_id'] = null;
             $values['sync_status'] = self::SYNC_STATE_NOT_SYNCED;
+            $values['sync_action'] = null;
             $values['sync_message'] = 'Ungültige ID.';
         }
 
@@ -1052,6 +1056,7 @@ class Article extends Model
                 'external_id' => null,
                 'external_updated_at' => null,
                 'sync_status' => self::SYNC_STATE_SUCCESS,
+                'sync_action' => null,
                 'sync_message' => null,
             ]);
 
@@ -1077,6 +1082,7 @@ class Article extends Model
                         'external_id' => null,
                         'external_updated_at' => null,
                         'sync_status' => self::SYNC_STATE_SUCCESS,
+                        'sync_action' => null,
                         'sync_message' => null,
                     ]);
 
@@ -1091,6 +1097,7 @@ class Article extends Model
                         'external_id' => $woocommerce_product['id'],
                         'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
                         'sync_status' => self::SYNC_STATE_SUCCESS,
+                        'sync_action' => null,
                         'sync_message' => null,
                         'exported_at' => now(),
                     ]);
@@ -1107,6 +1114,7 @@ class Article extends Model
                 'external_id' => null,
                 'external_updated_at' => null,
                 'sync_status' => self::SYNC_STATE_SUCCESS,
+                'sync_action' => null,
                 'sync_message' => null,
             ]);
 

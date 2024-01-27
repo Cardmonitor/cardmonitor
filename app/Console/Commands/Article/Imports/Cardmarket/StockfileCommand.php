@@ -84,10 +84,7 @@ class StockfileCommand extends Command
             $stockfile_article_count += $cardmarket_card['amount'];
 
             $articles_for_card = Article::select('articles.*')
-                ->with('externalIds', function ($query) {
-                    $query->where('external_type', 'woocommerce')
-                        ->whereNotNull('external_id');
-                })
+                ->with('externalIdsCardmarket')
                 ->join('cards', 'cards.id', '=', 'articles.card_id')
                 ->where('articles.user_id', $this->user->id)
                 ->where('articles.card_id', $cardmarket_product_id)
@@ -249,10 +246,37 @@ class StockfileCommand extends Command
                 if ($cardmarket_article['amount'] < 1) {
                     continue;
                 }
+
+                $attributes = [
+                    'user_id' => $this->user->id,
+                    'card_id' => $cardmarket_product_id,
+                    'language_id' => $cardmarket_article['language_id'],
+                    'condition' => $cardmarket_article['condition'],
+                    'unit_price' => $cardmarket_article['unit_price'],
+                    'is_foil' => $cardmarket_article['is_foil'],
+                    'is_reverse_holo' => $cardmarket_article['is_reverse_holo'],
+                    'is_first_edition' => $cardmarket_article['is_first_edition'],
+                    'is_signed' => $cardmarket_article['is_signed'],
+                    'is_altered' => $cardmarket_article['is_altered'],
+                    'is_playset' => $cardmarket_article['is_playset'],
+                    'cardmarket_article_id' => $cardmarket_article['cardmarket_article_id'],
+                    'cardmarket_comments' => $cardmarket_article['cardmarket_comments'],
+                    'number' => $cardmarket_article['number_from_cardmarket_comments'],
+                    'has_sync_error' => false,
+                    'sync_error' => null,
+                    'should_sync' => false,
+                    'is_sellable' => 1,
+                    'is_sellable_since' => now(),
+                ];
                 foreach (range(0, ($cardmarket_article['amount'] - 1)) as $index) {
                     $output = $this->output($cardmarket_product_id, $sync_action, new Article(), $cardmarket_article);
                     $this->line(implode("\t", $output));
                     $this->addToCsvFile($output);
+
+                    $article = Article::create($attributes);
+
+                    $this->updateOrCreateExternalId($article, $cardmarket_article, $sync_action, Article::SYNC_STATE_ERROR);
+
                     $sync_actions[$sync_action]++;
                 }
             }
@@ -387,7 +411,12 @@ class StockfileCommand extends Command
 
     private function updateOrCreateExternalId(Article $article, array $cardmarket_article, string $sync_action, int $sync_status = Article::SYNC_STATE_SUCCESS): void
     {
-        $article->externalIds()->updateOrCreate([
+        if ($article->externalIdsCardmarket?->sync_action === 'CREATED') {
+            $sync_action = 'CREATED';
+            $sync_status = Article::SYNC_STATE_ERROR;
+        }
+
+        $article->externalIdsCardmarket()->updateOrCreate([
             'user_id' => $article->user_id,
             'external_type' =>'cardmarket',
         ], [

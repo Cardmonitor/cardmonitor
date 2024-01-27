@@ -231,7 +231,7 @@
                                 </optgroup>
                             </select>
                         </td>
-                        <td class="align-middle" colspan="3"></td>
+                        <td class="align-middle" colspan="2"></td>
                         <td class="align-middle text-right">
                             <button class="btn btn-sm btn-secondary" style="width: 132px;" :disabled="actioning.status === true" @click="action">
                                 <i class="fas fa-spinner fa-spin mr-1" v-show="actioning.status === true"></i>Ausführen
@@ -414,11 +414,13 @@
                     {slug: 'CARDMARKET_ID', name: 'Cardmarket Article ID'},
                     {slug: 'SIMILAR', name: 'Ähnliche Karte'},
                     {slug: 'CARD', name: 'Karte'},
+                    {slug: 'CREATED', name: 'Angelegte Artikel'},
                     {slug: 'DELETED', name: 'Gelöscht'},
                     {slug: 'DELETED_REST', name: 'Sonstige gelöschte Artikel'},
                 ],
                 sync_actions_woocommerce: [
                     {slug: 'NUMBER', name: 'Nummer'},
+                    {slug: 'CREATED', name: 'Angelegte Artikel'},
                     {slug: 'DELETED_REST', name: 'Gelöschte Artikel'},
                 ],
             };

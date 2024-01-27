@@ -2787,6 +2787,9 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         slug: 'CARD',
         name: 'Karte'
       }, {
+        slug: 'CREATED',
+        name: 'Angelegte Artikel'
+      }, {
         slug: 'DELETED',
         name: 'Gelöscht'
       }, {
@@ -2796,6 +2799,9 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       sync_actions_woocommerce: [{
         slug: 'NUMBER',
         name: 'Nummer'
+      }, {
+        slug: 'CREATED',
+        name: 'Angelegte Artikel'
       }, {
         slug: 'DELETED_REST',
         name: 'Gelöschte Artikel'
@@ -11255,7 +11261,7 @@ var render = function render() {
   }, [_vm._v("Upload zu WooCommerce")])])])]), _vm._v(" "), _c("td", {
     staticClass: "align-middle",
     attrs: {
-      colspan: "3"
+      colspan: "2"
     }
   }), _vm._v(" "), _c("td", {
     staticClass: "align-middle text-right"
