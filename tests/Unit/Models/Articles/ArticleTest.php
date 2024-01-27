@@ -1579,6 +1579,14 @@ class ArticleTest extends TestCase
                 'value' => $article->card->game_id,
             ],
             [
+                'key' => 'card_id',
+                'value' => $article->card->id,
+            ],
+            [
+                'key' => 'expansion_id',
+                'value' => $article->card->expansion->id,
+            ],
+            [
                 'key' => 'expansion_abbreviation',
                 'value' => $article->card->expansion->abbreviation,
             ],
