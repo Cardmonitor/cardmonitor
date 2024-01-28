@@ -2,29 +2,30 @@
 
 namespace App\Models\Orders;
 
-use App\Models\Articles\Article;
-use App\Models\Cards\Card;
-use App\Models\Images\Image;
-use App\Models\Items\Item;
-use App\Models\Items\Transactions\Sale;
-use App\Models\Orders\Evaluation;
-use App\Models\Storages\Content;
-use App\Models\Users\CardmarketUser;
-use App\Support\Locale;
 use App\User;
 use Carbon\Carbon;
+use App\Support\Locale;
 use Carbon\CarbonPeriod;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use App\Models\Cards\Card;
+use App\Models\Items\Item;
 use Illuminate\Support\Arr;
+use App\Models\Images\Image;
+use App\Enums\ExternalIds\ExernalType;
+use App\Models\Articles\Article;
+use App\Models\Storages\Content;
+use App\Models\Orders\Evaluation;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use App\Models\Users\CardmarketUser;
+use App\Models\Items\Transactions\Sale;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Order extends Model
 {
@@ -83,7 +84,7 @@ class Order extends Model
         $seller = CardmarketUser::updateOrCreateFromCardmarket($cardmarket_order['seller']);
 
         $values = [
-            'source_slug' => 'cardmarket',
+            'source_slug' => ExernalType::CARDMARKET->value,
             'source_id' => $cardmarket_order['idOrder'],
             'cardmarket_order_id' => $cardmarket_order['idOrder'],
             'buyer_id' => $buyer->id,
@@ -110,7 +111,7 @@ class Order extends Model
         ];
 
         $order = self::updateOrCreate([
-            'source_slug' => 'cardmarket',
+            'source_slug' => ExernalType::CARDMARKET->value,
             'source_id' => $cardmarket_order['idOrder'],
         ], $values);
 

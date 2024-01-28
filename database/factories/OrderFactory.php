@@ -2,10 +2,11 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Orders\Order;
-use App\Models\Users\CardmarketUser;
 use App\User;
+use App\Models\Orders\Order;
 use Faker\Generator as Faker;
+use App\Enums\ExternalIds\ExernalType;
+use App\Models\Users\CardmarketUser;
 
 $factory->define(Order::class, function (Faker $faker) {
 
@@ -13,7 +14,7 @@ $factory->define(Order::class, function (Faker $faker) {
 
     return [
         'user_id' => factory(User::class),
-        'source_slug' => 'cardmarket',
+        'source_slug' => ExernalType::CARDMARKET->value,
         'source_id' => $cardmarket_order_id,
         'buyer_id' => factory(CardmarketUser::class),
         'seller_id' => factory(CardmarketUser::class),

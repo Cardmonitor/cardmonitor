@@ -11,6 +11,7 @@ use Illuminate\Console\Command;
 use App\Models\Articles\Article;
 use App\Models\Articles\ExternalId;
 use App\Models\Localizations\Language;
+use Types;
 
 class SyncCommand extends Command
 {
@@ -78,7 +79,7 @@ class SyncCommand extends Command
 
             $article->externalIdsWoocommerce()->updateOrCreate([
                 'user_id' => $article->user_id,
-                'external_type' => 'woocommerce',
+                'external_type' => Types::WOOCOMMERCE->value,
             ], [
                 'external_id' => $woocommerce_product['id'],
                 'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
@@ -88,7 +89,7 @@ class SyncCommand extends Command
             ]);
         }
 
-        $deleted_rest_count = ExternalId::where('external_type', 'woocommerce')
+        $deleted_rest_count = ExternalId::where('external_type', Types::WOOCOMMERCE->value)
             ->where('user_id', $user->id)
             ->whereNotNull('external_id')
             ->whereHas('article', function ($query) {

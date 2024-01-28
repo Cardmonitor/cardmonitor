@@ -14,6 +14,7 @@ use App\Models\Storages\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Models\Expansions\Expansion;
 use App\Collections\ArticleCollection;
+use App\Enums\ExternalIds\ExernalType;
 use App\Models\Localizations\Language;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
@@ -626,9 +627,9 @@ class Article extends Model
                 'should_sync' => false,
             ]);
 
-            $this->externalIds()->updateOrCreate([
+            $this->externalIdsCardmarket()->updateOrCreate([
                 'user_id' => $this->user_id,
-                'external_type' => 'cardmarket',
+                'external_type' => ExernalType::CARDMARKET->value,
             ], [
                 'external_id' => $cardmarketArticle['idArticle'],
                 'external_updated_at' => new Carbon($cardmarketArticle['lastEdited']),
@@ -647,9 +648,9 @@ class Article extends Model
             // 'cardmarket_article_id' => null,
         ]);
 
-        $this->externalIds()->updateOrCreate([
+        $this->externalIdsCardmarket()->updateOrCreate([
             'user_id' => $this->user_id,
-            'external_type' => 'cardmarket',
+            'external_type' => ExernalType::CARDMARKET->value,
         ], [
             'sync_status' => self::SYNC_STATE_ERROR,
             'sync_message' => $response['inserted']['error'],
@@ -673,9 +674,9 @@ class Article extends Model
                     'should_sync' => false,
                 ]);
 
-                $this->externalIds()->updateOrCreate([
+                $this->externalIdsCardmarket()->updateOrCreate([
                     'user_id' => $this->user_id,
-                    'external_type' => 'cardmarket',
+                    'external_type' => ExernalType::CARDMARKET->value,
                 ], [
                     'external_id' => $cardmarket_article['idArticle'],
                     'external_updated_at' => new Carbon($cardmarket_article['lastEdited']),
@@ -705,9 +706,9 @@ class Article extends Model
                     'is_altered' => Arr::get($cardmarket_article, 'isAltered', false),
                 ]);
 
-                $this->externalIds()->updateOrCreate([
+                $this->externalIdsCardmarket()->updateOrCreate([
                     'user_id' => $this->user_id,
-                    'external_type' => 'cardmarket',
+                    'external_type' => ExernalType::CARDMARKET->value,
                 ], [
                     'external_id' => $cardmarket_article['idArticle'],
                     'external_updated_at' => new Carbon($cardmarket_article['lastEdited']),
@@ -727,9 +728,9 @@ class Article extends Model
                     'cardmarket_article_id' => null,
                 ]);
 
-                $this->externalIds()->updateOrCreate([
+                $this->externalIdsCardmarket()->updateOrCreate([
                     'user_id' => $this->user_id,
-                    'external_type' => 'cardmarket',
+                    'external_type' => ExernalType::CARDMARKET->value,
                 ], [
                     'external_id' => null,
                     'sync_status' => self::SYNC_STATE_ERROR,
@@ -747,7 +748,7 @@ class Article extends Model
 
     public function syncDelete() : bool
     {
-        $external_id_cardmarket = $this->externalIds()->where('external_type', 'cardmarket')->first();
+        $external_id_cardmarket = $this->externalIdsCardmarket;
         if (is_null($this->cardmarket_article_id) && (is_null($external_id_cardmarket) || is_null($external_id_cardmarket->external_id))) {
             return true;
         }
@@ -769,9 +770,9 @@ class Article extends Model
         }
 
         if ($success) {
-            $this->externalIds()->updateOrCreate([
+            $this->externalIdsCardmarket()->updateOrCreate([
                 'user_id' => $this->user_id,
-                'external_type' => 'cardmarket',
+                'external_type' => ExernalType::CARDMARKET->value,
             ], [
                 'external_id' => null,
                 'external_updated_at' => null,
@@ -909,7 +910,7 @@ class Article extends Model
 
     public function syncWooCommerce(): bool
     {
-        $external_id = $this->externalIds()->where('external_type', 'woocommerce')->first();
+        $external_id = $this->externalIdsWooComerce;
         if (is_null($external_id) || is_null($external_id->external_id)) {
             return $this->syncWooCommerceAdd();
         }
@@ -923,9 +924,9 @@ class Article extends Model
         if ($response->successful()) {
             $woocommerce_product = $response->json();
 
-            $this->externalIds()->updateOrCreate([
+            $this->externalIdsWooCommerce()->updateOrCreate([
                 'user_id' => $this->user_id,
-                'external_type' => 'woocommerce',
+                'external_type' => ExernalType::WOOCOMMERCE->value
             ], [
                 'external_id' => $woocommerce_product['id'],
                 'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
@@ -941,9 +942,9 @@ class Article extends Model
 
         // Produkt mit der SKU existiert bereits
         if ($woocommerce_error['code'] === 'product_invalid_sku' && Arr::get($woocommerce_error, 'data.resource_id')) {
-            $this->externalIds()->updateOrCreate([
+            $this->externalIdsWooCommerce()->updateOrCreate([
                 'user_id' => $this->user_id,
-                'external_type' => 'woocommerce',
+                'external_type' => ExernalType::WOOCOMMERCE->value
             ], [
                 'external_id' => $woocommerce_error['data']['resource_id'],
                 'sync_status' => self::SYNC_STATE_SUCCESS,
@@ -955,9 +956,9 @@ class Article extends Model
             return true;
         }
 
-        $this->externalIds()->updateOrCreate([
+        $this->externalIdsWooCommerce()->updateOrCreate([
             'user_id' => $this->user_id,
-            'external_type' => 'woocommerce',
+            'external_type' => ExernalType::WOOCOMMERCE->value
         ], [
             'sync_status' => self::SYNC_STATE_ERROR,
             'sync_message' => $woocommerce_error['data']['message'],
@@ -968,13 +969,13 @@ class Article extends Model
 
     public function syncWooCommerceUpdate(): bool
     {
-        $response = (new WooCommerceOrder())->updateProduct($this->externalIds()->where('external_type', 'woocommerce')->first()->external_id, $this->toWooCommerce());
+        $response = (new WooCommerceOrder())->updateProduct($this->externalIdsWooCommerce->external_id, $this->toWooCommerce());
         if ($response->successful()) {
             $woocommerce_product = $response->json();
 
-            $this->externalIds()->updateOrCreate([
+            $this->externalIdsWooCommerce()->updateOrCreate([
                 'user_id' => $this->user_id,
-                'external_type' => 'woocommerce',
+                'external_type' => ExernalType::WOOCOMMERCE->value
             ], [
                 'external_id' => $woocommerce_product['id'],
                 'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
@@ -1008,9 +1009,9 @@ class Article extends Model
                 }
                 if ($woocommerce_products_count === 1) {
                     $woocommerce_product = $woocommerce_products[0];
-                    $this->externalIds()->updateOrCreate([
+                    $this->externalIdsWooCommerce()->updateOrCreate([
                         'user_id' => $this->user_id,
-                        'external_type' => 'woocommerce',
+                        'external_type' => ExernalType::WOOCOMMERCE->value
                     ], [
                         'external_id' => $woocommerce_product['id'],
                         'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
@@ -1032,9 +1033,9 @@ class Article extends Model
             $values['sync_message'] = 'Ungültige ID.';
         }
 
-        $this->externalIds()->updateOrCreate([
+        $this->externalIdsWooCommerce()->updateOrCreate([
             'user_id' => $this->user_id,
-            'external_type' => 'woocommerce',
+            'external_type' => ExernalType::WOOCOMMERCE->value
         ], $values);
 
         return false;
@@ -1042,16 +1043,16 @@ class Article extends Model
 
     public function syncWooCommerceDelete(): bool
     {
-        $woocommerce__product_id = $this->externalIds()->where('external_type', 'woocommerce')->first()?->external_id;
-        if (is_null($woocommerce__product_id)) {
+        $woocommerce_product_id = $this->externalIdsWooCommerce?->external_id;
+        if (is_null($woocommerce_product_id)) {
             return true;
         }
 
-        $response = (new WooCommerceOrder())->deleteProduct($woocommerce__product_id);
+        $response = (new WooCommerceOrder())->deleteProduct($woocommerce_product_id);
         if ($response->successful()) {
-            $this->externalIds()->updateOrCreate([
+            $this->externalIdsWooCommerce()->updateOrCreate([
                 'user_id' => $this->user_id,
-                'external_type' => 'woocommerce',
+                'external_type' => ExernalType::WOOCOMMERCE->value
             ], [
                 'external_id' => null,
                 'external_updated_at' => null,
@@ -1075,9 +1076,9 @@ class Article extends Model
                 $woocommerce_products = $response->json();
                 $woocommerce__products_count = count($woocommerce_products);
                 if ($woocommerce__products_count === 0) {
-                    $this->externalIds()->updateOrCreate([
+                    $this->externalIdsWooCommerce()->updateOrCreate([
                         'user_id' => $this->user_id,
-                        'external_type' => 'woocommerce',
+                        'external_type' => ExernalType::WOOCOMMERCE->value
                     ], [
                         'external_id' => null,
                         'external_updated_at' => null,
@@ -1090,9 +1091,9 @@ class Article extends Model
                 }
                 if ($woocommerce__products_count === 1) {
                     $woocommerce_product = $woocommerce_products[0];
-                    $this->externalIds()->updateOrCreate([
+                    $this->externalIdsWooCommerce()->updateOrCreate([
                         'user_id' => $this->user_id,
-                        'external_type' => 'woocommerce',
+                        'external_type' => ExernalType::WOOCOMMERCE->value
                     ], [
                         'external_id' => $woocommerce_product['id'],
                         'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
@@ -1107,9 +1108,9 @@ class Article extends Model
             }
         }
         elseif (Arr::get($woocommerce_error, 'code') === 'woocommerce_rest_already_trashed') {
-            $this->externalIds()->updateOrCreate([
+            $this->externalIdsWooCommerce()->updateOrCreate([
                 'user_id' => $this->user_id,
-                'external_type' => 'woocommerce',
+                'external_type' => ExernalType::WOOCOMMERCE->value
             ], [
                 'external_id' => null,
                 'external_updated_at' => null,
@@ -1121,9 +1122,9 @@ class Article extends Model
             return true;
         }
 
-        $this->externalIds()->updateOrCreate([
+        $this->externalIdsWooCommerce()->updateOrCreate([
             'user_id' => $this->user_id,
-            'external_type' => 'woocommerce',
+            'external_type' => ExernalType::WOOCOMMERCE->value
         ], [
             'sync_status' => self::SYNC_STATE_ERROR,
             'sync_message' => Arr::get($woocommerce_error, 'data.message', 'Unbekannter Fehler'),
@@ -1629,12 +1630,12 @@ class Article extends Model
 
     public function externalIdsCardmarket(): HasOne
     {
-        return $this->hasOne(ExternalId::class)->where('external_type', 'cardmarket');
+        return $this->hasOne(ExternalId::class)->where('external_type', ExernalType::CARDMARKET->value);
     }
 
     public function externalIdsWooCommerce(): HasOne
     {
-        return $this->hasOne(ExternalId::class)->where('external_type', 'woocommerce');
+        return $this->hasOne(ExternalId::class)->where('external_type', ExernalType::WOOCOMMERCE->value);
     }
 
     public function language() : BelongsTo
@@ -1809,10 +1810,10 @@ class Article extends Model
             ->search(Arr::get($filter, 'searchtext'))
             ->storage(Arr::get($filter, 'storage_id'))
             ->sync(Arr::get($filter, 'sync'))
-            ->externalIdSyncState(Arr::get($filter, 'sync_cardmarket'), 'cardmarket')
-            ->externalIdSyncState(Arr::get($filter, 'sync_woocommerce'), 'woocommerce')
-            ->syncAction(Arr::get($filter, 'cardmarket_sync_action'), 'cardmarket')
-            ->syncAction(Arr::get($filter, 'woocommerce_sync_action'), 'woocommerce');
+            ->externalIdSyncState(Arr::get($filter, 'sync_cardmarket'), ExernalType::CARDMARKET->value)
+            ->externalIdSyncState(Arr::get($filter, 'sync_woocommerce'), ExernalType::WOOCOMMERCE->value)
+            ->syncAction(Arr::get($filter, 'cardmarket_sync_action'), ExernalType::CARDMARKET->value)
+            ->syncAction(Arr::get($filter, 'woocommerce_sync_action'), ExernalType::WOOCOMMERCE->value);
     }
 
     public function scopeOrder(Builder $query, $value) : Builder
@@ -1986,9 +1987,8 @@ class Article extends Model
 
         // Number from Cardmarket Comments is empty
         if ($value == 3) {
-            return $query->whereHas('externalIds', function ($query) {
-                $query->where('external_type', 'cardmarket')
-                    ->where('sync_message', 'Number from Cardmarket Comments is empty');
+            return $query->whereHas('externalIdsCardmarket', function ($query) {
+                $query->where('sync_message', 'Number from Cardmarket Comments is empty');
             });
         };
 
@@ -2018,9 +2018,8 @@ class Article extends Model
         }
 
         if ($value == 3) {
-            return $query->whereHas('externalIds', function ($query) {
-                $query->where('external_type', 'cardmarket')
-                    ->where('sync_message', 'Number from Cardmarket Comments is empty');
+            return $query->whereHas('externalIdsCardmarket', function ($query) {
+                $query->where('sync_message', 'Number from Cardmarket Comments is empty');
             });
         };
 

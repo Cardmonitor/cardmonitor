@@ -2,6 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use App\Enums\ExternalIds\ExernalType;
 use App\Models\Users\CardmarketUser;
 use Faker\Generator as Faker;
 
@@ -10,7 +11,7 @@ $factory->define(CardmarketUser::class, function (Faker $faker) {
     $cardmarket_user_id = $faker->unique()->randomNumber();
 
     return [
-        'source_slug' => 'cardmarket',
+        'source_slug' => ExernalType::CARDMARKET->value,
         'source_id' => $cardmarket_user_id,
         'cardmarket_user_id' => $cardmarket_user_id,
         'username' => $faker->userName,

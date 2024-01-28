@@ -30,7 +30,7 @@ class ArticleController extends Controller
 
     public function show(Article $article)
     {
-        $external_id = $article->externalIds->where('external_type', 'woocommerce')->whereNotNull('external_id')->first();
+        $external_id = $article->externalIdsWooCommerce()->whereNotNull('external_id')->first();
 
         if (!$external_id) {
             return back()->with('status', [

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Article\Imports\Cardmarket;
 
+use App\Enums\ExternalIds\ExernalType;
 use App\User;
 use ZipArchive;
 use Illuminate\Support\Arr;
@@ -418,7 +419,7 @@ class StockfileCommand extends Command
 
         $article->externalIdsCardmarket()->updateOrCreate([
             'user_id' => $article->user_id,
-            'external_type' =>'cardmarket',
+            'external_type' => ExernalType::CARDMARKET->value,
         ], [
             'external_id' => $article->cardmarket_article_id,
             'external_updated_at' => $article->cardmarket_last_edited,

@@ -14,6 +14,7 @@ use App\Models\Expansions\Expansion;
 use App\Models\Items\Card as ItemCard;
 use App\Models\Localizations\Language;
 use App\Console\Commands\Article\Imports\Cardmarket\StockfileCommand;
+use App\Enums\ExternalIds\ExernalType;
 
 class ArticleController extends Controller
 {
@@ -292,8 +293,8 @@ class ArticleController extends Controller
         if ($is_deletable = $article->isDeletable()) {
             foreach ($article->externalIds()->whereNotNull('external_id')->get() as $external_id) {
                 $is_deletable = match ($external_id->external_type) {
-                    'cardmarket' => $article->syncDelete(),
-                    'woocommerce' => $article->syncWooCommerceDelete(),
+                    ExernalType::CARDMARKET->value => $article->syncDelete(),
+                    ExernalType::WOOCOMMERCE->value => $article->syncWooCommerceDelete(),
                 };
 
                 if (!$is_deletable) {
