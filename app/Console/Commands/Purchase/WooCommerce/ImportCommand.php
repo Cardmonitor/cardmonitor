@@ -1,35 +1,19 @@
 <?php
 
-namespace App\Console\Commands\Order\WooCommerce;
+namespace App\Console\Commands\Purchase\WooCommerce;
 
 use App\User;
-use App\Models\Orders\Order;
 use Illuminate\Console\Command;
 use App\Importers\Orders\WooCommercePurchaseImporter;
 
 class ImportCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'order:woocommerce:import {user} {order}';
+    protected $signature = 'purchase:woocommerce:import {user} {order}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Creates an Order from a WooCommerce Order';
+    protected $description = 'Creates a Purchase from a WooCommerce Order';
 
     protected User $user;
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
     public function handle()
     {
         $this->user = User::find($this->argument('user'));
