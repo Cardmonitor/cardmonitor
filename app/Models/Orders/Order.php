@@ -406,10 +406,12 @@ class Order extends Model
         $this->articles()->sync($article_ids);
 
         // Artikel auf WooCommerce löschen
-        Artisan::queue('woocommerce:products:delete', [
-            'user' => $this->user_id,
-            '--articles' => $article_ids,
-        ]);
+        if (!empty($article_ids)) {
+            Artisan::queue('woocommerce:products:delete', [
+                'user' => $this->user_id,
+                '--articles' => $article_ids,
+            ]);
+        }
     }
 
     protected function addArticleFromCardmarket(array $cardmarket_article): array
