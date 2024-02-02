@@ -85,7 +85,10 @@ class StockfileCommand extends Command
             $stockfile_article_count += $cardmarket_card['amount'];
 
             $articles_for_card = Article::select('articles.*')
-                ->with('externalIdsCardmarket')
+                ->with([
+                    'externalIdsCardmarket',
+                    'externalIdsWoocommerce',
+                ])
                 ->join('cards', 'cards.id', '=', 'articles.card_id')
                 ->where('articles.user_id', $this->user->id)
                 ->where('articles.card_id', $cardmarket_product_id)
@@ -431,13 +434,13 @@ class StockfileCommand extends Command
 
     private function updateOnWooCommerce(Article $article): void
     {
-        if ($article->externalIds->isEmpty()) {
+        if (is_null($article->externalIdsWoocommerce)) {
             return;
         }
 
-        Artisan::queue('woocommerce:products:update', [
-            'user' => $this->user->id,
-            '--article' => $article->id,
-        ]);
+        // Artisan::queue('woocommerce:products:update', [
+        //     'user' => $this->user->id,
+        //     '--article' => $article->id,
+        // ]);
     }
 }
