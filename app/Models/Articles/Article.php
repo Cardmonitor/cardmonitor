@@ -14,7 +14,7 @@ use App\Models\Storages\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Models\Expansions\Expansion;
 use App\Collections\ArticleCollection;
-use App\Enums\ExternalIds\ExernalType;
+use App\Enums\ExternalIds\ExternalType;
 use App\Models\Localizations\Language;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
@@ -629,7 +629,7 @@ class Article extends Model
 
             $this->externalIdsCardmarket()->updateOrCreate([
                 'user_id' => $this->user_id,
-                'external_type' => ExernalType::CARDMARKET->value,
+                'external_type' => ExternalType::CARDMARKET->value,
             ], [
                 'external_id' => $cardmarketArticle['idArticle'],
                 'external_updated_at' => new Carbon($cardmarketArticle['lastEdited']),
@@ -650,7 +650,7 @@ class Article extends Model
 
         $this->externalIdsCardmarket()->updateOrCreate([
             'user_id' => $this->user_id,
-            'external_type' => ExernalType::CARDMARKET->value,
+            'external_type' => ExternalType::CARDMARKET->value,
         ], [
             'sync_status' => self::SYNC_STATE_ERROR,
             'sync_message' => $response['inserted']['error'],
@@ -676,7 +676,7 @@ class Article extends Model
 
                 $this->externalIdsCardmarket()->updateOrCreate([
                     'user_id' => $this->user_id,
-                    'external_type' => ExernalType::CARDMARKET->value,
+                    'external_type' => ExternalType::CARDMARKET->value,
                 ], [
                     'external_id' => $cardmarket_article['idArticle'],
                     'external_updated_at' => new Carbon($cardmarket_article['lastEdited']),
@@ -708,7 +708,7 @@ class Article extends Model
 
                 $this->externalIdsCardmarket()->updateOrCreate([
                     'user_id' => $this->user_id,
-                    'external_type' => ExernalType::CARDMARKET->value,
+                    'external_type' => ExternalType::CARDMARKET->value,
                 ], [
                     'external_id' => $cardmarket_article['idArticle'],
                     'external_updated_at' => new Carbon($cardmarket_article['lastEdited']),
@@ -730,7 +730,7 @@ class Article extends Model
 
                 $this->externalIdsCardmarket()->updateOrCreate([
                     'user_id' => $this->user_id,
-                    'external_type' => ExernalType::CARDMARKET->value,
+                    'external_type' => ExternalType::CARDMARKET->value,
                 ], [
                     'external_id' => null,
                     'sync_status' => self::SYNC_STATE_ERROR,
@@ -772,7 +772,7 @@ class Article extends Model
         if ($success) {
             $this->externalIdsCardmarket()->updateOrCreate([
                 'user_id' => $this->user_id,
-                'external_type' => ExernalType::CARDMARKET->value,
+                'external_type' => ExternalType::CARDMARKET->value,
             ], [
                 'external_id' => null,
                 'external_updated_at' => null,
@@ -926,7 +926,7 @@ class Article extends Model
 
             $this->externalIdsWooCommerce()->updateOrCreate([
                 'user_id' => $this->user_id,
-                'external_type' => ExernalType::WOOCOMMERCE->value
+                'external_type' => ExternalType::WOOCOMMERCE->value
             ], [
                 'external_id' => $woocommerce_product['id'],
                 'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
@@ -944,7 +944,7 @@ class Article extends Model
         if ($woocommerce_error['code'] === 'product_invalid_sku' && Arr::get($woocommerce_error, 'data.resource_id')) {
             $this->externalIdsWooCommerce()->updateOrCreate([
                 'user_id' => $this->user_id,
-                'external_type' => ExernalType::WOOCOMMERCE->value
+                'external_type' => ExternalType::WOOCOMMERCE->value
             ], [
                 'external_id' => $woocommerce_error['data']['resource_id'],
                 'sync_status' => self::SYNC_STATE_SUCCESS,
@@ -958,11 +958,24 @@ class Article extends Model
 
         $this->externalIdsWooCommerce()->updateOrCreate([
             'user_id' => $this->user_id,
-            'external_type' => ExernalType::WOOCOMMERCE->value
+            'external_type' => ExternalType::WOOCOMMERCE->value
         ], [
             'sync_status' => self::SYNC_STATE_ERROR,
             'sync_message' => $woocommerce_error['data']['message'],
         ]);
+
+        return false;
+    }
+
+    public function syncWooCommerceUpdatePrice(): bool
+    {
+        $response = (new WooCommerceOrder())->updateProduct($this->externalIdsWooCommerce->external_id, [
+            'regular_price' => $this->unit_price,
+        ]);
+
+        if ($response->successful()) {
+            return true;
+        }
 
         return false;
     }
@@ -975,7 +988,7 @@ class Article extends Model
 
             $this->externalIdsWooCommerce()->updateOrCreate([
                 'user_id' => $this->user_id,
-                'external_type' => ExernalType::WOOCOMMERCE->value
+                'external_type' => ExternalType::WOOCOMMERCE->value
             ], [
                 'external_id' => $woocommerce_product['id'],
                 'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
@@ -1011,7 +1024,7 @@ class Article extends Model
                     $woocommerce_product = $woocommerce_products[0];
                     $this->externalIdsWooCommerce()->updateOrCreate([
                         'user_id' => $this->user_id,
-                        'external_type' => ExernalType::WOOCOMMERCE->value
+                        'external_type' => ExternalType::WOOCOMMERCE->value
                     ], [
                         'external_id' => $woocommerce_product['id'],
                         'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
@@ -1035,7 +1048,7 @@ class Article extends Model
 
         $this->externalIdsWooCommerce()->updateOrCreate([
             'user_id' => $this->user_id,
-            'external_type' => ExernalType::WOOCOMMERCE->value
+            'external_type' => ExternalType::WOOCOMMERCE->value
         ], $values);
 
         return false;
@@ -1052,7 +1065,7 @@ class Article extends Model
         if ($response->successful()) {
             $this->externalIdsWooCommerce()->updateOrCreate([
                 'user_id' => $this->user_id,
-                'external_type' => ExernalType::WOOCOMMERCE->value
+                'external_type' => ExternalType::WOOCOMMERCE->value
             ], [
                 'external_id' => null,
                 'external_updated_at' => null,
@@ -1078,7 +1091,7 @@ class Article extends Model
                 if ($woocommerce__products_count === 0) {
                     $this->externalIdsWooCommerce()->updateOrCreate([
                         'user_id' => $this->user_id,
-                        'external_type' => ExernalType::WOOCOMMERCE->value
+                        'external_type' => ExternalType::WOOCOMMERCE->value
                     ], [
                         'external_id' => null,
                         'external_updated_at' => null,
@@ -1093,7 +1106,7 @@ class Article extends Model
                     $woocommerce_product = $woocommerce_products[0];
                     $this->externalIdsWooCommerce()->updateOrCreate([
                         'user_id' => $this->user_id,
-                        'external_type' => ExernalType::WOOCOMMERCE->value
+                        'external_type' => ExternalType::WOOCOMMERCE->value
                     ], [
                         'external_id' => $woocommerce_product['id'],
                         'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
@@ -1110,7 +1123,7 @@ class Article extends Model
         elseif (Arr::get($woocommerce_error, 'code') === 'woocommerce_rest_already_trashed') {
             $this->externalIdsWooCommerce()->updateOrCreate([
                 'user_id' => $this->user_id,
-                'external_type' => ExernalType::WOOCOMMERCE->value
+                'external_type' => ExternalType::WOOCOMMERCE->value
             ], [
                 'external_id' => null,
                 'external_updated_at' => null,
@@ -1124,7 +1137,7 @@ class Article extends Model
 
         $this->externalIdsWooCommerce()->updateOrCreate([
             'user_id' => $this->user_id,
-            'external_type' => ExernalType::WOOCOMMERCE->value
+            'external_type' => ExternalType::WOOCOMMERCE->value
         ], [
             'sync_status' => self::SYNC_STATE_ERROR,
             'sync_message' => Arr::get($woocommerce_error, 'data.message', 'Unbekannter Fehler'),
@@ -1630,12 +1643,12 @@ class Article extends Model
 
     public function externalIdsCardmarket(): HasOne
     {
-        return $this->hasOne(ExternalId::class)->where('external_type', ExernalType::CARDMARKET->value);
+        return $this->hasOne(ExternalId::class)->where('external_type', ExternalType::CARDMARKET->value);
     }
 
     public function externalIdsWooCommerce(): HasOne
     {
-        return $this->hasOne(ExternalId::class)->where('external_type', ExernalType::WOOCOMMERCE->value);
+        return $this->hasOne(ExternalId::class)->where('external_type', ExternalType::WOOCOMMERCE->value);
     }
 
     public function language() : BelongsTo
@@ -1810,10 +1823,10 @@ class Article extends Model
             ->search(Arr::get($filter, 'searchtext'))
             ->storage(Arr::get($filter, 'storage_id'))
             ->sync(Arr::get($filter, 'sync'))
-            ->externalIdSyncState(Arr::get($filter, 'sync_cardmarket'), ExernalType::CARDMARKET->value)
-            ->externalIdSyncState(Arr::get($filter, 'sync_woocommerce'), ExernalType::WOOCOMMERCE->value)
-            ->syncAction(Arr::get($filter, 'cardmarket_sync_action'), ExernalType::CARDMARKET->value)
-            ->syncAction(Arr::get($filter, 'woocommerce_sync_action'), ExernalType::WOOCOMMERCE->value);
+            ->externalIdSyncState(Arr::get($filter, 'sync_cardmarket'), ExternalType::CARDMARKET->value)
+            ->externalIdSyncState(Arr::get($filter, 'sync_woocommerce'), ExternalType::WOOCOMMERCE->value)
+            ->syncAction(Arr::get($filter, 'cardmarket_sync_action'), ExternalType::CARDMARKET->value)
+            ->syncAction(Arr::get($filter, 'woocommerce_sync_action'), ExternalType::WOOCOMMERCE->value);
     }
 
     public function scopeOrder(Builder $query, $value) : Builder

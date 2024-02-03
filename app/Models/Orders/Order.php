@@ -10,7 +10,7 @@ use App\Models\Cards\Card;
 use App\Models\Items\Item;
 use Illuminate\Support\Arr;
 use App\Models\Images\Image;
-use App\Enums\ExternalIds\ExernalType;
+use App\Enums\ExternalIds\ExternalType;
 use App\Models\Articles\Article;
 use App\Models\Storages\Content;
 use App\Models\Orders\Evaluation;
@@ -84,7 +84,7 @@ class Order extends Model
         $seller = CardmarketUser::updateOrCreateFromCardmarket($cardmarket_order['seller']);
 
         $values = [
-            'source_slug' => ExernalType::CARDMARKET->value,
+            'source_slug' => ExternalType::CARDMARKET->value,
             'source_id' => $cardmarket_order['idOrder'],
             'cardmarket_order_id' => $cardmarket_order['idOrder'],
             'buyer_id' => $buyer->id,
@@ -111,7 +111,7 @@ class Order extends Model
         ];
 
         $order = self::updateOrCreate([
-            'source_slug' => ExernalType::CARDMARKET->value,
+            'source_slug' => ExternalType::CARDMARKET->value,
             'source_id' => $cardmarket_order['idOrder'],
         ], $values);
 

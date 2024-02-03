@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Article\Imports\Cardmarket;
 
-use App\Enums\ExternalIds\ExernalType;
+use App\Enums\ExternalIds\ExternalType;
 use App\User;
 use ZipArchive;
 use Illuminate\Support\Arr;
@@ -122,7 +122,6 @@ class StockfileCommand extends Command
                     ]);
 
                     $this->updateOrCreateExternalId($article, $cardmarket_article, $sync_action);
-                    $this->updateOnWooCommerce($article);
 
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
@@ -154,7 +153,6 @@ class StockfileCommand extends Command
                     ]);
 
                     $this->updateOrCreateExternalId($article, $cardmarket_article, $sync_action);
-                    $this->updateOnWooCommerce($article);
 
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
@@ -193,7 +191,6 @@ class StockfileCommand extends Command
                     ]);
 
                     $this->updateOrCreateExternalId($article, $cardmarket_article, $sync_action);
-                    $this->updateOnWooCommerce($article);
 
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
@@ -232,7 +229,6 @@ class StockfileCommand extends Command
                     ]);
 
                     $this->updateOrCreateExternalId($article, $cardmarket_article, $sync_action);
-                    $this->updateOnWooCommerce($article);
 
                     $articles_for_card->forget($article->id);
                     $all_updated_article_ids[] = $article->id;
@@ -422,7 +418,7 @@ class StockfileCommand extends Command
 
         $article->externalIdsCardmarket()->updateOrCreate([
             'user_id' => $article->user_id,
-            'external_type' => ExernalType::CARDMARKET->value,
+            'external_type' => ExternalType::CARDMARKET->value,
         ], [
             'external_id' => $article->cardmarket_article_id,
             'external_updated_at' => $article->cardmarket_last_edited,
@@ -430,17 +426,5 @@ class StockfileCommand extends Command
             'sync_message' => empty(Arr::get($cardmarket_article, 'number_from_cardmarket_comments')) ? 'Number from Cardmarket Comments is empty' : null,
             'sync_action' => $sync_action,
         ]);
-    }
-
-    private function updateOnWooCommerce(Article $article): void
-    {
-        if (is_null($article->externalIdsWoocommerce)) {
-            return;
-        }
-
-        // Artisan::queue('woocommerce:products:update', [
-        //     'user' => $this->user->id,
-        //     '--article' => $article->id,
-        // ]);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Enums\ExternalIds;
 
-enum ExernalType: string {
+enum ExternalType: string {
     case CARDMARKET = 'cardmarket';
     case WOOCOMMERCE = 'woocommerce';
 }

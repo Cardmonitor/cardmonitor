@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Order;
 
-use App\Enums\ExternalIds\ExernalType;
+use App\Enums\ExternalIds\ExternalType;
 use App\User;
 use App\Models\Orders\Order;
 use Illuminate\Console\Command;
@@ -70,7 +70,7 @@ class SyncCommand extends Command
 
     private function handleState(string $actor, string $state): void
     {
-        $orders = Order::where('user_id', $this->user->id)->where('source_slug', ExernalType::CARDMARKET->value)->state($state)->get();
+        $orders = Order::where('user_id', $this->user->id)->where('source_slug', ExternalType::CARDMARKET->value)->state($state)->get();
         $order_source_ids = $orders->pluck('source_id');
 
         $synced_orders = $this->user->cardmarketApi->syncOrders($actor, $state);

@@ -11,7 +11,7 @@ use Illuminate\Console\Command;
 use App\Models\Articles\Article;
 use App\Models\Articles\ExternalId;
 use App\Models\Localizations\Language;
-use Types;
+use App\Enums\ExternalIds\ExternalType;
 
 class SyncCommand extends Command
 {
@@ -22,9 +22,12 @@ class SyncCommand extends Command
     public function handle()
     {
         $user = User::findOrFail($this->argument('user'));
+
+        $header = array_keys($this->output(0, new Article(), []));
+        $this->line(implode("\t", $header));
+
         $article_ids = [];
         foreach ($this->getProducts() as $woocommerce_product) {
-            $this->info('Syncing product: ' . $woocommerce_product['name']);
             $article = $user->articles()->with([
                 'externalIdsWoocommerce',
             ])->where('is_sellable', 1)
@@ -35,8 +38,6 @@ class SyncCommand extends Command
             $sync_status = Article::SYNC_STATE_SUCCESS;
 
             if (!$article) {
-                $this->error('Article not found: ' . $woocommerce_product['sku']);
-
                 $meta_data = array_reduce($woocommerce_product['meta_data'], function ($carry, $item) {
                     $carry[$item['key']] = $item['value'];
                     return $carry;
@@ -79,7 +80,7 @@ class SyncCommand extends Command
 
             $article->externalIdsWoocommerce()->updateOrCreate([
                 'user_id' => $article->user_id,
-                'external_type' => Types::WOOCOMMERCE->value,
+                'external_type' => ExternalType::WOOCOMMERCE->value,
             ], [
                 'external_id' => $woocommerce_product['id'],
                 'external_updated_at' => Carbon::createFromFormat('Y-m-d\TH:i:s', $woocommerce_product['date_modified']),
@@ -87,9 +88,13 @@ class SyncCommand extends Command
                 'sync_message' => null,
                 'sync_action' => $sync_action,
             ]);
+
+            $this->updatePrice($article, $woocommerce_product);
+
+            $this->line(implode("\t", $this->output($sync_action, $article, $woocommerce_product)));
         }
 
-        $deleted_rest_count = ExternalId::where('external_type', Types::WOOCOMMERCE->value)
+        $deleted_rest_count = ExternalId::where('external_type', ExternalType::WOOCOMMERCE->value)
             ->where('user_id', $user->id)
             ->whereNotNull('external_id')
             ->whereHas('article', function ($query) {
@@ -127,5 +132,27 @@ class SyncCommand extends Command
         } while ($page <= $total_pages);
 
         return $WooCommerce->orders()->json();
+    }
+
+    private function updatePrice(Article $article, array $woocommerce_product)
+    {
+        if ($article->unit_price === $woocommerce_product['regular_price']) {
+            return;
+        }
+
+        $article->syncWooCommerceUpdatePrice();
+    }
+
+    private function output($sync_action, Article $article, array $woocommerce_product = []): array
+    {
+        return [
+            'woocommerce_product_id' => str_pad(Arr::get($woocommerce_product, 'id', '-'), 22, ' ', STR_PAD_RIGHT),
+            'article_id' => str_pad($article->id ?? '-', 10, ' ', STR_PAD_RIGHT),
+            'article_number' => str_pad($article->number ?? '-', 14, ' ', STR_PAD_RIGHT),
+            'import_state' => str_pad($sync_action, 12, ' ', STR_PAD_RIGHT),
+            'article_unit_price' => str_pad($article->unit_price ?? 0, 18, ' ', STR_PAD_RIGHT),
+            'woocommerce_product_price' => str_pad(Arr::get($woocommerce_product, 'regular_price', 0), 25, ' ', STR_PAD_RIGHT),
+            'card_name' => $article->card_name ?? '-',
+        ];
     }
 }

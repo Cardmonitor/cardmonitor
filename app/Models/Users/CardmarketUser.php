@@ -5,7 +5,7 @@ namespace App\Models\Users;
 use Carbon\Carbon;
 use App\Support\Locale;
 use Illuminate\Support\Arr;
-use App\Enums\ExternalIds\ExernalType;
+use App\Enums\ExternalIds\ExternalType;
 use Illuminate\Database\Eloquent\Model;
 
 class CardmarketUser extends Model
@@ -52,7 +52,7 @@ class CardmarketUser extends Model
         ];
 
         return self::updateOrCreate([
-            'source_slug' => ExernalType::CARDMARKET->value,
+            'source_slug' => ExternalType::CARDMARKET->value,
             'source_id' => $cardmarket_user['idUser'],
         ], $values);
     }

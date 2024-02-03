@@ -5,7 +5,7 @@ namespace App\Console\Commands\Order;
 use Mockery\Matcher\Type;
 use App\Models\Orders\Order;
 use Illuminate\Console\Command;
-use App\Enums\ExternalIds\ExernalType;
+use App\Enums\ExternalIds\ExternalType;
 use Illuminate\Support\Facades\DB;
 use App\Models\Users\CardmarketUser;
 
@@ -70,7 +70,7 @@ class SetSourceCommand extends Command
 
             $updated = $order->update([
                 'id' => $id,
-                'source_slug' => ExernalType::CARDMARKET->value,
+                'source_slug' => ExternalType::CARDMARKET->value,
                 'source_id' => $order->cardmarket_order_id,
             ]);
 
@@ -123,7 +123,7 @@ class SetSourceCommand extends Command
 
             $updated = $cardmarket_user->update([
                 'id' => $id,
-                'source_slug' => ExernalType::CARDMARKET->value,
+                'source_slug' => ExternalType::CARDMARKET->value,
                 'source_id' => $cardmarket_user->cardmarket_user_id,
             ]);
 
