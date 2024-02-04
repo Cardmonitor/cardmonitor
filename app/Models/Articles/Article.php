@@ -473,6 +473,50 @@ class Article extends Model
         return $article;
     }
 
+    public static function createFromWooCommerceProduct(int $user_id, array $woocommerce_product): self
+    {
+        $meta_data = array_reduce($woocommerce_product['meta_data'], function ($carry, $item) {
+            $carry[$item['key']] = $item['value'];
+            return $carry;
+        }, []);
+
+        if (! Arr::get($meta_data, 'card_id', false)) {
+            throw new \Exception('Keine Card ID vorhanden: ' . $woocommerce_product['sku']);
+        }
+
+        $card = Card::firstOrImport(Arr::get($meta_data, 'card_id'));
+
+        $values = [
+            'user_id' => $user_id,
+            'card_id' => $card->id,
+            'language_id' => Arr::get($meta_data, 'language_id', Language::DEFAULT_ID),
+            'condition' => Arr::get($meta_data, 'condition', ''),
+            'unit_price' => $woocommerce_product['price'],
+            'is_foil' => Arr::get($meta_data, 'is_foil', '') === 'Ja',
+            'is_reverse_holo' => Arr::get($meta_data, 'is_reverse_holo', '') === 'Ja',
+            'is_first_edition' => Arr::get($meta_data, 'is_first_edition', '') === 'Ja',
+            'is_signed' => Arr::get($meta_data, 'is_signed', '') === 'Ja',
+            'is_altered' => Arr::get($meta_data, 'is_altered', '') === 'Ja',
+            'is_playset' => Arr::get($meta_data, 'is_playset', '') === 'Ja',
+            'cardmarket_comments' => Arr::get($meta_data, 'cardmarket_comments', null),
+            'number' => $woocommerce_product['sku'],
+            'is_sellable' => 1,
+            'is_sellable_since' => now(),
+        ];
+
+        $article = self::create($values);
+
+        $article->externalIdsWoocommerce()->updateOrCreate([
+            'user_id' => $user_id,
+            'external_id' => $woocommerce_product['id'],
+            'external_type' => ExternalType::WOOCOMMERCE->value,
+            'sync_action' => 'CREATED',
+            'sync_status' => self::SYNC_STATE_ERROR,
+        ]);
+
+        return $article;
+    }
+
     public static function getForGroupedPicklist(int $user_id): ArticleCollection
     {
         return self::select('articles.*', DB::raw('COUNT(articles.id) AS amount_picklist'))

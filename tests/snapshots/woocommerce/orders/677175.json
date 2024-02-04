@@ -1,0 +1,130 @@
+{
+    "id": 677175,
+    "parent_id": 0,
+    "status": "processing",
+    "currency": "EUR",
+    "version": "8.4.0",
+    "prices_include_tax": false,
+    "date_created": "2024-02-04T05:46:06",
+    "date_modified": "2024-02-04T05:46:06",
+    "discount_total": "0.00",
+    "discount_tax": "0.00",
+    "shipping_total": "10.00",
+    "shipping_tax": "0.00",
+    "cart_tax": "0.00",
+    "total": "21.98",
+    "total_tax": "0.00",
+    "customer_id": 0,
+    "order_key": "wc_order_LXFM8XsvEuTVx",
+    "billing": {
+        "first_name": "John",
+        "last_name": "Doe",
+        "company": "",
+        "address_1": "969 Market",
+        "address_2": "",
+        "city": "San Francisco",
+        "state": "CA",
+        "postcode": "94103",
+        "country": "US",
+        "email": "john.doe@example.com",
+        "phone": "(555) 555-5555"
+    },
+    "shipping": {
+        "first_name": "John",
+        "last_name": "Doe",
+        "company": "",
+        "address_1": "969 Market",
+        "address_2": "",
+        "city": "San Francisco",
+        "state": "CA",
+        "postcode": "94103",
+        "country": "US",
+        "phone": ""
+    },
+    "payment_method": "bacs",
+    "payment_method_title": "Direct Bank Transfer",
+    "transaction_id": "",
+    "customer_ip_address": "",
+    "customer_user_agent": "",
+    "created_via": "rest-api",
+    "customer_note": "",
+    "date_completed": null,
+    "date_paid": "2024-02-04T05:46:06",
+    "cart_hash": "",
+    "number": "677175",
+    "meta_data": [
+        {
+            "id": 5403417,
+            "key": "_relevanssi_noindex_reason",
+            "value": "WooCommerce Yoast SEO"
+        }
+    ],
+    "line_items": [
+        {
+            "id": 203932,
+            "name": "Intruder Alarm",
+            "product_id": 662978,
+            "variation_id": 0,
+            "quantity": 1,
+            "tax_class": "",
+            "subtotal": "11.98",
+            "subtotal_tax": "0.00",
+            "total": "11.98",
+            "total_tax": "0.00",
+            "taxes": [],
+            "meta_data": [
+                {
+                    "id": 1755375,
+                    "key": "_reduced_stock",
+                    "value": "1",
+                    "display_key": "_reduced_stock",
+                    "display_value": "1"
+                }
+            ],
+            "sku": "A016.160",
+            "price": 11.98,
+            "image": {
+                "id": "662977",
+                "src": "https://cards.keepseven.eu/wp-content/uploads/sites/4/722.jpg"
+            },
+            "parent_name": null
+        }
+    ],
+    "tax_lines": [],
+    "shipping_lines": [
+        {
+            "id": 203933,
+            "method_title": "Flat Rate",
+            "method_id": "flat_rate",
+            "instance_id": "",
+            "total": "10.00",
+            "total_tax": "0.00",
+            "taxes": [],
+            "meta_data": []
+        }
+    ],
+    "fee_lines": [],
+    "coupon_lines": [],
+    "refunds": [],
+    "payment_url": "https://cards.keepseven.eu/checkout/order-pay/677175/?pay_for_order=true&key=wc_order_LXFM8XsvEuTVx",
+    "is_editable": false,
+    "needs_payment": false,
+    "needs_processing": true,
+    "date_created_gmt": "2024-02-04T03:46:06",
+    "date_modified_gmt": "2024-02-04T03:46:06",
+    "date_completed_gmt": null,
+    "date_paid_gmt": "2024-02-04T03:46:06",
+    "currency_symbol": "€",
+    "_links": {
+        "self": [
+            {
+                "href": "https://cards.keepseven.eu/wp-json/wc/v3/orders/677175"
+            }
+        ],
+        "collection": [
+            {
+                "href": "https://cards.keepseven.eu/wp-json/wc/v3/orders"
+            }
+        ]
+    }
+}

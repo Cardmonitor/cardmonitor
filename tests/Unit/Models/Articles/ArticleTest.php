@@ -1670,4 +1670,31 @@ class ArticleTest extends TestCase
 
         $article->syncWoocommerceAdd();
     }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_from_woocommerce_product() {
+        $woocommerce_product_id = 662978;
+        $woocommerce_product = JsonSnapshot::get('tests/snapshots/woocommerce/orders/products/' . $woocommerce_product_id . '.json', function () use ($woocommerce_product_id) {
+            return (new \App\APIs\WooCommerce\WooCommerceOrder())->findProduct($woocommerce_product_id)->json();
+        });
+
+        $meta_data = array_reduce($woocommerce_product['meta_data'], function ($carry, $item) {
+            $carry[$item['key']] = $item['value'];
+            return $carry;
+        }, []);
+
+        $card = factory(Card::class)->create([
+            'cardmarket_product_id' => $meta_data['card_id'],
+        ]);
+
+        $article = Article::createFromWooCommerceProduct($this->user->id, $woocommerce_product);
+
+        $this->assertEquals($this->user->id, $article->user_id);
+        $this->assertEquals($card->id, $article->card_id);
+        $this->assertEquals($woocommerce_product['sku'], $article->number);
+        $this->assertEquals($woocommerce_product['price'], $article->unit_price);
+        $this->assertEquals($meta_data['condition'], $article->condition);
+    }
 }
