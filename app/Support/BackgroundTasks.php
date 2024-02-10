@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Storage;
 class BackgroundTasks
 {
     private string $filename = '';
+    private array $default = [
+        'user' => [],
+    ];
 
     public static function make(): self {
         return new self();
@@ -35,7 +38,7 @@ class BackgroundTasks
     public function all(): array
     {
         if (! file_exists($this->filename)) {
-            return [];
+            return $this->default;
         }
 
         return json_decode(file_get_contents($this->filename), true) ?? [];

@@ -184,11 +184,30 @@
         methods: {
             checkBackgroundTasks(background_tasks) {
                 const component = this;
-                component.syncing.status = !!background_tasks['user'][window.user.id].order.sync || false;
+                component.syncing.status = this.getOrderSyncingStatus(background_tasks);
 
                 if (!component.syncing.status) {
                     this.fetch();
                 }
+            },
+            getOrderSyncingStatus(background_tasks) {
+                const keys = [
+                    'user',
+                    window.user.id,
+                    'order',
+                    'sync',
+                ];
+                let check_object = background_tasks;
+
+                // check if all keys exist
+                for (let i in keys) {
+                    if (check_object[keys[i]] === undefined) {
+                        return false;
+                    }
+                    check_object = check_object[keys[i]];
+                }
+
+                return !!background_tasks['user'][window.user.id].order.sync || false;
             },
             download() {
                 var component = this;

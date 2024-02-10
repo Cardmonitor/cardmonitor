@@ -5258,10 +5258,23 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     checkBackgroundTasks: function checkBackgroundTasks(background_tasks) {
       var component = this;
-      component.syncing.status = !!background_tasks['user'][window.user.id].order.sync || false;
+      component.syncing.status = this.getOrderSyncingStatus(background_tasks);
       if (!component.syncing.status) {
         this.fetch();
       }
+    },
+    getOrderSyncingStatus: function getOrderSyncingStatus(background_tasks) {
+      var keys = ['user', window.user.id, 'order', 'sync'];
+      var check_object = background_tasks;
+
+      // check if all keys exist
+      for (var i in keys) {
+        if (check_object[keys[i]] === undefined) {
+          return false;
+        }
+        check_object = check_object[keys[i]];
+      }
+      return !!background_tasks['user'][window.user.id].order.sync || false;
     },
     download: function download() {
       var component = this;
