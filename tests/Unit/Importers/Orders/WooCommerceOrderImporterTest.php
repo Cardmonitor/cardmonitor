@@ -21,6 +21,8 @@ class WooCommerceOrderImporterTest extends TestCase
      */
     public function it_can_update_or_create_an_order_from_woocommerce_api()
     {
+        $this->markTestSkipped('No WooCommerce Connection available');
+
         $woocommerce_order_id = 677175;
         $woocommerce_order = JsonSnapshot::get('tests/snapshots/woocommerce/orders/' . $woocommerce_order_id . '.json', function () use ($woocommerce_order_id) {
             return (new \App\APIs\WooCommerce\WooCommerceOrder())->order($woocommerce_order_id)->json();
