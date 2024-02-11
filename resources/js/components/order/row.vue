@@ -2,7 +2,7 @@
     <tr :class="{'table-warning': item.articles_on_hold_count > 0}">
         <td class="align-middle d-none d-sm-table-cell pointer" @click="link">{{ item.paid_at_formatted }}</td>
         <td class="align-middle pointer" @click="link">
-            <div>{{ item.cardmarket_order_id }}</div>
+            <div>{{ item.source_id }}</div>
             <div class="text-muted" v-if="item.buyer">{{ item.buyer.name }}</div>
         </td>
         <td class="align-middle d-none d-md-table-cell text-right pointer" @click="link">

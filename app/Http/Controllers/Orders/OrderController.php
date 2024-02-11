@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Orders;
 
+use App\Enums\Orders\Status;
 use App\Models\Items\Custom;
 use App\Models\Orders\Order;
 use Illuminate\Http\Request;
@@ -31,6 +32,7 @@ class OrderController extends Controller
                 ->search($request->input('searchtext'))
                 ->state($request->input('state'))
                 ->presale($request->input('presale'))
+                ->sourceSlug($request->input('source_slug'))
                 ->with([
                     'buyer',
                     'evaluation'
@@ -43,7 +45,7 @@ class OrderController extends Controller
         }
 
         return view($this->baseViewPath . '.index')
-            ->with('states', Order::STATES)
+            ->with('states', Status::filter())
             ->with('background_tasks', BackgroundTasks::make()->all());
     }
 

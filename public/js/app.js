@@ -5196,7 +5196,9 @@ __webpack_require__.r(__webpack_exports__);
       isLoading: true,
       syncing: {
         status: false,
-        interval: null
+        interval: null,
+        cardmarket: false,
+        woocommerce: false
       },
       paginate: {
         nextPageUrl: null,
@@ -5208,9 +5210,14 @@ __webpack_require__.r(__webpack_exports__);
         presale: null,
         searchtext: '',
         show: false,
-        state: 'paid'
+        state: 'paid',
+        source_slug: null
       },
-      selected: []
+      selected: [],
+      source_slugs: {
+        'cardmarket': 'Cardmarket',
+        'woocommerce': 'WooCommerce'
+      }
     };
   },
   mounted: function mounted() {
@@ -5260,6 +5267,8 @@ __webpack_require__.r(__webpack_exports__);
       var component = this;
       component.syncing.status = this.getOrderSyncingStatus(background_tasks);
       if (!component.syncing.status) {
+        component.syncing.cardmarket = false;
+        component.syncing.woocommerce = false;
         this.fetch();
       }
     },
@@ -5274,7 +5283,7 @@ __webpack_require__.r(__webpack_exports__);
         }
         check_object = check_object[keys[i]];
       }
-      return !!background_tasks['user'][window.user.id].order.sync || false;
+      return is_syncing;
     },
     download: function download() {
       var component = this;
@@ -5322,7 +5331,17 @@ __webpack_require__.r(__webpack_exports__);
     updated: function updated(index, item) {
       Vue.set(this.items, index, item);
     },
-    sync: function sync() {
+    syncCardmarket: function syncCardmarket() {
+      var component = this;
+      axios.put(component.uri + '/sync', component.filter).then(function (response) {
+        component.syncing.status = true;
+        Vue.success(component.$t('order.successes.syncing_background'));
+      })["catch"](function (error) {
+        Vue.error(component.$t('order.errors.synced'));
+        console.log(error);
+      })["finally"](function () {});
+    },
+    syncWooCommerce: function syncWooCommerce() {
       var component = this;
       axios.put(component.uri + '/sync', component.filter).then(function (response) {
         component.syncing.status = true;
@@ -14794,7 +14813,7 @@ var render = function render() {
     on: {
       click: _vm.link
     }
-  }, [_c("div", [_vm._v(_vm._s(_vm.item.cardmarket_order_id))]), _vm._v(" "), _vm.item.buyer ? _c("div", {
+  }, [_c("div", [_vm._v(_vm._s(_vm.item.source_id))]), _vm._v(" "), _vm.item.buyer ? _c("div", {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.item.buyer.name))]) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-md-table-cell text-right pointer",
@@ -14938,14 +14957,14 @@ var render = function render() {
       disabled: _vm.syncing.status == 1
     },
     on: {
-      click: _vm.sync
+      click: _vm.syncCardmarket
     }
   }, [_c("i", {
     staticClass: "fas fa-sync",
     "class": {
       "fa-spin": _vm.syncing.status == 1
     }
-  })]), _vm._v(" "), _c("button", {
+  }), _vm._v(" Cardmarket")]), _vm._v(" "),  false ? 0 : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-sm btn-secondary ml-1",
     attrs: {
       disabled: _vm.syncing.status == 1
@@ -15000,6 +15019,46 @@ var render = function render() {
     return _c("option", {
       domProps: {
         value: id
+      }
+    }, [_vm._v(_vm._s(name))]);
+  })], 2)])]), _vm._v(" "), _c("div", {
+    staticClass: "col-auto"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "filter-state"
+    }
+  }, [_vm._v("Shop")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.source_slug,
+      expression: "filter.source_slug"
+    }],
+    staticClass: "form-control form-control-sm",
+    attrs: {
+      id: "filter-state"
+    },
+    on: {
+      change: [function ($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "source_slug", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }, _vm.search]
+    }
+  }, [_c("option", {
+    domProps: {
+      value: null
+    }
+  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _vm._l(_vm.source_slugs, function (name, slug) {
+    return _c("option", {
+      domProps: {
+        value: slug
       }
     }, [_vm._v(_vm._s(name))]);
   })], 2)])]), _vm._v(" "), _c("div", {

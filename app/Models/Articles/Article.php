@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Expansions\Expansion;
 use App\Collections\ArticleCollection;
 use App\Enums\ExternalIds\ExternalType;
+use App\Enums\Orders\Status;
 use App\Models\Localizations\Language;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
@@ -528,7 +529,7 @@ class Article extends Model
                 'language',
             ])
             ->where('articles.user_id', $user_id)
-            ->where('orders.state', ORDER::STATE_PAID)
+            ->where('orders.state', Status::PAID->value)
             ->orderBy('cards.color_order_by', 'ASC')
             ->orderBy('cards.cmc', 'ASC')
             ->groupBy('articles.card_id')

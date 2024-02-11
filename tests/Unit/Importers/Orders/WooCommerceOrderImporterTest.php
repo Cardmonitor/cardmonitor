@@ -2,16 +2,14 @@
 
 namespace Tests\Unit\Importers\Orders;
 
-use Mockery;
 use Tests\TestCase;
 use App\Models\Cards\Card;
 use App\Models\Orders\Order;
-use App\APIs\WooCommerce\Status;
 use App\Models\Articles\Article;
 use App\Models\Users\CardmarketUser;
 use App\Enums\ExternalIds\ExternalType;
+use App\Enums\Orders\Status;
 use Tests\Support\Snapshots\JsonSnapshot;
-use App\APIs\WooCommerce\WooCommerceOrder;
 use App\Importers\Orders\WooCommerceOrderImporter;
 
 class WooCommerceOrderImporterTest extends TestCase
@@ -77,7 +75,7 @@ class WooCommerceOrderImporterTest extends TestCase
         $this->assertEquals($woocommerce_order['id'], $order->source_id);
         $this->assertEquals(ExternalType::WOOCOMMERCE->value, $order->source_slug);
         $this->assertEquals($order->buyer->id, $order->buyer_id);
-        $this->assertEquals($woocommerce_order['status'], $order->state);
+        $this->assertEquals(Status::fromWooCommerceSlug($woocommerce_order['status'])->value, $order->state);
         $this->assertEquals($quantity, $order->articles_count);
 
         foreach ($order->articles as $key => $article) {

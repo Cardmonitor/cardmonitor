@@ -2,22 +2,18 @@
 
 namespace App\Http\Controllers\Cardmarket\Orders;
 
-use App\Http\Controllers\Controller;
-use App\Models\Orders\Order;
 use App\User;
+use App\Enums\Orders\Status;
+use App\Models\Orders\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
 
 class OrderController extends Controller
 {
     protected $CardmarketApi;
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         if ($request->wantsJson()) {
@@ -25,17 +21,10 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Order  $order
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Order $order = null)
     {
         $request->validate([
-            'state' => 'sometimes|nullable|in:' . implode(',', array_keys(Order::STATES)),
+            'state' => 'sometimes|nullable|in:' . implode(',', Status::values()),
         ]);
 
         $user = auth()->user();
@@ -47,15 +36,9 @@ class OrderController extends Controller
 
         if (is_null($order)) {
             $this->processing($user);
-            if ($request->has('state') && in_array($request->input('state'), array_keys(Order::STATES))) {
+            if ($request->has('state') && in_array($request->input('state'), Status::values())) {
                 $state = $request->input('state');
                 $this->syncStateOrders($user, $state);
-                // Funktioniert aktuell nicht 429 Too Many Requests
-                // if ($state == Order::STATE_PAID) {
-                //     Artisan::queue('article:imports:cardmarket:stockfile', [
-                //         'user' => $user->id,
-                //     ]);
-                // }
             }
             else {
                 $this->syncAllOrders($user);
@@ -93,8 +76,8 @@ class OrderController extends Controller
     protected function syncStateOrders(User $user, string $state)
     {
         $states = [$state];
-        if ($state == Order::STATE_PAID) {
-            $states[] = Order::STATE_BOUGHT;
+        if ($state == Status::PAID->value) {
+            $states[] = Status::BOUGHT->value;
         }
 
         Artisan::queue('order:sync', [

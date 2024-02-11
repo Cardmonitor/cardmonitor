@@ -6,6 +6,7 @@ use Mockery;
 use Tests\TestCase;
 use App\Models\Items\Item;
 use Illuminate\Support\Arr;
+use App\Enums\Orders\Status;
 use App\Models\Images\Image;
 use App\Models\Orders\Order;
 use App\Models\Articles\Article;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\App;
 use App\Models\Expansions\Expansion;
 use App\Models\Users\CardmarketUser;
 use App\Models\Localizations\Language;
+use App\Enums\ExternalIds\ExternalType;
 use Tests\Traits\RelationshipAssertions;
 use Tests\Support\Snapshots\JsonSnapshot;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -333,17 +335,17 @@ class OrderTest extends TestCase
     {
         $orders = [];
         $orders_count = 0;
-        foreach (Order::STATES as $state => $label) {
-            $orders[$state] = factory(Order::class)->create([
+        foreach (Status::cases() as $status) {
+            $orders[$status->value] = factory(Order::class)->create([
                 'user_id' => $this->user->id,
-                'state' => $state,
+                'state' => $status->value,
             ]);
             $orders_count++;
         }
 
-        $cancelled_order = $orders[Order::STATE_CANCELLED];
+        $cancelled_order = $orders[Status::CANCELLED->value];
 
-        Arr::forget($orders, Order::STATE_CANCELLED);
+        Arr::forget($orders, Status::CANCELLED->value);
         $not_canceled_order_count = count($orders);
 
         $not_cancelled_order_ids = Arr::pluck($orders, 'id');
@@ -378,5 +380,41 @@ class OrderTest extends TestCase
         ]);
 
         $this->assertFalse($order->fresh()->is_importable);
+    }
+
+    /**
+     * @test
+     */
+    public function it_knows_its_external_type()
+    {
+        $order = factory(Order::class)->create([
+            'source_slug' => \App\Enums\ExternalIds\ExternalType::CARDMARKET->value,
+        ]);
+
+        $this->assertEquals(ExternalType::CARDMARKET, $order->externalType);
+
+        $order = factory(Order::class)->create([
+            'source_slug' => \App\Enums\ExternalIds\ExternalType::WOOCOMMERCE->value,
+        ]);
+
+        $this->assertEquals(ExternalType::WOOCOMMERCE, $order->externalType);
+    }
+
+    /**
+     * @test
+     */
+    public function it_knows_its_formatted_state()
+    {
+        $order = factory(Order::class)->create([
+            'state' => Status::CANCELLED->value,
+        ]);
+
+        $this->assertEquals(Status::CANCELLED->name(), $order->state_formatted);
+
+        $order = factory(Order::class)->create([
+            'state' => 'unknown',
+        ]);
+
+        $this->assertEquals('unknown', $order->state_formatted);
     }
 }

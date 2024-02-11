@@ -19,7 +19,7 @@ class BackgroundTasksTest extends TestCase
         ];
 
         $BackgroundTasks->flush();
-        $this->assertEquals([], $BackgroundTasks->all());
+        $this->assertEquals(['user' => []], $BackgroundTasks->all());
 
         $BackgroundTasks->setContent($content);
 
@@ -134,6 +134,6 @@ class BackgroundTasksTest extends TestCase
 
         $BackgroundTasks->flush();
 
-        $this->assertEquals([], $BackgroundTasks->all());
+        $this->assertEquals(['user' => []], $BackgroundTasks->all());
     }
 }

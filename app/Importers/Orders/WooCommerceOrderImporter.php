@@ -2,11 +2,12 @@
 
 namespace App\Importers\Orders;
 
+use App\Enums\Orders\Status;
 use App\Models\Orders\Order;
 use Illuminate\Support\Carbon;
-use App\Enums\ExternalIds\ExternalType;
 use App\Models\Articles\Article;
 use App\Models\Users\CardmarketUser;
+use App\Enums\ExternalIds\ExternalType;
 
 class WooCommerceOrderImporter
 {
@@ -53,7 +54,7 @@ class WooCommerceOrderImporter
             'buyer_id' => $buyer->id,
             'seller_id' => null,
             'shipping_method_id' => 0,
-            'state' => $woocommerce_order['status'],
+            'state' => Status::fromWooCommerceSlug($woocommerce_order['status'])->value,
             'shippingmethod' => '',
             'shipping_name' => $woocommerce_order['shipping']['first_name'] . ' ' . $woocommerce_order['shipping']['last_name'],
             'shipping_extra' => '',
@@ -63,14 +64,16 @@ class WooCommerceOrderImporter
             'shipping_country' => $woocommerce_order['shipping']['country'],
             'shipment_revenue' => $woocommerce_order['shipping_total'],
             'articles_count' => $articles_count,
-            'articles_cost' => $articles_cost,
-            'cost' => $woocommerce_order['total'],
+            'articles_revenue' => $articles_cost,
+            'articles_cost' => 0,
+            'revenue' => $woocommerce_order['total'],
+            'cost' => 0,
             'user_id' => $this->user_id,
-            'bought_at' => new Carbon($woocommerce_order['date_completed_gmt']),
+            'bought_at' => null,
             'canceled_at' => null,
             'paid_at' => new Carbon($woocommerce_order['date_paid_gmt']),
             'received_at' => null,
-            'sent_at' => null,
+            'sent_at' => new Carbon($woocommerce_order['date_completed_gmt']),
             'is_purchase' => false,
         ];
 

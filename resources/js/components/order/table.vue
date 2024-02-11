@@ -7,7 +7,8 @@
                     <filter-search v-model="filter.searchtext" @input="search()"></filter-search>
                 </div>
                 <button class="btn btn-sm btn-secondary ml-1" @click="filter.show = !filter.show"><i class="fas fa-filter"></i></button>
-                <button class="btn btn-sm btn-secondary ml-1" @click="sync" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i></button>
+                <button class="btn btn-sm btn-secondary ml-1" @click="syncCardmarket" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i> Cardmarket</button>
+                <button class="btn btn-sm btn-secondary ml-1" @click="syncWooCommerce" :disabled="syncing.status == 1" v-if="false"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i> WooCommerce</button>
                 <button class="btn btn-sm btn-secondary ml-1" @click="download" :disabled="syncing.status == 1"><i class="fas fa-download"></i></button>
                 <button type="button" class="btn btn-sm btn-secondary ml-1" data-toggle="modal" data-target="#import-sent">
                     <i class="fas fa-upload"></i>
@@ -24,6 +25,16 @@
                         <select class="form-control form-control-sm" id="filter-state" v-model="filter.state" @change="search">
                             <option :value="null">{{ $t('filter.all') }}</option>
                             <option :value="id" v-for="(name, id) in states">{{ name }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-auto">
+                    <div class="form-group">
+                        <label for="filter-state">Shop</label>
+                        <select class="form-control form-control-sm" id="filter-state" v-model="filter.source_slug" @change="search">
+                            <option :value="null">{{ $t('filter.all') }}</option>
+                            <option :value="slug" v-for="(name, slug) in source_slugs">{{ name }}</option>
                         </select>
                     </div>
                 </div>
@@ -118,6 +129,8 @@
                 syncing: {
                     status: false,
                     interval: null,
+                    cardmarket: false,
+                    woocommerce: false,
                 },
                 paginate: {
                     nextPageUrl: null,
@@ -130,8 +143,13 @@
                     searchtext: '',
                     show: false,
                     state: 'paid',
+                    source_slug: null,
                 },
                 selected: [],
+                source_slugs: {
+                    'cardmarket': 'Cardmarket',
+                    'woocommerce': 'WooCommerce',
+                }
             };
         },
 
@@ -187,6 +205,8 @@
                 component.syncing.status = this.getOrderSyncingStatus(background_tasks);
 
                 if (!component.syncing.status) {
+                    component.syncing.cardmarket = false;
+                    component.syncing.woocommerce = false;
                     this.fetch();
                 }
             },
@@ -207,7 +227,7 @@
                     check_object = check_object[keys[i]];
                 }
 
-                return !!background_tasks['user'][window.user.id].order.sync || false;
+                return is_syncing;
             },
             download() {
                 var component = this;
@@ -261,7 +281,22 @@
             updated(index, item) {
                 Vue.set(this.items, index, item);
             },
-            sync() {
+            syncCardmarket() {
+                var component = this;
+                axios.put(component.uri + '/sync', component.filter)
+                    .then(function (response) {
+                        component.syncing.status = true;
+                        Vue.success(component.$t('order.successes.syncing_background'));
+                    })
+                    .catch(function (error) {
+                        Vue.error(component.$t('order.errors.synced'));
+                        console.log(error);
+                    })
+                    .finally ( function () {
+
+                    });
+            },
+            syncWooCommerce() {
                 var component = this;
                 axios.put(component.uri + '/sync', component.filter)
                     .then(function (response) {

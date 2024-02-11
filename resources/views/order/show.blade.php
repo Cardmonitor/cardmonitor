@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="d-flex mb-3">
-        <h2 class="col mb-0"><a class="text-body" href="/order">{{ __('app.nav.order') }}</a><span class="d-none d-md-inline"> > {{ $model->cardmarket_order_id }}<span class="d-none d-lg-inline"> - {{ $model->stateFormatted }}</span></span></h2>
+        <h2 class="col mb-0"><a class="text-body" href="/order">{{ __('app.nav.order') }}</a><span class="d-none d-md-inline"> > {{ $model->cardmarket_order_id }}<span class="d-none d-lg-inline"> - {{ $model->state_formatted }}</span></span></h2>
         <div class="d-flex align-items-center">
             <button class="btn btn-sm btn-secondary ml-1" data-toggle="modal" data-target="#message-create" data-model-id="{{ $model->id }}"><i class="fas fa-envelope"></i></button>
             <form action="{{ $model->path . '/sync' }}" class="ml-1" method="POST">

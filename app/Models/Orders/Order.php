@@ -9,14 +9,15 @@ use Carbon\CarbonPeriod;
 use App\Models\Cards\Card;
 use App\Models\Items\Item;
 use Illuminate\Support\Arr;
+use App\Enums\Orders\Status;
 use App\Models\Images\Image;
-use App\Enums\ExternalIds\ExternalType;
 use App\Models\Articles\Article;
 use App\Models\Storages\Content;
 use App\Models\Orders\Evaluation;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Models\Users\CardmarketUser;
+use App\Enums\ExternalIds\ExternalType;
 use App\Models\Items\Transactions\Sale;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
@@ -59,6 +60,8 @@ class Order extends Model
         self::STATE_CANCELLED => 'Storniert',
     ];
 
+    private ?ExternalType $external_type = null;
+
     protected $appends = [
         'editPath',
         'paid_at_formatted',
@@ -78,7 +81,7 @@ class Order extends Model
 
     protected $guarded = [];
 
-    public static function updateOrCreateFromCardmarket(int $user_id, array $cardmarket_order, bool $force = false) : self
+    public static function updateOrCreateFromCardmarket(int $user_id, array $cardmarket_order, bool $force = false): self
     {
         $buyer = CardmarketUser::updateOrCreateFromCardmarket($cardmarket_order['buyer']);
         $seller = CardmarketUser::updateOrCreateFromCardmarket($cardmarket_order['seller']);
@@ -349,7 +352,7 @@ class Order extends Model
     public static function getForPicklist(int $user_id): Collection
     {
         return self::where('user_id', $user_id)
-            ->where('orders.state', ORDER::STATE_PAID)
+            ->where('orders.state', Status::PAID->value)
             ->orderBy('paid_at', 'ASC')
             ->get()
             ->keyBy('id');
@@ -378,7 +381,7 @@ class Order extends Model
         }
     }
 
-    protected function getCardDefaultPrices() : Collection
+    protected function getCardDefaultPrices(): Collection
     {
         if (! is_null($this->cardDefaultPrices)) {
             return $this->cardDefaultPrices;
@@ -553,7 +556,7 @@ class Order extends Model
         return $article_ids;
     }
 
-    public function calculateProfits() : self
+    public function calculateProfits(): self
     {
         $provision = $this->calculateProvision();
         $itemsCost = $this->calculateItemsCost();
@@ -566,14 +569,14 @@ class Order extends Model
         return $this;
     }
 
-    protected function calculateProvision() : float
+    protected function calculateProvision(): float
     {
         $this->attributes['provision'] = $this->articles->sum('provision');
 
         return $this->attributes['provision'];
     }
 
-    protected function calculateItemsCost() : float
+    protected function calculateItemsCost(): float
     {
         $this->attributes['items_cost'] = $this->sales->sum( function ($sale) {
             return ($sale->quantity * $sale->unit_cost);
@@ -582,7 +585,7 @@ class Order extends Model
         return $this->attributes['items_cost'];
     }
 
-    protected function calculateArticlesProfit() : float
+    protected function calculateArticlesProfit(): float
     {
         $this->attributes['articles_cost'] = $this->articles->sum('unit_cost');
         $this->attributes['articles_profit'] = ($this->attributes['articles_revenue'] - $this->attributes['articles_cost'] - $this->provision - $this->items_cost);
@@ -590,7 +593,7 @@ class Order extends Model
         return $this->attributes['articles_profit'];
     }
 
-    protected function calculateShipmentProfit() : float
+    protected function calculateShipmentProfit(): float
     {
         $this->attributes['shipment_profit'] = Arr::get(self::SHIPPING_PROFITS, $this->attributes['shippingmethod'], 0.3);
         $this->attributes['shipment_cost'] = $this->attributes['shipment_revenue'] - $this->attributes['shipment_profit'];
@@ -605,7 +608,7 @@ class Order extends Model
         ]);
     }
 
-    public function isPresale() : bool
+    public function isPresale(): bool
     {
         foreach ($this->articles as $key => $article) {
 
@@ -630,12 +633,21 @@ class Order extends Model
         return ($this->received_at->diffInDays($date ?? now()) <= self::DAYS_TO_HAVE_IAMGES);
     }
 
-    public function getShippingCountryAttribute() : string
+    public function getExternalTypeAttribute(): ExternalType
+    {
+        if (is_null($this->external_type)) {
+            $this->external_type = ExternalType::from($this->source_slug);
+        }
+
+        return $this->external_type;
+    }
+
+    public function getShippingCountryAttribute(): string
     {
         return Locale::iso3166($this->attributes['shipping_country']);
     }
 
-    public function getShippingCountryNameAttribute() : string
+    public function getShippingCountryNameAttribute(): string
     {
         return Arr::get(config('app.iso3166_names'), $this->shipping_country, $this->shipping_country);
     }
@@ -645,7 +657,7 @@ class Order extends Model
         return number_format($this->revenue, 2, ',', '');
     }
 
-    public function getPreparedMessageAttribute() : string
+    public function getPreparedMessageAttribute(): string
     {
         $message = $this->user->prepared_message;
 
@@ -695,12 +707,12 @@ class Order extends Model
         return $message;
     }
 
-    public function getMkmNameAttribute() : string
+    public function getMkmNameAttribute(): string
     {
         return $this->mkm . $this->source_id;
     }
 
-    public function getMkmAttribute() : string
+    public function getMkmAttribute(): string
     {
         return 'MKM';
     }
@@ -715,12 +727,12 @@ class Order extends Model
         return $this->path('edit');
     }
 
-    protected function path(string $action = '') : string
+    protected function path(string $action = ''): string
     {
         return route($this->baseRoute() . '.' . $action, ['order' => $this->id]);
     }
 
-    protected function baseRoute() : string
+    protected function baseRoute(): string
     {
         return $this->is_purchase ? 'purchases' : 'order';
     }
@@ -730,7 +742,7 @@ class Order extends Model
         return $this->state == \App\APIs\WooCommerce\Status::ON_HOLD->value;
     }
 
-    public function getPaidAtFormattedAttribute() : string
+    public function getPaidAtFormattedAttribute(): string
     {
         return (is_null($this->paid_at) ? '' : $this->paid_at->format('d.m.Y H:i'));
     }
@@ -742,7 +754,12 @@ class Order extends Model
 
     public function getStateFormattedAttribute(): string
     {
-        return Arr::get(self::STATES, $this->state, '');
+        $status = Status::tryFrom($this->state);
+        if (is_null($status)) {
+            return $this->state;
+        }
+
+        return $status->name();
     }
 
     public function articles(): BelongsToMany
@@ -779,22 +796,22 @@ class Order extends Model
         return $this->morphMany(Image::class, 'imageable');
     }
 
-    public function sales() : HasMany
+    public function sales(): HasMany
     {
         return $this->hasMany(Sale::class, 'order_id');
     }
 
-    public function seller() : BelongsTo
+    public function seller(): BelongsTo
     {
         return $this->belongsTo(CardmarketUser::class, 'seller_id');
     }
 
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function scopePresale(Builder $query, $value) : Builder
+    public function scopePresale(Builder $query, $value): Builder
     {
         if (is_null($value)) {
             return $query;
@@ -815,7 +832,7 @@ class Order extends Model
         ) ' . ($value == 1 ? '>' : '=') . ' 0');
     }
 
-    public function scopeSearch(Builder $query, $value) : Builder
+    public function scopeSearch(Builder $query, $value): Builder
     {
         if (! $value) {
             return $query;
@@ -827,6 +844,15 @@ class Order extends Model
             return $query->where('orders.cardmarket_order_id', 'like', '%' . $value . '%')
                 ->orWhere('cardmarket_users.name', 'like', '%' . $value . '%');
         })->groupBy('cardmarket_order_id');
+    }
+
+    public function scopeSourceSlug(Builder $query, $value): Builder
+    {
+        if (! $value) {
+            return $query;
+        }
+
+        return $query->where('source_slug', $value);
     }
 
     public function scopeState(Builder $query, $value): Builder
@@ -849,10 +875,10 @@ class Order extends Model
         }
 
         if ($value == 1) {
-            $query->where('state', self::STATE_CANCELLED);
+            $query->where('state', Status::CANCELLED->value);
         }
         elseif ($value == 0) {
-            $query->where('state', '!=', self::STATE_CANCELLED);
+            $query->where('state', '!=', Status::CANCELLED->value);
         }
 
         return $query;
