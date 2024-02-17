@@ -15,10 +15,10 @@ class StatusTest extends TestCase
         $this->assertEquals(Status::BOUGHT, Status::fromWooCommerceSlug('pending'));
         $this->assertEquals(Status::PAID, Status::fromWooCommerceSlug('processing'));
         $this->assertEquals(Status::BOUGHT, Status::fromWooCommerceSlug('on-hold'));
-        $this->assertEquals(Status::SENT, Status::fromWooCommerceSlug('completed'));
+        $this->assertEquals(Status::RECEIVED, Status::fromWooCommerceSlug('completed'));
         $this->assertEquals(Status::CANCELLED, Status::fromWooCommerceSlug('cancelled'));
-        $this->assertEquals(Status::CANCELLED, Status::fromWooCommerceSlug('refunded'));
-        $this->assertEquals(Status::LOST, Status::fromWooCommerceSlug('failed'));
+        $this->assertEquals(Status::LOST, Status::fromWooCommerceSlug('refunded'));
+        $this->assertEquals(Status::CANCELLED, Status::fromWooCommerceSlug('failed'));
     }
 
     /**
