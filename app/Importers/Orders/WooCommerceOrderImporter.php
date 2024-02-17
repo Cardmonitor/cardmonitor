@@ -69,10 +69,10 @@ class WooCommerceOrderImporter
             'revenue' => $woocommerce_order['total'],
             'cost' => 0,
             'user_id' => $this->user_id,
-            'bought_at' => null,
+            'bought_at' => new Carbon($woocommerce_order['date_created_gmt']),
             'canceled_at' => null,
             'paid_at' => new Carbon($woocommerce_order['date_paid_gmt']),
-            'received_at' => null,
+            'received_at' => new Carbon($woocommerce_order['date_completed_gmt']),
             'sent_at' => new Carbon($woocommerce_order['date_completed_gmt']),
             'is_purchase' => false,
         ];

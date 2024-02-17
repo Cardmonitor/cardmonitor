@@ -3,15 +3,21 @@
 @section('content')
 
     <div class="d-flex mb-3">
-        <h2 class="col mb-0"><a class="text-body" href="/order">{{ __('app.nav.order') }}</a><span class="d-none d-md-inline"> > {{ $model->cardmarket_order_id }}<span class="d-none d-lg-inline"> - {{ $model->state_formatted }}</span></span></h2>
+        <h2 class="col mb-0"><a class="text-body" href="/order">{{ __('app.nav.order') }}</a><span class="d-none d-md-inline"> > {{ $model->source_id }}<span class="d-none d-lg-inline"> - {{ $model->state_formatted }}</span></span></h2>
         <div class="d-flex align-items-center">
-            <button class="btn btn-sm btn-secondary ml-1" data-toggle="modal" data-target="#message-create" data-model-id="{{ $model->id }}"><i class="fas fa-envelope"></i></button>
-            <form action="{{ $model->path . '/sync' }}" class="ml-1" method="POST">
-                @csrf
-                @method('PUT')
+            <a href="{{ route('order.picklist.show', ['order' => $model->id, 'view' => 'pdf']) }}" target="blank" class="btn btn-sm btn-secondary ml-1">Pickliste</a>
 
-                <button type="submit" class="btn btn-sm btn-secondary" title="Aktualisieren"><i class="fas fa-fw fa-sync"></i></button>
-            </form>
+            <button class="btn btn-sm btn-secondary ml-1" data-toggle="modal" data-target="#message-create" data-model-id="{{ $model->id }}"><i class="fas fa-envelope"></i></button>
+            @if ($model->is_cardmarket)
+                <form action="{{ $model->path . '/sync' }}" class="ml-1" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    <button type="submit" class="btn btn-sm btn-secondary" title="Aktualisieren"><i class="fas fa-fw fa-sync"></i></button>
+                </form>
+            @elseif ($model->is_woocommerce)
+                <a href="{{ route('order.' . $model->external_type->value . '.import.show', ['order' => $model->id]) }}" class="btn btn-sm btn-secondary ml-1"><i class="fas fa-fw fa-sync"></i></a>
+            @endif
             <form action="{{ $model->path . '/articles/state' }}" class="ml-1" method="POST">
                 @csrf
                 @method('PUT')
@@ -25,7 +31,7 @@
                 @endif
             </form>
             <a href="{{ url('/order') }}" class="btn btn-sm btn-secondary ml-1">{{ __('app.overview') }}</a>
-            <a href="{{ route('order.cardmarket.show', ['order' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1">Cardmarket Data</a>
+            <a href="{{ route('order.' . $model->external_type->value . '.show', ['order' => $model->id]) }}" target="_blank" class="btn btn-sm btn-secondary ml-1">{{ $model->external_type->name() }} Data</a>
         </div>
     </div>
 
@@ -76,16 +82,20 @@
         <div class="col-md-6">
 
             <div class="card mb-3">
-                <div class="card-header">{{ $model->cardmarket_order_id }}</div>
+                <div class="card-header">{{ $model->source_id }}</div>
                 <div class="card-body">
                     <div class="row">
+                        <div class="col-label"><b>Herkunft</b></div>
+                        <div class="col-value">{{ $model->external_type->name() }}</div>
+                    </div>
+                    <div class="row">
                         <div class="col-label"><b>{{ __('order.id') }}</b></div>
-                        <div class="col-value">{{ $model->cardmarket_order_id }}</div>
+                        <div class="col-value">{{ $model->source_id }}</div>
                     </div>
                     @if ($model->buyer)
                         <div class="row">
                             <div class="col-label"><b>{{ __('order.buyer') }}</b></div>
-                            <div class="col-value">{{ $model->buyer->username }}</div>
+                            <div class="col-value">{{ $model->buyer->username ?: $model->buyer->firstname . ' ' . $model->buyer->name }}</div>
                         </div>
                     @endif
                     @if ($model->seller)

@@ -717,6 +717,16 @@ class Order extends Model
         return 'MKM';
     }
 
+    public function getIsCardmarketAttribute(): bool
+    {
+        return $this->source_slug === ExternalType::CARDMARKET->value;
+    }
+
+    public function getIsWoocommerceAttribute(): bool
+    {
+        return $this->source_slug === ExternalType::WOOCOMMERCE->value;
+    }
+
     public function getPathAttribute()
     {
         return $this->path('show');

@@ -98,13 +98,19 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('order/import/sent', 'Orders\Import\SentController@store');
 
-    Route::get('order/picklist/{view?}', 'Orders\Picklists\PicklistController@index')->name('order.picklist.index');
+    Route::get('order/picklist/{view?}', [App\Http\Controllers\Orders\Picklists\PicklistController::class, 'index'])->name('order.picklist.index');
 
     Route::post('order/{order}/images', 'Images\ImageableController@store')->name('order.images.store');
+
+    Route::get('order/woocommerce/import', [\App\Http\Controllers\Orders\WooCommerce\ImportController::class, 'index'])->name('order.woocommerce.import.index');
 
     Route::get('order/sync', [\App\Http\Controllers\Cardmarket\Orders\OrderController::class, 'index'])->name('order.sync.index');
     Route::put('order/sync', [\App\Http\Controllers\Cardmarket\Orders\OrderController::class, 'update'])->name('order.sync.update');
     Route::get('order/{order}/cardmarket', [\App\Http\Controllers\Cardmarket\Orders\OrderController::class, 'show'])->name('order.cardmarket.show');
+    Route::get('order/{order}/woocommerce', [\App\Http\Controllers\Orders\WooCommerce\OrderController::class, 'show'])->name('order.woocommerce.show');
+    Route::get('order/{order}/woocommerce/import', [\App\Http\Controllers\Orders\WooCommerce\ImportController::class, 'show'])->name('order.woocommerce.import.show');
+
+    Route::get('order/{order}/picklist/{view?}', [App\Http\Controllers\Orders\Picklists\PicklistController::class, 'show'])->name('order.picklist.show');
 
     Route::resource('order', 'Orders\OrderController')->except([
         'create',

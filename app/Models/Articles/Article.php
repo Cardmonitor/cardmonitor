@@ -538,9 +538,9 @@ class Article extends Model
             ->get();
     }
 
-    public static function getForPicklist(int $user_id): ArticleCollection
+    public static function getForPicklist(int $user_id, int $order_id = 0): ArticleCollection
     {
-        return self::select('articles.*', 'orders.id AS order_id')
+        $query = self::select('articles.*', 'orders.id AS order_id')
             ->join('article_order', 'articles.id', '=', 'article_order.article_id')
             ->join('orders', 'orders.id', '=', 'article_order.order_id')
             ->with([
@@ -553,8 +553,15 @@ class Article extends Model
                     ->orWhere('articles.state', '!=', Article::STATE_ON_HOLD);
             })
             ->where('orders.state', 'paid')
-            ->orderBy('articles.number', 'ASC')
-            ->get();
+            ->orderBy('articles.number', 'ASC');
+
+        if ($order_id > 0) {
+            $query->whereHas('orders', function ($query) use ($order_id) {
+                $query->where('orders.id', $order_id);
+            });
+        }
+
+        return $query->get();
     }
 
     /**

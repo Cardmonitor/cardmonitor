@@ -31,7 +31,9 @@ class ImportCommand extends Command
 
         if ($this->option('order')) {
             $response = $WooCommerce->order($this->option('order'));
-            return $response->json();
+            return [
+                $response->json()
+            ];
         }
 
         if ($this->option('states')) {
