@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 use App\Models\Articles\Article;
 use App\Models\Users\CardmarketUser;
 use App\Enums\ExternalIds\ExternalType;
+use Illuminate\Support\Facades\Artisan;
 
 class WooCommerceOrderImporter
 {
@@ -35,6 +36,14 @@ class WooCommerceOrderImporter
             $this->importLineItem($line_item);
         }
 
+        // Artikel auf Cardmarket löschen
+        // if (!empty($this->articles)) {
+        //     Artisan::queue('cardmarket:articles:delete', [
+        //         'user' => $this->user_id,
+        //         '--articles' => collect($this->articles)->pluck('id')
+        //     ]);
+        // }
+
         return $this->order;
     }
 
@@ -48,6 +57,8 @@ class WooCommerceOrderImporter
             $articles_cost += $line_item['total'];
             $articles_count += $line_item['quantity'];
         }
+
+        $date_completed = is_null($woocommerce_order['date_completed_gmt']) ? null : new Carbon($woocommerce_order['date_completed_gmt']);
 
         $values = [
             'cardmarket_order_id' => 0,
@@ -71,9 +82,9 @@ class WooCommerceOrderImporter
             'user_id' => $this->user_id,
             'bought_at' => new Carbon($woocommerce_order['date_created_gmt']),
             'canceled_at' => null,
-            'paid_at' => new Carbon($woocommerce_order['date_paid_gmt']),
-            'received_at' => new Carbon($woocommerce_order['date_completed_gmt']),
-            'sent_at' => new Carbon($woocommerce_order['date_completed_gmt']),
+            'paid_at' => is_null($woocommerce_order['date_paid_gmt']) ? null : new Carbon($woocommerce_order['date_paid_gmt']),
+            'received_at' => $date_completed,
+            'sent_at' => $date_completed,
             'is_purchase' => false,
         ];
 

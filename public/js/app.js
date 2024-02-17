@@ -3999,7 +3999,21 @@ __webpack_require__.r(__webpack_exports__);
     },
     checkBackgroundTasks: function checkBackgroundTasks(background_tasks) {
       var component = this;
-      component.syncing.status = !!background_tasks['user'][window.user.id].order.sync || false;
+      component.syncing.status = this.getOrderSyncingStatus(background_tasks);
+    },
+    getOrderSyncingStatus: function getOrderSyncingStatus(background_tasks) {
+      var keys = ['user', window.user.id, 'order', 'sync'];
+      var check_object = background_tasks;
+
+      // check if all keys exist
+      for (var i in keys) {
+        if (check_object[keys[i]] === undefined) {
+          return false;
+        }
+        check_object = check_object[keys[i]];
+      }
+      return !!background_tasks['user'][window.user.id]['order']['sync'] || false;
+      ;
     },
     send: function send(item) {
       var component = this;
@@ -4011,7 +4025,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       })["finally"](function () {});
     },
-    sync: function sync() {
+    syncCardmarket: function syncCardmarket() {
       var component = this;
       if (component.syncing.status == 1) {
         return;
@@ -4019,7 +4033,23 @@ __webpack_require__.r(__webpack_exports__);
       clearTimeout(component.syncing.timeout);
       axios.put('/order/sync', component.filter).then(function (response) {
         component.syncing.status = 1;
-        Vue.success('Bestellungen werden im Hintergrund aktualisiert.');
+        Vue.success('Bestellungen von Cardmarket werden im Hintergrund aktualisiert.');
+      })["catch"](function (error) {
+        Vue.error(component.$t('order.errors.synced'));
+        console.log(error);
+      })["finally"](function () {});
+    },
+    syncWooCommerce: function syncWooCommerce() {
+      var component = this;
+      if (component.syncing.status == 1) {
+        return;
+      }
+      clearTimeout(component.syncing.timeout);
+      axios.get('/order/woocommerce/import', {
+        params: component.filter
+      }).then(function (response) {
+        component.syncing.status = 1;
+        Vue.success('Bestellungen von WooCommerce werden im Hintergrund aktualisiert.');
       })["catch"](function (error) {
         Vue.error(component.$t('order.errors.synced'));
         console.log(error);
@@ -5283,7 +5313,8 @@ __webpack_require__.r(__webpack_exports__);
         }
         check_object = check_object[keys[i]];
       }
-      return is_syncing;
+      return !!background_tasks['user'][window.user.id]['order']['sync'] || false;
+      ;
     },
     download: function download() {
       var component = this;
@@ -5343,7 +5374,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     syncWooCommerce: function syncWooCommerce() {
       var component = this;
-      axios.put(component.uri + '/sync', component.filter).then(function (response) {
+      axios.get(component.uri + '/woocommerce/import', {
+        params: component.filter
+      }).then(function (response) {
         component.syncing.status = true;
         Vue.success(component.$t('order.successes.syncing_background'));
       })["catch"](function (error) {
@@ -12731,19 +12764,32 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "col"
   }, [_vm._v(_vm._s(_vm.$t("order.home.paid.title")))]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c("div", {
-    staticClass: "ml-3"
+    staticClass: "ml-3 pointer",
+    on: {
+      click: _vm.syncCardmarket
+    }
   }, [_c("i", {
-    staticClass: "fas fa-sync pointer",
+    staticClass: "fas fa-sync",
     "class": {
       "fa-spin": _vm.syncing.status == 1
     },
     attrs: {
       disabled: _vm.syncing.status == 1
-    },
-    on: {
-      click: _vm.sync
     }
-  })]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Cardmarket")]), _vm._v(" "), _c("div", {
+    staticClass: "ml-3 pointer",
+    on: {
+      click: _vm.syncWooCommerce
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-sync",
+    "class": {
+      "fa-spin": _vm.syncing.status == 1
+    },
+    attrs: {
+      disabled: _vm.syncing.status == 1
+    }
+  }), _vm._v(" WooCommerce")]), _vm._v(" "), _c("div", {
     staticClass: "ml-3"
   }, [_c("i", {
     staticClass: "fas fa-download pointer",
@@ -12782,7 +12828,7 @@ var render = function render() {
       attrs: {
         href: item.path
       }
-    }, [_vm._v(_vm._s(item.cardmarket_order_id))]), _vm._v(" "), item.buyer ? _c("div", {
+    }, [_vm._v(_vm._s(item.source_id))]), _vm._v(" "), item.buyer ? _c("div", {
       staticClass: "text-muted"
     }, [_vm._v(_vm._s(item.buyer.name))]) : _vm._e()]), _vm._v(" "), _c("td", {
       staticClass: "align-middle d-none d-sm-table-cell text-right"
@@ -14964,7 +15010,20 @@ var render = function render() {
     "class": {
       "fa-spin": _vm.syncing.status == 1
     }
-  }), _vm._v(" Cardmarket")]), _vm._v(" "),  false ? 0 : _vm._e(), _vm._v(" "), _c("button", {
+  }), _vm._v(" Cardmarket")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-sm btn-secondary ml-1",
+    attrs: {
+      disabled: _vm.syncing.status == 1
+    },
+    on: {
+      click: _vm.syncWooCommerce
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-sync",
+    "class": {
+      "fa-spin": _vm.syncing.status == 1
+    }
+  }), _vm._v(" WooCommerce")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-sm btn-secondary ml-1",
     attrs: {
       disabled: _vm.syncing.status == 1

@@ -17,10 +17,10 @@ enum Status: string {
             'pending' => self::BOUGHT,
             'processing' => self::PAID,
             'on-hold' =>  self::BOUGHT,
-            'completed' => self::SENT,
+            'completed' => self::RECEIVED,
             'cancelled' => self::CANCELLED,
-            'refunded' => self::CANCELLED,
-            'failed' => self::LOST,
+            'refunded' => self::LOST,
+            'failed' => self::CANCELLED,
         };
     }
 

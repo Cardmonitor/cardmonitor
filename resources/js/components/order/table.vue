@@ -8,7 +8,7 @@
                 </div>
                 <button class="btn btn-sm btn-secondary ml-1" @click="filter.show = !filter.show"><i class="fas fa-filter"></i></button>
                 <button class="btn btn-sm btn-secondary ml-1" @click="syncCardmarket" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i> Cardmarket</button>
-                <button class="btn btn-sm btn-secondary ml-1" @click="syncWooCommerce" :disabled="syncing.status == 1" v-if="false"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i> WooCommerce</button>
+                <button class="btn btn-sm btn-secondary ml-1" @click="syncWooCommerce" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i> WooCommerce</button>
                 <button class="btn btn-sm btn-secondary ml-1" @click="download" :disabled="syncing.status == 1"><i class="fas fa-download"></i></button>
                 <button type="button" class="btn btn-sm btn-secondary ml-1" data-toggle="modal" data-target="#import-sent">
                     <i class="fas fa-upload"></i>
@@ -227,7 +227,7 @@
                     check_object = check_object[keys[i]];
                 }
 
-                return is_syncing;
+                return !!background_tasks['user'][window.user.id]['order']['sync'] || false;;
             },
             download() {
                 var component = this;
@@ -298,7 +298,9 @@
             },
             syncWooCommerce() {
                 var component = this;
-                axios.put(component.uri + '/sync', component.filter)
+                axios.get(component.uri + '/woocommerce/import', {
+                    params: component.filter
+                })
                     .then(function (response) {
                         component.syncing.status = true;
                         Vue.success(component.$t('order.successes.syncing_background'));

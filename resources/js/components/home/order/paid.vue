@@ -4,7 +4,8 @@
             <div class="card-header d-flex align-items-center">
                 <div class="col">{{ $t('order.home.paid.title') }}</div>
                 <div><a class="text-body" href="/order/picklist">Pickliste</a></div>
-                <div class="ml-3"><i class="fas fa-sync pointer" @click="sync" :class="{'fa-spin': syncing.status == 1}" :disabled="syncing.status == 1"></i></div>
+                <div class="ml-3 pointer" @click="syncCardmarket"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}" :disabled="syncing.status == 1"></i> Cardmarket</div>
+                <div class="ml-3 pointer" @click="syncWooCommerce"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}" :disabled="syncing.status == 1"></i> WooCommerce</div>
                 <div class="ml-3"><i class="fas fa-download pointer" @click="download" :disabled="syncing.status == 1"></i></div>
                 <div class="ml-3" v-if="false"><a href="/order/export/dropbox" class="text-body"><i class="fab fa-dropbox pointer"></i></a></div>
                 <div class="ml-3"><i data-toggle="modal" data-target="#import-sent" class="fas fa-upload pointer"></i></div>
@@ -32,7 +33,7 @@
                         <tr v-for="(item, key) in items" :class="{'table-warning': item.articles_on_hold_count > 0}">
                             <td class="align-middle d-none d-md-table-cell">{{ item.paid_at_formatted }}</td>
                             <td class="align-middle">
-                                <a :href="item.path">{{ item.cardmarket_order_id }}</a>
+                                <a :href="item.path">{{ item.source_id }}</a>
                                 <div class="text-muted" v-if="item.buyer">{{ item.buyer.name }}</div>
                             </td>
                             <td class="align-middle d-none d-sm-table-cell text-right">
@@ -190,7 +191,26 @@
             },
             checkBackgroundTasks(background_tasks) {
                 const component = this;
-                component.syncing.status = !!background_tasks['user'][window.user.id].order.sync || false;
+                component.syncing.status = this.getOrderSyncingStatus(background_tasks);
+            },
+            getOrderSyncingStatus(background_tasks) {
+                const keys = [
+                    'user',
+                    window.user.id,
+                    'order',
+                    'sync',
+                ];
+                let check_object = background_tasks;
+
+                // check if all keys exist
+                for (let i in keys) {
+                    if (check_object[keys[i]] === undefined) {
+                        return false;
+                    }
+                    check_object = check_object[keys[i]];
+                }
+
+                return !!background_tasks['user'][window.user.id]['order']['sync'] || false;;
             },
             send(item) {
                 var component = this;
@@ -207,7 +227,7 @@
 
                     });
             },
-            sync() {
+            syncCardmarket() {
                 var component = this;
                 if (component.syncing.status == 1) {
                     return;
@@ -216,7 +236,28 @@
                 axios.put('/order/sync', component.filter)
                     .then(function (response) {
                         component.syncing.status = 1;
-                        Vue.success('Bestellungen werden im Hintergrund aktualisiert.');
+                        Vue.success('Bestellungen von Cardmarket werden im Hintergrund aktualisiert.');
+                    })
+                    .catch(function (error) {
+                        Vue.error(component.$t('order.errors.synced'));
+                        console.log(error);
+                    })
+                    .finally ( function () {
+
+                    });
+            },
+            syncWooCommerce() {
+                var component = this;
+                if (component.syncing.status == 1) {
+                    return;
+                }
+                clearTimeout(component.syncing.timeout);
+                axios.get('/order/woocommerce/import', {
+                    params: component.filter
+                })
+                    .then(function (response) {
+                        component.syncing.status = 1;
+                        Vue.success('Bestellungen von WooCommerce werden im Hintergrund aktualisiert.');
                     })
                     .catch(function (error) {
                         Vue.error(component.$t('order.errors.synced'));
