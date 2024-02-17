@@ -5,8 +5,9 @@
     <div class="d-flex mb-3">
         <h2 class="col mb-0"><a class="text-body" href="/order">{{ __('app.nav.order') }}</a><span class="d-none d-md-inline"> > {{ $model->source_id }}<span class="d-none d-lg-inline"> - {{ $model->state_formatted }}</span></span></h2>
         <div class="d-flex align-items-center">
-            <a href="{{ route('order.picklist.show', ['order' => $model->id, 'view' => 'pdf']) }}" target="blank" class="btn btn-sm btn-secondary ml-1">Pickliste</a>
-
+            @if ($model->state === \App\Enums\Orders\Status::PAID->value && $model->articles_count != $model->articles_on_hold_count)
+                <a href="{{ route('order.picklist.show', ['order' => $model->id, 'view' => 'pdf']) }}" target="blank" class="btn btn-sm btn-secondary ml-1">Pickliste</a>
+            @endif
             <button class="btn btn-sm btn-secondary ml-1" data-toggle="modal" data-target="#message-create" data-model-id="{{ $model->id }}"><i class="fas fa-envelope"></i></button>
             @if ($model->is_cardmarket)
                 <form action="{{ $model->path . '/sync' }}" class="ml-1" method="POST">
