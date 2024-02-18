@@ -1,6 +1,5 @@
 <template>
     <tr v-if="isEditing">
-        <td class="align-middle d-none d-lg-table-cell text-center"><i class="fas fa-fw" :class="item.sync_icon" :title="item.sync_error || 'Karte synchronisiert'"></i></td>
         <td class="align-middle d-none d-lg-table-cell text-center"><i class="fas fa-fw" :class="item.sync_icon_cardmarket" :title="item.sync_title_cardmarket"></i></td>
         <td class="align-middle d-none d-lg-table-cell text-center"><i class="fas fa-fw" :class="item.sync_icon_woocommerce" :title="item.external_ids_woo_commerce.sync_message || item.external_ids_woo_commerce.sync_action"></i></td>
         <td class="align-middle d-none d-xl-table-cell text-center pointer"><i class="fas fa-image" @mouseover="showImage($event)" @mouseout="$emit('hide')"></i></td>
@@ -59,10 +58,6 @@
         </td>
     </tr>
     <tr v-else>
-        <td class="align-middle d-none d-lg-table-cell text-center">
-            <i class="fas fa-fw fa-euro-sign text-success" title="Verkauft" v-if="item.orders.length"></i>
-            <i class="fas fa-fw" :class="item.sync_icon" :title="item.sync_error || 'Karte synchronisiert'" v-else></i>
-        </td>
         <td class="align-middle d-none d-lg-table-cell text-center"><i class="fas fa-fw" :class="item.sync_icon_cardmarket" :title="item.sync_title_cardmarket"></i></td>
         <td class="align-middle d-none d-lg-table-cell text-center"><i class="fas fa-fw" :class="item.sync_icon_woocommerce" :title="item.sync_title_woocommerce"></i></td>
         <td class="align-middle d-none d-xl-table-cell pointer"><i class="fas fa-image" @mouseover="showImage($event)" @mouseout="$emit('hide')"></i></td>

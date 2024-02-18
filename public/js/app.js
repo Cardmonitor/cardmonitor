@@ -9354,14 +9354,6 @@ var render = function render() {
     staticClass: "align-middle d-none d-lg-table-cell text-center"
   }, [_c("i", {
     staticClass: "fas fa-fw",
-    "class": _vm.item.sync_icon,
-    attrs: {
-      title: _vm.item.sync_error || "Karte synchronisiert"
-    }
-  })]), _vm._v(" "), _c("td", {
-    staticClass: "align-middle d-none d-lg-table-cell text-center"
-  }, [_c("i", {
-    staticClass: "fas fa-fw",
     "class": _vm.item.sync_icon_cardmarket,
     attrs: {
       title: _vm.item.sync_title_cardmarket
@@ -9702,19 +9694,6 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-fw fa-trash"
   })])])])]) : _c("tr", [_c("td", {
-    staticClass: "align-middle d-none d-lg-table-cell text-center"
-  }, [_vm.item.orders.length ? _c("i", {
-    staticClass: "fas fa-fw fa-euro-sign text-success",
-    attrs: {
-      title: "Verkauft"
-    }
-  }) : _c("i", {
-    staticClass: "fas fa-fw",
-    "class": _vm.item.sync_icon,
-    attrs: {
-      title: _vm.item.sync_error || "Karte synchronisiert"
-    }
-  })]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-lg-table-cell text-center"
   }, [_c("i", {
     staticClass: "fas fa-fw",
@@ -10559,56 +10538,6 @@ var render = function render() {
     attrs: {
       "for": "filter-sync"
     }
-  }, [_vm._v("Cardmarket Alt (Zum Testen)")]), _vm._v(" "), _c("select", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.filter.sync,
-      expression: "filter.sync"
-    }],
-    staticClass: "form-control form-control-sm",
-    attrs: {
-      id: "filter-sync"
-    },
-    on: {
-      change: [function ($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-          return o.selected;
-        }).map(function (o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val;
-        });
-        _vm.$set(_vm.filter, "sync", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
-      }, _vm.search]
-    }
-  }, [_c("option", {
-    domProps: {
-      value: -1
-    }
-  }, [_vm._v(_vm._s(_vm.$t("filter.all")))]), _vm._v(" "), _c("option", {
-    domProps: {
-      value: 2
-    }
-  }, [_vm._v("Nicht hochgeladen")]), _vm._v(" "), _c("option", {
-    domProps: {
-      value: 1
-    }
-  }, [_vm._v(_vm._s(_vm.$t("filter.sync.error")))]), _vm._v(" "), _c("option", {
-    domProps: {
-      value: 0
-    }
-  }, [_vm._v(_vm._s(_vm.$t("filter.sync.success")))]), _vm._v(" "), _c("option", {
-    domProps: {
-      value: 3
-    }
-  }, [_vm._v("Keine Lagernummer im Kommentar")])])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-auto"
-  }, [_c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "filter-sync"
-    }
   }, [_vm._v("Cardmarket")]), _vm._v(" "), _c("select", {
     directives: [{
       name: "model",
@@ -11179,11 +11108,6 @@ var render = function render() {
   }, [_c("thead", [_c("tr", [_c("th", {
     staticClass: "text-center d-none d-lg-table-cell w-icon",
     attrs: {
-      title: "Sync Alt"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("article.sync")))]), _vm._v(" "), _c("th", {
-    staticClass: "text-center d-none d-lg-table-cell w-icon",
-    attrs: {
       title: "Sync Cardmarket"
     }
   }, [_vm._v("C")]), _vm._v(" "), _c("th", {
@@ -11249,7 +11173,13 @@ var render = function render() {
         }
       }
     })];
-  })], 2), _vm._v(" "), _c("tfoot", [_c("tr", [_c("td"), _vm._v(" "), _c("td"), _vm._v(" "), _c("td"), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
+  })], 2), _vm._v(" "), _c("tfoot", [_c("tr", [_c("td", {
+    staticClass: "d-none d-lg-table-cell"
+  }), _vm._v(" "), _c("td", {
+    staticClass: "d-none d-lg-table-cell"
+  }), _vm._v(" "), _c("td", {
+    staticClass: "d-none d-xl-table-cell"
+  }), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_vm._v(_vm._s(_vm.items.length) + " von " + _vm._s(_vm.paginate.total))]), _vm._v(" "), _c("td", {
     staticClass: "align-middle",

@@ -27,19 +27,6 @@
 
                 <div class="col-auto">
                     <div class="form-group">
-                        <label for="filter-sync">Cardmarket Alt (Zum Testen)</label>
-                        <select class="form-control form-control-sm" id="filter-sync" v-model="filter.sync" @change="search">
-                            <option :value="-1">{{ $t('filter.all') }}</option>
-                            <option :value="2">Nicht hochgeladen</option>
-                            <option :value="1">{{ $t('filter.sync.error') }}</option>
-                            <option :value="0">{{ $t('filter.sync.success') }}</option>
-                            <option :value="3">Keine Lagernummer im Kommentar</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-auto">
-                    <div class="form-group">
                         <label for="filter-sync">Cardmarket</label>
                         <select class="form-control form-control-sm" id="filter-sync" v-model="filter.sync_cardmarket" @change="search">
                             <option :value="-1">{{ $t('filter.all') }}</option>
@@ -186,7 +173,6 @@
             <table class="table table-sm table-hover table-striped bg-white">
                 <thead>
                     <tr>
-                        <th class="text-center d-none d-lg-table-cell w-icon" title="Sync Alt">{{ $t('article.sync') }}</th>
                         <th class="text-center d-none d-lg-table-cell w-icon" title="Sync Cardmarket">C</th>
                         <th class="text-center d-none d-lg-table-cell w-icon" title="Sync WooCommerce">W</th>
                         <th class="text-right d-none d-xl-table-cell w-icon"></th>
@@ -208,10 +194,9 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td class="d-none d-lg-table-cell"></td>
+                        <td class="d-none d-lg-table-cell"></td>
+                        <td class="d-none d-xl-table-cell"></td>
                         <td class="align-middle">{{ items.length }} von {{ paginate.total }}</td>
                         <td class="align-middle" colspan="5">
                             <select class="form-control form-control-sm" v-model="actionForm.action" placeholder="Aktion wählen">
