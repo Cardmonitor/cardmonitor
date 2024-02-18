@@ -657,11 +657,23 @@ class Article extends Model
 
     public function sync(): bool
     {
+        $this->ensureNumberInCardmarketComments();
+
         if ($this->cardmarket_article_id) {
             return $this->syncUpdate();
         }
 
         return $this->syncAdd();
+    }
+
+    private function ensureNumberInCardmarketComments(): void
+    {
+        if ($this->number_from_cardmarket_comments) {
+            return;
+        }
+
+        $this->setNumberInCardmarketComments()
+            ->save();
     }
 
     public function syncAdd(): bool
