@@ -14202,11 +14202,20 @@ var render = function render() {
     attrs: {
       title: _vm.item.language.name
     }
-  })])]), _vm._v(" "), _c("div", [_c("expansion-icon", {
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "d-flex"
+  }, [_c("expansion-icon", {
     attrs: {
       expansion: _vm.item.card.expansion
     }
-  })], 1), _vm._v(" "), _c("div", [_c("rarity", {
+  }), _vm._v(" "), _c("div", {
+    staticClass: "ml-1"
+  }, [_c("a", {
+    attrs: {
+      href: _vm.item.card.expansion.path,
+      target: "_blank"
+    }
+  }, [_vm._v(_vm._s(_vm.item.card.expansion.abbreviation))])])], 1), _vm._v(" "), _c("div", [_c("rarity", {
     attrs: {
       value: _vm.item.card.rarity
     }

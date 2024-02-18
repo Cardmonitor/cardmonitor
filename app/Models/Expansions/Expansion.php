@@ -228,7 +228,7 @@ class Expansion extends Model
 
     public function getImagesAttribute()
     {
-        return Storage::files('public/items/' . $this->game_id . '/' . $this->expansion_id);
+        return Storage::files('public/items/' . $this->game_id . '/' . $this->id);
     }
 
     public function getImagesCountAttribute(): int

@@ -10,7 +10,10 @@
             <div class="col d-flex flex-column">
                 <div class="mb-3">
                     <div><b>{{ (index + 1) }}: {{ item.local_name }} (#{{ item.card.number }}) <span class="fi" :class="'fi-' + item.language.code" :title="item.language.name"></span> </b></div>
-                    <div><expansion-icon :expansion="item.card.expansion"></expansion-icon></div>
+                    <div class="d-flex">
+                        <expansion-icon :expansion="item.card.expansion"></expansion-icon>
+                        <div class="ml-1"><a :href="item.card.expansion.path" target="_blank">{{ item.card.expansion.abbreviation }}</a></div>
+                    </div>
                     <div><rarity :value="item.card.rarity"></rarity> ({{ item.card.rarity }})</div>
                     <div><condition :value="item.condition"></condition> ({{ item.condition }})</div>
                     <div><i class="fas fa-star text-warning" v-if="item.is_foil"></i></div>
