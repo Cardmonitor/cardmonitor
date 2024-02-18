@@ -12,6 +12,7 @@ class DeleteCommand extends Command
         {user}
         {--article= : id of the article to delete}
         {--articles=* : ids of the articles to delete}
+        {--all : delete all articles}
         {--limit= : amount of articles to delete}';
 
     protected $description = 'Deletes the articles on WooCommerce.';
@@ -25,7 +26,7 @@ class DeleteCommand extends Command
         $articles_count = 0;
         $deleted_count = 0;
 
-        if (empty($this->option('article')) && empty($this->option('articles'))) {
+        if (empty($this->option('article')) && empty($this->option('articles')) && ! $this->option('all')) {
             $this->error('Keine Artikel angegeben. Bitte --article oder --articles verwenden.');
             return self::FAILURE;
         }
