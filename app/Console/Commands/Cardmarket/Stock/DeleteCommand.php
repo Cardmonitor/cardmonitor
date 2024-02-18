@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\WooCommerce\Products;
+namespace App\Console\Commands\Cardmarket\Stock;
 
 use App\User;
 use Illuminate\Console\Command;
@@ -8,13 +8,13 @@ use Illuminate\Support\LazyCollection;
 
 class DeleteCommand extends Command
 {
-    protected $signature = 'woocommerce:products:delete
+    protected $signature = 'cardmarket:stock:delete
         {user}
         {--article= : id of the article to delete}
         {--articles=* : ids of the articles to delete}
         {--limit= : amount of articles to delete}';
 
-    protected $description = 'Deletes the articles on WooCommerce.';
+    protected $description = 'Deletes the articles on Cardmarket.';
 
     private User $user;
 
@@ -33,7 +33,7 @@ class DeleteCommand extends Command
         foreach ($this->getArticles() as $article) {
             $this->output->write($article->id . "\t" . $article->number . "\t" . $article->card->expansion->abbreviation . "\t" . $article->local_name  . "\t\t\t");
 
-            if ($article->syncWooCommerceDelete()) {
+            if ($article->syncDelete()) {
                 $deleted_count++;
             }
             $articles_count++;
