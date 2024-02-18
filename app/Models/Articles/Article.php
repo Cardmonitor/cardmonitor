@@ -1307,7 +1307,7 @@ class Article extends Model
         ];
     }
 
-    public function setNumberInCardmarketComments(): void
+    public function setNumberInCardmarketComments(): self
     {
         $number_from_cardmarket_comments = $this->number_from_cardmarket_comments;
 
@@ -1320,6 +1320,8 @@ class Article extends Model
         else {
             $this->attributes['cardmarket_comments'] = str_replace($number_from_cardmarket_comments, $this->number, $this->cardmarket_comments);
         }
+
+        return $this;
     }
 
     public function setStorage(\App\Models\Storages\Storage $storage, int $slot = 0): self

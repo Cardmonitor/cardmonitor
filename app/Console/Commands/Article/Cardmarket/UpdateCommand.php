@@ -50,7 +50,8 @@ class UpdateCommand extends Command
             $this->output->write($article->id . "\t" . $article->number . "\t" . $article->card->expansion->abbreviation . "\t" . $article->local_name  . "\t\t\t");
 
             if (empty($article->number_from_cardmarket_comments)) {
-                $article->setNumberInCardmarketComments()->save();
+                $article->setNumberInCardmarketComments()
+                    ->save();
             }
 
             if ($article->sync()) {
