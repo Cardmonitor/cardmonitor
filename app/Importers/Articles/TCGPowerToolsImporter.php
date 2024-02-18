@@ -2,6 +2,7 @@
 
 namespace App\Importers\Articles;
 
+use App\Enums\Articles\Source;
 use Carbon\Carbon;
 use App\Models\Cards\Card;
 use Illuminate\Support\Arr;
@@ -105,7 +106,7 @@ class TCGPowerToolsImporter
                 'is_sellable_since' => now(),
             ];
             $attributes = [
-                'source_slug' => self::SOURCE_SLUG,
+                'source_slug' => Source::TCG_POWERTOOLS->value,
                 'source_id' => $row_index,
                 'index' => $index,
                 'storage_id' => $this->storage->id,

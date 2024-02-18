@@ -5,6 +5,7 @@ namespace App\Importers\Orders;
 use App\Models\Cards\Card;
 use Illuminate\Support\Arr;
 use App\Models\Orders\Order;
+use App\Enums\Articles\Source;
 use Illuminate\Support\Carbon;
 use App\APIs\WooCommerce\Status;
 use App\Models\Articles\Article;
@@ -13,8 +14,6 @@ use App\Models\Localizations\Language;
 
 class WooCommercePurchaseImporter
 {
-    CONST SOURCE_SLUG = 'woocommerce-api';
-
     private array $articles = [];
     private int $user_id;
 
@@ -122,7 +121,7 @@ class WooCommercePurchaseImporter
         ];
 
         $this->order = Order::updateOrCreate([
-            'source_slug' => self::SOURCE_SLUG,
+            'source_slug' => Source::WOOCOMMERCE_PURCHASE->value,
             'source_id' => $woocommerce_order['id'],
         ], $values);
     }
@@ -130,7 +129,7 @@ class WooCommercePurchaseImporter
     public function updateOrCreateSeller(array $woocommerce_order): CardmarketUser
     {
         return CardmarketUser::updateOrCreate([
-            'source_slug' => self::SOURCE_SLUG,
+            'source_slug' => Source::WOOCOMMERCE_PURCHASE->value,
             'firstname' => $woocommerce_order['billing']['first_name'],
             'name' => $woocommerce_order['billing']['last_name'],
             'extra' => $woocommerce_order['billing']['address_2'],
@@ -188,7 +187,7 @@ class WooCommercePurchaseImporter
 
         for ($index=1; $index <= $quantity; $index++) {
             $values = [
-                'source_slug' => self::SOURCE_SLUG,
+                'source_slug' => Source::WOOCOMMERCE_PURCHASE->value,
                 'source_id' => $line_item['id'],
                 'index' => $index,
                 'user_id' => $this->user_id,
@@ -215,7 +214,7 @@ class WooCommercePurchaseImporter
                 'local_name' => $local_name,
             ];
             $attributes = [
-                'source_slug' => self::SOURCE_SLUG,
+                'source_slug' => Source::WOOCOMMERCE_PURCHASE->value,
                 'source_id' => $line_item['id'],
                 'index' => $index,
             ];

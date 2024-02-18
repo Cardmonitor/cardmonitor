@@ -2,6 +2,7 @@
 
 namespace App\Importers\Articles;
 
+use App\Enums\Articles\Source;
 use App\Models\Cards\Card;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
@@ -10,7 +11,6 @@ use Illuminate\Support\Arr;
 
 class MagicSorterImporter
 {
-    const SOURCE_SLUG = 'magic-sorter';
     const PRICE_MULTIPLIER = 10;
 
     public array $articles_by_position = [];
@@ -104,7 +104,7 @@ class MagicSorterImporter
             'is_sellable_since' => now(),
         ];
         $attributes = [
-            'source_slug' => self::SOURCE_SLUG,
+            'source_slug' => Source::MAGIC_SORTER->value,
             'source_id' => $row_index,
             'storage_id' => $this->getStorage($position)->id,
         ];

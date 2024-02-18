@@ -11,6 +11,7 @@ use App\APIs\WooCommerce\Status;
 use App\Models\Articles\Article;
 use App\Models\Users\CardmarketUser;
 use App\APIs\WooCommerce\WooCommercePurchase;
+use App\Enums\Articles\Source;
 use Tests\Support\Snapshots\JsonSnapshot;
 use App\Importers\Orders\WooCommercePurchaseImporter;
 
@@ -76,7 +77,7 @@ class WooCommercePurchaseImporterTest extends TestCase
         $this->assertEquals(1, $order->is_purchase);
         $this->assertEquals($this->user->id, $order->user_id);
         $this->assertEquals($woocommerce_order['id'], $order->source_id);
-        $this->assertEquals(WooCommercePurchaseImporter::SOURCE_SLUG, $order->source_slug);
+        $this->assertEquals(Source::WOOCOMMERCE_PURCHASE->value, $order->source_slug);
         $this->assertEquals($order->seller->id, $order->seller_id);
         $this->assertEquals(Status::PROCESSING->value, $order->state);
         $this->assertEquals($quantity, $order->articles_count);
@@ -92,7 +93,7 @@ class WooCommercePurchaseImporterTest extends TestCase
                 $is_foil = false;
             }
 
-            $this->assertEquals(WooCommercePurchaseImporter::SOURCE_SLUG, $article->source_slug);
+            $this->assertEquals(Source::WOOCOMMERCE_PURCHASE->value, $article->source_slug);
             $this->assertEquals($line_item['id'], $article->source_id);
             $this->assertEquals($source_sort, $article->source_sort);
             $this->assertEquals($cardmarket_product_id, $article->card_id);

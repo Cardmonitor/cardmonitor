@@ -2,6 +2,7 @@
 
 namespace App\Models\Orders;
 
+use App\Enums\Articles\Source;
 use App\User;
 use Carbon\Carbon;
 use App\Support\Locale;
@@ -547,6 +548,8 @@ class Order extends Model
             'is_playset' => Arr::get($cardmarket_article, 'isPlayset', false),
             'cardmarket_comments' => $cardmarket_article['comments'] ?: null,
             'number' => $number_from_cardmarket_comments ?: null,
+            'source_slug' => \App\Enums\Articles\Source::CARDMARKET_ORDER->value,
+            'source_id' => $this->source_id,
         ];
         foreach (range($articles_count, ($articles_left_count - 1)) as $value) {
             $article = $this->articles()->create($attributes);
