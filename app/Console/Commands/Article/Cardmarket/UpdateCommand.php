@@ -49,6 +49,10 @@ class UpdateCommand extends Command
         foreach ($this->getArticles() as $article) {
             $this->output->write($article->id . "\t" . $article->number . "\t" . $article->card->expansion->abbreviation . "\t" . $article->local_name  . "\t\t\t");
 
+            if (empty($article->number_from_cardmarket_comments)) {
+                $article->setNumberInCardmarketComments()->save();
+            }
+
             if ($article->sync()) {
                 $updated_count++;
             }
