@@ -1747,6 +1747,13 @@ class Article extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function scopeForceIndex(Builder $query, $index): Builder
+    {
+        $table = $this->getTable();
+
+        return $query->from(DB::raw("`$table` FORCE INDEX(`$index`)"));
+    }
+
     public function scopeIsFoil(Builder $query, $value) : Builder
     {
         if (is_null($value)) {

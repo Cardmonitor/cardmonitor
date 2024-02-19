@@ -37,7 +37,7 @@ class ArticleController extends Controller
         if ($request->wantsJson()) {
             return $user->articles()
                 ->select('articles.*')
-                ->useIndex('articles_user_id_is_sellable_index')
+                ->forceIndex('articles_user_id_is_sellable_index')
                 ->join('cards', 'cards.id', 'articles.card_id')
                 ->filter($request->all())
                 ->with('card', function ($query) {
