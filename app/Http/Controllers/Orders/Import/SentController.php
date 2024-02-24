@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Orders\Import;
 
+use App\Enums\ExternalIds\ExternalType;
 use App\Http\Controllers\Controller;
 use App\Models\Orders\Order;
 use Illuminate\Http\Request;
@@ -31,7 +32,15 @@ class SentController extends Controller
             $columns = explode(';', $row);
             $cardmarket_order_id = Arr::get($columns, 0, 0);
             $tracking_number = Arr::get($columns, 1, '');
-            $order = Order::where('user_id', $userId)->where('cardmarket_order_id', $cardmarket_order_id)->first();
+
+            if (!$cardmarket_order_id) {
+                continue;
+            }
+
+            $order = Order::where('user_id', $userId)
+                ->where('source_slug)', ExternalType::CARDMARKET->value)
+                ->where('source_id', $cardmarket_order_id)
+                ->first();
 
             $row_count++;
             if (is_null($order)) {
@@ -40,12 +49,12 @@ class SentController extends Controller
 
             try {
                 if ($tracking_number) {
-                    $CardmarketApi->order->setTrackingNumber($order->cardmarket_order_id, $tracking_number);
+                    $CardmarketApi->order->setTrackingNumber($order->source_id, $tracking_number);
                     $order->update([
                         'tracking_number' => $tracking_number,
                     ]);
                 }
-                $cardmarketOrder = $CardmarketApi->order->send($order->cardmarket_order_id);
+                $cardmarketOrder = $CardmarketApi->order->send($order->source_id);
                 $order->updateOrCreateFromCardmarket($userId, $cardmarketOrder['order']);
             }
             catch (\Exception $exc) {
