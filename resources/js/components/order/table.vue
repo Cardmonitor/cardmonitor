@@ -7,8 +7,8 @@
                     <filter-search v-model="filter.searchtext" @input="search()"></filter-search>
                 </div>
                 <button class="btn btn-sm btn-secondary ml-1" @click="filter.show = !filter.show"><i class="fas fa-filter"></i></button>
-                <button class="btn btn-sm btn-secondary ml-1" @click="syncCardmarket" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i> Cardmarket</button>
-                <button class="btn btn-sm btn-secondary ml-1" @click="syncWooCommerce" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.status == 1}"></i> WooCommerce</button>
+                <button class="btn btn-sm btn-secondary ml-1" @click="syncCardmarket" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.cardmarket == 1}"></i> Cardmarket</button>
+                <button class="btn btn-sm btn-secondary ml-1" @click="syncWooCommerce" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.woocommerce == 1}"></i> WooCommerce</button>
                 <button class="btn btn-sm btn-secondary ml-1" @click="download" :disabled="syncing.status == 1"><i class="fas fa-download"></i></button>
                 <button type="button" class="btn btn-sm btn-secondary ml-1" data-toggle="modal" data-target="#import-sent">
                     <i class="fas fa-upload"></i>
@@ -202,32 +202,13 @@
         methods: {
             checkBackgroundTasks(background_tasks) {
                 const component = this;
-                component.syncing.status = this.getOrderSyncingStatus(background_tasks);
+                component.syncing.status = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.status', false);
+                component.syncing.cardmarket = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.cardmarket', false);
+                component.syncing.woocommerce = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.woocommerce', false);
 
                 if (!component.syncing.status) {
-                    component.syncing.cardmarket = false;
-                    component.syncing.woocommerce = false;
                     this.fetch();
                 }
-            },
-            getOrderSyncingStatus(background_tasks) {
-                const keys = [
-                    'user',
-                    window.user.id,
-                    'order',
-                    'sync',
-                ];
-                let check_object = background_tasks;
-
-                // check if all keys exist
-                for (let i in keys) {
-                    if (check_object[keys[i]] === undefined) {
-                        return false;
-                    }
-                    check_object = check_object[keys[i]];
-                }
-
-                return !!background_tasks['user'][window.user.id]['order']['sync'] || false;;
             },
             download() {
                 var component = this;
@@ -286,6 +267,7 @@
                 axios.put(component.uri + '/sync', component.filter)
                     .then(function (response) {
                         component.syncing.status = true;
+                        component.syncing.cardmarket = true;
                         Vue.success(component.$t('order.successes.syncing_background'));
                     })
                     .catch(function (error) {
@@ -303,6 +285,7 @@
                 })
                     .then(function (response) {
                         component.syncing.status = true;
+                        component.syncing.woocommerce = true;
                         Vue.success(component.$t('order.successes.syncing_background'));
                     })
                     .catch(function (error) {

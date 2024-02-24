@@ -28,10 +28,13 @@ class ImportCommand extends Command
     public function handle(BackgroundTasks $BackgroundTasks)
     {
         $this->user = User::findOrFail($this->argument('user'));
-        $backgroundtask_key = 'user.' . $this->user->id . '.order.sync';
+        $backgroundtask_keys = [
+            'user.' . $this->user->id . '.order.sync.status',
+            'user.' . $this->user->id . '.order.sync.woocommerce',
+        ];
 
         try {
-            $this->putBackgroundTask($BackgroundTasks, $backgroundtask_key);
+            $this->putBackgroundTask($BackgroundTasks, $backgroundtask_keys);
 
             $woocommerce_states = $this->option('states');
             $order_source_ids = $this->getOrderSourceIdsForStates($woocommerce_states);
@@ -44,12 +47,14 @@ class ImportCommand extends Command
             }
 
             $this->importNotImportedOrders($order_source_ids->diff($imported_order_source_ids));
-            $this->notifyUserSuccess($BackgroundTasks, $backgroundtask_key, $woocommerce_states);
+            $this->notifyUserSuccess($BackgroundTasks, $backgroundtask_keys, $woocommerce_states);
 
             return self::SUCCESS;
         }
         catch (\Exception $e) {
-            $BackgroundTasks->forget($backgroundtask_key);
+            foreach ($backgroundtask_keys as $backgroundtask_key) {
+                $BackgroundTasks->forget($backgroundtask_key);
+            }
             $this->user->notify(FlashMessage::danger('Die WooCommerce Bestellungen im Status <b>' . implode(', ', $woocommerce_states) . '</b> konnten nicht importiert werden.', [
                 'background_tasks' => App::make(BackgroundTasks::class)->all(),
             ]));
@@ -57,22 +62,26 @@ class ImportCommand extends Command
         }
     }
 
-    private function putBackgroundTask(BackgroundTasks $BackgroundTasks, string $backgroundtask_key): void
+    private function putBackgroundTask(BackgroundTasks $BackgroundTasks, array $backgroundtask_keys): void
     {
         if ($this->option('order')) {
             return;
         }
 
-        $BackgroundTasks->put($backgroundtask_key, 1);
+        foreach ($backgroundtask_keys as $backgroundtask_key) {
+            $BackgroundTasks->put($backgroundtask_key, 1);
+        }
     }
 
-    private function notifyUserSuccess(BackgroundTasks $BackgroundTasks, string $backgroundtask_key, array $woocommerce_states): void
+    private function notifyUserSuccess(BackgroundTasks $BackgroundTasks, array $backgroundtask_keys, array $woocommerce_states): void
     {
         if ($this->option('order')) {
             return;
         }
 
-        $BackgroundTasks->forget($backgroundtask_key);
+        foreach ($backgroundtask_keys as $backgroundtask_key) {
+            $BackgroundTasks->forget($backgroundtask_key);
+        }
         $this->user->notify(FlashMessage::success('Die WooCommerce Bestellungen im Status <b>' . implode(', ', $woocommerce_states) . '</b> wurden importiert.', [
             'background_tasks' => App::make(BackgroundTasks::class)->all(),
         ]));

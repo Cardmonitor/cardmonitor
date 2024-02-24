@@ -33,16 +33,26 @@ class SyncCommand extends Command
             return self::SUCCESS;
         }
 
+        $backgroundtask_keys = [
+            'user.' . $this->user->id . '.order.sync.status',
+            'user.' . $this->user->id . '.order.sync.cardmarket',
+        ];
+
         try {
-            $backgroundtask_key = 'user.' . $this->user->id . '.order.sync';
-            $BackgroundTasks->put($backgroundtask_key, 1);
+
+            foreach ($backgroundtask_keys as $backgroundtask_key) {
+                $BackgroundTasks->put($backgroundtask_key, 1);
+            }
 
             $states = $this->getStates();
             foreach ($states as $state) {
                 $this->handleState($this->option('actor'), $state);
             }
 
-            $BackgroundTasks->forget($backgroundtask_key);
+            foreach ($backgroundtask_keys as $backgroundtask_key) {
+                $BackgroundTasks->forget($backgroundtask_key);
+            }
+
             $this->user->notify(FlashMessage::success('Die Bestellungen im Status <b>' . implode(', ', $states) . '</b> wurden synchronisiert.', [
                 'background_tasks' => App::make(BackgroundTasks::class)->all(),
             ]));
@@ -50,7 +60,9 @@ class SyncCommand extends Command
             return self::SUCCESS;
         }
         catch (\Exception $e) {
-            $BackgroundTasks->forget($backgroundtask_key);
+            foreach ($backgroundtask_keys as $backgroundtask_key) {
+                $BackgroundTasks->forget($backgroundtask_key);
+            }
             $this->user->notify(FlashMessage::danger('Die Bestellungen im Status <b>' . implode(', ', $states) . '</b> konnten nicht synchronisiert werden.', [
                 'background_tasks' => App::make(BackgroundTasks::class)->all(),
             ]));

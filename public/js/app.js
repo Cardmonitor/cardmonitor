@@ -3907,7 +3907,9 @@ __webpack_require__.r(__webpack_exports__);
       syncing: {
         status: false,
         interval: null,
-        timeout: null
+        timeout: null,
+        cardmarket: false,
+        woocommerce: false
       },
       filter: {
         page: 1,
@@ -3999,21 +4001,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     checkBackgroundTasks: function checkBackgroundTasks(background_tasks) {
       var component = this;
-      component.syncing.status = this.getOrderSyncingStatus(background_tasks);
-    },
-    getOrderSyncingStatus: function getOrderSyncingStatus(background_tasks) {
-      var keys = ['user', window.user.id, 'order', 'sync'];
-      var check_object = background_tasks;
-
-      // check if all keys exist
-      for (var i in keys) {
-        if (check_object[keys[i]] === undefined) {
-          return false;
-        }
-        check_object = check_object[keys[i]];
-      }
-      return !!background_tasks['user'][window.user.id]['order']['sync'] || false;
-      ;
+      component.syncing.status = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.status', false);
+      component.syncing.cardmarket = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.cardmarket', false);
+      component.syncing.woocommerce = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.woocommerce', false);
     },
     send: function send(item) {
       var component = this;
@@ -4032,7 +4022,8 @@ __webpack_require__.r(__webpack_exports__);
       }
       clearTimeout(component.syncing.timeout);
       axios.put('/order/sync', component.filter).then(function (response) {
-        component.syncing.status = 1;
+        component.syncing.status = true;
+        component.syncing.cardmarket = true;
         Vue.success('Bestellungen von Cardmarket werden im Hintergrund aktualisiert.');
       })["catch"](function (error) {
         Vue.error(component.$t('order.errors.synced'));
@@ -4048,7 +4039,8 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/order/woocommerce/import', {
         params: component.filter
       }).then(function (response) {
-        component.syncing.status = 1;
+        component.syncing.status = true;
+        component.syncing.woocommerce = true;
         Vue.success('Bestellungen von WooCommerce werden im Hintergrund aktualisiert.');
       })["catch"](function (error) {
         Vue.error(component.$t('order.errors.synced'));
@@ -5295,26 +5287,12 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     checkBackgroundTasks: function checkBackgroundTasks(background_tasks) {
       var component = this;
-      component.syncing.status = this.getOrderSyncingStatus(background_tasks);
+      component.syncing.status = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.status', false);
+      component.syncing.cardmarket = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.cardmarket', false);
+      component.syncing.woocommerce = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.woocommerce', false);
       if (!component.syncing.status) {
-        component.syncing.cardmarket = false;
-        component.syncing.woocommerce = false;
         this.fetch();
       }
-    },
-    getOrderSyncingStatus: function getOrderSyncingStatus(background_tasks) {
-      var keys = ['user', window.user.id, 'order', 'sync'];
-      var check_object = background_tasks;
-
-      // check if all keys exist
-      for (var i in keys) {
-        if (check_object[keys[i]] === undefined) {
-          return false;
-        }
-        check_object = check_object[keys[i]];
-      }
-      return !!background_tasks['user'][window.user.id]['order']['sync'] || false;
-      ;
     },
     download: function download() {
       var component = this;
@@ -5366,6 +5344,7 @@ __webpack_require__.r(__webpack_exports__);
       var component = this;
       axios.put(component.uri + '/sync', component.filter).then(function (response) {
         component.syncing.status = true;
+        component.syncing.cardmarket = true;
         Vue.success(component.$t('order.successes.syncing_background'));
       })["catch"](function (error) {
         Vue.error(component.$t('order.errors.synced'));
@@ -5378,6 +5357,7 @@ __webpack_require__.r(__webpack_exports__);
         params: component.filter
       }).then(function (response) {
         component.syncing.status = true;
+        component.syncing.woocommerce = true;
         Vue.success(component.$t('order.successes.syncing_background'));
       })["catch"](function (error) {
         Vue.error(component.$t('order.errors.synced'));
@@ -12701,7 +12681,7 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-sync",
     "class": {
-      "fa-spin": _vm.syncing.status == 1
+      "fa-spin": _vm.syncing.cardmarket == 1
     },
     attrs: {
       disabled: _vm.syncing.status == 1
@@ -12714,7 +12694,7 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-sync",
     "class": {
-      "fa-spin": _vm.syncing.status == 1
+      "fa-spin": _vm.syncing.woocommerce == 1
     },
     attrs: {
       disabled: _vm.syncing.status == 1
@@ -14947,7 +14927,7 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-sync",
     "class": {
-      "fa-spin": _vm.syncing.status == 1
+      "fa-spin": _vm.syncing.cardmarket == 1
     }
   }), _vm._v(" Cardmarket")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-sm btn-secondary ml-1",
@@ -14960,7 +14940,7 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-sync",
     "class": {
-      "fa-spin": _vm.syncing.status == 1
+      "fa-spin": _vm.syncing.woocommerce == 1
     }
   }), _vm._v(" WooCommerce")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-sm btn-secondary ml-1",
