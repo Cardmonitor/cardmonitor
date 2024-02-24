@@ -38,7 +38,7 @@ class SentController extends Controller
             }
 
             $order = Order::where('user_id', $userId)
-                ->where('source_slug)', ExternalType::CARDMARKET->value)
+                ->where('source_slug', ExternalType::CARDMARKET->value)
                 ->where('source_id', $cardmarket_order_id)
                 ->first();
 
