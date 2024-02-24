@@ -37,12 +37,12 @@ class WooCommerceOrderImporter
         }
 
         // Artikel auf Cardmarket löschen
-        // if (!empty($this->articles)) {
-        //     Artisan::queue('cardmarket:stock:delete', [
-        //         'user' => $this->user_id,
-        //         '--articles' => collect($this->articles)->pluck('id')
-        //     ]);
-        // }
+        if (!empty($this->articles)) {
+            Artisan::queue('cardmarket:stock:delete', [
+                'user' => $this->user_id,
+                '--articles' => collect($this->articles)->pluck('id')
+            ]);
+        }
 
         return $this->order;
     }

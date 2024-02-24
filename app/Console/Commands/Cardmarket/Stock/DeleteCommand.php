@@ -38,6 +38,7 @@ class DeleteCommand extends Command
                 $deleted_count++;
             }
             $articles_count++;
+            usleep(50);
 
             $this->output->writeln('');
         }
@@ -49,10 +50,7 @@ class DeleteCommand extends Command
 
     private function getArticles(): LazyCollection
     {
-        $query = $this->user->articles()
-            ->with('card.expansion')
-            ->whereNotNull('number')
-            ->oldest('synced_at');
+        $query = $this->user->articles();
 
         if ($this->option('article')) {
             $query->where('id', $this->option('article'));
