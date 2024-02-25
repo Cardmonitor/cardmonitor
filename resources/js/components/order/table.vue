@@ -7,9 +7,9 @@
                     <filter-search v-model="filter.searchtext" @input="search()"></filter-search>
                 </div>
                 <button class="btn btn-sm btn-secondary ml-1" @click="filter.show = !filter.show"><i class="fas fa-filter"></i></button>
-                <button class="btn btn-sm btn-secondary ml-1" @click="syncCardmarket" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.cardmarket == 1}"></i> Cardmarket</button>
-                <button class="btn btn-sm btn-secondary ml-1" @click="syncWooCommerce" :disabled="syncing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': syncing.woocommerce == 1}"></i> WooCommerce</button>
-                <button class="btn btn-sm btn-secondary ml-1" @click="download" :disabled="syncing.status == 1"><i class="fas fa-download"></i></button>
+                <button class="btn btn-sm btn-secondary ml-1" @click="importFromCardmarket" :disabled="is_importing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': is_importing.cardmarket == 1}"></i> Cardmarket</button>
+                <button class="btn btn-sm btn-secondary ml-1" @click="importFromWooCommerce" :disabled="is_importing.status == 1"><i class="fas fa-sync" :class="{'fa-spin': is_importing.woocommerce == 1}"></i> WooCommerce</button>
+                <button class="btn btn-sm btn-secondary ml-1" @click="download" :disabled="is_importing.status == 1"><i class="fas fa-download"></i></button>
                 <button type="button" class="btn btn-sm btn-secondary ml-1" data-toggle="modal" data-target="#import-sent">
                     <i class="fas fa-upload"></i>
                 </button>
@@ -24,7 +24,7 @@
                         <label for="filter-state">{{ $t('app.state') }}</label>
                         <select class="form-control form-control-sm" id="filter-state" v-model="filter.state" @change="search">
                             <option :value="null">{{ $t('filter.all') }}</option>
-                            <option :value="id" v-for="(name, id) in states">{{ name }}</option>
+                            <option :value="id" v-for="(name, id) in states" :key="id">{{ name }}</option>
                         </select>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                         <label for="filter-state">Shop</label>
                         <select class="form-control form-control-sm" id="filter-state" v-model="filter.source_slug" @change="search">
                             <option :value="null">{{ $t('filter.all') }}</option>
-                            <option :value="slug" v-for="(name, slug) in source_slugs">{{ name }}</option>
+                            <option :value="slug" v-for="(name, slug) in source_slugs" :key="slug">{{ name }}</option>
                         </select>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                     <a class="page-link" href="#" @click.prevent="filter.page--">{{ $t('app.paginate.previous') }}</a>
                 </li>
 
-                <li class="page-item" v-for="(n, i) in pages" v-bind:class="{ active: (n == filter.page) }"><a class="page-link" href="#" @click.prevent="filter.page = n">{{ n }}</a></li>
+                <li class="page-item" v-for="(n, i) in pages" v-bind:class="{ active: (n == filter.page) }" :key="n"><a class="page-link" href="#" @click.prevent="filter.page = n">{{ n }}</a></li>
 
                 <li class="page-item" v-show="paginate.nextPageUrl">
                     <a class="page-link" href="#" @click.prevent="filter.page++">{{ $t('app.paginate.next') }}</a>
@@ -103,12 +103,16 @@
     import row from "./row.vue";
     import filterSearch from "../filter/search.vue";
 
+    import { ImportMixin } from '../../mixins/orders/import.js';
+
     export default {
 
         components: {
             row,
             filterSearch,
         },
+
+        mixins: [ImportMixin],
 
         props: {
             initialBackgroundTasks: {
@@ -126,12 +130,6 @@
                 uri: '/order',
                 items: [],
                 isLoading: true,
-                syncing: {
-                    status: false,
-                    interval: null,
-                    cardmarket: false,
-                    woocommerce: false,
-                },
                 paginate: {
                     nextPageUrl: null,
                     prevPageUrl: null,
@@ -202,11 +200,11 @@
         methods: {
             checkBackgroundTasks(background_tasks) {
                 const component = this;
-                component.syncing.status = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.status', false);
-                component.syncing.cardmarket = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.cardmarket', false);
-                component.syncing.woocommerce = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.woocommerce', false);
+                component.is_importing.status = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.status', false);
+                component.is_importing.cardmarket = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.cardmarket', false);
+                component.is_importing.woocommerce = _.get(background_tasks, 'user.' + window.user.id + '.order.sync.woocommerce', false);
 
-                if (!component.syncing.status) {
+                if (!component.is_importing.status) {
                     this.fetch();
                 }
             },
@@ -261,40 +259,6 @@
             },
             updated(index, item) {
                 Vue.set(this.items, index, item);
-            },
-            syncCardmarket() {
-                var component = this;
-                axios.put(component.uri + '/sync', component.filter)
-                    .then(function (response) {
-                        component.syncing.status = true;
-                        component.syncing.cardmarket = true;
-                        Vue.success(component.$t('order.successes.syncing_background'));
-                    })
-                    .catch(function (error) {
-                        Vue.error(component.$t('order.errors.synced'));
-                        console.log(error);
-                    })
-                    .finally ( function () {
-
-                    });
-            },
-            syncWooCommerce() {
-                var component = this;
-                axios.get(component.uri + '/woocommerce/import', {
-                    params: component.filter
-                })
-                    .then(function (response) {
-                        component.syncing.status = true;
-                        component.syncing.woocommerce = true;
-                        Vue.success(component.$t('order.successes.syncing_background'));
-                    })
-                    .catch(function (error) {
-                        Vue.error(component.$t('order.errors.synced'));
-                        console.log(error);
-                    })
-                    .finally ( function () {
-
-                    });
             },
             showPageButton(page) {
                 if (page == 1 || page == this.paginate.lastPage) {
