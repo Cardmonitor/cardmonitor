@@ -1027,7 +1027,7 @@ class Article extends Model
             'external_type' => ExternalType::WOOCOMMERCE->value
         ], [
             'sync_status' => self::SYNC_STATE_ERROR,
-            'sync_message' => Arr::get($woocommerce_error, 'data.message', 'Unbekannter Fehler'),
+            'sync_message' => Arr::get($woocommerce_error, 'message', 'Unbekannter Fehler'),
         ]);
 
         return false;
