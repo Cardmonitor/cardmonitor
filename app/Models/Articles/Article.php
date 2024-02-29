@@ -1020,12 +1020,14 @@ class Article extends Model
             return true;
         }
 
+        echo json_encode($woocommerce_error, JSON_PRETTY_PRINT);
+
         $this->externalIdsWooCommerce()->updateOrCreate([
             'user_id' => $this->user_id,
             'external_type' => ExternalType::WOOCOMMERCE->value
         ], [
             'sync_status' => self::SYNC_STATE_ERROR,
-            'sync_message' => $woocommerce_error['data']['message'],
+            'sync_message' => Arr::get($woocommerce_error, 'data.message', 'Unbekannter Fehler'),
         ]);
 
         return false;
@@ -1805,11 +1807,8 @@ class Article extends Model
             return $query;
         }
 
-        if (!$this->hasJoin($query, 'cards')) {
-            $query->join('cards', 'cards.id', '=', 'articles.card_id');
-        }
-
-        return $query->where('cards.expansion_id', $value);
+        return $query->ensureCardsJoin()
+            ->where('cards.expansion_id', $value);
     }
 
     public function scopeGame(Builder $query, $value) : Builder
@@ -1818,11 +1817,8 @@ class Article extends Model
             return $query;
         }
 
-        if (!$this->hasJoin($query, 'cards')) {
-            $query->join('cards', 'cards.id', '=', 'articles.card_id');
-        }
-
-        return $query->where('cards.game_id', $value);
+        return $query->ensureCardsJoin()
+            ->where('cards.game_id', $value);
     }
 
     public function scopeLanguage(Builder $query, $value) : Builder
@@ -1930,16 +1926,14 @@ class Article extends Model
             return $query;
         }
 
-        if (!$this->hasJoin($query, 'cards')) {
-            $query->join('cards', 'cards.id', '=', 'articles.card_id');
-        }
-
         if ($value == 0) {
-            return $query->whereNull('cards.expansion_id');
+            return $query->ensureCardsJoin()
+                ->whereNull('cards.expansion_id');
         }
 
         if ($value == 1) {
-            return $query->whereNotNull('cards.expansion_id');
+            return $query->ensureCardsJoin()
+                ->whereNotNull('cards.expansion_id');
         }
 
         return $query;
@@ -1951,11 +1945,8 @@ class Article extends Model
             return $query;
         }
 
-        if (!$this->hasJoin($query, 'cards')) {
-            $query->join('cards', 'cards.id', '=', 'articles.card_id');
-        }
-
-        return $query->where('cards.rarity', $value);
+        return $query->ensureCardsJoin()
+            ->where('cards.rarity', $value);
     }
 
     public function scopeRule(Builder $query, $value) : Builder
@@ -2151,6 +2142,15 @@ class Article extends Model
             $query->where('external_type', $external_type)
                 ->where('sync_action', $value);
         });
+    }
+
+    public function scopeEnsureCardsJoin(Builder $query): Builder
+    {
+        if (!$this->hasJoin($query, 'cards')) {
+            $query->join('cards', 'cards.id', '=', 'articles.card_id');
+        }
+
+        return $query;
     }
 
     private function hasJoin(Builder $Builder, $table_name): bool
