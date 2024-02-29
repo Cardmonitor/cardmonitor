@@ -1805,6 +1805,10 @@ class Article extends Model
             return $query;
         }
 
+        if (!$this->hasJoin($query, 'cards')) {
+            $query->join('cards', 'cards.id', '=', 'articles.card_id');
+        }
+
         return $query->where('cards.expansion_id', $value);
     }
 
@@ -1812,6 +1816,10 @@ class Article extends Model
     {
         if (! $value) {
             return $query;
+        }
+
+        if (!$this->hasJoin($query, 'cards')) {
+            $query->join('cards', 'cards.id', '=', 'articles.card_id');
         }
 
         return $query->where('cards.game_id', $value);
@@ -1922,6 +1930,10 @@ class Article extends Model
             return $query;
         }
 
+        if (!$this->hasJoin($query, 'cards')) {
+            $query->join('cards', 'cards.id', '=', 'articles.card_id');
+        }
+
         if ($value == 0) {
             return $query->whereNull('cards.expansion_id');
         }
@@ -1937,6 +1949,10 @@ class Article extends Model
     {
         if (! $value) {
             return $query;
+        }
+
+        if (!$this->hasJoin($query, 'cards')) {
+            $query->join('cards', 'cards.id', '=', 'articles.card_id');
         }
 
         return $query->where('cards.rarity', $value);
@@ -2137,5 +2153,19 @@ class Article extends Model
         });
     }
 
+    private function hasJoin(Builder $Builder, $table_name): bool
+    {
+        $joins = $Builder->getQuery()->joins;
+        if (empty($joins)) {
+            return false;
+        }
 
+        foreach ($joins as $JoinClause) {
+            if ($JoinClause->table == $table_name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
