@@ -976,7 +976,7 @@ class Article extends Model
     {
         $this->card->download();
 
-        if (! $this->card->hasValidCardmarketImage) {
+        if (! $this->card->hasValidCardmarketImage()) {
             $this->externalIdsWooCommerce()->updateOrCreate([
                 'user_id' => $this->user_id,
                 'external_type' => ExternalType::WOOCOMMERCE->value

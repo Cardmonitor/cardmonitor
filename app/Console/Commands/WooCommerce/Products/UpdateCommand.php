@@ -47,7 +47,7 @@ class UpdateCommand extends Command
         $updated_count = 0;
 
         foreach ($this->getArticles() as $article) {
-            $this->output->write($article->id . "\t" . $article->number . "\t" . $article->card->expansion->abbreviation . "\t" . $article->local_name  . "\t\t\t");
+            echo $article->id . "\t" . $article->number . "\t" . $article->card->expansion->abbreviation . "\t" . $article->local_name  . "\t\t\t" . PHP_EOL;
 
             if ($article->syncWooCommerce()) {
                 $updated_count++;
