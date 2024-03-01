@@ -249,8 +249,6 @@ class Card extends Model
             return;
         }
 
-        $CardmarketApi = App::make('CardmarketApi');
-
         if ($this->hasValidCardmarketImage()) {
             return;
         }
@@ -260,6 +258,7 @@ class Card extends Model
         }
 
         try {
+            $CardmarketApi = App::make('CardmarketApi');
             $filename = storage_path('app/public/items/' . $this->game_id . '/' . $this->expansion_id . '/' . $this->id . '.jpg');
             $CardmarketApi->product->download($this->image, $filename);
         }

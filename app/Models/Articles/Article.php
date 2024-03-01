@@ -974,6 +974,20 @@ class Article extends Model
 
     public function syncWooCommerce(): bool
     {
+        $this->card->download();
+
+        if (! $this->card->hasValidCardmarketImage) {
+            $this->externalIdsWooCommerce()->updateOrCreate([
+                'user_id' => $this->user_id,
+                'external_type' => ExternalType::WOOCOMMERCE->value
+            ], [
+                'sync_status' => self::SYNC_STATE_ERROR,
+                'sync_message' => 'Ungültiges Bild',
+            ]);
+
+            return false;
+        }
+
         $external_id = $this->externalIdsWooComerce;
         if (is_null($external_id) || is_null($external_id->external_id)) {
             return $this->syncWooCommerceAdd();
