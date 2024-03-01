@@ -1120,10 +1120,7 @@ class Article extends Model
             }
 
             // Produkt nicht (mehr) vorhanden
-            $values['external_id'] = null;
-            $values['sync_status'] = self::SYNC_STATE_NOT_SYNCED;
-            $values['sync_action'] = null;
-            $values['sync_message'] = 'Ungültige ID.';
+            return $this->syncWooCommerceAdd();
         }
 
         $this->externalIdsWooCommerce()->updateOrCreate([
