@@ -496,7 +496,7 @@
                 })
                 .finally( function () {
                     // syncCardmarket is ececuted as a job, so we don't want to reset the actioning status
-                    if (component.actionForm.action != 'syncCardmarket') {
+                    if (component.actionForm.action != 'syncCardmarket' && component.actionForm.action != 'syncWooCommerce') {
                         component.actioning.status = false;
                     }
                     component.actionForm.action = null;
@@ -572,26 +572,7 @@
                     });
             },
             checkBackgroundTasks(background_tasks) {
-                const component = this;
-                const keys = [
-                    'user',
-                    window.user.id,
-                    'article',
-                    'cardmarket',
-                    'update',
-                ];
-                let check_object = background_tasks;
-
-                // check if all keys exist
-                for (let i in keys) {
-                    if (check_object[keys[i]] === undefined) {
-                        component.actioning.status = false;
-                        return;
-                    }
-                    check_object = check_object[keys[i]];
-                }
-
-                component.actioning.status = !!background_tasks['user'][window.user.id]['article']['cardmarket']['update'] || false;
+                component.actioning.status = (_.get(background_tasks, 'user.' + window.user.id + '.article.cardmarket.update', false) || _.get(background_tasks, 'user.' + window.user.id + '.article.woocommerce.products.update', false));
             },
             fetch() {
                 var component = this;
