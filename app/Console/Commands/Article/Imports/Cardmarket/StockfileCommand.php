@@ -67,6 +67,11 @@ class StockfileCommand extends Command
 
         $cardmarket_cards = $this->getCardmarketCards();
 
+        if (empty($cardmarket_cards)) {
+            $this->error('No Cardmarket Cards found');
+            return;
+        }
+
         $stockfile_article_count = 0;
         $all_updated_article_ids = [];
 
