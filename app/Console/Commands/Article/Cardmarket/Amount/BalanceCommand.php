@@ -18,7 +18,7 @@ class BalanceCommand extends Command
     protected $signature = 'article:cardmarket:amount:balance
         {user}
         {amount : amount of articles to balance to}
-        {--excecute : increase and decreae the amount of articles}';
+        {--execute : increase and decreae the amount of articles}';
 
     protected $description = 'Updates amaount of similar articles on Cardmarket.';
 
@@ -48,7 +48,7 @@ class BalanceCommand extends Command
                     continue;
                 }
 
-                if ($this->option('excecute')) {
+                if ($this->option('execute')) {
                     $is_deleted = $article->syncDelete();
                     echo $is_deleted ? 'DELETED' : 'ERROR';
                     usleep(100000); // 0.1 seconds
