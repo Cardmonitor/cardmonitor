@@ -2,8 +2,10 @@
 
 namespace Tests\Unit\Exporters\Orders;
 
+use App\Enums\ExternalIds\ExternalType;
 use App\Exporters\Orders\CsvExporter;
 use App\Models\Articles\Article;
+use App\Models\Articles\ExternalId;
 use App\Models\Expansions\Expansion;
 use App\Models\Orders\Order;
 use Illuminate\Support\Collection;
@@ -41,7 +43,7 @@ class CsvExporterTest extends TestCase
             'articles.language',
             'articles.card.expansion',
             'articles.externalIdsCardmarket',
-            'articles.externalIdsWooCommerce',
+            'articles.externalIdsCARDMARKET',
             'buyer',
         ]);
 
@@ -92,10 +94,16 @@ class CsvExporterTest extends TestCase
         $order = factory(Order::class)->create([
             'user_id' => $this->user->id,
             'state' => 'paid',
+            'source_slug' => ExternalType::CARDMARKET->value,
         ]);
 
         $article = factory(Article::class)->create([
             'user_id' => $this->user->id,
+        ]);
+        $externalId = ExternalId::factory()->create([
+            'article_id' => $article->id,
+            'user_id' => $this->user->id,
+            'external_type' => ExternalType::CARDMARKET->value,
         ]);
 
         $this->assertCount(0, $order->articles);
@@ -107,11 +115,24 @@ class CsvExporterTest extends TestCase
         $article = factory(Article::class)->create([
             'user_id' => $this->user->id,
         ]);
+        $externalId = ExternalId::factory()->create([
+            'article_id' => $article->id,
+            'user_id' => $this->user->id,
+            'external_type' => ExternalType::CARDMARKET->value,
+            'external_id' => '123456',
+        ]);
+
         $order->articles()->attach($article->id);
 
         $this->assertCount(2, $order->fresh()->articles);
 
         $article = Article::create($article->getOriginal());
+        $externalId = ExternalId::factory()->create([
+            'article_id' => $article->id,
+            'user_id' => $this->user->id,
+            'external_type' => ExternalType::CARDMARKET->value,
+            'external_id' => '123456',
+        ]);
 
         $order->articles()->attach($article->id);
 
