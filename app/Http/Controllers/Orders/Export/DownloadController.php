@@ -21,6 +21,8 @@ class DownloadController extends Controller
             ->with([
                 'articles.language',
                 'articles.card.expansion',
+                'articles.externalIdsCardmarket',
+                'articles.externalIdsWooCommerce',
                 'buyer',
             ])->get();
 

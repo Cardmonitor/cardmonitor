@@ -40,6 +40,8 @@ class CsvExporterTest extends TestCase
         $order->load([
             'articles.language',
             'articles.card.expansion',
+            'articles.externalIdsCardmarket',
+            'articles.externalIdsWooCommerce',
             'buyer',
         ]);
 

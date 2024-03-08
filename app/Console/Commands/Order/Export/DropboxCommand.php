@@ -59,6 +59,8 @@ class DropboxCommand extends Command
             ->with([
                 'articles.language',
                 'articles.card.expansion',
+                'articles.externalIdsCardmarket',
+                'articles.externalIdsWooCommerce',
                 'buyer',
             ])->get();
 
