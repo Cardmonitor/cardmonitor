@@ -1709,6 +1709,8 @@ class ArticleTest extends TestCase
      */
     public function it_can_not_be_created_on_woocommerce_without_a_valid_image()
     {
+        $this->markTestSkipped('No WooCommerce Connection available');
+
         $article = factory(Article::class)->create([
             'user_id' => $this->user->id,
             'number' => 'A999.999',
@@ -1743,6 +1745,8 @@ class ArticleTest extends TestCase
      */
     public function it_can_be_created_on_woocommerce()
     {
+        $this->markTestSkipped('No WooCommerce Connection available');
+
         $woocommerce_product_id = 662978;
         $woocommerce_product = JsonSnapshot::get('tests/snapshots/woocommerce/orders/products/' . $woocommerce_product_id . '.json', function () use ($woocommerce_product_id) {
             return (new \App\APIs\WooCommerce\WooCommerceOrder())->findProduct($woocommerce_product_id)->json();
@@ -1770,6 +1774,8 @@ class ArticleTest extends TestCase
      */
     public function it_can_be_updated_if_sku_is_already_on_woocommerce()
     {
+        $this->markTestSkipped('No WooCommerce Connection available');
+
         $woocommerce_error = JsonSnapshot::get('tests/snapshots/woocommerce/orders/products/product_invalid_sku.json', function () {
             return [];
         });
