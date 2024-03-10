@@ -1,0 +1,7 @@
+{
+    "code": "woocommerce_product_image_upload_error",
+    "message": "Fehler beim Abrufen des externen Bildes https://www.example.com/1.jpg. Fehler: Not Found",
+    "data": {
+        "status": 400
+    }
+}

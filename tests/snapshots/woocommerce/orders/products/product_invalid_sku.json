@@ -1,0 +1,9 @@
+{
+    "code": "product_invalid_sku",
+    "message": "Ungültige oder doppelte Artikelnummer.",
+    "data": {
+        "status": 400,
+        "resource_id": 662978,
+        "unique_sku": "A016.160-1"
+    }
+}

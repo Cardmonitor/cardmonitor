@@ -337,7 +337,7 @@ class CardTest extends TestCase
     /**
      * @test
      */
-    public function it_knwos_if_it_is_a_singles_product()
+    public function it_knows_if_it_is_a_singles_product()
     {
         $card = factory(Card::class)->create([
             'category_name' => null

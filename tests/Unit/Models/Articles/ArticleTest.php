@@ -10,15 +10,18 @@ use App\Models\Games\Game;
 use App\Models\Rules\Rule;
 use Illuminate\Support\Arr;
 use App\Models\Orders\Order;
+use Illuminate\Http\Response;
 use App\Models\Articles\Article;
 use App\Models\Storages\Storage;
 use Cardmonitor\Cardmarket\Stock;
 use Illuminate\Support\Facades\App;
 use App\Models\Expansions\Expansion;
+use Illuminate\Support\Facades\Http;
 use Tests\Traits\AttributeAssertions;
 use App\Models\Localizations\Language;
 use Tests\Traits\RelationshipAssertions;
 use Tests\Support\Snapshots\JsonSnapshot;
+use App\APIs\WooCommerce\WooCommerceOrder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -1674,7 +1677,8 @@ class ArticleTest extends TestCase
     /**
      * @test
      */
-    public function it_can_be_created_from_woocommerce_product() {
+    public function it_can_be_created_from_woocommerce_product()
+    {
         $woocommerce_product_id = 662978;
         $woocommerce_product = JsonSnapshot::get('tests/snapshots/woocommerce/orders/products/' . $woocommerce_product_id . '.json', function () use ($woocommerce_product_id) {
             return (new \App\APIs\WooCommerce\WooCommerceOrder())->findProduct($woocommerce_product_id)->json();
@@ -1696,5 +1700,92 @@ class ArticleTest extends TestCase
         $this->assertEquals($woocommerce_product['sku'], $article->number);
         $this->assertEquals($woocommerce_product['price'], $article->unit_price);
         $this->assertEquals($meta_data['condition'], $article->condition);
+    }
+
+    /**
+     * @test
+     * @runTestsInSeparateProcesses
+     * @preserveGlobalState disabled
+     */
+    public function it_can_not_be_created_on_woocommerce_without_a_valid_image()
+    {
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'number' => 'A999.999',
+        ]);
+
+        $this->assertFalse($article->card->hasValidCardmarketImage());
+        $this->assertNull($article->card->download());
+
+        $is_exported = $article->syncWoocommerce();
+        $this->assertFalse($is_exported);
+
+        $woocommerce_error = JsonSnapshot::get('tests/snapshots/woocommerce/orders/products/woocommerce_product_image_upload_error.json', function () {
+            return [];
+        });
+
+        Http::fake(function ($request) use ($woocommerce_error) {
+            return Http::response($woocommerce_error, Response::HTTP_BAD_REQUEST);
+        });
+
+        $is_exported = $article->syncWooCommerceAdd();
+
+        $this->assertFalse($is_exported);
+        $this->assertNull($article->externalIdsWooCommerce->external_id);
+        $this->assertEquals(Article::SYNC_STATE_ERROR, $article->externalIdsWooCommerce->sync_status);
+        $this->assertEquals($woocommerce_error['message'], $article->externalIdsWooCommerce->sync_message);
+    }
+
+    /**
+     * @test
+     * @runTestsInSeparateProcesses
+     * @preserveGlobalState disabled
+     */
+    public function it_can_be_created_on_woocommerce()
+    {
+        $woocommerce_product_id = 662978;
+        $woocommerce_product = JsonSnapshot::get('tests/snapshots/woocommerce/orders/products/' . $woocommerce_product_id . '.json', function () use ($woocommerce_product_id) {
+            return (new \App\APIs\WooCommerce\WooCommerceOrder())->findProduct($woocommerce_product_id)->json();
+        });
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+            'number' => $woocommerce_product['sku'],
+        ]);
+
+        Http::fake(function ($request) use ($woocommerce_product) {
+            return Http::response($woocommerce_product, Response::HTTP_OK);
+        });
+
+        $is_exported = $article->syncWooCommerceAdd();
+
+        $this->assertTrue($is_exported);
+        $this->assertEquals($woocommerce_product_id, $article->externalIdsWooCommerce->external_id);
+    }
+
+    /**
+     * @test
+     * @runTestsInSeparateProcesses
+     * @preserveGlobalState disabled
+     */
+    public function it_can_be_updated_if_sku_is_already_on_woocommerce()
+    {
+        $woocommerce_error = JsonSnapshot::get('tests/snapshots/woocommerce/orders/products/product_invalid_sku.json', function () {
+            return [];
+        });
+        $woocommerce_product_id = $woocommerce_error['data']['resource_id'];
+
+        $article = factory(Article::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        Http::fake(function ($request) use ($woocommerce_error) {
+            return Http::response($woocommerce_error, Response::HTTP_BAD_REQUEST);
+        });
+
+        $is_exported = $article->syncWooCommerceAdd();
+
+        $this->assertTrue($is_exported);
+        $this->assertEquals($woocommerce_product_id, $article->externalIdsWooCommerce->external_id);
     }
 }
