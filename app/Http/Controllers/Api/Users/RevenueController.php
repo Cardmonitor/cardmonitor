@@ -44,9 +44,10 @@ class RevenueController extends Controller
         ]);
 
         $revenue = $request->user()->orders()
+            ->whereNotNull('paid_at')
             ->whereBetween('paid_at', [
-                $attributes['from'],
-                $attributes['to']
+                $attributes['from'] . ' 00:00:00',
+                $attributes['to'] . ' 23:59:59',
             ])
             ->sum('revenue');
 
