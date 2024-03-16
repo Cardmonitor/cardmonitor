@@ -68,6 +68,7 @@ class Order extends Model
         'paid_at_formatted',
         'path',
         'revenue_formatted',
+        'source_name',
     ];
 
     protected $dates = [
@@ -763,6 +764,11 @@ class Order extends Model
     public function getShippingAddressTextAttribute(): string
     {
         return $this->shipping_name . "\n" . ($this->shipping_extra ? $this->shipping_extra . "\n" : '') . $this->shipping_street . "\n" . $this->shipping_zip . ' ' . $this->shipping_city . "\n" . $this->shipping_country;
+    }
+
+    public function getSourceNameAttribute(): string
+    {
+        return ExternalType::tryFrom($this->source_slug)?->name() ?? $this->source_slug;
     }
 
     public function getStateFormattedAttribute(): string

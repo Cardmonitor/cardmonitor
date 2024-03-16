@@ -34,7 +34,7 @@
                             <td class="align-middle d-none d-md-table-cell">{{ item.paid_at_formatted }}</td>
                             <td class="align-middle">
                                 <a :href="item.path">{{ item.source_id }}</a>
-                                <div class="text-muted" v-if="item.buyer">{{ item.buyer.name }}</div>
+                                <div class="text-muted" v-if="item.buyer">{{ item.buyer.name }} - {{ item.source_name }}</div>
                             </td>
                             <td class="align-middle d-none d-sm-table-cell text-right">
                                 {{ item.revenue_formatted }} €

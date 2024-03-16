@@ -417,4 +417,29 @@ class OrderTest extends TestCase
 
         $this->assertEquals('unknown', $order->state_formatted);
     }
+
+    /**
+     * @test
+     */
+    public function it_knows_its_source_name()
+    {
+        $order = factory(Order::class)->create([
+            'source_slug' => ExternalType::CARDMARKET->value,
+        ]);
+
+        $this->assertEquals(ExternalType::CARDMARKET->name(), $order->source_name);
+
+        $order = factory(Order::class)->create([
+            'source_slug' => ExternalType::WOOCOMMERCE->value,
+        ]);
+
+        $this->assertEquals(ExternalType::WOOCOMMERCE->name(), $order->source_name);
+
+        $source_slug = 'unknown';
+        $order = factory(Order::class)->create([
+            'source_slug' =>$source_slug,
+        ]);
+
+        $this->assertEquals($source_slug, $order->source_name);
+    }
 }

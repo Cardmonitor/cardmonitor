@@ -12666,7 +12666,7 @@ var render = function render() {
       }
     }, [_vm._v(_vm._s(item.source_id))]), _vm._v(" "), item.buyer ? _c("div", {
       staticClass: "text-muted"
-    }, [_vm._v(_vm._s(item.buyer.name))]) : _vm._e()]), _vm._v(" "), _c("td", {
+    }, [_vm._v(_vm._s(item.buyer.name) + " - " + _vm._s(item.source_name))]) : _vm._e()]), _vm._v(" "), _c("td", {
       staticClass: "align-middle d-none d-sm-table-cell text-right"
     }, [_vm._v("\n                            " + _vm._s(item.revenue_formatted) + " €\n                        ")]), _vm._v(" "), _c("td", {
       staticClass: "align-middle d-none d-sm-table-cell text-right"
@@ -14706,7 +14706,7 @@ var render = function render() {
     }
   }, [_c("div", [_vm._v(_vm._s(_vm.item.source_id))]), _vm._v(" "), _vm.item.buyer ? _c("div", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.item.buyer.name))]) : _vm._e()]), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.item.buyer.name) + " - " + _vm._s(_vm.item.source_name))]) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "align-middle d-none d-md-table-cell text-right pointer",
     on: {
       click: _vm.link
