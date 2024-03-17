@@ -20,7 +20,7 @@ class BalanceCommand extends Command
         {amount : amount of articles to balance to}
         {--execute : increase and decreae the amount of articles}';
 
-    protected $description = 'Updates amaount of similar articles on Cardmarket.';
+    protected $description = 'Updates amount of similar articles on Cardmarket.';
 
     protected User $user;
 
@@ -28,22 +28,36 @@ class BalanceCommand extends Command
     {
         $this->user = User::with('api')->findOrFail($this->argument('user'));
 
-        $backgroundtask_key = 'user.' . $this->user->id . '.article.cardmarket.amaount.balance';
+        $backgroundtask_key = 'user.' . $this->user->id . '.article.cardmarket.amount.balance';
         $BackgroundTasks->put($backgroundtask_key, 1);
 
-        $articles_count = 0;
-        $updated_count = 0;
+        $deleted_count = $this->decrement($this->argument('amount'));
+        $created_count = $this->increment($this->argument('amount'));
 
-        $cards = $this->getCardIdsToDecrement($this->argument('amount'));
+        $this->line('Deleted ' . $deleted_count . ' articles.');
+        $this->line('Created ' . $created_count . ' articles.');
+
+        $BackgroundTasks->forget($backgroundtask_key);
+
+        $this->notifyUser($deleted_count, $created_count);
+
+        return self::SUCCESS;
+    }
+
+    private function decrement(int $target_amount): int
+    {
+        $deleted_count = 0;
+
+        $cards = $this->getCardIdsToDecrement($target_amount);
         foreach ($cards as $card) {
             echo $card->card_id . "\t" . $card->articles_count . "\t" . $card->cardmarket_count . "\t" . $card->abbreviation . "\t" . $card->local_name . "\t" . $card->language_id . "\t" . $card->condition . "\t" . $card->is_foil . "\t" . $card->is_signed . "\t" . $card->is_altered . "\t" . $card->is_playset . "\t" . $card->is_first_edition . "\t" . $card->is_reverse_holo . "\t" . $card->unit_price;
             echo PHP_EOL;
 
             $articles = $this->getArticlesForCard($card);
             foreach ($articles as $article_counter => $article) {
-                echo $article_counter . "\t" . $article->id . "\t" . $article->number . "\t" . $article->externalIdsCardmarket?->external_id  . "\t\t\t";
+                echo $article_counter . "\t" . $article->id . "\t" . $article->number . "\t" . str_pad($article->externalIdsCardmarket?->external_id ?? '-', 12, ' ', STR_PAD_RIGHT)  . "\t\t\t";
 
-                if ($article_counter < $this->argument('amount')) {
+                if ($article_counter < $target_amount) {
                     echo 'SKIP' . PHP_EOL;
                     continue;
                 }
@@ -57,32 +71,67 @@ class BalanceCommand extends Command
                     echo 'TO DELETE';
                 }
 
+                $deleted_count++;
+
                 echo PHP_EOL;
             }
         }
 
-        return self::SUCCESS;
-
-        $this->line('Updated ' . $updated_count . '/' . $articles_count . ' articles.');
-
-        $BackgroundTasks->forget($backgroundtask_key);
-
-        $this->notifyUser($articles_count, $updated_count);
-
-        return self::SUCCESS;
+        return $deleted_count;
     }
 
     private function getCardIdsToDecrement(int $target_amount): LazyCollection
     {
         return $this->getQueryToBalanceAmount()
-            ->having('cardmarket_count', '>', $this->argument('amount'))
+            ->having('cardmarket_count', '>', $target_amount)
             ->cursor();
+    }
+
+    private function increment(int $target_amount): int
+    {
+        $created_count = 0;
+
+        $cards = $this->getCardIdsToIncrement($target_amount);
+        foreach ($cards as $card) {
+            echo $card->card_id . "\t" . $card->articles_count . "\t" . $card->cardmarket_count . "\t" . $card->abbreviation . "\t" . $card->local_name . "\t" . $card->language_id . "\t" . $card->condition . "\t" . $card->is_foil . "\t" . $card->is_signed . "\t" . $card->is_altered . "\t" . $card->is_playset . "\t" . $card->is_first_edition . "\t" . $card->is_reverse_holo . "\t" . $card->unit_price;
+            echo PHP_EOL;
+
+            $articles = $this->getArticlesForCard($card);
+            foreach ($articles as $article_counter => $article) {
+                echo $article_counter . "\t" . $article->id . "\t" . $article->number . "\t" . str_pad($article->externalIdsCardmarket?->external_id ?? '-', 12, ' ', STR_PAD_RIGHT)  . "\t\t\t";
+
+                if ($article->externalIdsCardmarket?->external_id) {
+                    echo 'SKIP' . PHP_EOL;
+                    continue;
+                }
+
+                if ($article_counter >= $target_amount) {
+                    echo 'SKIP' . PHP_EOL;
+                    continue;
+                }
+
+                if ($this->option('execute')) {
+                    $is_created = $article->sync();
+                    echo $is_created ? 'CREATED' : 'ERROR';
+                    usleep(100000); // 0.1 seconds
+                }
+                else {
+                    echo 'TO CREATE';
+                }
+
+                $created_count++;
+
+                echo PHP_EOL;
+            }
+        }
+
+        return $created_count;
     }
 
     private function getCardIdsToIncrement(int $target_amount): LazyCollection
     {
         return $this->getQueryToBalanceAmount()
-            ->having('cardmarket_count', '<', $this->argument('amount'))
+            ->having('cardmarket_count', '<', $target_amount)
             ->havingRaw(DB::raw('articles_count') . ' > ' . DB::raw('cardmarket_count'))
             ->cursor();
     }
@@ -100,6 +149,7 @@ class BalanceCommand extends Command
             })
             ->where('articles.user_id', $this->user->id)
             ->whereNotNull('articles.number')
+            ->whereNotNull('articles.storing_history_id') // Notwendig?
             ->where('articles.is_sellable', 1)
             ->groupBy('articles.card_id', 'articles.language_id', 'articles.condition', 'articles.is_foil', 'articles.is_signed', 'articles.is_altered', 'articles.is_playset', 'articles.is_first_edition', 'articles.is_reverse_holo', 'articles.unit_price');
     }
@@ -127,9 +177,9 @@ class BalanceCommand extends Command
         return $query->cursor();
     }
 
-    private function notifyUser(int $articles_count, int $updated_count): void
+    private function notifyUser(int $deleted_count, int $created_count): void
     {
-        $this->user->notify(FlashMessage::success($updated_count .'/' . $articles_count . ' Artikel ' . ($updated_count === 1 ? 'wurde' : 'wurden') . ' zu Cardmarket hochgeladen', [
+        $this->user->notify(FlashMessage::success($created_count .' Artikel ' . ($created_count === 1 ? 'wurde' : 'wurden') . ' zu Cardmarket hochgeladen.<br />' . $deleted_count . ' Artikel ' . ($deleted_count === 1 ? 'wurde' : 'wurden') . ' auf Cardmarket gelöscht.', [
             'background_tasks' => App::make(BackgroundTasks::class)->all(),
         ]));
     }
