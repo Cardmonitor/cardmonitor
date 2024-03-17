@@ -105,6 +105,11 @@ class BalanceCommand extends Command
                     continue;
                 }
 
+                if (is_null($article->storing_history_id)) {
+                    echo 'SKIP' . PHP_EOL;
+                    continue;
+                }
+
                 if ($article_counter >= $target_amount) {
                     echo 'SKIP' . PHP_EOL;
                     continue;
@@ -149,7 +154,6 @@ class BalanceCommand extends Command
             })
             ->where('articles.user_id', $this->user->id)
             ->whereNotNull('articles.number')
-            ->whereNotNull('articles.storing_history_id') // Notwendig?
             ->where('articles.is_sellable', 1)
             ->groupBy('articles.card_id', 'articles.language_id', 'articles.condition', 'articles.is_foil', 'articles.is_signed', 'articles.is_altered', 'articles.is_playset', 'articles.is_first_edition', 'articles.is_reverse_holo', 'articles.unit_price');
     }
