@@ -443,7 +443,7 @@ class OrderTest extends TestCase
         $this->assertEquals($source_slug, $order->source_name);
     }
 
-    /**
+     /**
      * @test
      */
     public function it_knows_its_mkm_name()
@@ -460,7 +460,7 @@ class OrderTest extends TestCase
             'payment_method_title' => 'Direct Bank Transfer',
         ]);
 
-        $this->assertEquals($order->payment_method_title, $order->mkm_name);
+        $this->assertEquals('', $order->mkm_name);
 
         $source_slug = 'unknown';
         $order = factory(Order::class)->create([
@@ -468,5 +468,32 @@ class OrderTest extends TestCase
         ]);
 
         $this->assertEquals('', $order->mkm_name);
+    }
+
+    /**
+     * @test
+     */
+    public function it_knows_its_mkm()
+    {
+        $order = factory(Order::class)->create([
+            'source_slug' => ExternalType::CARDMARKET->value,
+        ]);
+
+        $this->assertEquals('MKM', $order->mkm);
+
+        $order = factory(Order::class)->create([
+            'source_slug' => ExternalType::WOOCOMMERCE->value,
+            'payment_method' => 'bacs',
+            'payment_method_title' => 'Direct Bank Transfer',
+        ]);
+
+        $this->assertEquals('Direct Bank Transfer', $order->mkm);
+
+        $source_slug = 'unknown';
+        $order = factory(Order::class)->create([
+            'source_slug' => $source_slug,
+        ]);
+
+        $this->assertEquals('', $order->mkm);
     }
 }
