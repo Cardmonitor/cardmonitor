@@ -713,11 +713,11 @@ class Order extends Model
 
     public function getMkmNameAttribute(): string
     {
-        if ($this->source_slug === ExternalType::CARDMARKET->value) {
-            return $this->mkm . $this->source_id;
-        }
-
-        return '';
+        return match ($this->source_slug) {
+            ExternalType::CARDMARKET->value => 'MKM' . $this->source_id,
+            ExternalType::WOOCOMMERCE->value => 'WC' . $this->source_id,
+            default => '',
+        };
     }
 
     public function getMkmAttribute(): string

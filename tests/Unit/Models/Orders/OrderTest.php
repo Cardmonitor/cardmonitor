@@ -460,7 +460,7 @@ class OrderTest extends TestCase
             'payment_method_title' => 'Direct Bank Transfer',
         ]);
 
-        $this->assertEquals('', $order->mkm_name);
+        $this->assertEquals('WC' . $order->source_id, $order->mkm_name);
 
         $source_slug = 'unknown';
         $order = factory(Order::class)->create([

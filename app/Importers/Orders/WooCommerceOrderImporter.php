@@ -107,7 +107,7 @@ class WooCommerceOrderImporter
             'street' => $woocommerce_order['billing']['address_1'],
             'zip' => $woocommerce_order['billing']['postcode'],
             'city' => $woocommerce_order['billing']['city'],
-            'country' => $woocommerce_order['billing']['country'],
+            'country' => $woocommerce_order['billing']['country'] ?: 'DE',
             'phone' => $woocommerce_order['billing']['phone'],
             'email' => $woocommerce_order['billing']['email'],
         ], [
