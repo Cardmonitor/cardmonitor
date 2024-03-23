@@ -73,7 +73,7 @@ class WooCommerceOrderImporter
             'shipping_street' => $woocommerce_order['shipping']['address_1'],
             'shipping_zip' => $woocommerce_order['shipping']['postcode'],
             'shipping_city' => $woocommerce_order['shipping']['city'],
-            'shipping_country' => $woocommerce_order['shipping']['country'],
+            'shipping_country' => $woocommerce_order['shipping']['country'] ?: 'DE',
             'shipment_revenue' => $woocommerce_order['shipping_total'],
             'payment_method' => $woocommerce_order['payment_method'],
             'payment_method_title' => $woocommerce_order['payment_method_title'],
