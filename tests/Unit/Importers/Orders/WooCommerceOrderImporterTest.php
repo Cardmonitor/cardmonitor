@@ -79,6 +79,9 @@ class WooCommerceOrderImporterTest extends TestCase
         $this->assertEquals($order->buyer->id, $order->buyer_id);
         $this->assertEquals(Status::fromWooCommerceSlug($woocommerce_order['status'])->value, $order->state);
         $this->assertEquals($quantity, $order->articles_count);
+        $this->assertEquals($woocommerce_order['payment_method'], $order->payment_method);
+        $this->assertEquals($woocommerce_order['payment_method_title'], $order->payment_method_title);
+        $this->assertEquals($woocommerce_order['shipping_lines'][0]['method_title'], $order->shippingmethod);
 
         foreach ($order->articles as $key => $article) {
 

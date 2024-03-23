@@ -2,6 +2,7 @@
 
 namespace App\Importers\Orders;
 
+use Illuminate\Support\Arr;
 use App\Enums\Orders\Status;
 use App\Models\Orders\Order;
 use Illuminate\Support\Carbon;
@@ -66,7 +67,7 @@ class WooCommerceOrderImporter
             'seller_id' => null,
             'shipping_method_id' => 0,
             'state' => Status::fromWooCommerceSlug($woocommerce_order['status'])->value,
-            'shippingmethod' => '',
+            'shippingmethod' => Arr::get($woocommerce_order, 'shipping_lines.0.method_title', ''),
             'shipping_name' => $woocommerce_order['shipping']['first_name'] . ' ' . $woocommerce_order['shipping']['last_name'],
             'shipping_extra' => '',
             'shipping_street' => $woocommerce_order['shipping']['address_1'],
@@ -74,6 +75,8 @@ class WooCommerceOrderImporter
             'shipping_city' => $woocommerce_order['shipping']['city'],
             'shipping_country' => $woocommerce_order['shipping']['country'],
             'shipment_revenue' => $woocommerce_order['shipping_total'],
+            'payment_method' => $woocommerce_order['payment_method'],
+            'payment_method_title' => $woocommerce_order['payment_method_title'],
             'articles_count' => $articles_count,
             'articles_revenue' => $articles_cost,
             'articles_cost' => 0,

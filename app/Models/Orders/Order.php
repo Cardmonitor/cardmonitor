@@ -713,7 +713,11 @@ class Order extends Model
 
     public function getMkmNameAttribute(): string
     {
-        return $this->mkm . $this->source_id;
+        if ($this->source_slug === ExternalType::CARDMARKET->value) {
+            return $this->mkm . $this->source_id;
+        }
+
+        return $this->payment_method_title ?? '';
     }
 
     public function getMkmAttribute(): string
